@@ -32,3 +32,7 @@ item.VeganOption.kapokTuft.name=Kapok Tuft
 
 # faux feather
 item.VeganOption.fauxFeather.name=Faux Feather
+
+# straw bed
+item.VeganOption.bedStraw.name=Straw Bed
+tile.VeganOption.bedStraw.name=Straw Bed

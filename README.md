@@ -8,7 +8,7 @@ Minecraft mod that seeks to add vegan alternatives to all Minecraft animal produ
 
 ### Currently Implemented Alternatives
 
-#### Jute fibre/Burlap (leather/string)
+#### Jute Fibre/Burlap (leather/string)
 
 - Jute Stalks drop from harvesting Large Ferns
 - 3x3 of Jute Stalks crafted together makes a Jute Bundle
@@ -24,6 +24,10 @@ Minecraft mod that seeks to add vegan alternatives to all Minecraft animal produ
 - Block of Kapok is a 1:1 alternative to Wool
 - Kapok Tufts can be crafted with a Stick to make a Faux Feather
 - Faux Feather is a 1:1 alternative to Feather
+
+#### Straw Bed (bed)
+
+- Crafted using Hay Bales instead of Wool
 
 ### Building
 

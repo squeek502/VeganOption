@@ -2,6 +2,7 @@ package squeek.veganoption.registry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
+import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -14,10 +15,13 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.blocks.BlockBedGeneric;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.helpers.ConstantHelper;
-import squeek.veganoption.modifications.FernModifier;
-import squeek.veganoption.modifications.JungleLeavesModifier;
+import squeek.veganoption.items.ItemBedGeneric;
+import squeek.veganoption.modifications.DropsModifier;
+import squeek.veganoption.modifications.DropsModifier.BlockSpecifier;
+import squeek.veganoption.modifications.DropsModifier.DropSpecifier;
 import squeek.veganoption.modifications.RecipeModifier;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -30,25 +34,30 @@ public class Content
 
 	// burlap
 	public static Item burlap;
-	public static Item burlapHelmet;
-	public static Item burlapChestplate;
-	public static Item burlapLeggings;
-	public static Item burlapBoots;
+	public static ItemArmor burlapHelmet;
+	public static ItemArmor burlapChestplate;
+	public static ItemArmor burlapLeggings;
+	public static ItemArmor burlapBoots;
 
 	// kapok
 	public static Item kapokTuft;
-	public static Block kapokBlock;
-	public static Item kapokItem;
+	public static BlockColored kapokBlock;
 
 	// faux feather
 	public static Item fauxFeather;
+
+	// straw bed
+	public static BlockBedGeneric bedStrawBlock;
+	public static ItemBedGeneric bedStrawItem;
 
 	// oredict
 	public static final String leatherOreDict = "materialLeather";
 	public static final String woolOreDict = "materialBedding";
 	public static final String featherOreDict = "materialFeather";
 
-	public static RecipeModifier recipeModifier = new RecipeModifier();
+	// modifiers
+	public static final RecipeModifier recipeModifier = new RecipeModifier();
+	public static final DropsModifier dropsModifier = new DropsModifier();
 
 	public static void create()
 	{
@@ -89,7 +98,15 @@ public class Content
 		GameRegistry.registerBlock(juteBundled, "juteBundled");
 		GameRegistry.addShapedRecipe(new ItemStack(juteBundled), "///", "///", "///", '/', new ItemStack(juteStalk));
 
-		new FernModifier();
+		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.double_plant, 3)
+		{
+			@Override
+			public boolean metaMatches(int meta)
+			{
+				return this.meta == BlockDoublePlant.func_149890_d(meta);
+			}
+		};
+		dropsModifier.addDropsToBlock(doubleFernSpecifier, new DropSpecifier(new ItemStack(juteStalk), 1, 3));
 	}
 
 	private static void burlap()
@@ -105,28 +122,28 @@ public class Content
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(burlap), "~~", "~~", '~', "fibreBast"));
 		OreDictionary.registerOre(leatherOreDict, new ItemStack(burlap));
 
-		burlapHelmet = new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 0)
+		burlapHelmet = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 0)
 				.setUnlocalizedName(ModInfo.MODID + ".helmetBurlap")
 				.setTextureName("leather_helmet");
 		GameRegistry.registerItem(burlapHelmet, "helmetBurlap");
 		GameRegistry.addRecipe(new ItemStack(burlapHelmet), "XXX", "X X", 'X', new ItemStack(burlap));
 		recipeModifier.excludeOutput(new ItemStack(Items.leather_helmet));
 
-		burlapChestplate = new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 1)
+		burlapChestplate = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 1)
 				.setUnlocalizedName(ModInfo.MODID + ".chestplateBurlap")
 				.setTextureName("leather_chestplate");
 		GameRegistry.registerItem(burlapChestplate, "chestplateBurlap");
 		GameRegistry.addRecipe(new ItemStack(burlapChestplate), "X X", "XXX", "XXX", 'X', new ItemStack(burlap));
 		recipeModifier.excludeOutput(new ItemStack(Items.leather_chestplate));
 
-		burlapLeggings = new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 2)
+		burlapLeggings = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 2)
 				.setUnlocalizedName(ModInfo.MODID + ".leggingsBurlap")
 				.setTextureName("leather_leggings");
 		GameRegistry.registerItem(burlapLeggings, "leggingsBurlap");
 		GameRegistry.addRecipe(new ItemStack(burlapLeggings), "XXX", "X X", "X X", 'X', new ItemStack(burlap));
 		recipeModifier.excludeOutput(new ItemStack(Items.leather_leggings));
 
-		burlapBoots = new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 3)
+		burlapBoots = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 3)
 				.setUnlocalizedName(ModInfo.MODID + ".bootsBurlap")
 				.setTextureName("leather_boots");
 		GameRegistry.registerItem(burlapBoots, "bootsBurlap");
@@ -157,7 +174,7 @@ public class Content
 				.setTextureName(ModInfo.MODID_LOWER + ":kapok_tuft");
 		GameRegistry.registerItem(kapokTuft, "kapokTuft");
 
-		kapokBlock = new BlockColored(Material.cloth)
+		kapokBlock = (BlockColored) new BlockColored(Material.cloth)
 				.setHardness(0.8F)
 				.setStepSound(Block.soundTypeCloth)
 				.setBlockName(ModInfo.MODID + ".kapok")
@@ -172,7 +189,15 @@ public class Content
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(kapokBlock, 1, 15 - i), "dye" + ConstantHelper.dyeColors[i], new ItemStack(kapokBlock)));
 		}
 
-		new JungleLeavesModifier();
+		BlockSpecifier jungleLeavesSpecifier = new BlockSpecifier(Blocks.leaves, 3)
+		{
+			@Override
+			public boolean metaMatches(int meta)
+			{
+				return (meta & 3) == meta;
+			}
+		};
+		dropsModifier.addDropsToBlock(jungleLeavesSpecifier, new DropSpecifier(new ItemStack(kapokTuft), 0.1f, 0, 2));
 	}
 
 	private static void fauxFeather()
@@ -191,7 +216,17 @@ public class Content
 
 	private static void palliasse()
 	{
-		// TODO: Add a separate straw bed
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.bed), "~~~", "===", '~', new ItemStack(Blocks.hay_block), '=', "plankWood"));
+		bedStrawBlock = (BlockBedGeneric) new BlockBedGeneric()
+				.setHardness(0.2F)
+				.setBlockName(ModInfo.MODID + ".bedStraw")
+				.setBlockTextureName(ModInfo.MODID_LOWER + ":straw_bed");
+		bedStrawItem = (ItemBedGeneric) new ItemBedGeneric(bedStrawBlock)
+				.setMaxStackSize(1)
+				.setUnlocalizedName(ModInfo.MODID + ".bedStraw")
+				.setTextureName(ModInfo.MODID_LOWER + ":straw_bed");
+		bedStrawBlock.setBedItem(bedStrawItem);
+		GameRegistry.registerBlock(bedStrawBlock, null, "bedStraw");
+		GameRegistry.registerItem(bedStrawItem, "bedStraw");
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bedStrawItem), "~~~", "===", '~', new ItemStack(Blocks.hay_block), '=', "plankWood"));
 	}
 }
