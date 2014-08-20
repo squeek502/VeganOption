@@ -1,0 +1,11 @@
+# jute
+tile.VeganOption.juteBundled.name=Bundled Jute
+item.VeganOption.juteStalk.name=Jute Stalk
+item.VeganOption.juteFibre.name=Jute Fibre
+
+# burlap
+item.VeganOption.burlap.name=Burlap
+item.VeganOption.helmetBurlap=Burlap Hat
+item.VeganOption.chestplateBurlap=Burlap Tunic
+item.VeganOption.leggingsBurlap=Burlap Pants
+item.VeganOption.bootsBurlap=Burlap Boots

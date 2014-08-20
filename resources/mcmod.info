@@ -1,0 +1,16 @@
+[
+{
+  "modid": "VeganOption",
+  "name": "The Vegan Option",
+  "description": "Adds vegan alternatives for the various animal products used in Minecraft.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["squeek"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
