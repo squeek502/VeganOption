@@ -5,7 +5,30 @@ item.VeganOption.juteFibre.name=Jute Fibre
 
 # burlap
 item.VeganOption.burlap.name=Burlap
-item.VeganOption.helmetBurlap=Burlap Hat
-item.VeganOption.chestplateBurlap=Burlap Tunic
-item.VeganOption.leggingsBurlap=Burlap Pants
-item.VeganOption.bootsBurlap=Burlap Boots
+item.VeganOption.helmetBurlap.name=Burlap Hat
+item.VeganOption.chestplateBurlap.name=Burlap Tunic
+item.VeganOption.leggingsBurlap.name=Burlap Pants
+item.VeganOption.bootsBurlap.name=Burlap Boots
+
+# kapok
+tile.VeganOption.kapok.name=Block of Kapok
+tile.VeganOption.kapok.white.name=Block of Kapok
+tile.VeganOption.kapok.orange.name=Orange Block of Kapok
+tile.VeganOption.kapok.magenta.name=Magenta Block of Kapok
+tile.VeganOption.kapok.lightBlue.name=Light Blue Block of Kapok
+tile.VeganOption.kapok.yellow.name=Yellow Block of Kapok
+tile.VeganOption.kapok.lime.name=Lime Block of Kapok
+tile.VeganOption.kapok.pink.name=Pink Block of Kapok
+tile.VeganOption.kapok.gray.name=Gray Block of Kapok
+tile.VeganOption.kapok.silver.name=Light Gray Block of Kapok
+tile.VeganOption.kapok.cyan.name=Cyan Block of Kapok
+tile.VeganOption.kapok.purple.name=Purple Block of Kapok
+tile.VeganOption.kapok.blue.name=Blue Block of Kapok
+tile.VeganOption.kapok.brown.name=Brown Block of Kapok
+tile.VeganOption.kapok.green.name=Green Block of Kapok
+tile.VeganOption.kapok.red.name=Red Block of Kapok
+tile.VeganOption.kapok.black.name=Black Block of Kapok
+item.VeganOption.kapokTuft.name=Kapok Tuft
+
+# faux feather
+item.VeganOption.fauxFeather.name=Faux Feather

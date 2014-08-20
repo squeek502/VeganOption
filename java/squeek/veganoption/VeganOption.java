@@ -9,7 +9,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
-@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION)
+@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "after:*")
 public class VeganOption
 {
 	public static final Logger Log = LogManager.getLogger(ModInfo.MODID);
@@ -30,5 +30,7 @@ public class VeganOption
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		FMLInterModComms.sendRuntimeMessage(ModInfo.MODID, "VersionChecker", "addVersionCheck", "http://www.ryanliptak.com/minecraft/versionchecker/squeek502/VeganOption");
+
+		Content.finish();
 	}
 }
