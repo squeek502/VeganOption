@@ -127,7 +127,7 @@ public class DropsModifier
 			{
 				int amountToDrop = amountToDrop();
 				for (int i = 0; i < amountToDrop; i++)
-					drops.add(itemStack);
+					drops.add(itemStack.copy());
 			}
 			return drops;
 		}
