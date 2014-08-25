@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.oredict.OreDictionary;
@@ -64,6 +66,11 @@ public class DropsModifier
 			return blockMatches(block) && metaMatches(block, meta);
 		}
 
+		public boolean matches(IBlockAccess world, int x, int y, int z, Block block, int meta)
+		{
+			return matches(block, meta);
+		}
+
 		public boolean blockMatches(Block block)
 		{
 			return this.block == block;
@@ -110,26 +117,31 @@ public class DropsModifier
 			this.dropChance = dropChance;
 		}
 
-		public boolean shouldDrop()
+		public boolean shouldDrop(EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
 		{
 			return RandomHelper.random.nextFloat() < dropChance;
 		}
 
-		public int amountToDrop()
+		public int amountToDrop(EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
 		{
 			return RandomHelper.getRandomIntFromRange(dropsMin, dropsMax);
 		}
 
-		public List<ItemStack> getDrops()
+		public List<ItemStack> getDrops(EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
 		{
 			List<ItemStack> drops = new ArrayList<ItemStack>();
-			if (shouldDrop())
+			if (shouldDrop(harvester, fortuneLevel, isSilkTouching))
 			{
-				int amountToDrop = amountToDrop();
+				int amountToDrop = amountToDrop(harvester, fortuneLevel, isSilkTouching);
 				for (int i = 0; i < amountToDrop; i++)
 					drops.add(itemStack.copy());
 			}
 			return drops;
+		}
+
+		public void modifyDrops(List<ItemStack> drops, EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
+		{
+			drops.addAll(getDrops(harvester, fortuneLevel, isSilkTouching));
 		}
 	}
 
@@ -138,9 +150,9 @@ public class DropsModifier
 	{
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
-			if (blockDropSpecifier.getKey().matches(event.block, event.blockMetadata))
+			if (blockDropSpecifier.getKey().matches(event.world, event.x, event.y, event.z, event.block, event.blockMetadata))
 			{
-				event.drops.addAll(blockDropSpecifier.getValue().getDrops());
+				blockDropSpecifier.getValue().modifyDrops(event.drops, event.harvester, event.fortuneLevel, event.isSilkTouching);
 			}
 		}
 	}

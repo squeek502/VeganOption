@@ -2,6 +2,7 @@ package squeek.veganoption.helpers;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class BlockHelper
@@ -32,5 +33,10 @@ public class BlockHelper
 		world.getBlock(x - 1, y, z), world.getBlock(x + 1, y, z),
 		world.getBlock(x, y, z - 1), world.getBlock(x, y, z + 1)
 		};
+	}
+	
+	public static Vec3 followWaterStreamToSourceBlock(World world, int xStart, int yStart, int zStart)
+	{
+		return null;
 	}
 }

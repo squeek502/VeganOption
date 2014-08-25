@@ -29,6 +29,34 @@ Minecraft mod that seeks to add vegan alternatives to all Minecraft animal produ
 
 - Crafted using Hay Bales instead of Wool
 
+#### Fossils (bone)
+
+- Bones drop (very) rarely when mining Stone
+
+#### Plant Milk (milk)
+
+- 2xPumpkin Seeds + Sugar + Water can be crafted to create Pumpkin Seed Milk (a 1:1 alternative to Milk)
+
+#### Egg Replacers (egg)
+
+- Apples can be crafted into Apple Sauce (Apple + Bowl)
+- Potatoes can be crafted into Potato Starch (Potato + Weighted Pressure Plate + Water + Bowl)
+- Apple Sauce and Potato Starch are 1:1 alternatives to Eggs
+
+#### Resin (slimeball)
+
+- Resin is a semi-rare drop from harvesting Spruce Wood
+- Resin is a 1:1 alternative to Slimeballs
+
+#### Vegetable Oil Ink (ink sac)
+
+- Sunflower Seeds drop from harvesting Sunflowers
+- Sunflower Seeds can be crafted into Sunflower Oil (Sunflower Seeds + Weighted Pressure Plate + Bottle)
+- Sunflower Oil can be smelted into Vegetable Wax in a furnace
+- Resin can be smelted into Rosin in a furnace
+- Vegetable Oil Ink can be crafted from Sunflower Oil + Rosin + Vegetable Wax + Charcoal
+- Vegetable Oil Ink is a 1:1 alternative to Ink Sacs
+
 ### Building
 
 1. Clone this repository

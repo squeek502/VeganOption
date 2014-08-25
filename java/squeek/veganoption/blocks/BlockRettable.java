@@ -110,6 +110,15 @@ public class BlockRettable extends BlockHay
 	}
 
 	@Override
+	public boolean isToolEffective(String type, int metadata)
+	{
+		if (isRetted(metadata))
+			return false;
+		else
+			return super.isToolEffective(type, metadata);
+	}
+
+	@Override
 	public int damageDropped(int p_149692_1_)
 	{
 		return 0;
