@@ -78,7 +78,7 @@ public class BlockRettable extends BlockHay
 
 	public boolean canRet(World world, int x, int y, int z)
 	{
-		return BlockHelper.isAdjacentToOrCoveredInWater(world, x, y, z);
+		return BlockHelper.isAdjacentToOrCoveredInWater(BlockHelper.blockPos(world, x, y, z));
 	}
 
 	public boolean isRetted(int meta)

@@ -22,7 +22,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -593,7 +595,7 @@ public class Content
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":encrusted_obsidian");
 		GameRegistry.registerBlock(encrustedObsidian, "encrustedObsidian");
 		encrustedObsidian.setHarvestLevel("pickaxe", 3);
-		GameRegistry.addShapedRecipe(new ItemStack(encrustedObsidian, 2), "de", "oo", 'd', Items.diamond, 'e', Items.emerald, 'o', Blocks.obsidian);
+		GameRegistry.addShapelessRecipe(new ItemStack(encrustedObsidian, 2), Items.diamond, Blocks.obsidian, Blocks.obsidian, Items.emerald);
 
 		enderRift = new BlockEnderRift()
 				.setHardness(-1.0F)
@@ -601,9 +603,12 @@ public class Content
 				.setBlockName(ModInfo.MODID + ".enderRift");
 		GameRegistry.registerBlock(enderRift, "enderRift");
 
-		fluidRawEnder = new Fluid(fluidRawEnderName);
+		fluidRawEnder = new Fluid(ModInfo.MODID + ".rawEnder");
 		FluidRegistry.registerFluid(fluidRawEnder);
-		rawEnder = new BlockRawEnder(fluidRawEnder);
+		rawEnder = new BlockRawEnder(fluidRawEnder)
+			.setBlockName(ModInfo.MODID + ".rawEnder");
+		fluidRawEnder.setBlock(rawEnder);
+		fluidRawEnder.setUnlocalizedName(rawEnder.getUnlocalizedName());
 		GameRegistry.registerBlock(rawEnder, "rawEnder");
 
 		bucketRawEnder = new ItemBucketGeneric(rawEnder)
@@ -612,5 +617,8 @@ public class Content
 				.setTextureName(ModInfo.MODID_LOWER + ":raw_ender_bucket")
 				.setContainerItem(Items.bucket);
 		GameRegistry.registerItem(bucketRawEnder, "bucketRawEnder");
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.bucket));
+
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.ender_pearl), new ItemStack(frozenBubble), new ItemStack(bucketRawEnder));
 	}
 }

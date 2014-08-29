@@ -69,3 +69,10 @@ item.VeganOption.fertilizer.name=Fertilizer
 
 # frozen bubble
 item.VeganOption.frozenBubble.name=Frozen Bubble
+item.VeganOption.frozenBubbleFilled.name=Frozen Bubble (Partially Filled)
+
+# raw ender
+tile.VeganOption.encrustedObsidian.name=Encrusted Obsidian
+item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
+tile.VeganOption.rawEnder.name=Raw Ender
+tile.VeganOption.enderRift.name=Ender Rift

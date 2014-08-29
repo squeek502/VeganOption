@@ -1,13 +1,14 @@
 package squeek.veganoption.blocks;
 
+import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEndPortal;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLogic;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import squeek.veganoption.VeganOption;
+import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.registry.Content;
 
 public class BlockEnderRift extends BlockEndPortal
@@ -21,36 +22,73 @@ public class BlockEnderRift extends BlockEndPortal
 		}
 	}
 
+	public static MaterialEnderRift materialEnderRift = new MaterialEnderRift();
+
 	public BlockEnderRift()
 	{
-		super(new MaterialEnderRift());
+		super(materialEnderRift);
+		setTickRandomly(true);
 	}
 
+	// absord fluid flow
 	public boolean onFluidFlowInto(World world, int x, int y, int z, int flowDecay)
 	{
-		Block fluidBlock = world.getBlock(x, y + 1, z);
-		if (fluidBlock == Blocks.flowing_water || fluidBlock == Blocks.water && flowDecay == 9)
-		{
-		}
-
 		return true;
 	}
-	
+
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block blockChanged)
+	public void updateTick(World world, int x, int y, int z, Random random)
 	{
-		if (blockChanged == Blocks.air)
+		super.updateTick(world, x, y, z, random);
+
+		BlockHelper.BlockPos riftBlockPos = BlockHelper.blockPos(world, x, y, z);
+		BlockHelper.BlockPos aboveBlockPos = riftBlockPos.getOffset(0, 1, 0);
+		if (BlockHelper.isWater(aboveBlockPos) && world.getBlock(x, y - 1, z).isReplaceable(world, x, y - 1, z))
 		{
-			boolean isWaterAbove = world.getBlock(x, y + 1, z) == Blocks.water || world.getBlock(x, y + 1, z) == Blocks.flowing_water;
-			if (isWaterAbove && world.getBlock(x, y - 1, z).isAir(world, x, y - 1, z))
+			BlockHelper.BlockPos sourceBlockToConsume = BlockHelper.followWaterStreamToSourceBlock(aboveBlockPos);
+			if (sourceBlockToConsume != null)
 			{
-				world.setBlock(x, y - 1, z, Content.rawEnder, 7, 3);
-				VeganOption.Log.info("onNeighborBlockChange " + blockChanged);
+				world.setBlockToAir(sourceBlockToConsume.x, sourceBlockToConsume.y, sourceBlockToConsume.z);
+				
+				if (!world.isDaytime())
+				{
+					world.setBlock(x, y - 1, z, Content.rawEnder, 7, 3);
+				}
+				else
+				{
+					// TODO: negative consequences
+					VeganOption.Log.info("too bad it's daytime");
+				}
 			}
 		}
-		super.onNeighborBlockChange(world, x, y, z, blockChanged);
 	}
-	
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block changedBlock)
+	{
+		super.onNeighborBlockChange(world, x, y, z, changedBlock);
+
+		if (!canBlockStay(world, x, y, z))
+			world.setBlockToAir(x, y, z);
+	}
+
+	@Override
+	public boolean canBlockStay(World world, int x, int y, int z)
+	{
+		return isValidPortalLocation(world, x, y, z) && super.canBlockStay(world, x, y, z);
+	}
+
+	public static boolean isValidPortalLocation(World world, int x, int y, int z)
+	{
+		BlockHelper.BlockPos blockPos = BlockHelper.blockPos(world, x, y, z);
+		for (BlockHelper.BlockPos blockToCheck : BlockHelper.getBlocksAdjacentTo(blockPos))
+		{
+			if (!(blockToCheck.getBlock() instanceof BlockEncrustedObsidian))
+				return false;
+		}
+		return true;
+	}
+
 	// stop from teleporting to the end
 	@Override
 	public void onEntityCollidedWithBlock(World p_149670_1_, int p_149670_2_, int p_149670_3_, int p_149670_4_, Entity p_149670_5_)

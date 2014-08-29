@@ -35,9 +35,11 @@ public class BlockRawEnder extends BlockFluidFinite
 		}
 	}
 
+	public static MaterialRawEnder materialRawEnder = new MaterialRawEnder();
+
 	public BlockRawEnder(Fluid fluid)
 	{
-		super(fluid, new MaterialRawEnder());
+		super(fluid, materialRawEnder);
 		setCreativeTab(CreativeTabs.tabMisc);
 	}
 
