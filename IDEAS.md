@@ -79,3 +79,11 @@ http://en.wikipedia.org/wiki/Rosin
 not sure what the potential uses would be; might be out of the scope of this mod
 
 Limit egg replacers to recipes with food outputs?
+
+## Most things should have an in-world crafting method
+
+### Frozen bubble
+ - Soap (rosin + wax?) in a dispenser creates bubbles, bubbles touch ice (more specific than just a single ice block?) to become frozen bubbles
+
+### Potato starch/oil/milk
+ - Crush with a piston?
