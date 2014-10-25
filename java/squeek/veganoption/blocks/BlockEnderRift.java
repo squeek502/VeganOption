@@ -6,8 +6,12 @@ import net.minecraft.block.BlockEndPortal;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLogic;
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import squeek.veganoption.VeganOption;
+import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.registry.Content;
 
@@ -30,6 +34,24 @@ public class BlockEnderRift extends BlockEndPortal
 		setTickRandomly(true);
 	}
 
+	@Override
+	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	{
+		return new TileEntityEnderRift();
+	}
+
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
+	{
+		this.setBlockBounds(0.0F, 0.25F, 0.0F, 1.0F, 0.75F, 1.0F);
+	}
+
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
+	{
+		return side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal();
+	}
+
 	// absord fluid flow
 	public boolean onFluidFlowInto(World world, int x, int y, int z, int flowDecay)
 	{
@@ -49,7 +71,7 @@ public class BlockEnderRift extends BlockEndPortal
 			if (sourceBlockToConsume != null)
 			{
 				world.setBlockToAir(sourceBlockToConsume.x, sourceBlockToConsume.y, sourceBlockToConsume.z);
-				
+
 				if (!world.isDaytime())
 				{
 					world.setBlock(x, y - 1, z, Content.rawEnder, 7, 3);

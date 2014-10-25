@@ -29,13 +29,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.BlockBedGeneric;
-import squeek.veganoption.blocks.BlockCompost;
-import squeek.veganoption.blocks.BlockComposter;
-import squeek.veganoption.blocks.BlockEncrustedObsidian;
-import squeek.veganoption.blocks.BlockEnderRift;
-import squeek.veganoption.blocks.BlockRawEnder;
-import squeek.veganoption.blocks.BlockRettable;
+import squeek.veganoption.blocks.*;
+import squeek.veganoption.blocks.renderers.RenderEnderRift;
+import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.helpers.ConstantHelper;
 import squeek.veganoption.integration.HarvestCraft;
 import squeek.veganoption.items.ItemBedGeneric;
@@ -47,7 +43,10 @@ import squeek.veganoption.modifications.DropsModifier;
 import squeek.veganoption.modifications.DropsModifier.BlockSpecifier;
 import squeek.veganoption.modifications.DropsModifier.DropSpecifier;
 import squeek.veganoption.modifications.RecipeModifier;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 public class Content
 {
@@ -602,11 +601,16 @@ public class Content
 				.setResistance(6000000.0F)
 				.setBlockName(ModInfo.MODID + ".enderRift");
 		GameRegistry.registerBlock(enderRift, "enderRift");
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnderRift.class, new RenderEnderRift());
+		}
+		GameRegistry.registerTileEntity(TileEntityEnderRift.class, ModInfo.MODID + ".enderRift");
 
 		fluidRawEnder = new Fluid(ModInfo.MODID + ".rawEnder");
 		FluidRegistry.registerFluid(fluidRawEnder);
 		rawEnder = new BlockRawEnder(fluidRawEnder)
-			.setBlockName(ModInfo.MODID + ".rawEnder");
+				.setBlockName(ModInfo.MODID + ".rawEnder");
 		fluidRawEnder.setBlock(rawEnder);
 		fluidRawEnder.setUnlocalizedName(rawEnder.getUnlocalizedName());
 		GameRegistry.registerBlock(rawEnder, "rawEnder");
