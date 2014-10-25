@@ -2,35 +2,9 @@ package squeek.veganoption.helpers;
 
 public class ColorHelper
 {
-	public static int blendBetweenColors(double val, int minColor, int maxColor)
-	{
-		return blendBetweenColors(val, minColor, maxColor, 0d, 1d);
-	}
-
-	public static int blendBetweenColors(double val, int minColor, int maxColor, double min, double max)
-	{
-		if (min == max)
-			return maxColor;
-
-		double range = max - min;
-		double ratioOfMax = (max - val) / range;
-		double ratioOfMin = (val - min) / range;
-
-		int[] minColorRGBA = toRGBA(minColor);
-		int[] maxColorRGBA = toRGBA(maxColor);
-		int[] color = new int[]{
-			(int) (maxColorRGBA[0] * ratioOfMin + minColorRGBA[0] * ratioOfMax),
-			(int) (maxColorRGBA[1] * ratioOfMin + minColorRGBA[1] * ratioOfMax),
-			(int) (maxColorRGBA[2] * ratioOfMin + minColorRGBA[2] * ratioOfMax),
-			(int) (maxColorRGBA[3] * ratioOfMin + minColorRGBA[3] * ratioOfMax)
-		};
-
-		return fromRGBA(color[0], color[1], color[2], color[3]);
-	}
-
 	public static float[] toNormalizedRGB(int color)
 	{
-		return toNormalizedRGBA(color | (255 & 255) << 24);
+		return toNormalizedRGBA(color | 255 << 24);
 	}
 
 	public static float[] toNormalizedRGBA(int color)
@@ -68,5 +42,31 @@ public class ColorHelper
 	public static int fromNormalizedRGB(float r, float g, float b)
 	{
 		return fromNormalizedRGBA(r, g, b, 1f);
+	}
+
+	public static int blendBetweenColors(double val, int minColor, int maxColor)
+	{
+		return blendBetweenColors(val, minColor, maxColor, 0d, 1d);
+	}
+
+	public static int blendBetweenColors(double val, int minColor, int maxColor, double min, double max)
+	{
+		if (min == max)
+			return maxColor;
+
+		double range = max - min;
+		double ratioOfMax = (max - val) / range;
+		double ratioOfMin = (val - min) / range;
+
+		int[] minColorRGBA = toRGBA(minColor);
+		int[] maxColorRGBA = toRGBA(maxColor);
+		int[] color = new int[]{
+			(int) (maxColorRGBA[0] * ratioOfMin + minColorRGBA[0] * ratioOfMax),
+			(int) (maxColorRGBA[1] * ratioOfMin + minColorRGBA[1] * ratioOfMax),
+			(int) (maxColorRGBA[2] * ratioOfMin + minColorRGBA[2] * ratioOfMax),
+			(int) (maxColorRGBA[3] * ratioOfMin + minColorRGBA[3] * ratioOfMax)
+		};
+
+		return fromRGBA(color[0], color[1], color[2], color[3]);
 	}
 }
