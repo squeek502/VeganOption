@@ -134,6 +134,9 @@ public class BlockHelper
 
 	public static BlockPos followWaterStreamToSourceBlock(BlockPos blockPos, Set<BlockPos> blocksChecked)
 	{
+		if (blockPos.getMeta() == 0)
+			return blockPos;
+
 		List<BlockPos> blocksToCheck = new ArrayList<BlockPos>();
 		blocksToCheck.add(blockPos.getOffset(0, 1, 0));
 		blocksToCheck.addAll(Arrays.asList(getBlocksAdjacentTo(blockPos)));
