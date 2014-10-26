@@ -159,4 +159,36 @@ public class BlockHelper
 		}
 		return null;
 	}
+	
+	public static BlockPos[] getBlocksInRadiusAround(BlockPos centerBlock, int radius)
+	{
+		List<BlockPos> blocks = new ArrayList<BlockPos>();
+		int radiusSq = radius * radius;
+		for (int xOffset=0; xOffset <= radius; xOffset++)
+		{
+			for (int yOffset=0; yOffset <= radius; yOffset++)
+			{
+				for (int zOffset=0; zOffset <= radius; zOffset++)
+				{
+					BlockPos block = centerBlock.getOffset(xOffset, yOffset, zOffset);
+					int xDelta = block.x - centerBlock.x;
+					int yDelta = block.y - centerBlock.y;
+					int zDelta = block.z - centerBlock.z;
+					int deltaLengthSq = xDelta * xDelta + yDelta * yDelta + zDelta * zDelta;
+					if (deltaLengthSq <= radiusSq)
+					{
+						blocks.add(block);
+						blocks.add(centerBlock.getOffset(-xOffset, yOffset, zOffset));
+						blocks.add(centerBlock.getOffset(xOffset, yOffset, -zOffset));
+						blocks.add(centerBlock.getOffset(-xOffset, yOffset, -zOffset));
+						blocks.add(centerBlock.getOffset(xOffset, -yOffset, zOffset));
+						blocks.add(centerBlock.getOffset(xOffset, -yOffset, -zOffset));
+						blocks.add(centerBlock.getOffset(-xOffset, -yOffset, zOffset));
+						blocks.add(centerBlock.getOffset(-xOffset, -yOffset, -zOffset));
+					}
+				}
+			}
+		}
+		return blocks.toArray(new BlockPos[0]);
+	}
 }

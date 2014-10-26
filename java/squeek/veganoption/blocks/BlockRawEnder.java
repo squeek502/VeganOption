@@ -3,7 +3,6 @@ package squeek.veganoption.blocks;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -40,7 +39,6 @@ public class BlockRawEnder extends BlockFluidFinite
 	public BlockRawEnder(Fluid fluid)
 	{
 		super(fluid, materialRawEnder);
-		setCreativeTab(CreativeTabs.tabMisc);
 	}
 
 	@Override
@@ -55,6 +53,7 @@ public class BlockRawEnder extends BlockFluidFinite
 	{
 		stillIcon = register.registerIcon(ModInfo.MODID_LOWER + ":" + "raw_ender_still");
 		flowIcon = register.registerIcon(ModInfo.MODID_LOWER + ":" + "raw_ender_flow");
+		getFluid().setIcons(stillIcon, flowIcon);
 	}
 
 	@Override

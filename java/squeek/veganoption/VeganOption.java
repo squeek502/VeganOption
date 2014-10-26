@@ -2,6 +2,7 @@ package squeek.veganoption;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import squeek.veganoption.network.NetworkHandler;
 import squeek.veganoption.registry.Content;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -18,19 +19,21 @@ public class VeganOption
 	public void preInit(FMLInitializationEvent event)
 	{
 		Content.create();
+
+		FMLInterModComms.sendRuntimeMessage(ModInfo.MODID, "VersionChecker", "addVersionCheck", "http://www.ryanliptak.com/minecraft/versionchecker/squeek502/VeganOption");
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		NetworkHandler.init();
+
 		FMLInterModComms.sendMessage("Waila", "register", "squeek.veganoption.integration.Waila.callbackRegister");
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		FMLInterModComms.sendRuntimeMessage(ModInfo.MODID, "VersionChecker", "addVersionCheck", "http://www.ryanliptak.com/minecraft/versionchecker/squeek502/VeganOption");
-
 		Content.finish();
 	}
 }

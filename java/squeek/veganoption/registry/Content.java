@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -32,24 +34,32 @@ import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.*;
 import squeek.veganoption.blocks.renderers.RenderEnderRift;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
+import squeek.veganoption.entities.EntityBubble;
+import squeek.veganoption.entities.EntityBubbleDispenserBehavior;
 import squeek.veganoption.helpers.ConstantHelper;
 import squeek.veganoption.integration.HarvestCraft;
 import squeek.veganoption.items.ItemBedGeneric;
 import squeek.veganoption.items.ItemBucketGeneric;
 import squeek.veganoption.items.ItemFertilizer;
 import squeek.veganoption.items.ItemFrozenBubble;
+import squeek.veganoption.items.ItemSoapSolution;
 import squeek.veganoption.modifications.CraftingModifier;
 import squeek.veganoption.modifications.DropsModifier;
 import squeek.veganoption.modifications.DropsModifier.BlockSpecifier;
 import squeek.veganoption.modifications.DropsModifier.DropSpecifier;
 import squeek.veganoption.modifications.RecipeModifier;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 public class Content
 {
+	// helper itemstacks for vanilla stuff
+	public static final ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
+
 	// jute
 	public static BlockRettable juteBundled;
 	public static Item juteStalk;
@@ -102,6 +112,14 @@ public class Content
 	public static Block compost;
 	public static Item fertilizer;
 
+	// soap
+	public static Fluid fluidLyeWater;
+	public static final String fluidLyeWaterName = "lyeWater";
+	public static Block lyeWater;
+	public static Item bucketLyeWater;
+	public static Item soap;
+	public static Item soapSolution;
+
 	// frozen bubble
 	public static Item frozenBubble;
 
@@ -128,6 +146,7 @@ public class Content
 	public static final String rottenOreDict = "materialRotten";
 	public static final String fertilizerOreDict = "fertilizer";
 	public static final String pufferFishOreDict = "reagentWaterBreathing";
+	public static final String soapOreDict = "soap";
 
 	// modifiers
 	public static final RecipeModifier recipeModifier = new RecipeModifier();
@@ -150,6 +169,7 @@ public class Content
 		bioplastic();
 		fauxFeather();
 		compost();
+		soap();
 		frozenBubble();
 		ender();
 	}
@@ -568,6 +588,50 @@ public class Content
 		GameRegistry.addShapelessRecipe(new ItemStack(fertilizer, 12), new ItemStack(compost), new ItemStack(Items.bone));
 	}
 
+	private static void soap()
+	{
+		fluidLyeWater = new Fluid(ModInfo.MODID + ".lyeWater");
+		FluidRegistry.registerFluid(fluidLyeWater);
+		lyeWater = new BlockLyeWater(fluidLyeWater)
+				.setBlockName(ModInfo.MODID + ".lyeWater");
+		fluidLyeWater.setBlock(lyeWater);
+		fluidLyeWater.setUnlocalizedName(lyeWater.getUnlocalizedName());
+		GameRegistry.registerBlock(lyeWater, "lyeWater");
+
+		bucketLyeWater = new ItemBucketGeneric(lyeWater)
+				.setUnlocalizedName(ModInfo.MODID + ".bucketLyeWater")
+				.setCreativeTab(CreativeTabs.tabMisc)
+				.setTextureName(ModInfo.MODID_LOWER + ":lye_water_bucket")
+				.setContainerItem(Items.bucket);
+		GameRegistry.registerItem(bucketLyeWater, "bucketLyeWater");
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidLyeWater, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketLyeWater), new ItemStack(Items.bucket));
+		GameRegistry.addShapelessRecipe(new ItemStack(bucketLyeWater), charcoal, new ItemStack(Items.water_bucket));
+		craftingModifier.addInputsToRemoveForOutput(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket));
+
+		soap = new Item()
+				.setUnlocalizedName(ModInfo.MODID + ".soap")
+				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setTextureName(ModInfo.MODID_LOWER + ":soap");
+		GameRegistry.registerItem(soap, "soap");
+		OreDictionary.registerOre(soapOreDict, soap);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soap), // output
+		new ItemStack(bucketLyeWater),
+				vegetableOilOreDict,
+				new ItemStack(rosin)));
+
+		soapSolution = new ItemSoapSolution()
+				.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
+				.setCreativeTab(CreativeTabs.tabMisc)
+				.setTextureName(ModInfo.MODID_LOWER + ":soap_solution")
+				.setContainerItem(Items.glass_bottle);
+		GameRegistry.registerItem(soapSolution, "soapSolution");
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soapSolution), // output
+		soapOreDict,
+				new ItemStack(Items.water_bucket),
+				new ItemStack(Items.sugar),
+				new ItemStack(Items.glass_bottle)));
+	}
+
 	private static void frozenBubble()
 	{
 		ItemStack pufferFish = new ItemStack(Items.fish, 1, ItemFishFood.FishType.PUFFERFISH.ordinal());
@@ -580,7 +644,15 @@ public class Content
 				.setTextureName(ModInfo.MODID_LOWER + ":frozen_bubble");
 		GameRegistry.registerItem(frozenBubble, "frozenBubble");
 		OreDictionary.registerOre(pufferFishOreDict, frozenBubble);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(frozenBubble), "iri", "ioi", "iwi", 'i', Blocks.ice, 'r', rosin, 'o', vegetableOilOreDict, 'w', Items.water_bucket));
+		GameRegistry.addShapedRecipe(new ItemStack(frozenBubble), "iii", "isi", "iii", 'i', Blocks.ice, 's', soapSolution);
+		GameRegistry.addShapelessRecipe(new ItemStack(frozenBubble), Blocks.packed_ice, soapSolution);
+
+		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", EntityRegistry.findGlobalUniqueEntityId(), ModInfo.MODID, 80, 10, true);
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
+			RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, new RenderSnowball(frozenBubble));
+		}
+		BlockDispenser.dispenseBehaviorRegistry.putObject(soapSolution, new EntityBubbleDispenserBehavior());
 	}
 
 	private static void ender()

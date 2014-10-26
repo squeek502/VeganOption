@@ -67,7 +67,17 @@ tile.VeganOption.composter.name=Composter
 tile.VeganOption.compost.name=Compost
 item.VeganOption.fertilizer.name=Fertilizer
 
+# soap
+item.VeganOption.bucketLyeWater.name=Lye Water Bucket
+tile.VeganOption.lyeWater.name=Lye Water
+fluid.tile.VeganOption.lyeWater=Lye Water
+death.attack.VeganOption.lyeWater=%1$s bathed in pure lye
+death.attack.VeganOption.lyeWater.player=%1$s bathed in pure lye whilst trying to escape %2$s
+item.VeganOption.soap.name=Soap
+item.VeganOption.soapSolution.name=Soap Solution
+
 # frozen bubble
+entity.VeganOption.bubble.name=Bubble
 item.VeganOption.frozenBubble.name=Frozen Bubble
 item.VeganOption.frozenBubbleFilled.name=Frozen Bubble (Partially Filled)
 
@@ -75,4 +85,5 @@ item.VeganOption.frozenBubbleFilled.name=Frozen Bubble (Partially Filled)
 tile.VeganOption.encrustedObsidian.name=Encrusted Obsidian
 item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
 tile.VeganOption.rawEnder.name=Raw Ender
+fluid.tile.VeganOption.rawEnder=Raw Ender
 tile.VeganOption.enderRift.name=Ender Rift

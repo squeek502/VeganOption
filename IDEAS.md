@@ -65,6 +65,10 @@ frozen bubble + raw/liquid ender
 - must be done at night or there are negative consequencs (explosions seem too mundane?)
 - perhaps negative consequence could be teleporting the player that placed the block to the block (exploitable? is that bad?)
 
+### Soap
+http://journeytoforever.org/biodiesel_ashlye.html
+http://www.motherearthnews.com/homesteading-and-livestock/how-to-make-soap-from-ashes-zmaz72jfzfre.aspx#axzz2RoPhB892
+
 ## Misc things
 
 Sugarcane as a source of Kenaf (leather/string alternative)?
