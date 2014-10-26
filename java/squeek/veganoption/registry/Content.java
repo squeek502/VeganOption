@@ -115,7 +115,6 @@ public class Content
 
 	// soap
 	public static Fluid fluidLyeWater;
-	public static final String fluidLyeWaterName = "lyeWater";
 	public static Block lyeWater;
 	public static Item bucketLyeWater;
 	public static Item soap;
@@ -128,7 +127,6 @@ public class Content
 	public static Block encrustedObsidian;
 	public static Block enderRift;
 	public static Fluid fluidRawEnder;
-	public static final String fluidRawEnderName = "rawEnder";
 	public static Block rawEnder;
 	public static Item bucketRawEnder;
 
