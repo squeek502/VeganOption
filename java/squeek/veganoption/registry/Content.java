@@ -42,6 +42,7 @@ import squeek.veganoption.items.ItemBedGeneric;
 import squeek.veganoption.items.ItemBucketGeneric;
 import squeek.veganoption.items.ItemFertilizer;
 import squeek.veganoption.items.ItemFrozenBubble;
+import squeek.veganoption.items.ItemSoap;
 import squeek.veganoption.items.ItemSoapSolution;
 import squeek.veganoption.modifications.CraftingModifier;
 import squeek.veganoption.modifications.DropsModifier;
@@ -608,7 +609,7 @@ public class Content
 		GameRegistry.addShapelessRecipe(new ItemStack(bucketLyeWater), charcoal, new ItemStack(Items.water_bucket));
 		craftingModifier.addInputsToRemoveForOutput(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket));
 
-		soap = new Item()
+		soap = new ItemSoap()
 				.setUnlocalizedName(ModInfo.MODID + ".soap")
 				.setCreativeTab(CreativeTabs.tabMaterials)
 				.setTextureName(ModInfo.MODID_LOWER + ":soap");
