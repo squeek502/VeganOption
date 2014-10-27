@@ -41,6 +41,7 @@ import squeek.veganoption.integration.HarvestCraft;
 import squeek.veganoption.items.ItemBedGeneric;
 import squeek.veganoption.items.ItemBucketGeneric;
 import squeek.veganoption.items.ItemFertilizer;
+import squeek.veganoption.items.ItemFoodContainered;
 import squeek.veganoption.items.ItemFrozenBubble;
 import squeek.veganoption.items.ItemSoap;
 import squeek.veganoption.items.ItemSoapSolution;
@@ -372,7 +373,7 @@ public class Content
 		}
 		else
 		{
-			appleSauce = new ItemFood(3, 1f, false)
+			appleSauce = new ItemFoodContainered(3, 1f, false)
 					.setUnlocalizedName(ModInfo.MODID + ".appleSauce")
 					.setCreativeTab(CreativeTabs.tabFood)
 					.setTextureName(ModInfo.MODID_LOWER + ":apple_sauce")
