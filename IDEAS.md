@@ -48,9 +48,6 @@ http://en.wikipedia.org/wiki/Gunpowder
 ### Rotten flesh
 rotten plants (half-composted plant matter)
 
-### Nether star
-?
-
 ### Blaze rod
 plastic rod + rosin + wax + flint & steel
 
@@ -65,9 +62,32 @@ frozen bubble + raw/liquid ender
 - must be done at night or there are negative consequencs (explosions seem too mundane?)
 - perhaps negative consequence could be teleporting the player that placed the block to the block (exploitable? is that bad?)
 
-### Soap
-http://journeytoforever.org/biodiesel_ashlye.html
-http://www.motherearthnews.com/homesteading-and-livestock/how-to-make-soap-from-ashes-zmaz72jfzfre.aspx#axzz2RoPhB892
+### Nether star
+?
+
+### Ghast tear
+?
+
+### Spider eye
+False Morel as a rare drop from Mycelium
+http://en.wikipedia.org/wiki/Gyromitra_esculenta
+
+Doll's Eyes; too good to pass up, but I can't figure out how to incorperate them
+http://en.wikipedia.org/wiki/Actaea_pachypoda
+
+Mistletoe?
+http://en.wikipedia.org/wiki/Mistletoe
+
+### Fermented spider eye
+Fermented False Morel (see Spider eye)
+
+### Dragon egg
+?
+
+### Mob heads
+Potato starch + water + paper = Papier-mâché
+Papier-mâché surrounding some frame block = Blank mob head
+Dyes + blank mob head = various mob heads
 
 ## Misc things
 
@@ -83,6 +103,11 @@ http://en.wikipedia.org/wiki/Rosin
 not sure what the potential uses would be; might be out of the scope of this mod
 
 Limit egg replacers to recipes with food outputs?
+
+### Soap
+http://journeytoforever.org/biodiesel_ashlye.html
+http://www.motherearthnews.com/homesteading-and-livestock/how-to-make-soap-from-ashes-zmaz72jfzfre.aspx#axzz2RoPhB892
+- cures all potion effects when used
 
 ## Most things should have an in-world crafting method
 
