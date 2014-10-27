@@ -41,6 +41,30 @@ public class ClassTransformer implements IClassTransformer
 
 			return writeClassToBytes(classNode);
 		}
+		else if (transformedName.equals("net.minecraft.entity.item.EntityItem"))
+		{
+			boolean isObfuscated = name != transformedName;
+
+			ClassNode classNode = readClassFromBytes(bytes);
+
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "h" : "onUpdate", "()V");
+
+			/*
+			if (Hooks.onEntityItemUpdate(this))
+				return;
+			*/
+			InsnList toInject = new InsnList();
+			LabelNode ifNotCanceled = new LabelNode();
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onEntityItemUpdate", "(Lnet/minecraft/entity/item/EntityItem;)Z"));
+			toInject.add(new JumpInsnNode(Opcodes.IFEQ, ifNotCanceled));
+			toInject.add(new InsnNode(Opcodes.RETURN));
+			toInject.add(ifNotCanceled);
+
+			method.instructions.insertBefore(findFirstInstruction(method), toInject);
+
+			return writeClassToBytes(classNode);
+		}
 		return bytes;
 	}
 

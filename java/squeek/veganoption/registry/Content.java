@@ -415,8 +415,8 @@ public class Content
 				.setTextureName(ModInfo.MODID_LOWER + ":potato_starch");
 		GameRegistry.registerItem(potatoStarch, "potatoStarch");
 		OreDictionary.registerOre(eggOreDict, new ItemStack(potatoStarch));
-		ItemStack potatoCrusher = !HarvestCraft.exists ? new ItemStack(Blocks.heavy_weighted_pressure_plate) : new ItemStack(HarvestCraft.getItem("mortarandpestleItem"));
-		GameRegistry.addShapelessRecipe(new ItemStack(potatoStarch), potatoCrusher, new ItemStack(Items.water_bucket), new ItemStack(Items.potato));
+		ItemStack potatoCrusher = new ItemStack(Blocks.piston);
+		GameRegistry.addShapelessRecipe(new ItemStack(potatoStarch), potatoCrusher, new ItemStack(Items.potato));
 		craftingModifier.addInputsToKeepForOutput(new ItemStack(potatoStarch), potatoCrusher);
 	}
 
