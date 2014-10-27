@@ -13,7 +13,7 @@ public class ItemSoapSolution extends Item
 	{
 		super();
 		setMaxStackSize(1);
-		setMaxDamage(16);
+		setMaxDamage(15); // 16 uses
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class ItemSoapSolution extends Item
 
 		itemStack.damageItem(1, player);
 
-		if (itemStack.getItemDamage() == itemStack.getMaxDamage() && getContainerItem() != null)
+		if (itemStack.stackSize == 0 && getContainerItem() != null)
 		{
 			return new ItemStack(getContainerItem());
 		}
