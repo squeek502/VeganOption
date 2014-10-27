@@ -61,8 +61,10 @@ public class CraftingModifier
 					if (OreDictionary.itemMatches(inputToKeep, stackInSlot, false))
 					{
 						stackInSlot.stackSize += inputToKeep.stackSize;
-						if (stackInSlot.isItemStackDamageable())
-							stackInSlot.attemptDamageItem(inputToKeep.stackSize, RandomHelper.random);
+						if (stackInSlot.isItemStackDamageable() && stackInSlot.attemptDamageItem(inputToKeep.stackSize, RandomHelper.random))
+						{
+							stackInSlot.stackSize--;
+						}
 						break;
 					}
 				}
