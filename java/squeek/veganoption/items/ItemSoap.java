@@ -8,6 +8,13 @@ import net.minecraft.world.World;
 
 public class ItemSoap extends Item
 {
+	public ItemSoap()
+	{
+		super();
+		setMaxStackSize(1);
+		setMaxDamage(3); // 4 uses
+	}
+
 	@Override
 	public EnumAction getItemUseAction(ItemStack itemStack)
 	{
@@ -34,6 +41,9 @@ public class ItemSoap extends Item
 			// so.. just clear all potion effects instead of calling curePotionEffects
 			player.clearActivePotions();
 		}
+
+		itemStack.damageItem(1, player);
+
 		return super.onEaten(itemStack, world, player);
 	}
 

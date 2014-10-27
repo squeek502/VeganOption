@@ -638,9 +638,9 @@ public class Content
 				.setCreativeTab(CreativeTabs.tabMaterials)
 				.setTextureName(ModInfo.MODID_LOWER + ":soap");
 		GameRegistry.registerItem(soap, "soap");
-		OreDictionary.registerOre(soapOreDict, soap);
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soap), // output
-		new ItemStack(bucketLyeWater),
+		OreDictionary.registerOre(soapOreDict, new ItemStack(soap, 1, OreDictionary.WILDCARD_VALUE));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soap),
+				new ItemStack(bucketLyeWater),
 				vegetableOilOreDict,
 				new ItemStack(rosin)));
 
@@ -650,11 +650,12 @@ public class Content
 				.setTextureName(ModInfo.MODID_LOWER + ":soap_solution")
 				.setContainerItem(Items.glass_bottle);
 		GameRegistry.registerItem(soapSolution, "soapSolution");
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soapSolution), // output
-		soapOreDict,
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soapSolution),
+				soapOreDict,
 				new ItemStack(Items.water_bucket),
 				new ItemStack(Items.sugar),
 				new ItemStack(Items.glass_bottle)));
+		craftingModifier.addInputsToKeepForOutput(new ItemStack(soapSolution), new ItemStack(soap, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	private static void frozenBubble()
