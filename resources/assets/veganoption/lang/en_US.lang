@@ -95,3 +95,7 @@ item.VeganOption.falseMorelFermented.name=Fermented False Morel
 # mob heads
 item.VeganOption.papierMache.name=Papier-Mâché
 item.VeganOption.mobHeadBlank.name=Blank Mob Head
+
+# gunpowder
+item.VeganOption.sulfur.name=Sulfur
+item.VeganOption.saltpeter.name=Saltpeter

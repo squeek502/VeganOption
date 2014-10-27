@@ -146,6 +146,10 @@ public class Content
 	public static Item papierMache;
 	public static Item mobHeadBlank;
 
+	// gunpowder
+	public static Item sulfur;
+	public static Item saltpeter;
+
 	// oredict
 	public static final String leatherOreDict = "materialLeather";
 	public static final String woolOreDict = "materialBedding";
@@ -164,6 +168,8 @@ public class Content
 	public static final String soapOreDict = "soap";
 	public static final String poisonousOreDict = "reagentPoisonous";
 	public static final String fermentedOreDict = "reagentFermented";
+	public static final String sulfurOreDict = "sulfur"; // TODO: find out what other mods use
+	public static final String saltpeterOreDict = "saltpeter"; // TODO: find out what other mods use
 
 	// modifiers
 	public static final RecipeModifier recipeModifier = new RecipeModifier();
@@ -191,6 +197,7 @@ public class Content
 		ender();
 		poison();
 		heads();
+		gunpowder();
 	}
 
 	public static void finish()
@@ -768,5 +775,28 @@ public class Content
 		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadSteve.copy(), "ddd", "dhd", "ddd", 'd', "dyeBrown", 'h', mobHeadBlank));
 		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadZombie.copy(), "ddd", "dhd", "ddd", 'd', "dyeGreen", 'h', mobHeadBlank));
 		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadCreeper.copy(), "ddd", "dhd", "ddd", 'd', "dyeLime", 'h', mobHeadBlank));
+	}
+
+	private static void gunpowder()
+	{
+		sulfur = new Item()
+				.setUnlocalizedName(ModInfo.MODID + ".sulfur")
+				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setTextureName(ModInfo.MODID_LOWER + ":sulfur");
+		GameRegistry.registerItem(sulfur, "sulfur");
+		OreDictionary.registerOre(sulfurOreDict, sulfur);
+
+		dropsModifier.addDropsToBlock(new BlockSpecifier(Blocks.netherrack), new DropSpecifier(new ItemStack(sulfur), 0.02f));
+
+		saltpeter = new Item()
+				.setUnlocalizedName(ModInfo.MODID + ".saltpeter")
+				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setTextureName(ModInfo.MODID_LOWER + ":saltpeter");
+		GameRegistry.registerItem(saltpeter, "saltpeter");
+		OreDictionary.registerOre(saltpeterOreDict, saltpeter);
+
+		dropsModifier.addDropsToBlock(new BlockSpecifier(Blocks.sandstone), new DropSpecifier(new ItemStack(saltpeter), 0.02f, 1, 3));
+
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.gunpowder), charcoal.copy(), sulfurOreDict, saltpeterOreDict));
 	}
 }

@@ -44,6 +44,8 @@ http://en.wikipedia.org/wiki/Ramie
 ### Gunpowder
 sulfur as a rare drop from netherrack + charcoal + saltpeter?
 http://en.wikipedia.org/wiki/Gunpowder
+http://en.wikipedia.org/wiki/Sodium_nitrate
+http://en.wikipedia.org/wiki/Caliche
 
 ### Rotten flesh
 rotten plants (half-composted plant matter)
