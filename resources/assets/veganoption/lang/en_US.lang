@@ -87,3 +87,7 @@ item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
 tile.VeganOption.rawEnder.name=Raw Ender
 fluid.tile.VeganOption.rawEnder=Raw Ender
 tile.VeganOption.enderRift.name=Ender Rift
+
+# poison
+item.VeganOption.falseMorel.name=False Morel
+item.VeganOption.falseMorelFermented.name=Fermented False Morel

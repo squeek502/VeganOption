@@ -8,6 +8,8 @@ import cpw.mods.fml.common.Loader;
 
 public class HarvestCraft
 {
+	// TODO: False Morel Soup
+
 	public static final boolean exists = Loader.isModLoaded("harvestcraft");
 	public static final String rootPackage = "com.pam.harvestcraft.";
 

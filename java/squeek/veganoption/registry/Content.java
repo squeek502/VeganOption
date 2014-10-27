@@ -22,6 +22,7 @@ import net.minecraft.item.ItemFishFood;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -131,6 +132,10 @@ public class Content
 	public static Block rawEnder;
 	public static Item bucketRawEnder;
 
+	// poison
+	public static Item falseMorel;
+	public static Item falseMorelFermented;
+
 	// oredict
 	public static final String leatherOreDict = "materialLeather";
 	public static final String woolOreDict = "materialBedding";
@@ -147,6 +152,8 @@ public class Content
 	public static final String fertilizerOreDict = "fertilizer";
 	public static final String pufferFishOreDict = "reagentWaterBreathing";
 	public static final String soapOreDict = "soap";
+	public static final String poisonousOreDict = "reagentPoisonous";
+	public static final String fermentedOreDict = "reagentFermented";
 
 	// modifiers
 	public static final RecipeModifier recipeModifier = new RecipeModifier();
@@ -172,6 +179,7 @@ public class Content
 		soap();
 		frozenBubble();
 		ender();
+		poison();
 	}
 
 	public static void finish()
@@ -696,5 +704,35 @@ public class Content
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.bucket));
 
 		GameRegistry.addShapelessRecipe(new ItemStack(Items.ender_pearl), new ItemStack(frozenBubble), new ItemStack(bucketRawEnder));
+	}
+
+	private static void poison()
+	{
+		OreDictionary.registerOre(poisonousOreDict, Items.spider_eye);
+		recipeModifier.convertInput(new ItemStack(Items.spider_eye), poisonousOreDict);
+		recipeModifier.excludeOutput(new ItemStack(Items.fermented_spider_eye));
+
+		OreDictionary.registerOre(fermentedOreDict, Items.fermented_spider_eye);
+		recipeModifier.convertInput(new ItemStack(Items.fermented_spider_eye), fermentedOreDict);
+
+		falseMorel = new ItemFood(2, 0.8F, false)
+				.setPotionEffect(Potion.poison.id, 5, 0, 1.0F)
+				.setPotionEffect(PotionHelper.spiderEyeEffect)
+				.setUnlocalizedName(ModInfo.MODID + ".falseMorel")
+				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setTextureName(ModInfo.MODID_LOWER + ":false_morel");
+		GameRegistry.registerItem(falseMorel, "falseMorel");
+		OreDictionary.registerOre(poisonousOreDict, falseMorel);
+
+		dropsModifier.addDropsToBlock(new BlockSpecifier(Blocks.mycelium), new DropSpecifier(new ItemStack(falseMorel), 0.15f));
+
+		falseMorelFermented = new Item()
+				.setPotionEffect(PotionHelper.fermentedSpiderEyeEffect)
+				.setUnlocalizedName(ModInfo.MODID + ".falseMorelFermented")
+				.setCreativeTab(CreativeTabs.tabBrewing)
+				.setTextureName(ModInfo.MODID_LOWER + ":false_morel_fermented");
+		GameRegistry.registerItem(falseMorelFermented, "falseMorelFermented");
+		OreDictionary.registerOre(fermentedOreDict, falseMorelFermented);
+		GameRegistry.addShapelessRecipe(new ItemStack(falseMorelFermented), new ItemStack(falseMorel), new ItemStack(Blocks.brown_mushroom), new ItemStack(Items.sugar));
 	}
 }
