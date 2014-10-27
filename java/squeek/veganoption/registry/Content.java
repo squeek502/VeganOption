@@ -62,6 +62,12 @@ public class Content
 {
 	// helper itemstacks for vanilla stuff
 	public static final ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
+	// {"skeleton", "wither", "zombie", "steve", "creeper"}
+	public static final ItemStack mobHeadSkeleton = new ItemStack(Items.skull, 1, 0);
+	public static final ItemStack mobHeadWitherSkeleton = new ItemStack(Items.skull, 1, 1);
+	public static final ItemStack mobHeadZombie = new ItemStack(Items.skull, 1, 2);
+	public static final ItemStack mobHeadSteve = new ItemStack(Items.skull, 1, 3);
+	public static final ItemStack mobHeadCreeper = new ItemStack(Items.skull, 1, 4);
 
 	// jute
 	public static BlockRettable juteBundled;
@@ -136,6 +142,10 @@ public class Content
 	public static Item falseMorel;
 	public static Item falseMorelFermented;
 
+	// heads
+	public static Item papierMache;
+	public static Item mobHeadBlank;
+
 	// oredict
 	public static final String leatherOreDict = "materialLeather";
 	public static final String woolOreDict = "materialBedding";
@@ -180,6 +190,7 @@ public class Content
 		frozenBubble();
 		ender();
 		poison();
+		heads();
 	}
 
 	public static void finish()
@@ -733,5 +744,29 @@ public class Content
 		GameRegistry.registerItem(falseMorelFermented, "falseMorelFermented");
 		OreDictionary.registerOre(fermentedOreDict, falseMorelFermented);
 		GameRegistry.addShapelessRecipe(new ItemStack(falseMorelFermented), new ItemStack(falseMorel), new ItemStack(Blocks.brown_mushroom), new ItemStack(Items.sugar));
+	}
+
+	private static void heads()
+	{
+		papierMache = new Item()
+				.setUnlocalizedName(ModInfo.MODID + ".papierMache")
+				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setTextureName(ModInfo.MODID_LOWER + ":papier_mache");
+		GameRegistry.registerItem(papierMache, "papierMache");
+		GameRegistry.addShapelessRecipe(new ItemStack(papierMache, 8), new ItemStack(Items.water_bucket), new ItemStack(potatoStarch), new ItemStack(Items.paper), new ItemStack(Items.paper), new ItemStack(Items.paper), new ItemStack(Items.paper));
+
+		// TODO: Make placeable?
+		mobHeadBlank = new Item()
+				.setUnlocalizedName(ModInfo.MODID + ".mobHeadBlank")
+				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setTextureName(ModInfo.MODID_LOWER + ":blank_mob_head");
+		GameRegistry.registerItem(mobHeadBlank, "mobHeadBlank");
+		GameRegistry.addShapedRecipe(new ItemStack(mobHeadBlank), "///", "/m/", "///", '/', new ItemStack(papierMache), 'm', new ItemStack(Blocks.melon_block));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadSkeleton.copy(), "ddd", "dhd", "ddd", 'd', "dyeLightGray", 'h', mobHeadBlank));
+		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadWitherSkeleton.copy(), "ddd", "dhd", "ddd", 'd', "dyeBlack", 'h', mobHeadBlank));
+		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadSteve.copy(), "ddd", "dhd", "ddd", 'd', "dyeBrown", 'h', mobHeadBlank));
+		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadZombie.copy(), "ddd", "dhd", "ddd", 'd', "dyeGreen", 'h', mobHeadBlank));
+		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadCreeper.copy(), "ddd", "dhd", "ddd", 'd', "dyeLime", 'h', mobHeadBlank));
 	}
 }

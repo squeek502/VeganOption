@@ -91,3 +91,7 @@ tile.VeganOption.enderRift.name=Ender Rift
 # poison
 item.VeganOption.falseMorel.name=False Morel
 item.VeganOption.falseMorelFermented.name=Fermented False Morel
+
+# mob heads
+item.VeganOption.papierMache.name=Papier-Mâché
+item.VeganOption.mobHeadBlank.name=Blank Mob Head
