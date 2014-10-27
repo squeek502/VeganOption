@@ -6,6 +6,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -24,7 +25,6 @@ public class EntityBubble extends EntityThrowable
 	public static final float FREEZING_TEMPERATURE = -15;
 	public static final int TEMPERATURE_CHECK_RADIUS = 3;
 
-	public int ticksElapsed = 0;
 	public int lifetime = RandomHelper.getRandomIntFromRange(LIFETIME_BASE, LIFETIME_MAX);
 	public float temperature;
 
@@ -66,7 +66,7 @@ public class EntityBubble extends EntityThrowable
 	@Override
 	public void onUpdate()
 	{
-		if (!this.worldObj.isRemote && (ticksElapsed >= lifetime || this.isInWater()))
+		if (!this.worldObj.isRemote && (ticksExisted >= lifetime || this.isInWater()))
 		{
 			pop();
 			return;
@@ -81,7 +81,7 @@ public class EntityBubble extends EntityThrowable
 			return;
 		}
 
-		if (!this.worldObj.isRemote && ticksElapsed % 10 == 0)
+		if (!this.worldObj.isRemote && ticksExisted % 10 == 0)
 		{
 			this.motionX += 0.1F * (RandomHelper.random.nextFloat() - 0.5F);
 			this.motionY += 0.1F * (RandomHelper.random.nextFloat() - 0.5F);
@@ -89,8 +89,6 @@ public class EntityBubble extends EntityThrowable
 		}
 
 		super.onUpdate();
-
-		ticksElapsed++;
 
 		this.motionX *= 0.9F;
 		this.motionY *= 0.9F;
@@ -168,4 +166,21 @@ public class EntityBubble extends EntityThrowable
 		return airTemperature;
 	}
 
+	@Override
+	public void readEntityFromNBT(NBTTagCompound tag)
+	{
+		super.readEntityFromNBT(tag);
+
+		temperature = tag.getFloat("temperature");
+		lifetime = tag.getInteger("lifetime");
+	}
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound tag)
+	{
+		super.writeEntityToNBT(tag);
+
+		tag.setFloat("temperature", temperature);
+		tag.setInteger("lifetime", lifetime);
+	}
 }
