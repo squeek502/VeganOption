@@ -68,11 +68,11 @@ tile.VeganOption.compost.name=Compost
 item.VeganOption.fertilizer.name=Fertilizer
 
 # soap
-item.VeganOption.bucketLyeWater.name=Lye Water Bucket
-tile.VeganOption.lyeWater.name=Lye Water
-fluid.tile.VeganOption.lyeWater=Lye Water
-death.attack.VeganOption.lyeWater=%1$s bathed in pure lye
-death.attack.VeganOption.lyeWater.player=%1$s bathed in pure lye whilst trying to escape %2$s
+item.VeganOption.bucketLyeWater.name=Wood Ash Lye Bucket
+tile.VeganOption.lyeWater.name=Wood Ash Lye
+fluid.tile.VeganOption.lyeWater=Wood Ash Lye
+death.attack.VeganOption.lyeWater=%1$s bathed in lye
+death.attack.VeganOption.lyeWater.player=%1$s bathed in lye whilst trying to escape %2$s
 item.VeganOption.soap.name=Soap
 item.VeganOption.soapSolution.name=Soap Solution
 

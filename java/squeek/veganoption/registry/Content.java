@@ -630,7 +630,7 @@ public class Content
 				.setContainerItem(Items.bucket);
 		GameRegistry.registerItem(bucketLyeWater, "bucketLyeWater");
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidLyeWater, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketLyeWater), new ItemStack(Items.bucket));
-		GameRegistry.addShapelessRecipe(new ItemStack(bucketLyeWater), charcoal, new ItemStack(Items.water_bucket));
+		GameRegistry.addShapelessRecipe(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket), charcoal, charcoal, charcoal);
 		craftingModifier.addInputsToRemoveForOutput(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket));
 
 		soap = new ItemSoap()
