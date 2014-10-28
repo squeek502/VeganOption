@@ -106,6 +106,9 @@ not sure what the potential uses would be; might be out of the scope of this mod
 
 Limit egg replacers to recipes with food outputs?
 
+Acacia trees as a alternative source for brown dye?
+http://en.wikipedia.org/wiki/Catechu
+
 ### Soap
 http://journeytoforever.org/biodiesel_ashlye.html
 http://www.motherearthnews.com/homesteading-and-livestock/how-to-make-soap-from-ashes-zmaz72jfzfre.aspx#axzz2RoPhB892
