@@ -6,7 +6,9 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import squeek.veganoption.blocks.BlockRettable;
+import squeek.veganoption.blocks.tiles.TileEntityComposter;
 
 public class Waila implements IWailaDataProvider
 {
@@ -25,15 +27,24 @@ public class Waila implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> toolTip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		BlockRettable blockRettable = (BlockRettable) accessor.getBlock();
-		float rettingPercent = (float) blockRettable.getRettingPercentFromMeta(accessor.getMetadata());
-		if (rettingPercent >= 1)
-			toolTip.add("Retted");
-		else
+		if (accessor.getBlock() instanceof BlockRettable)
 		{
-			toolTip.add("Retting : " + (int) (rettingPercent * 100f) + "%");
-			if (!blockRettable.canRet(accessor.getWorld(), accessor.getPosition().blockX, accessor.getPosition().blockY, accessor.getPosition().blockZ))
-				toolTip.add("Needs to be submerged in water");
+			BlockRettable blockRettable = (BlockRettable) accessor.getBlock();
+			float rettingPercent = (float) blockRettable.getRettingPercentFromMeta(accessor.getMetadata());
+			if (rettingPercent >= 1)
+				toolTip.add("Retted");
+			else
+			{
+				toolTip.add("Retting : " + (int) (rettingPercent * 100f) + "%");
+				if (!blockRettable.canRet(accessor.getWorld(), accessor.getPosition().blockX, accessor.getPosition().blockY, accessor.getPosition().blockZ))
+					toolTip.add("Needs to be submerged in water");
+			}
+		}
+		else if (accessor.getTileEntity() instanceof TileEntityComposter)
+		{
+			NBTTagCompound tag = accessor.getNBTData();
+			float compostingPercent = tag.getFloat("Compost");
+			toolTip.add(String.format("%s : %.0f %%", "Composting", compostingPercent * 100));
 		}
 		return toolTip;
 	}
@@ -49,5 +60,7 @@ public class Waila implements IWailaDataProvider
 		Waila instance = new Waila();
 
 		registrar.registerBodyProvider(instance, BlockRettable.class);
+		registrar.registerBodyProvider(instance, TileEntityComposter.class);
+		registrar.registerSyncedNBTKey("*", TileEntityComposter.class);
 	}
 }

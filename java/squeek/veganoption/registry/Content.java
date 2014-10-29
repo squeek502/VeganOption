@@ -34,6 +34,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.*;
 import squeek.veganoption.blocks.renderers.RenderEnderRift;
+import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.entities.EntityBubbleDispenserBehavior;
@@ -51,6 +52,7 @@ import squeek.veganoption.modifications.DropsModifier;
 import squeek.veganoption.modifications.DropsModifier.BlockSpecifier;
 import squeek.veganoption.modifications.DropsModifier.DropSpecifier;
 import squeek.veganoption.modifications.RecipeModifier;
+import squeek.veganoption.registry.CompostRegistry.FoodSpecifier;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -154,6 +156,7 @@ public class Content
 	public static final String leatherOreDict = "materialLeather";
 	public static final String woolOreDict = "materialBedding";
 	public static final String featherOreDict = "materialFeather";
+	public static final String bastFibreOreDict = "fibreBast";
 	public static final String milkOreDict = "listAllmilk"; // HarvestCraft's oredict entry
 	public static final String eggOreDict = "listAllegg"; // HarvestCraft's oredict entry
 	public static final String slimeballOreDict = "slimeball"; // Forge's oredict entry
@@ -170,6 +173,9 @@ public class Content
 	public static final String fermentedOreDict = "reagentFermented";
 	public static final String sulfurOreDict = "sulfur"; // TODO: find out what other mods use
 	public static final String saltpeterOreDict = "saltpeter"; // TODO: find out what other mods use
+	public static final String stickOreDict = "stickWood"; // Forge's oredict entry
+	public static final String leavesOreDict = "treeLeaves"; // Forge's oredict entry
+	public static final String saplingOreDict = "treeSapling"; // Forge's oredict entry
 
 	// modifiers
 	public static final RecipeModifier recipeModifier = new RecipeModifier();
@@ -203,6 +209,44 @@ public class Content
 	public static void finish()
 	{
 		recipeModifier.replaceRecipes();
+		registerCompostables();
+	}
+
+	private static void registerCompostables()
+	{
+		CompostRegistry.addBrown(stickOreDict);
+		CompostRegistry.addBrown(Items.paper);
+		CompostRegistry.addBrown(papierMache);
+		CompostRegistry.addBrown(bastFibreOreDict);
+		CompostRegistry.addBrown(charcoal);
+		// TODO: addBrown(sawdustOreDict);
+
+		CompostRegistry.addGreen(saplingOreDict);
+		CompostRegistry.addGreen(rottenPlants);
+		CompostRegistry.addGreen(juteStalk);
+		CompostRegistry.addGreen(Blocks.grass);
+		CompostRegistry.addGreen(Blocks.tallgrass);
+		CompostRegistry.addGreen(leavesOreDict);
+		CompostRegistry.addGreen(Blocks.pumpkin);
+		CompostRegistry.addGreen(Blocks.pumpkin_stem);
+		CompostRegistry.addGreen(Blocks.melon_block);
+		CompostRegistry.addGreen(Blocks.melon_stem);
+		CompostRegistry.addGreen(Blocks.vine);
+
+		CompostRegistry.blacklist(new FoodSpecifier()
+		{
+			@Override
+			public boolean matches(ItemStack itemStack)
+			{
+				// meat is bad for composting
+				if (itemStack.getItem() instanceof ItemFood && ((ItemFood) itemStack.getItem()).isWolfsFavoriteMeat())
+					return true;
+				else if (itemStack.getItem() instanceof ItemFishFood)
+					return true;
+				else
+					return false;
+			}
+		});
 	}
 
 	private static void jute()
@@ -212,7 +256,7 @@ public class Content
 				.setCreativeTab(CreativeTabs.tabMaterials)
 				.setTextureName(ModInfo.MODID_LOWER + ":jute_fibre");
 		GameRegistry.registerItem(juteFibre, "juteFibre");
-		OreDictionary.registerOre("fibreBast", new ItemStack(juteFibre));
+		OreDictionary.registerOre(bastFibreOreDict, new ItemStack(juteFibre));
 
 		juteStalk = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".juteStalk")
@@ -586,6 +630,7 @@ public class Content
 				.setCreativeTab(CreativeTabs.tabInventory)
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":composter");
 		GameRegistry.registerBlock(composter, "composter");
+		GameRegistry.registerTileEntity(TileEntityComposter.class, ModInfo.MODID + ".composter");
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(composter), "/c/", "/ /", '/', "stickWood", 'c', new ItemStack(Blocks.chest)));
 
 		rottenPlants = new ItemFood(4, 0.1F, true)
