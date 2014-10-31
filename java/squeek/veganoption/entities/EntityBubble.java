@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.BlockHelper.BlockPos;
 import squeek.veganoption.helpers.RandomHelper;
+import squeek.veganoption.helpers.TemperatureHelper;
 import squeek.veganoption.network.MessageBubblePop;
 import squeek.veganoption.network.NetworkHandler;
 import squeek.veganoption.registry.Content;
@@ -47,7 +48,7 @@ public class EntityBubble extends EntityThrowable
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.temperature = getBiomeTemperature(worldObj, (int) posX, (int) posY, (int) posZ);
+		this.temperature = TemperatureHelper.getBiomeTemperature(worldObj, (int) posX, (int) posY, (int) posZ);
 	}
 
 	@Override
@@ -134,15 +135,10 @@ public class EntityBubble extends EntityThrowable
 		pop();
 	}
 
-	public static float getBiomeTemperature(World world, int x, int y, int z)
-	{
-		final float FLOAT_TEMP_TO_CELSIUS = 20f;
-		return world.getBiomeGenForCoords(x, y).getFloatTemperature(x, y, z) * FLOAT_TEMP_TO_CELSIUS;
-	}
 
 	public static float getSurroundingAirTemperature(World world, double x, double y, double z)
 	{
-		float airTemperature = getBiomeTemperature(world, (int) x, (int) y, (int) z);
+		float airTemperature = TemperatureHelper.getBiomeTemperature(world, (int) x, (int) y, (int) z);
 
 		BlockPos[] surroundingBlocks = BlockHelper.getBlocksInRadiusAround(new BlockPos(world, (int) x, (int) y, (int) z), TEMPERATURE_CHECK_RADIUS);
 
