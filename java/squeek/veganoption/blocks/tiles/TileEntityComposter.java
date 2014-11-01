@@ -215,11 +215,11 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		return compostTemperature;
 	}
 
+	/**
+	 * @return float between 1.0 and -1.0, to be used as the direction/speed of temperature change
+	 */
 	public static float getTemperatureDeltaAtTime(float percentCooled)
 	{
-		// at 0-50% cooled, temperature increases (returns 1.0 - 0.0)
-		// at 50% cooled, zero temperature delta (returns 0.0)
-		// at 50-infinite% cooled, temperature decreases (returns 0.0 to -1.0)
 		return (float) (-2f / (1f + Math.exp(-percentCooled * 15f + 5f)) + 1f);
 	}
 
