@@ -3,10 +3,12 @@ package squeek.veganoption.blocks;
 import java.util.Random;
 import net.minecraft.block.BlockHay;
 import net.minecraft.item.Item;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.ColorHelper;
+import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -164,5 +166,17 @@ public class BlockRettable extends BlockHay
 	public int getMetaFromRettingStage(IBlockAccess world, int x, int y, int z, int rettingStage)
 	{
 		return (world.getBlockMetadata(x, y, z) & 12) + rettingStage;
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride()
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
+	{
+		return MathHelper.floor_float(getRettingPercent(world, x, y, z) * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH);
 	}
 }
