@@ -19,6 +19,7 @@ public class BlockComposter extends BlockContainer
 	public BlockComposter()
 	{
 		super(Material.wood);
+		this.setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
 	}
 
 	@Override
@@ -59,9 +60,45 @@ public class BlockComposter extends BlockContainer
 	}
 
 	@Override
+	public boolean hasComparatorInputOverride()
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
+	{
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null && tile instanceof TileEntityComposter)
+		{
+			return ((TileEntityComposter) tile).getComparatorSignalStrength(side);
+		}
+		return super.getComparatorInputOverride(world, x, y, z, side);
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
 		this.blockIcon = iconRegister.registerIcon("planks_oak");
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getRenderType()
+	{
+		return -1;
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
 	}
 }

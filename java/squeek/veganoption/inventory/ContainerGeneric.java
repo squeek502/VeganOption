@@ -16,6 +16,7 @@ public abstract class ContainerGeneric extends Container
 	public ContainerGeneric(IInventory inventory)
 	{
 		this.inventory = inventory;
+		onContainerOpened();
 	}
 
 	protected void addSlot(IInventory inventory, int xStart, int yStart)
@@ -265,5 +266,17 @@ public abstract class ContainerGeneric extends Container
 	public boolean canInteractWith(EntityPlayer player)
 	{
 		return inventory.isUseableByPlayer(player);
+	}
+
+	public void onContainerOpened()
+	{
+		inventory.openInventory();
+	}
+
+	@Override
+	public void onContainerClosed(EntityPlayer player)
+	{
+		inventory.closeInventory();
+		super.onContainerClosed(player);
 	}
 }

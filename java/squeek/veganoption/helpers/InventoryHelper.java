@@ -65,4 +65,25 @@ public class InventoryHelper
 			}
 		}
 	}
+
+	public static float getPercentInventoryFilled(IInventory inventory)
+	{
+		if (inventory == null || inventory.getSizeInventory() == 0)
+			return 0;
+
+		float filledPercent = 0.0F;
+
+		for (int slotNum = 0; slotNum < inventory.getSizeInventory(); ++slotNum)
+		{
+			ItemStack itemstack = inventory.getStackInSlot(slotNum);
+
+			if (itemstack != null)
+			{
+				filledPercent += (float) itemstack.stackSize / (float) Math.min(inventory.getInventoryStackLimit(), itemstack.getMaxStackSize());
+			}
+		}
+
+		filledPercent /= (float) inventory.getSizeInventory();
+		return filledPercent;
+	}
 }

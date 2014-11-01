@@ -14,16 +14,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemBucketMilk;
-import net.minecraft.item.ItemCloth;
-import net.minecraft.item.ItemFishFood;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -33,6 +28,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.*;
+import squeek.veganoption.blocks.renderers.RenderComposter;
 import squeek.veganoption.blocks.renderers.RenderEnderRift;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
@@ -631,6 +627,12 @@ public class Content
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":composter");
 		GameRegistry.registerBlock(composter, "composter");
 		GameRegistry.registerTileEntity(TileEntityComposter.class, ModInfo.MODID + ".composter");
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
+			RenderComposter composterRenderer = new RenderComposter();
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityComposter.class, composterRenderer);
+			MinecraftForgeClient.registerItemRenderer(ItemBlock.getItemFromBlock(composter), composterRenderer);
+		}
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(composter), "/c/", "/ /", '/', "stickWood", 'c', new ItemStack(Blocks.chest)));
 
 		rottenPlants = new ItemFood(4, 0.1F, true)

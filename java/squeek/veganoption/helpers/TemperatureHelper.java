@@ -18,11 +18,11 @@ public class TemperatureHelper
 
 	public static float celsiusToFahrenheit(float celsius)
 	{
-		return CELSIUS_TO_FAHRENHEIT_MULT * celsius + CELSIUS_TO_FARENHEIT_OFFSET;
+		return (CELSIUS_TO_FAHRENHEIT_MULT * celsius) + CELSIUS_TO_FARENHEIT_OFFSET;
 	}
 
 	public static float fahrenheitToCelsius(float fahrenheit)
 	{
-		return FAHRENHEIT_TO_CELSIUS_MULT * fahrenheit + FARENHEIT_TO_CELSIUS_OFFSET;
+		return FAHRENHEIT_TO_CELSIUS_MULT * (fahrenheit + FARENHEIT_TO_CELSIUS_OFFSET);
 	}
 }

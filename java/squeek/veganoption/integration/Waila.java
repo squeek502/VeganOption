@@ -43,8 +43,16 @@ public class Waila implements IWailaDataProvider
 		else if (accessor.getTileEntity() instanceof TileEntityComposter)
 		{
 			NBTTagCompound tag = accessor.getNBTData();
-			float compostingPercent = tag.getFloat("Compost");
-			toolTip.add(String.format("%s : %.0f %%", "Composting", compostingPercent * 100));
+
+			if (tag.getLong("Start") == TileEntityComposter.NOT_COMPOSTING)
+			{
+				toolTip.add("Empty");
+			}
+			else
+			{
+				toolTip.add(String.format("%s : %.0f%%", "Composting", tag.getFloat("Compost") * 100));
+				toolTip.add(String.format("%s : %.0f°C", "Temperature", tag.getFloat("Temperature")));
+			}
 		}
 		return toolTip;
 	}
@@ -61,6 +69,12 @@ public class Waila implements IWailaDataProvider
 
 		registrar.registerBodyProvider(instance, BlockRettable.class);
 		registrar.registerBodyProvider(instance, TileEntityComposter.class);
-		registrar.registerSyncedNBTKey("*", TileEntityComposter.class);
+		// necessary to allow specifying specific keys to sync
+		registrar.registerSyncedNBTKey("x", TileEntityComposter.class);
+		registrar.registerSyncedNBTKey("y", TileEntityComposter.class);
+		registrar.registerSyncedNBTKey("z", TileEntityComposter.class);
+		registrar.registerSyncedNBTKey("Compost", TileEntityComposter.class);
+		registrar.registerSyncedNBTKey("Temperature", TileEntityComposter.class);
+		registrar.registerSyncedNBTKey("Start", TileEntityComposter.class);
 	}
 }
