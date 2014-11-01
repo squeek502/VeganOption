@@ -215,18 +215,6 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		return compostTemperature;
 	}
 
-	/**
-	 * @param startTemperature temperature at the last aeration
-	 * @param percentCooled 0.0 meaning just aerated, 1.0 meaning fully cooled
-	 * @return temperature in degrees celcius that would be expected at this time
-	 */
-	public static float getExpectedTemperature(float startTemperature, float percentCooled)
-	{
-		// skewed curve that rises faster than it falls
-		float percentOfMaxTemperature = (float) (-Math.pow(Math.log(2.5f * percentCooled + 0.333f), 2) + 1);
-		return startTemperature + startTemperature * percentOfMaxTemperature;
-	}
-
 	public static float getTemperatureDeltaAtTime(float percentCooled)
 	{
 		// at 0-50% cooled, temperature increases (returns 1.0 - 0.0)
