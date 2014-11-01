@@ -81,12 +81,12 @@ public class CompostRegistry
 
 	public static void addGreen(Item item)
 	{
-		addGreen(new ItemStack(item));
+		addGreen(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	public static void addGreen(Block block)
 	{
-		addGreen(new ItemStack(block));
+		addGreen(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	public static void addGreen(ItemStack itemStack)

@@ -215,19 +215,24 @@ public class Content
 		CompostRegistry.addBrown(papierMache);
 		CompostRegistry.addBrown(bastFibreOreDict);
 		CompostRegistry.addBrown(charcoal);
+		CompostRegistry.addBrown(Blocks.deadbush);
 		// TODO: addBrown(sawdustOreDict);
 
 		CompostRegistry.addGreen(saplingOreDict);
 		CompostRegistry.addGreen(rottenPlants);
 		CompostRegistry.addGreen(juteStalk);
-		CompostRegistry.addGreen(Blocks.grass);
 		CompostRegistry.addGreen(Blocks.tallgrass);
+		CompostRegistry.addGreen(Blocks.double_plant);
 		CompostRegistry.addGreen(leavesOreDict);
 		CompostRegistry.addGreen(Blocks.pumpkin);
 		CompostRegistry.addGreen(Blocks.pumpkin_stem);
 		CompostRegistry.addGreen(Blocks.melon_block);
 		CompostRegistry.addGreen(Blocks.melon_stem);
 		CompostRegistry.addGreen(Blocks.vine);
+		CompostRegistry.addGreen(Blocks.yellow_flower);
+		CompostRegistry.addGreen(Blocks.red_flower);
+		CompostRegistry.addGreen(Blocks.brown_mushroom);
+		CompostRegistry.addGreen(Blocks.red_mushroom);
 
 		CompostRegistry.blacklist(new FoodSpecifier()
 		{
