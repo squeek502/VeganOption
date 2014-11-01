@@ -34,7 +34,7 @@ public class VeganOption
 		GuiHelper.init();
 		NetworkHandler.init();
 
-		FMLInterModComms.sendMessage("Waila", "register", "squeek.veganoption.integration.Waila.callbackRegister");
+		FMLInterModComms.sendMessage("Waila", "register", "squeek.veganoption.integration.waila.WailaRegistrar.register");
 	}
 
 	@EventHandler

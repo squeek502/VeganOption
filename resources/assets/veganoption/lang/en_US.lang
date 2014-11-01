@@ -2,6 +2,9 @@
 tile.VeganOption.juteBundled.name=Bundled Jute
 item.VeganOption.juteStalk.name=Jute Stalk
 item.VeganOption.juteFibre.name=Jute Fibre
+VeganOption.waila.retting=Retting
+VeganOption.waila.retting.not.submerged=Needs to be submerged in water
+VeganOption.waila.retted=Retted
 
 # burlap
 item.VeganOption.burlap.name=Burlap
@@ -66,6 +69,9 @@ item.VeganOption.composter.name=Composter
 tile.VeganOption.composter.name=Composter
 tile.VeganOption.compost.name=Compost
 item.VeganOption.fertilizer.name=Fertilizer
+VeganOption.waila.composter.empty=Empty
+VeganOption.waila.composter.composting=Composting
+VeganOption.waila.composter.temperature=Temperature
 
 # soap
 item.VeganOption.bucketLyeWater.name=Wood Ash Lye Bucket
