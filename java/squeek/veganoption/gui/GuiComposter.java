@@ -10,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.opengl.GL11;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.helpers.ColorHelper;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.inventory.ContainerComposter;
 import squeek.veganoption.registry.CompostRegistry;
@@ -71,8 +72,8 @@ public class GuiComposter extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRendererObj.drawString(this.inventory.hasCustomInventoryName() ? this.inventory.getInventoryName() : I18n.format(this.inventory.getInventoryName()), 8, 6, 4210752);
-		this.fontRendererObj.drawString(this.playerInventory.hasCustomInventoryName() ? this.playerInventory.getInventoryName() : I18n.format(this.playerInventory.getInventoryName()), 8, this.ySize - 96 + 2, 4210752);
+		this.fontRendererObj.drawString(this.inventory.hasCustomInventoryName() ? this.inventory.getInventoryName() : I18n.format(this.inventory.getInventoryName()), 8, 6, ColorHelper.DEFAULT_TEXT_COLOR);
+		this.fontRendererObj.drawString(this.playerInventory.hasCustomInventoryName() ? this.playerInventory.getInventoryName() : I18n.format(this.playerInventory.getInventoryName()), 8, this.ySize - 96 + 2, ColorHelper.DEFAULT_TEXT_COLOR);
 
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}

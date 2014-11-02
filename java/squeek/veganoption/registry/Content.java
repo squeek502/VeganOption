@@ -206,6 +206,7 @@ public class Content
 	{
 		recipeModifier.replaceRecipes();
 		registerCompostables();
+		registerRelationships();
 	}
 
 	private static void registerCompostables()
@@ -248,6 +249,18 @@ public class Content
 					return false;
 			}
 		});
+	}
+	
+	private static void registerRelationships()
+	{
+		// child, parent
+		RelationshipRegistry.addRelationship(new ItemStack(bucketRawEnder), new ItemStack(rawEnder));
+		RelationshipRegistry.addRelationship(new ItemStack(rawEnder), new ItemStack(bucketRawEnder));
+		RelationshipRegistry.addRelationship(new ItemStack(rawEnder), new ItemStack(enderRift));
+		RelationshipRegistry.addRelationship(new ItemStack(enderRift), new ItemStack(encrustedObsidian));
+		RelationshipRegistry.addRelationship(new ItemStack(juteFibre), new ItemStack(juteBundled));
+		RelationshipRegistry.addRelationship(new ItemStack(lyeWater), new ItemStack(bucketLyeWater));
+		RelationshipRegistry.addRelationship(new ItemStack(bucketLyeWater), new ItemStack(lyeWater));
 	}
 
 	private static void jute()
@@ -374,7 +387,7 @@ public class Content
 				return this.meta == (meta & 3);
 			}
 		};
-		dropsModifier.addDropsToBlock(jungleLeavesSpecifier, new DropSpecifier(new ItemStack(kapokTuft), 0.1f, 0, 2));
+		dropsModifier.addDropsToBlock(jungleLeavesSpecifier, new DropSpecifier(new ItemStack(kapokTuft), 0.07f, 1, 2));
 	}
 
 	private static void fauxFeather()
@@ -662,7 +675,7 @@ public class Content
 				.setCreativeTab(CreativeTabs.tabBlock)
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":compost");
 		GameRegistry.registerBlock(compost, "compost");
-		GameRegistry.addShapelessRecipe(new ItemStack(fertilizer, 12), new ItemStack(compost), new ItemStack(Items.bone));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(fertilizer, 8), new ItemStack(compost), saltpeterOreDict));
 	}
 
 	private static void soap()

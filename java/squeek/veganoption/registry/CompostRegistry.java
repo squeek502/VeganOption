@@ -2,6 +2,7 @@ package squeek.veganoption.registry;
 
 import java.util.ArrayList;
 import java.util.List;
+import squeek.veganoption.helpers.MiscHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -19,16 +20,6 @@ public class CompostRegistry
 		public abstract boolean matches(ItemStack itemStack);
 	}
 
-	public static boolean isItemStackInList(List<ItemStack> haystack, ItemStack needle)
-	{
-		for (ItemStack itemStack : haystack)
-		{
-			if (OreDictionary.itemMatches(itemStack, needle, false))
-				return true;
-		}
-		return false;
-	}
-
 	public static boolean isCompostable(ItemStack itemStack)
 	{
 		return isGreen(itemStack) || isBrown(itemStack);
@@ -36,12 +27,12 @@ public class CompostRegistry
 
 	public static boolean isBrown(ItemStack itemStack)
 	{
-		return isItemStackInList(browns, itemStack);
+		return MiscHelper.isItemStackInList(browns, itemStack);
 	}
 
 	public static boolean isGreen(ItemStack itemStack)
 	{
-		return isCompostableFood(itemStack) || isItemStackInList(greens, itemStack);
+		return isCompostableFood(itemStack) || MiscHelper.isItemStackInList(greens, itemStack);
 	}
 
 	public static boolean isCompostableFood(ItemStack itemStack)

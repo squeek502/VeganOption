@@ -40,6 +40,68 @@ public class DropsModifier
 		blockDrops.put(blockSpecifier, dropSpecifier);
 	}
 
+	public boolean dropExists(ItemStack itemStack)
+	{
+		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
+		{
+			if (OreDictionary.itemMatches(itemStack, blockDropSpecifier.getValue().itemStack, false))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasDrops(ItemStack itemStack)
+	{
+		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
+		{
+			BlockSpecifier block = blockDropSpecifier.getKey();
+			if (OreDictionary.itemMatches(itemStack, new ItemStack(block.block, 1, block.meta), false))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public List<DropInfo> getSubsetByDroppedItem(ItemStack itemStack)
+	{
+		List<DropInfo> subset = new ArrayList<DropInfo>();
+		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
+		{
+			if (OreDictionary.itemMatches(itemStack, blockDropSpecifier.getValue().itemStack, false))
+			{
+				subset.add(new DropInfo(blockDropSpecifier.getKey(), blockDropSpecifier.getValue()));
+			}
+		}
+		return subset;
+	}
+
+	public List<DropInfo> getSubsetByBlock(ItemStack itemStack)
+	{
+		List<DropInfo> subset = new ArrayList<DropInfo>();
+		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
+		{
+			BlockSpecifier block = blockDropSpecifier.getKey();
+			if (OreDictionary.itemMatches(itemStack, new ItemStack(block.block, 1, block.meta), false))
+			{
+				subset.add(new DropInfo(blockDropSpecifier.getKey(), blockDropSpecifier.getValue()));
+			}
+		}
+		return subset;
+	}
+
+	public List<DropInfo> getAllDrops()
+	{
+		List<DropInfo> subset = new ArrayList<DropInfo>();
+		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
+		{
+			subset.add(new DropInfo(blockDropSpecifier.getKey(), blockDropSpecifier.getValue()));
+		}
+		return subset;
+	}
+
 	public static class BlockSpecifier
 	{
 		public final Block block;
@@ -89,10 +151,10 @@ public class DropsModifier
 
 	public static class DropSpecifier
 	{
-		private final ItemStack itemStack;
-		private final float dropChance;
-		private final int dropsMin;
-		private final int dropsMax;
+		public final ItemStack itemStack;
+		public final float dropChance;
+		public final int dropsMin;
+		public final int dropsMax;
 
 		public DropSpecifier(ItemStack itemStack)
 		{
@@ -119,7 +181,7 @@ public class DropsModifier
 
 		public boolean shouldDrop(EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
 		{
-			return RandomHelper.random.nextFloat() < dropChance;
+			return RandomHelper.random.nextFloat() < dropChance && !isSilkTouching;
 		}
 
 		public int amountToDrop(EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
@@ -142,6 +204,18 @@ public class DropsModifier
 		public void modifyDrops(List<ItemStack> drops, EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
 		{
 			drops.addAll(getDrops(harvester, fortuneLevel, isSilkTouching));
+		}
+	}
+
+	public static class DropInfo
+	{
+		public DropSpecifier drop;
+		public BlockSpecifier dropper;
+
+		public DropInfo(BlockSpecifier dropper, DropSpecifier drop)
+		{
+			this.dropper = dropper;
+			this.drop = drop;
 		}
 	}
 

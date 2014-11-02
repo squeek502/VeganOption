@@ -2,6 +2,8 @@ package squeek.veganoption.helpers;
 
 public class ColorHelper
 {
+	public static final int DEFAULT_TEXT_COLOR = 0x404040;
+
 	public static float[] toNormalizedRGB(int color)
 	{
 		return toNormalizedRGBA(color | 255 << 24);
@@ -61,10 +63,10 @@ public class ColorHelper
 		int[] minColorRGBA = toRGBA(minColor);
 		int[] maxColorRGBA = toRGBA(maxColor);
 		int[] color = new int[]{
-			(int) (maxColorRGBA[0] * ratioOfMin + minColorRGBA[0] * ratioOfMax),
-			(int) (maxColorRGBA[1] * ratioOfMin + minColorRGBA[1] * ratioOfMax),
-			(int) (maxColorRGBA[2] * ratioOfMin + minColorRGBA[2] * ratioOfMax),
-			(int) (maxColorRGBA[3] * ratioOfMin + minColorRGBA[3] * ratioOfMax)
+		(int) (maxColorRGBA[0] * ratioOfMin + minColorRGBA[0] * ratioOfMax),
+		(int) (maxColorRGBA[1] * ratioOfMin + minColorRGBA[1] * ratioOfMax),
+		(int) (maxColorRGBA[2] * ratioOfMin + minColorRGBA[2] * ratioOfMax),
+		(int) (maxColorRGBA[3] * ratioOfMin + minColorRGBA[3] * ratioOfMax)
 		};
 
 		return fromRGBA(color[0], color[1], color[2], color[3]);

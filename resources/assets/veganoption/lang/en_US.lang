@@ -1,7 +1,9 @@
 # jute
 tile.VeganOption.juteBundled.name=Bundled Jute
+tile.VeganOption.juteBundled.nei.usage=In order to extract the fibre, jute must be first be retted (submerged under water)
 item.VeganOption.juteStalk.name=Jute Stalk
 item.VeganOption.juteFibre.name=Jute Fibre
+item.VeganOption.juteFibre.nei.crafting=Obtained by breaking fully retted Bundled Jute
 VeganOption.waila.retting=Retting
 VeganOption.waila.retting.not.submerged=Needs to be submerged in water
 VeganOption.waila.retted=Retted
@@ -85,10 +87,12 @@ item.VeganOption.soapSolution.name=Soap Solution
 # frozen bubble
 entity.VeganOption.bubble.name=Bubble
 item.VeganOption.frozenBubble.name=Frozen Bubble
+item.VeganOption.frozenBubble.nei.usage=Frozen bubbles can also be filled by placing them in raw ender
 item.VeganOption.frozenBubbleFilled.name=Frozen Bubble (Partially Filled)
 
 # raw ender
 tile.VeganOption.encrustedObsidian.name=Encrusted Obsidian
+tile.VeganOption.encrustedObsidian.nei.usage=A rift to The End can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center
 item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
 tile.VeganOption.rawEnder.name=Raw Ender
 fluid.tile.VeganOption.rawEnder=Raw Ender
