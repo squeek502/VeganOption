@@ -1,6 +1,7 @@
 package squeek.veganoption.blocks.tiles;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
-import scala.actors.threadpool.Arrays;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.InventoryHelper;
 import squeek.veganoption.helpers.MiscHelper;
@@ -187,7 +187,6 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	public void aerate()
 	{
 		// shuffle the inventory
-		@SuppressWarnings("unchecked")
 		List<ItemStack> itemList = Arrays.asList(inventoryItems);
 		Collections.shuffle(itemList);
 		for (int slotNum = 0; slotNum < getSizeInventory(); slotNum++)
