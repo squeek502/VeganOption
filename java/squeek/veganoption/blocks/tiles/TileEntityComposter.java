@@ -157,10 +157,13 @@ public class TileEntityComposter extends TileEntity implements IInventory
 				}
 			}
 			greenSlots.removeAll(rottenPlantSlots);
-			int randomGreen = greenSlots.get(RandomHelper.random.nextInt(greenSlots.size()));
+			if (greenSlots.size() > 0)
+			{
+				int randomGreen = greenSlots.get(RandomHelper.random.nextInt(greenSlots.size()));
 
-			setInventorySlotContents(randomGreen, new ItemStack(Content.rottenPlants));
-			return true;
+				setInventorySlotContents(randomGreen, new ItemStack(Content.rottenPlants));
+				return true;
+			}
 		}
 		else
 		{
