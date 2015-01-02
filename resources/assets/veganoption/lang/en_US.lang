@@ -48,6 +48,7 @@ item.VeganOption.bucketPumpkinSeedMilk.name=Pumpkin Seed Milk
 # egg replacers
 item.VeganOption.appleSauce.name=Apple Sauce
 item.VeganOption.potatoStarch.name=Potato Starch
+item.VeganOption.potatoStarch.nei.crafting=%1$s can be made by crushing a {item.potato.name} with a {tile.pistonBase.name}
 
 # resin
 item.VeganOption.resin.name=Resin
@@ -87,14 +88,15 @@ item.VeganOption.soapSolution.name=Soap Solution
 # frozen bubble
 entity.VeganOption.bubble.name=Bubble
 item.VeganOption.frozenBubble.name=Frozen Bubble
-item.VeganOption.frozenBubble.nei.usage=Frozen bubbles can also be filled by placing them in raw ender
+item.VeganOption.frozenBubble.nei.usage=A %1$s can be filled by placing it in {tile.VeganOption.rawEnder.name}
 item.VeganOption.frozenBubbleFilled.name=Frozen Bubble (Partially Filled)
 
 # raw ender
 tile.VeganOption.encrustedObsidian.name=Encrusted Obsidian
-tile.VeganOption.encrustedObsidian.nei.usage=A rift to The End can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center
+tile.VeganOption.encrustedObsidian.nei.usage=An {tile.VeganOption.enderRift.name} can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center
 item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
 tile.VeganOption.rawEnder.name=Raw Ender
+tile.VeganOption.rawEnder.nei.crafting=Water flowing through an {tile.VeganOption.enderRift.name} at night has a chance to be converted into %1$s. If this is done during the day, there will be consequences.
 fluid.tile.VeganOption.rawEnder=Raw Ender
 tile.VeganOption.enderRift.name=Ender Rift
 

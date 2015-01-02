@@ -22,10 +22,11 @@ public class NEIVeganOptionConfig implements IConfigureNEI
 	public void loadConfig()
 	{
 		// TODO: Make sure all the strings are localized
-		// TODO: Composter handler
 		API.registerRecipeHandler(new TextHandler());
 		API.registerUsageHandler(new TextHandler());
 		API.registerRecipeHandler(new DropsHandler());
 		API.registerUsageHandler(new DropsHandler());
+		API.registerRecipeHandler(new CompostHandler());
+		API.registerUsageHandler(new CompostHandler());
 	}
 }

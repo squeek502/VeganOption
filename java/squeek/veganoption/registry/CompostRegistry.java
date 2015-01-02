@@ -2,19 +2,31 @@ package squeek.veganoption.registry;
 
 import java.util.ArrayList;
 import java.util.List;
-import squeek.veganoption.helpers.MiscHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import squeek.veganoption.helpers.MiscHelper;
 
 public class CompostRegistry
 {
 	public static List<ItemStack> browns = new ArrayList<ItemStack>();
 	public static List<ItemStack> greens = new ArrayList<ItemStack>();
 	public static List<FoodSpecifier> uncompostableFoods = new ArrayList<FoodSpecifier>();
-	
+
+	public static void registerAllFoods()
+	{
+		for (Object obj : Item.itemRegistry)
+		{
+			ItemStack itemStack = new ItemStack((Item) obj);
+			if (isCompostableFood(itemStack))
+			{
+				addGreen(itemStack);
+			}
+		}
+	}
+
 	public abstract static class FoodSpecifier
 	{
 		public abstract boolean matches(ItemStack itemStack);
@@ -32,7 +44,7 @@ public class CompostRegistry
 
 	public static boolean isGreen(ItemStack itemStack)
 	{
-		return isCompostableFood(itemStack) || MiscHelper.isItemStackInList(greens, itemStack);
+		return MiscHelper.isItemStackInList(greens, itemStack);
 	}
 
 	public static boolean isCompostableFood(ItemStack itemStack)
@@ -89,7 +101,7 @@ public class CompostRegistry
 	{
 		greens.addAll(OreDictionary.getOres(oredictName));
 	}
-	
+
 	public static void blacklist(FoodSpecifier foodSpecifier)
 	{
 		uncompostableFoods.add(foodSpecifier);

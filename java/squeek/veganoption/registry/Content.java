@@ -152,23 +152,25 @@ public class Content
 	public static final String leatherOreDict = "materialLeather";
 	public static final String woolOreDict = "materialBedding";
 	public static final String featherOreDict = "materialFeather";
-	public static final String bastFibreOreDict = "fibreBast";
+	public static final String bastFibreOreDict = "materialFiber";
 	public static final String milkOreDict = "listAllmilk"; // HarvestCraft's oredict entry
 	public static final String eggOreDict = "listAllegg"; // HarvestCraft's oredict entry
 	public static final String slimeballOreDict = "slimeball"; // Forge's oredict entry
 	public static final String vegetableOilOreDict = "foodOliveoil"; // HarvestCraft's oredict entry
 	public static final String waxOreDict = "materialWax";
+	public static final String waxOreDictForestry = "itemBeeswax";
 	public static final String inkSacOreDict = "dyeBlack"; // Forge's oredict entry
-	public static final String plasticOreDict = "materialPlastic"; // TODO: use MFR's oredict entry (if it exists)
+	public static final String brownDyeOreDict = "dyeBrown"; // Forge's oredict entry
+	public static final String plasticOreDict = "sheetPlastic"; // MFR's oredict entry
 	public static final String plasticRodOreDict = "stickPlastic";
 	public static final String rottenOreDict = "materialRotten";
-	public static final String fertilizerOreDict = "fertilizer";
+	public static final String fertilizerOreDict = "fertilizerOrganic"; // IC2's oredict entry
 	public static final String pufferFishOreDict = "reagentWaterBreathing";
 	public static final String soapOreDict = "soap";
 	public static final String poisonousOreDict = "reagentPoisonous";
 	public static final String fermentedOreDict = "reagentFermented";
-	public static final String sulfurOreDict = "sulfur"; // TODO: find out what other mods use
-	public static final String saltpeterOreDict = "saltpeter"; // TODO: find out what other mods use
+	public static final String sulfurOreDict = "dustSulfur"; // This is what other mods use
+	public static final String saltpeterOreDict = "dustSaltpeter"; // This is what other mods use
 	public static final String stickOreDict = "stickWood"; // Forge's oredict entry
 	public static final String leavesOreDict = "treeLeaves"; // Forge's oredict entry
 	public static final String saplingOreDict = "treeSapling"; // Forge's oredict entry
@@ -226,9 +228,7 @@ public class Content
 		CompostRegistry.addGreen(Blocks.double_plant);
 		CompostRegistry.addGreen(leavesOreDict);
 		CompostRegistry.addGreen(Blocks.pumpkin);
-		CompostRegistry.addGreen(Blocks.pumpkin_stem);
 		CompostRegistry.addGreen(Blocks.melon_block);
-		CompostRegistry.addGreen(Blocks.melon_stem);
 		CompostRegistry.addGreen(Blocks.vine);
 		CompostRegistry.addGreen(Blocks.yellow_flower);
 		CompostRegistry.addGreen(Blocks.red_flower);
@@ -249,8 +249,10 @@ public class Content
 					return false;
 			}
 		});
+
+		CompostRegistry.registerAllFoods();
 	}
-	
+
 	private static void registerRelationships()
 	{
 		// child, parent
@@ -261,6 +263,8 @@ public class Content
 		RelationshipRegistry.addRelationship(new ItemStack(juteFibre), new ItemStack(juteBundled));
 		RelationshipRegistry.addRelationship(new ItemStack(lyeWater), new ItemStack(bucketLyeWater));
 		RelationshipRegistry.addRelationship(new ItemStack(bucketLyeWater), new ItemStack(lyeWater));
+		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(frozenBubble));
+		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(rawEnder));
 	}
 
 	private static void jute()
@@ -309,7 +313,7 @@ public class Content
 				.setCreativeTab(CreativeTabs.tabMaterials)
 				.setTextureName(ModInfo.MODID_LOWER + ":burlap");
 		GameRegistry.registerItem(burlap, "burlap");
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(burlap), "~~", "~~", '~', "fibreBast"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(burlap), "~~", "~~", '~', bastFibreOreDict));
 		OreDictionary.registerOre(leatherOreDict, new ItemStack(burlap));
 
 		burlapHelmet = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 0)
@@ -343,7 +347,7 @@ public class Content
 
 	private static void string()
 	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.string), "~~", '~', "fibreBast"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.string), "~~", '~', bastFibreOreDict));
 		GameRegistry.addShapedRecipe(new ItemStack(Items.string), "~~~", '~', kapokTuft);
 	}
 
@@ -401,7 +405,7 @@ public class Content
 				.setTextureName("feather");
 		GameRegistry.registerItem(fauxFeather, "fauxFeather");
 		OreDictionary.registerOre(featherOreDict, new ItemStack(fauxFeather));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(fauxFeather), new ItemStack(kapokTuft), "stickPlastic"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(fauxFeather), new ItemStack(kapokTuft), plasticRodOreDict));
 	}
 
 	private static void palliasse()
@@ -585,6 +589,7 @@ public class Content
 				.setTextureName(ModInfo.MODID_LOWER + ":vegetable_wax");
 		GameRegistry.registerItem(waxVegetable, "waxVegetable");
 		OreDictionary.registerOre(waxOreDict, new ItemStack(waxVegetable));
+		OreDictionary.registerOre(waxOreDictForestry, new ItemStack(waxVegetable));
 		for (ItemStack vegetableOil : OreDictionary.getOres(vegetableOilOreDict))
 		{
 			GameRegistry.addSmelting(vegetableOil.copy(), new ItemStack(waxVegetable), 0.2f);
@@ -651,7 +656,7 @@ public class Content
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityComposter.class, composterRenderer);
 			MinecraftForgeClient.registerItemRenderer(ItemBlock.getItemFromBlock(composter), composterRenderer);
 		}
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(composter), "/c/", "/ /", '/', "stickWood", 'c', new ItemStack(Blocks.chest)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(composter), "/c/", "/ /", '/', stickOreDict, 'c', new ItemStack(Blocks.chest)));
 
 		rottenPlants = new ItemFood(4, 0.1F, true)
 				.setPotionEffect(Potion.hunger.id, 30, 0, 0.8F)
@@ -667,6 +672,7 @@ public class Content
 				.setTextureName(ModInfo.MODID_LOWER + ":fertilizer");
 		GameRegistry.registerItem(fertilizer, "fertilizer");
 		OreDictionary.registerOre(fertilizerOreDict, fertilizer);
+		OreDictionary.registerOre(brownDyeOreDict, fertilizer);
 
 		compost = new BlockCompost()
 				.setHardness(0.5F)

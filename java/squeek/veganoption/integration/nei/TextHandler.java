@@ -44,10 +44,22 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 
 		this.isUsage = isUsage;
 		this.unlocalized = itemStack.getUnlocalizedName() + ".nei." + (isUsage ? "usage" : "crafting");
-		if (LangHelper.existsRaw(unlocalized))
-			this.text = LangHelper.translateRaw(unlocalized, itemStack.getDisplayName());
 		this.children = isUsage ? RelationshipRegistry.getChildren(itemStack) : null;
 		this.parents = !isUsage ? RelationshipRegistry.getParents(itemStack) : null;
+
+		if (LangHelper.existsRaw(unlocalized))
+			this.text = LangHelper.translateRaw(unlocalized, itemStack.getDisplayName());
+		else
+		{
+			if (!isUsage && parents != null && parents.size() == 1 && LangHelper.existsRaw(parents.get(0).getUnlocalizedName() + ".nei.usage"))
+			{
+				this.text = LangHelper.translateRaw(parents.get(0).getUnlocalizedName() + ".nei.usage", parents.get(0).getDisplayName());
+			}
+			else if (isUsage && children != null && children.size() == 1 && LangHelper.existsRaw(children.get(0).getUnlocalizedName() + ".nei.crafting"))
+			{
+				this.text = LangHelper.translateRaw(children.get(0).getUnlocalizedName() + ".nei.crafting", children.get(0).getDisplayName());
+			}
+		}
 	}
 
 	public boolean hasUsageText(ItemStack itemStack)
