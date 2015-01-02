@@ -18,6 +18,7 @@ public class BlockCompost extends Block
 	{
 		super(Material.ground);
 		this.setCreativeTab(CreativeTabs.tabBlock);
+		setHarvestLevel("shovel", 0);
 		setTickRandomly(true);
 	}
 
