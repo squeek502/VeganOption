@@ -2,11 +2,14 @@ package squeek.veganoption.integration.nei;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import squeek.veganoption.helpers.ColorHelper;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.LangHelper;
@@ -60,6 +63,23 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 				this.text = LangHelper.translateRaw(children.get(0).getUnlocalizedName() + ".nei.crafting", children.get(0).getDisplayName());
 			}
 		}
+
+		this.text = processText(text);
+	}
+
+	public String processText(String text)
+	{
+		if (text == null)
+			return null;
+
+		Matcher m = Pattern.compile("\\{([^\\}]+)\\}").matcher(text);
+		StringBuffer sb = new StringBuffer(text.length());
+		while (m.find())
+		{
+			m.appendReplacement(sb, StatCollector.translateToLocal(m.group(1)));
+		}
+		m.appendTail(sb);
+		return sb.toString();
 	}
 
 	public boolean hasUsageText(ItemStack itemStack)
@@ -107,7 +127,7 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 	@Override
 	public String getRecipeName()
 	{
-		return isUsage ? "Usage" : "Crafting";
+		return isUsage ? LangHelper.translate("nei.usage") : LangHelper.translate("nei.crafting");
 	}
 
 	@Override
@@ -127,12 +147,14 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 		int y = 22;
 		if (parents != null)
 		{
-			GuiDraw.drawString("Byproduct Of", WIDTH / 2 - GuiDraw.getStringWidth("Byproduct Of") / 2, y, ColorHelper.DEFAULT_TEXT_COLOR, false);
+			final String byproductOfString = LangHelper.translate("nei.byproduct.of");
+			GuiDraw.drawString(byproductOfString, WIDTH / 2 - GuiDraw.getStringWidth(byproductOfString) / 2, y, ColorHelper.DEFAULT_TEXT_COLOR, false);
 			y += fontRenderer.FONT_HEIGHT + GuiHelper.STANDARD_SLOT_WIDTH + PADDING;
 		}
 		if (children != null)
 		{
-			GuiDraw.drawString("Byproducts", WIDTH / 2 - GuiDraw.getStringWidth("Byproducts") / 2, y, ColorHelper.DEFAULT_TEXT_COLOR, false);
+			final String byproductsString = LangHelper.translate("nei.byproducts");
+			GuiDraw.drawString(byproductsString, WIDTH / 2 - GuiDraw.getStringWidth(byproductsString) / 2, y, ColorHelper.DEFAULT_TEXT_COLOR, false);
 			y += fontRenderer.FONT_HEIGHT + GuiHelper.STANDARD_SLOT_WIDTH + PADDING;
 		}
 		if (text != null)

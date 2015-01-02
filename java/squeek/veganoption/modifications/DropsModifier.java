@@ -44,7 +44,7 @@ public class DropsModifier
 	{
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
-			if (OreDictionary.itemMatches(itemStack, blockDropSpecifier.getValue().itemStack, false))
+			if (OreDictionary.itemMatches(blockDropSpecifier.getValue().itemStack, itemStack, false))
 			{
 				return true;
 			}
@@ -57,7 +57,7 @@ public class DropsModifier
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
 			BlockSpecifier block = blockDropSpecifier.getKey();
-			if (OreDictionary.itemMatches(itemStack, new ItemStack(block.block, 1, block.meta), false))
+			if (OreDictionary.itemMatches(new ItemStack(block.block, 1, block.meta), itemStack, false))
 			{
 				return true;
 			}
@@ -70,7 +70,7 @@ public class DropsModifier
 		List<DropInfo> subset = new ArrayList<DropInfo>();
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
-			if (OreDictionary.itemMatches(itemStack, blockDropSpecifier.getValue().itemStack, false))
+			if (OreDictionary.itemMatches(blockDropSpecifier.getValue().itemStack, itemStack, false))
 			{
 				subset.add(new DropInfo(blockDropSpecifier.getKey(), blockDropSpecifier.getValue()));
 			}
@@ -84,7 +84,7 @@ public class DropsModifier
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
 			BlockSpecifier block = blockDropSpecifier.getKey();
-			if (OreDictionary.itemMatches(itemStack, new ItemStack(block.block, 1, block.meta), false))
+			if (OreDictionary.itemMatches(new ItemStack(block.block, 1, block.meta), itemStack, false))
 			{
 				subset.add(new DropInfo(blockDropSpecifier.getKey(), blockDropSpecifier.getValue()));
 			}
@@ -106,16 +106,28 @@ public class DropsModifier
 	{
 		public final Block block;
 		public final int meta;
+		public final ItemStack neiItemStack;
 
 		public BlockSpecifier(Block block)
 		{
-			this(block, 0);
+			this(block, null);
+		}
+
+		public BlockSpecifier(Block block, ItemStack neiItemStack)
+		{
+			this(block, 0, neiItemStack);
 		}
 
 		public BlockSpecifier(Block block, int meta)
 		{
+			this(block, meta, null);
+		}
+
+		public BlockSpecifier(Block block, int meta, ItemStack neiItemStack)
+		{
 			this.block = block;
 			this.meta = meta;
+			this.neiItemStack = neiItemStack;
 		}
 
 		public boolean matches(Block block)
@@ -204,6 +216,35 @@ public class DropsModifier
 		public void modifyDrops(List<ItemStack> drops, EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
 		{
 			drops.addAll(getDrops(harvester, fortuneLevel, isSilkTouching));
+		}
+	}
+
+	// only shows in NEI, doesn't actually modify the drops
+	public static class NEIBlockSpecifier extends BlockSpecifier
+	{
+		public NEIBlockSpecifier(Block block, int meta, ItemStack neiItemStack)
+		{
+			super(block, meta, neiItemStack);
+		}
+
+		@Override
+		public boolean matches(IBlockAccess world, int x, int y, int z, Block block, int meta)
+		{
+			return false;
+		}
+	}
+
+	// only shows in NEI, doesn't actually modify the drops
+	public static class NEIDropSpecifier extends DropSpecifier
+	{
+		public NEIDropSpecifier(ItemStack itemStack, float dropChance, int dropsMin, int dropsMax)
+		{
+			super(itemStack, dropChance, dropsMin, dropsMax);
+		}
+
+		@Override
+		public void modifyDrops(List<ItemStack> drops, EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
+		{
 		}
 	}
 

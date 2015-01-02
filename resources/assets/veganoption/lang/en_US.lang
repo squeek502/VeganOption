@@ -71,6 +71,7 @@ item.VeganOption.rottenPlants.name=Rotten Plants
 item.VeganOption.composter.name=Composter
 tile.VeganOption.composter.name=Composter
 tile.VeganOption.compost.name=Compost
+tile.VeganOption.compost.nei.usage=%1$s provides passive improvement to adjacent farmland.
 item.VeganOption.fertilizer.name=Fertilizer
 VeganOption.waila.composter.empty=Empty
 VeganOption.waila.composter.composting=Composting
@@ -111,3 +112,11 @@ item.VeganOption.mobHeadBlank.name=Blank Mob Head
 # gunpowder
 item.VeganOption.sulfur.name=Sulfur
 item.VeganOption.saltpeter.name=Saltpeter
+
+# nei strings
+VeganOption.nei.byproduct.of=Byproduct Of
+VeganOption.nei.byproducts=Byproducts
+VeganOption.nei.usage=Usage
+VeganOption.nei.crafting=Crafting
+VeganOption.nei.drops=Drops
+VeganOption.nei.composting=Composting

@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.helpers.GuiHelper;
+import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.modifications.DropsModifier.BlockSpecifier;
 import squeek.veganoption.modifications.DropsModifier.DropInfo;
@@ -26,7 +27,6 @@ import codechicken.nei.recipe.ICraftingHandler;
 import codechicken.nei.recipe.IUsageHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 
-// TODO: Add jute fiber to this handler?
 public class DropsHandler extends TemplateRecipeHandler
 {
 	public static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
@@ -115,7 +115,7 @@ public class DropsHandler extends TemplateRecipeHandler
 	@Override
 	public String getRecipeName()
 	{
-		return "Drops";
+		return LangHelper.translate("nei.drops");
 	}
 
 	@Override
@@ -159,7 +159,8 @@ public class DropsHandler extends TemplateRecipeHandler
 			int x = recipePos.x - (GuiHelper.STANDARD_SLOT_WIDTH * 2);
 			int y = recipePos.y;
 			BlockSpecifier blockSpecifier = blockDropSpecifiers.get(recipe).dropper;
-			positionedStacks.add(new PositionedStack(new ItemStack(blockSpecifier.block, 1, blockSpecifier.meta), x, y, false));
+			ItemStack blockStack = blockSpecifier.neiItemStack != null ? blockSpecifier.neiItemStack : new ItemStack(blockSpecifier.block, 1, blockSpecifier.meta);
+			positionedStacks.add(new PositionedStack(blockStack, x, y, false));
 		}
 		return positionedStacks;
 	}
@@ -241,12 +242,22 @@ public class DropsHandler extends TemplateRecipeHandler
 		return currenttip;
 	}
 
-	@SuppressWarnings("unused")
+	@Override
+	public boolean mouseClicked(GuiRecipe gui, int button, int recipe)
+	{
+		if (button == 0)
+			return transferRect(gui, recipe, false);
+		else if (button == 1)
+			return transferRect(gui, recipe, true);
+
+		return false;
+	}
+
 	private boolean transferRect(GuiRecipe gui, int recipe, boolean usage)
 	{
 		Point offset = gui.getRecipePosition(recipe);
 		Point offsetOffset = getRecipePosition(recipe);
-		Point realOffset = new Point(offset.x + offsetOffset.x, offset.y + offsetOffset.y);
+		Point realOffset = new Point(offset.x + offsetOffset.x - WIDTH / 2, offset.y + offsetOffset.y - 12);
 		try
 		{
 			return (Boolean) transferRect.invoke(null, gui, transferRects, realOffset.x, realOffset.y, usage);

@@ -265,6 +265,7 @@ public class Content
 		RelationshipRegistry.addRelationship(new ItemStack(bucketLyeWater), new ItemStack(lyeWater));
 		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(frozenBubble));
 		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(rawEnder));
+		RelationshipRegistry.addRelationship(new ItemStack(potatoStarch), new ItemStack(Items.potato));
 	}
 
 	private static void jute()
@@ -291,6 +292,11 @@ public class Content
 		juteBundled.setHarvestLevel("axe", 0);
 		GameRegistry.registerBlock(juteBundled, "juteBundled");
 		GameRegistry.addShapedRecipe(new ItemStack(juteBundled), "///", "///", "///", '/', new ItemStack(juteStalk));
+
+		Content.dropsModifier.addDropsToBlock(
+			new DropsModifier.NEIBlockSpecifier(juteBundled, OreDictionary.WILDCARD_VALUE, new ItemStack(juteBundled, 1, juteBundled.numRettingStages)),
+			new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops)
+		);
 
 		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.double_plant, 3)
 		{
@@ -813,7 +819,15 @@ public class Content
 		GameRegistry.registerItem(falseMorel, "falseMorel");
 		OreDictionary.registerOre(poisonousOreDict, falseMorel);
 
-		dropsModifier.addDropsToBlock(new BlockSpecifier(Blocks.mycelium), new DropSpecifier(new ItemStack(falseMorel), 0.15f));
+		DropSpecifier dontDropWhenSilkTouching = new DropSpecifier(new ItemStack(falseMorel), 0.15f)
+		{
+			@Override
+			public boolean shouldDrop(EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
+			{
+				return !isSilkTouching && super.shouldDrop(harvester, fortuneLevel, isSilkTouching);
+			}
+		};
+		dropsModifier.addDropsToBlock(new BlockSpecifier(Blocks.mycelium), dontDropWhenSilkTouching);
 
 		falseMorelFermented = new Item()
 				.setPotionEffect(PotionHelper.fermentedSpiderEyeEffect)
@@ -834,7 +848,6 @@ public class Content
 		GameRegistry.registerItem(papierMache, "papierMache");
 		GameRegistry.addShapelessRecipe(new ItemStack(papierMache, 8), new ItemStack(Items.water_bucket), new ItemStack(potatoStarch), new ItemStack(Items.paper), new ItemStack(Items.paper), new ItemStack(Items.paper), new ItemStack(Items.paper));
 
-		// TODO: Make placeable?
 		mobHeadBlank = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".mobHeadBlank")
 				.setCreativeTab(CreativeTabs.tabMaterials)

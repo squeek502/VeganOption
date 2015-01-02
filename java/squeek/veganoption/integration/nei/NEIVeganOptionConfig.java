@@ -21,7 +21,6 @@ public class NEIVeganOptionConfig implements IConfigureNEI
 	@Override
 	public void loadConfig()
 	{
-		// TODO: Make sure all the strings are localized
 		API.registerRecipeHandler(new TextHandler());
 		API.registerUsageHandler(new TextHandler());
 		API.registerRecipeHandler(new DropsHandler());
