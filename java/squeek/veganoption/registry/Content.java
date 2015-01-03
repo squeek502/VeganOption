@@ -91,7 +91,9 @@ public class Content
 	public static ItemBedGeneric bedStrawItem;
 
 	// vegan milk
-	public static ItemBucketMilk bucketPumpkinSeedMilk;
+	public static Fluid fluidPumpkinSeedMilk;
+	public static Block pumpkinSeedMilk;
+	public static Item bucketPumpkinSeedMilk;
 
 	// egg replacers
 	public static Item potatoStarch;
@@ -266,6 +268,7 @@ public class Content
 		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(frozenBubble));
 		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(rawEnder));
 		RelationshipRegistry.addRelationship(new ItemStack(potatoStarch), new ItemStack(Items.potato));
+		RelationshipRegistry.addRelationship(new ItemStack(frozenBubble), new ItemStack(soapSolution));
 	}
 
 	private static void jute()
@@ -435,12 +438,21 @@ public class Content
 		OreDictionary.registerOre(milkOreDict, new ItemStack(Items.milk_bucket));
 		recipeModifier.convertInput(new ItemStack(Items.milk_bucket), milkOreDict);
 
-		bucketPumpkinSeedMilk = (ItemBucketMilk) new ItemBucketMilk()
+		fluidPumpkinSeedMilk = new Fluid(ModInfo.MODID + ".pumpkinSeedMilk");
+		FluidRegistry.registerFluid(fluidPumpkinSeedMilk);
+		pumpkinSeedMilk = new BlockPumpkinSeedMilk(fluidPumpkinSeedMilk)
+				.setBlockName(ModInfo.MODID + ".pumpkinSeedMilk");
+		fluidPumpkinSeedMilk.setBlock(pumpkinSeedMilk);
+		fluidPumpkinSeedMilk.setUnlocalizedName(pumpkinSeedMilk.getUnlocalizedName());
+		GameRegistry.registerBlock(pumpkinSeedMilk, "pumpkinSeedMilk");
+
+		bucketPumpkinSeedMilk = new ItemBucketGeneric(pumpkinSeedMilk)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketPumpkinSeedMilk")
-				.setContainerItem(Items.bucket)
-				.setTextureName("bucket_milk");
+				.setTextureName("bucket_milk")
+				.setContainerItem(Items.bucket);
 		GameRegistry.registerItem(bucketPumpkinSeedMilk, "bucketPumpkinSeedMilk");
 		OreDictionary.registerOre(milkOreDict, new ItemStack(bucketPumpkinSeedMilk));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPumpkinSeedMilk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketPumpkinSeedMilk), new ItemStack(Items.bucket));
 		GameRegistry.addShapelessRecipe(new ItemStack(bucketPumpkinSeedMilk), // output
 										new ItemStack(Items.water_bucket),
 										new ItemStack(Items.pumpkin_seeds),
