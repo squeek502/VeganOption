@@ -1,9 +1,9 @@
 # jute
 tile.VeganOption.juteBundled.name=Bundled Jute
-tile.VeganOption.juteBundled.nei.usage=In order to extract the fibre, jute must be first be retted (submerged under water)
+tile.VeganOption.juteBundled.nei.usage=In order to extract the {item.VeganOption.juteFibre.name}, %1$s must be first be retted (submerged in water)
 item.VeganOption.juteStalk.name=Jute Stalk
 item.VeganOption.juteFibre.name=Jute Fibre
-item.VeganOption.juteFibre.nei.crafting=Obtained by breaking fully retted Bundled Jute
+item.VeganOption.juteFibre.nei.crafting=Obtained by breaking fully retted {tile.VeganOption.juteBundled.name}
 VeganOption.waila.retting=Retting
 VeganOption.waila.retting.not.submerged=Needs to be submerged in water
 VeganOption.waila.retted=Retted
@@ -44,6 +44,7 @@ tile.VeganOption.bedStraw.name=Straw Bed
 
 # pumpkin seed milk
 item.VeganOption.bucketPumpkinSeedMilk.name=Pumpkin Seed Milk
+#TODO: item.VeganOption.bucketPumpkinSeedMilk.nei.usage=
 
 # egg replacers
 item.VeganOption.appleSauce.name=Apple Sauce
@@ -69,10 +70,12 @@ item.VeganOption.plasticRod.name=Plastic Rod
 # composting
 item.VeganOption.rottenPlants.name=Rotten Plants
 item.VeganOption.composter.name=Composter
+#TODO: item.VeganOption.composter.nei.usage=
 tile.VeganOption.composter.name=Composter
 tile.VeganOption.compost.name=Compost
-tile.VeganOption.compost.nei.usage=%1$s provides passive improvement to adjacent farmland.
+tile.VeganOption.compost.nei.usage=%1$s provides passive improvement to adjacent {tile.farmland.name}.
 item.VeganOption.fertilizer.name=Fertilizer
+tile.VeganOption.fertilizer.nei.usage=%1$s is a {item.dyePowder.white.name} alternative.
 VeganOption.waila.composter.empty=Empty
 VeganOption.waila.composter.composting=Composting
 VeganOption.waila.composter.temperature=Temperature
@@ -80,6 +83,7 @@ VeganOption.waila.composter.temperature=Temperature
 # soap
 item.VeganOption.bucketLyeWater.name=Wood Ash Lye Bucket
 tile.VeganOption.lyeWater.name=Wood Ash Lye
+#TODO: tile.VeganOption.lyeWater.nei.usage=
 fluid.tile.VeganOption.lyeWater=Wood Ash Lye
 death.attack.VeganOption.lyeWater=%1$s bathed in lye
 death.attack.VeganOption.lyeWater.player=%1$s bathed in lye whilst trying to escape %2$s
@@ -89,12 +93,13 @@ item.VeganOption.soapSolution.name=Soap Solution
 # frozen bubble
 entity.VeganOption.bubble.name=Bubble
 item.VeganOption.frozenBubble.name=Frozen Bubble
-item.VeganOption.frozenBubble.nei.usage=A %1$s can be filled by placing it in {tile.VeganOption.rawEnder.name}
+item.VeganOption.frozenBubble.nei.crafting=A %1$s can be created by using {item.VeganOption.soapSolution.name} to create a {entity.VeganOption.bubble.name} in a very cold area (surrounded by {tile.ice.name}/{tile.snow.name}).
+item.VeganOption.frozenBubble.nei.usage=A %1$s can be filled by placing it in {tile.VeganOption.rawEnder.name}.
 item.VeganOption.frozenBubbleFilled.name=Frozen Bubble (Partially Filled)
 
 # raw ender
 tile.VeganOption.encrustedObsidian.name=Encrusted Obsidian
-tile.VeganOption.encrustedObsidian.nei.usage=An {tile.VeganOption.enderRift.name} can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center
+tile.VeganOption.encrustedObsidian.nei.usage=An {tile.VeganOption.enderRift.name} can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center.
 item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
 tile.VeganOption.rawEnder.name=Raw Ender
 tile.VeganOption.rawEnder.nei.crafting=Water flowing through an {tile.VeganOption.enderRift.name} at night has a chance to be converted into %1$s. If this is done during the day, there will be consequences.
