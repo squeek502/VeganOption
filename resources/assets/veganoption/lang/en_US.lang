@@ -45,6 +45,8 @@ tile.VeganOption.bedStraw.name=Straw Bed
 # pumpkin seed milk
 item.VeganOption.bucketPumpkinSeedMilk.name=Pumpkin Seed Milk
 #TODO: item.VeganOption.bucketPumpkinSeedMilk.nei.usage=
+tile.VeganOption.pumpkinSeedMilk.name=Pumpkin Seed Milk
+fluid.tile.VeganOption.pumpkinSeedMilk=Pumpkin Seed Milk
 
 # egg replacers
 item.VeganOption.appleSauce.name=Apple Sauce
