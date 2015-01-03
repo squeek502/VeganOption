@@ -1,6 +1,9 @@
 package squeek.veganoption.helpers;
 
 import java.util.Collection;
+import cpw.mods.fml.common.registry.GameData;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -27,11 +30,39 @@ public class MiscHelper
 
 	public static ItemStack getMatchingItemStackFromList(Collection<ItemStack> haystack, ItemStack needle, boolean strict)
 	{
-		for (ItemStack itemStack : haystack)
+		if (haystack != null)
 		{
-			if (OreDictionary.itemMatches(itemStack, needle, strict))
-				return itemStack;
+			for (ItemStack itemStack : haystack)
+			{
+				if (OreDictionary.itemMatches(itemStack, needle, strict))
+					return itemStack;
+			}
 		}
+		return null;
+	}
+
+	public static Item getItemByName(String name)
+	{
+		return GameData.getItemRegistry().getObject(name);
+	}
+
+	public static Block getBlockByName(String name)
+	{
+		return GameData.getBlockRegistry().getObject(name);
+	}
+
+	public static ItemStack getItemStackByObjectName(String name)
+	{
+		Item item = getItemByName(name);
+
+		if (item != null)
+			return new ItemStack(item);
+
+		Block block = getBlockByName(name);
+
+		if (block != null)
+			return new ItemStack(block);
+
 		return null;
 	}
 }

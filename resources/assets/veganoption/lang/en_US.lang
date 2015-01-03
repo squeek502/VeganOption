@@ -1,9 +1,9 @@
 # jute
 tile.VeganOption.juteBundled.name=Bundled Jute
-tile.VeganOption.juteBundled.nei.usage=In order to extract the {item.VeganOption.juteFibre.name}, %1$s must be first be retted (submerged in water)
+tile.VeganOption.juteBundled.nei.usage=In order to extract the [[VeganOption:juteFibre]], %1$s must be first be retted (submerged in water).
 item.VeganOption.juteStalk.name=Jute Stalk
 item.VeganOption.juteFibre.name=Jute Fibre
-item.VeganOption.juteFibre.nei.crafting=Obtained by breaking fully retted {tile.VeganOption.juteBundled.name}
+item.VeganOption.juteFibre.nei.crafting=%1$s is obtained by breaking fully retted [[VeganOption:juteBundled]].
 VeganOption.waila.retting=Retting
 VeganOption.waila.retting.not.submerged=Needs to be submerged in water
 VeganOption.waila.retted=Retted
@@ -17,6 +17,7 @@ item.VeganOption.bootsBurlap.name=Burlap Boots
 
 # kapok
 tile.VeganOption.kapok.name=Kapok Block
+tile.VeganOption.kapok.nei.usage=A %1$s is a [[minecraft:wool]] alternative.
 tile.VeganOption.kapok.white.name=Kapok Block
 tile.VeganOption.kapok.orange.name=Orange Kapok Block
 tile.VeganOption.kapok.magenta.name=Magenta Kapok Block
@@ -43,15 +44,15 @@ item.VeganOption.bedStraw.name=Straw Bed
 tile.VeganOption.bedStraw.name=Straw Bed
 
 # pumpkin seed milk
-item.VeganOption.bucketPumpkinSeedMilk.name=Pumpkin Seed Milk
-#TODO: item.VeganOption.bucketPumpkinSeedMilk.nei.usage=
+item.VeganOption.bucketPumpkinSeedMilk.name=Pumpkin Seed Milk Bucket
+item.VeganOption.bucketPumpkinSeedMilk.nei.usage=If you're looking for the curative effects that Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead
 tile.VeganOption.pumpkinSeedMilk.name=Pumpkin Seed Milk
 fluid.tile.VeganOption.pumpkinSeedMilk=Pumpkin Seed Milk
 
 # egg replacers
 item.VeganOption.appleSauce.name=Apple Sauce
 item.VeganOption.potatoStarch.name=Potato Starch
-item.VeganOption.potatoStarch.nei.crafting=%1$s can be made by crushing a {item.potato.name} with a {tile.pistonBase.name}
+item.VeganOption.potatoStarch.nei.crafting=%1$s can be made by crushing a [[minecraft:potato]] with a [[minecraft:piston]]
 
 # resin
 item.VeganOption.resin.name=Resin
@@ -62,6 +63,7 @@ item.VeganOption.oilSunflower.name=Sunflower Oil
 
 # vegetable oil ink
 item.VeganOption.inkVegetableOil.name=Vegetable Oil Ink
+item.VeganOption.inkVegetableOil.nei.usage=%1$s is a [[minecraft:dye:0]] alternative.
 item.VeganOption.waxVegetable.name=Vegetable Wax
 item.VeganOption.rosin.name=Rosin
 
@@ -75,9 +77,9 @@ item.VeganOption.composter.name=Composter
 #TODO: item.VeganOption.composter.nei.usage=
 tile.VeganOption.composter.name=Composter
 tile.VeganOption.compost.name=Compost
-tile.VeganOption.compost.nei.usage=%1$s provides passive improvement to adjacent {tile.farmland.name}.
+tile.VeganOption.compost.nei.usage=%1$s provides passive improvement to adjacent [[minecraft:farmland]].
 item.VeganOption.fertilizer.name=Fertilizer
-tile.VeganOption.fertilizer.nei.usage=%1$s is a {item.dyePowder.white.name} alternative.
+item.VeganOption.fertilizer.nei.usage=%1$s is a [[minecraft:dye:15]] alternative.
 VeganOption.waila.composter.empty=Empty
 VeganOption.waila.composter.composting=Composting
 VeganOption.waila.composter.temperature=Temperature
@@ -85,31 +87,34 @@ VeganOption.waila.composter.temperature=Temperature
 # soap
 item.VeganOption.bucketLyeWater.name=Wood Ash Lye Bucket
 tile.VeganOption.lyeWater.name=Wood Ash Lye
-#TODO: tile.VeganOption.lyeWater.nei.usage=
+tile.VeganOption.lyeWater.nei.usage=Warning: %1$s is corrosive.
 fluid.tile.VeganOption.lyeWater=Wood Ash Lye
 death.attack.VeganOption.lyeWater=%1$s bathed in lye
 death.attack.VeganOption.lyeWater.player=%1$s bathed in lye whilst trying to escape %2$s
 item.VeganOption.soap.name=Soap
+item.VeganOption.soap.nei.usage=When %1$s is used, it will remove all status effects from the player.
 item.VeganOption.soapSolution.name=Soap Solution
 
 # frozen bubble
 entity.VeganOption.bubble.name=Bubble
 item.VeganOption.frozenBubble.name=Frozen Bubble
-item.VeganOption.frozenBubble.nei.crafting=A %1$s can be created by using {item.VeganOption.soapSolution.name} to create a {entity.VeganOption.bubble.name} in a very cold area (surrounded by {tile.ice.name}/{tile.snow.name}).
-item.VeganOption.frozenBubble.nei.usage=A %1$s can be filled by placing it in {tile.VeganOption.rawEnder.name}.
+item.VeganOption.frozenBubble.nei.crafting=A %1$s can be created by using [[VeganOption:soapSolution]] to create a {entity.VeganOption.bubble.name} in a very cold area (surrounded by [[minecraft:ice]]/[[minecraft:snow]]).
 item.VeganOption.frozenBubbleFilled.name=Frozen Bubble (Partially Filled)
+item.VeganOption.frozenBubbleFilled.nei.crafting=A %1$s can be created by placing a [[VeganOption:frozenBubble]] in [[VeganOption:rawEnder]].
+item.VeganOption.frozenBubbleFilled.nei.usage=A %1$s can be turned into an [[minecraft:ender_pearl]] by filling it completely with [[VeganOption:rawEnder]].
 
 # raw ender
 tile.VeganOption.encrustedObsidian.name=Encrusted Obsidian
-tile.VeganOption.encrustedObsidian.nei.usage=An {tile.VeganOption.enderRift.name} can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center.
+tile.VeganOption.encrustedObsidian.nei.usage=An [[VeganOption:enderRift]] can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center.
 item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
 tile.VeganOption.rawEnder.name=Raw Ender
-tile.VeganOption.rawEnder.nei.crafting=Water flowing through an {tile.VeganOption.enderRift.name} at night has a chance to be converted into %1$s. If this is done during the day, there will be consequences.
+tile.VeganOption.rawEnder.nei.crafting=Water flowing through an [[VeganOption:enderRift]] at night has a chance to be converted into %1$s. If this is done during the day, there will be consequences.
 fluid.tile.VeganOption.rawEnder=Raw Ender
 tile.VeganOption.enderRift.name=Ender Rift
 
 # poison
 item.VeganOption.falseMorel.name=False Morel
+item.VeganOption.falseMorel.nei.usage=A %1$s is a toxic mushroom that can be used as a [[minecraft:spider_eye]] alternative.
 item.VeganOption.falseMorelFermented.name=Fermented False Morel
 
 # mob heads
@@ -127,3 +132,4 @@ VeganOption.nei.usage=Usage
 VeganOption.nei.crafting=Crafting
 VeganOption.nei.drops=Drops
 VeganOption.nei.composting=Composting
+VeganOption.nei.references=References
