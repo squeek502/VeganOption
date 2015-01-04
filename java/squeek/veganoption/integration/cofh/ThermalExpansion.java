@@ -12,6 +12,9 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class ThermalExpansion implements IIntegrator
 {
+	public static final int RESONANT_ENDER_PER_PEARL = FluidContainerRegistry.BUCKET_VOLUME / 4;
+	public static final String RESONANT_ENDER_FLUID_NAME = "ender";
+
 	@Override
 	public void preInit()
 	{
@@ -20,8 +23,8 @@ public class ThermalExpansion implements IIntegrator
 	@Override
 	public void init()
 	{
-		addTransposerFill(4000, new ItemStack(Content.frozenBubble), new ItemStack(Items.ender_pearl), new FluidStack(Content.fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), true);
-		addTransposerFill(4000, new ItemStack(Content.frozenBubble), new ItemStack(Items.ender_pearl), FluidRegistry.getFluidStack("ender", FluidContainerRegistry.BUCKET_VOLUME / 4), false);
+		addTransposerFill(4000, new ItemStack(Content.frozenBubble), new ItemStack(Items.ender_pearl), new FluidStack(Content.fluidRawEnder, Content.RAW_ENDER_PER_PEARL), true);
+		addTransposerFill(4000, new ItemStack(Content.frozenBubble), new ItemStack(Items.ender_pearl), FluidRegistry.getFluidStack(RESONANT_ENDER_FLUID_NAME, RESONANT_ENDER_PER_PEARL), false);
 	}
 
 	@Override
