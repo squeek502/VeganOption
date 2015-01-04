@@ -3,16 +3,17 @@ package squeek.veganoption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import squeek.veganoption.helpers.GuiHelper;
+import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.network.NetworkHandler;
 import squeek.veganoption.registry.Content;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "after:*")
+@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "")
 public class VeganOption
 {
 	public static final Logger Log = LogManager.getLogger(ModInfo.MODID);
@@ -21,11 +22,10 @@ public class VeganOption
 	public static VeganOption instance;
 
 	@EventHandler
-	public void preInit(FMLInitializationEvent event)
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		Content.create();
-
-		FMLInterModComms.sendMessage("VersionChecker", "addVersionCheck", "http://www.ryanliptak.com/minecraft/versionchecker/squeek502/VeganOption");
+		IntegrationHandler.preInit();
 	}
 
 	@EventHandler
@@ -33,13 +33,13 @@ public class VeganOption
 	{
 		GuiHelper.init();
 		NetworkHandler.init();
-
-		FMLInterModComms.sendMessage("Waila", "register", "squeek.veganoption.integration.waila.WailaRegistrar.register");
+		IntegrationHandler.init();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		Content.finish();
+		IntegrationHandler.postInit();
 	}
 }

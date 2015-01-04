@@ -35,7 +35,8 @@ import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.entities.EntityBubbleDispenserBehavior;
 import squeek.veganoption.helpers.ConstantHelper;
-import squeek.veganoption.integration.HarvestCraft;
+import squeek.veganoption.integration.IntegrationHandler;
+import squeek.veganoption.integration.pams.HarvestCraft;
 import squeek.veganoption.items.ItemBedGeneric;
 import squeek.veganoption.items.ItemBucketGeneric;
 import squeek.veganoption.items.ItemFertilizer;
@@ -137,6 +138,7 @@ public class Content
 	public static Fluid fluidRawEnder;
 	public static Block rawEnder;
 	public static Item bucketRawEnder;
+	public static int RAW_ENDER_PER_PEARL = FluidContainerRegistry.BUCKET_VOLUME;
 
 	// poison
 	public static Item falseMorel;
@@ -265,10 +267,14 @@ public class Content
 		RelationshipRegistry.addRelationship(new ItemStack(juteFibre), new ItemStack(juteBundled));
 		RelationshipRegistry.addRelationship(new ItemStack(lyeWater), new ItemStack(bucketLyeWater));
 		RelationshipRegistry.addRelationship(new ItemStack(bucketLyeWater), new ItemStack(lyeWater));
-		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(frozenBubble));
-		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(rawEnder));
+		RelationshipRegistry.addRelationship(new ItemStack(frozenBubble, 1, 1), new ItemStack(frozenBubble));
+		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(frozenBubble, 1, 1));
+		RelationshipRegistry.addRelationship(new ItemStack(frozenBubble, 1, 1), new ItemStack(rawEnder));
 		RelationshipRegistry.addRelationship(new ItemStack(potatoStarch), new ItemStack(Items.potato));
+		RelationshipRegistry.addRelationship(new ItemStack(potatoStarch), new ItemStack(Blocks.piston));
 		RelationshipRegistry.addRelationship(new ItemStack(frozenBubble), new ItemStack(soapSolution));
+		RelationshipRegistry.addRelationship(new ItemStack(bucketPumpkinSeedMilk), new ItemStack(pumpkinSeedMilk));
+		RelationshipRegistry.addRelationship(new ItemStack(pumpkinSeedMilk), new ItemStack(bucketPumpkinSeedMilk));
 	}
 
 	private static void jute()
@@ -297,9 +303,9 @@ public class Content
 		GameRegistry.addShapedRecipe(new ItemStack(juteBundled), "///", "///", "///", '/', new ItemStack(juteStalk));
 
 		Content.dropsModifier.addDropsToBlock(
-			new DropsModifier.NEIBlockSpecifier(juteBundled, OreDictionary.WILDCARD_VALUE, new ItemStack(juteBundled, 1, juteBundled.numRettingStages)),
-			new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops)
-		);
+												new DropsModifier.NEIBlockSpecifier(juteBundled, OreDictionary.WILDCARD_VALUE, new ItemStack(juteBundled, 1, juteBundled.numRettingStages)),
+												new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops)
+				);
 
 		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.double_plant, 3)
 		{
@@ -473,7 +479,7 @@ public class Content
 		OreDictionary.registerOre(eggOreDict, new ItemStack(Items.egg));
 		recipeModifier.convertInput(new ItemStack(Items.egg), eggOreDict);
 
-		if (HarvestCraft.exists)
+		if (IntegrationHandler.modExists(IntegrationHandler.MODID_HARVESTCRAFT))
 		{
 			appleSauce = HarvestCraft.getItem("applesauceItem");
 		}
@@ -525,17 +531,15 @@ public class Content
 
 	private static void vegetableOil()
 	{
-		if (HarvestCraft.exists)
+		seedSunflower = new ItemFood(1, 0.05f, false)
+				.setUnlocalizedName(ModInfo.MODID + ".seedSunflower")
+				.setCreativeTab(CreativeTabs.tabFood)
+				.setTextureName(ModInfo.MODID_LOWER + ":sunflower_seeds");
+		GameRegistry.registerItem(seedSunflower, "seedSunflower");
+
+		if (IntegrationHandler.modExists(IntegrationHandler.MODID_HARVESTCRAFT))
 		{
 			seedSunflower = HarvestCraft.getItem("sunflowerseedsItem");
-		}
-		else
-		{
-			seedSunflower = new ItemFood(1, 0.05f, false)
-					.setUnlocalizedName(ModInfo.MODID + ".seedSunflower")
-					.setCreativeTab(CreativeTabs.tabFood)
-					.setTextureName(ModInfo.MODID_LOWER + ":sunflower_seeds");
-			GameRegistry.registerItem(seedSunflower, "seedSunflower");
 		}
 
 		BlockSpecifier sunflowerTopSpecifier = new BlockSpecifier(Blocks.double_plant, 0)
@@ -583,7 +587,7 @@ public class Content
 
 	public static void registerOil(ItemStack output, ItemStack... inputs)
 	{
-		ItemStack oilPresser = !HarvestCraft.exists ? new ItemStack(Blocks.heavy_weighted_pressure_plate) : new ItemStack(HarvestCraft.getItem("juicerItem"));
+		ItemStack oilPresser = !IntegrationHandler.modExists(IntegrationHandler.MODID_HARVESTCRAFT) ? new ItemStack(Blocks.heavy_weighted_pressure_plate) : new ItemStack(HarvestCraft.getItem("juicerItem"));
 		List<ItemStack> recipeInputs = new ArrayList<ItemStack>(Arrays.asList(inputs));
 		recipeInputs.add(0, oilPresser);
 		if (output.getItem().hasContainerItem(output))
@@ -591,7 +595,7 @@ public class Content
 			recipeInputs.add(output.getItem().getContainerItem(output));
 		}
 		GameRegistry.addShapelessRecipe(output, (Object[]) recipeInputs.toArray(new ItemStack[recipeInputs.size()]));
-		if (!HarvestCraft.exists)
+		if (!IntegrationHandler.modExists(IntegrationHandler.MODID_HARVESTCRAFT))
 		{
 			craftingModifier.addInputsToKeepForOutput(output, oilPresser);
 		}
@@ -794,7 +798,10 @@ public class Content
 		}
 		GameRegistry.registerTileEntity(TileEntityEnderRift.class, ModInfo.MODID + ".enderRift");
 
-		fluidRawEnder = new Fluid(ModInfo.MODID + ".rawEnder");
+		fluidRawEnder = new Fluid(ModInfo.MODID + ".rawEnder")
+				.setLuminosity(3)
+				.setViscosity(3000)
+				.setDensity(4000);
 		FluidRegistry.registerFluid(fluidRawEnder);
 		rawEnder = new BlockRawEnder(fluidRawEnder)
 				.setBlockName(ModInfo.MODID + ".rawEnder");

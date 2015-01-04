@@ -1,16 +1,15 @@
-package squeek.veganoption.integration;
+package squeek.veganoption.integration.pams;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import net.minecraft.item.Item;
 import squeek.veganoption.VeganOption;
-import cpw.mods.fml.common.Loader;
+import squeek.veganoption.integration.IIntegrator;
 
-public class HarvestCraft
+public class HarvestCraft implements IIntegrator
 {
 	// TODO: False Morel Soup
 
-	public static final boolean exists = Loader.isModLoaded("harvestcraft");
 	public static final String rootPackage = "com.pam.harvestcraft.";
 
 	public static HashMap<String, Item> itemCache = new HashMap<String, Item>();
@@ -18,17 +17,14 @@ public class HarvestCraft
 	public static Class<?> ItemRegistry;
 	static
 	{
-		if (exists)
+		try
 		{
-			try
-			{
-				ItemRegistry = Class.forName(rootPackage + "ItemRegistry");
-			}
-			catch (Exception e)
-			{
-				VeganOption.Log.error("Something went wrong when initializing HarvestCraft integration:");
-				e.printStackTrace();
-			}
+			ItemRegistry = Class.forName(rootPackage + "ItemRegistry");
+		}
+		catch (Exception e)
+		{
+			VeganOption.Log.error("Something went wrong when initializing HarvestCraft integration:");
+			e.printStackTrace();
 		}
 	}
 
@@ -48,5 +44,20 @@ public class HarvestCraft
 			}
 		}
 		return item;
+	}
+
+	@Override
+	public void preInit()
+	{
+	}
+
+	@Override
+	public void init()
+	{
+	}
+
+	@Override
+	public void postInit()
+	{
 	}
 }
