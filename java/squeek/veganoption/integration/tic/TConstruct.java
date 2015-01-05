@@ -11,11 +11,15 @@ import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.IIntegrator;
 import squeek.veganoption.integration.IntegrationHandler;
+import squeek.veganoption.registry.CompostRegistry;
+import squeek.veganoption.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.registry.Content;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class TConstruct implements IIntegrator
 {
+	public static final String modID = IntegrationHandler.MODID_TINKERS_CONSTRUCT;
+
 	public static final int MATID_PLASTIC = 1000; // what MFR uses
 	public static final String MATNAME_PLASTIC = "Plastic"; // what MFR uses
 	/**
@@ -24,7 +28,11 @@ public class TConstruct implements IIntegrator
 	 * by the addPartBuilderMaterial IMC (in either VO or MFR)
 	 */
 	public static final String KEY_PLASTICROD_MATERIALSET = "BioplasticRodSet";
-	public static final String ITEMNAME_TOOLROD = IntegrationHandler.MODID_TINKERS_CONSTRUCT + ":toolRod";
+
+	public static final String ITEMNAME_TOOLROD = modID + ":toolRod";
+	public static final String ITEMNAME_JERKY = modID + ":jerky";
+	public static final String ITEMNAME_GOLDENHEAD = modID + ":goldHead";
+	public static final String ITEMNAME_DIAMONDAPPLE = modID + ":diamondApple";
 
 	@Override
 	public void preInit()
@@ -33,6 +41,27 @@ public class TConstruct implements IIntegrator
 
 	@Override
 	public void init()
+	{
+		registerPlasticToolMaterial();
+
+		CompostRegistry.blacklist(new FoodSpecifier()
+		{
+			@Override
+			public boolean matches(ItemStack itemStack)
+			{
+				// meat and diamonds are bad for composting
+				String itemName = Item.itemRegistry.getNameForObject(itemStack.getItem());
+				return itemName.equals(ITEMNAME_JERKY) || itemName.equals(ITEMNAME_GOLDENHEAD) || itemName.equals(ITEMNAME_DIAMONDAPPLE);
+			}
+		});
+	}
+
+	@Override
+	public void postInit()
+	{
+	}
+
+	public void registerPlasticToolMaterial()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 
@@ -53,13 +82,13 @@ public class TConstruct implements IIntegrator
 			tag.setFloat("Projectile_Fragility", 0.5f);
 			tag.setString("Style", EnumChatFormatting.GRAY.toString());
 			tag.setInteger("Color", 0xFFADADAD);
-			FMLInterModComms.sendMessage(IntegrationHandler.MODID_TINKERS_CONSTRUCT, "addMaterial", tag);
+			FMLInterModComms.sendMessage(modID, "addMaterial", tag);
 
 			tag = new NBTTagCompound();
 			tag.setInteger("MaterialId", MATID_PLASTIC);
 			tag.setTag("Item", new ItemStack(Content.bioplastic).writeToNBT(new NBTTagCompound()));
 			tag.setInteger("Value", 1);
-			FMLInterModComms.sendMessage(IntegrationHandler.MODID_TINKERS_CONSTRUCT, "addPartBuilderMaterial", tag);
+			FMLInterModComms.sendMessage(modID, "addPartBuilderMaterial", tag);
 
 			// without MFR, there is no need to register a shard, so just add the rod
 			// note: this doesn't really do much afaik
@@ -71,12 +100,7 @@ public class TConstruct implements IIntegrator
 			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, new ItemStack(Content.bioplastic), new ItemStack(Content.plasticRod), MATID_PLASTIC);
 		}
 	}
-
-	@Override
-	public void postInit()
-	{
-	}
-
+	
 	// avoid the oredict lookup every getRealHandle call
 	public static List<ItemStack> plasticRodItems = null;
 

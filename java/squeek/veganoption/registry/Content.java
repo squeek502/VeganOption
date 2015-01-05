@@ -260,8 +260,16 @@ public class Content
 					return true;
 				else if (itemStack.getItem() instanceof ItemFishFood)
 					return true;
-				else
-					return false;
+
+				int[] oreIDs = OreDictionary.getOreIDs(itemStack);
+				for (int oreID : oreIDs)
+				{
+					String oreName = OreDictionary.getOreName(oreID);
+					if (oreName.startsWith("listAllmeat") || oreName.contains("Meat"))
+						return true;
+				}
+
+				return false;
 			}
 		});
 
