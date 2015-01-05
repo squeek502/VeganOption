@@ -65,6 +65,29 @@ public class ClassTransformer implements IClassTransformer
 
 			return writeClassToBytes(classNode);
 		}
+		else if (transformedName.equals("tconstruct.tools.TinkerToolEvents"))
+		{
+			ClassNode classNode = readClassFromBytes(bytes);
+
+			MethodNode method = findMethodNodeOfClass(classNode, "buildTool", "(Ltconstruct/library/event/ToolBuildEvent;)V");
+
+			if (method != null)
+			{
+				/*
+				event.handleStack = Hooks.getRealHandle(event.handleStack);
+				*/
+				InsnList toInject = new InsnList();
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				toInject.add(new FieldInsnNode(Opcodes.GETFIELD, "tconstruct/library/event/ToolBuildEvent", "handleStack", "Lnet/minecraft/item/ItemStack;"));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "getRealHandle", "(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;"));
+				toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, "tconstruct/library/event/ToolBuildEvent", "handleStack", "Lnet/minecraft/item/ItemStack;"));
+	
+				method.instructions.insertBefore(findFirstInstruction(method), toInject);
+			}
+
+			return writeClassToBytes(classNode);
+		}
 		return bytes;
 	}
 

@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import squeek.veganoption.blocks.BlockEnderRift;
+import squeek.veganoption.integration.IntegrationHandler;
+import squeek.veganoption.integration.tic.TConstruct;
 import squeek.veganoption.registry.Content;
 
 public class Hooks
@@ -35,5 +37,14 @@ public class Hooks
 			}
 		}
 		return false;
+	}
+
+	// return the TiC ToolRod version of the given handle if it exists
+	public static ItemStack getRealHandle(ItemStack handle)
+	{
+		if (IntegrationHandler.modExists(IntegrationHandler.MODID_TINKERS_CONSTRUCT))
+			return TConstruct.getRealHandle(handle);
+
+		return handle;
 	}
 }
