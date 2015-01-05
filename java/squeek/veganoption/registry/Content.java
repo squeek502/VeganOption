@@ -14,7 +14,13 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemCloth;
+import net.minecraft.item.ItemFishFood;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.world.IBlockAccess;
@@ -178,6 +184,10 @@ public class Content
 	public static final String stickOreDict = "stickWood"; // Forge's oredict entry
 	public static final String leavesOreDict = "treeLeaves"; // Forge's oredict entry
 	public static final String saplingOreDict = "treeSapling"; // Forge's oredict entry
+	public static final String sawDustOreDict = "pulpWood"; // Mekanism's oredict entry
+	public static final String sawDustAltOreDict = "dustWood"; // TE's oredict entry
+	public static final String woodAshOreDict = "ashWood";
+	public static final String blackPigmentOreDict = "pigmentBlack";
 
 	// modifiers
 	public static final RecipeModifier recipeModifier = new RecipeModifier();
@@ -223,7 +233,8 @@ public class Content
 		CompostRegistry.addBrown(bastFibreOreDict);
 		CompostRegistry.addBrown(charcoal);
 		CompostRegistry.addBrown(Blocks.deadbush);
-		// TODO: addBrown(sawdustOreDict);
+		CompostRegistry.addBrown(sawDustOreDict);
+		CompostRegistry.addBrown(sawDustAltOreDict);
 
 		CompostRegistry.addGreen(saplingOreDict);
 		CompostRegistry.addGreen(rottenPlants);
@@ -605,6 +616,8 @@ public class Content
 
 	private static void ink()
 	{
+		OreDictionary.registerOre(blackPigmentOreDict, charcoal.copy());
+
 		waxVegetable = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".waxVegetable")
 				.setCreativeTab(CreativeTabs.tabMaterials)
@@ -624,8 +637,6 @@ public class Content
 		GameRegistry.registerItem(rosin, "rosin");
 		GameRegistry.addSmelting(resin, new ItemStack(rosin), 0.2f);
 
-		ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
-
 		inkVegetableOil = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".inkVegetableOil")
 				.setCreativeTab(CreativeTabs.tabMaterials)
@@ -633,7 +644,7 @@ public class Content
 				.setContainerItem(Items.glass_bottle);
 		GameRegistry.registerItem(inkVegetableOil, "inkVegetableOil");
 		OreDictionary.registerOre(inkSacOreDict, inkVegetableOil);
-		GameRegistry.addRecipe(new ShapelessOreRecipe(inkVegetableOil, vegetableOilOreDict, waxOreDict, rosin, charcoal));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(inkVegetableOil, vegetableOilOreDict, waxOreDict, rosin, blackPigmentOreDict));
 		craftingModifier.addInputsToRemoveForOutput(new ItemStack(inkVegetableOil), new ItemStack(oilSunflower));
 	}
 
@@ -653,7 +664,7 @@ public class Content
 				.setTextureName(ModInfo.MODID_LOWER + ":plastic_rod");
 		GameRegistry.registerItem(plasticRod, "plasticRod");
 		OreDictionary.registerOre(plasticRodOreDict, plasticRod);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(plasticRod), "p", "p", 'p', plasticOreDict));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(plasticRod, 4), "p", "p", 'p', plasticOreDict));
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.blaze_rod), plasticRodOreDict, new ItemStack(rosin), waxOreDict, new ItemStack(Items.flint_and_steel, 1, OreDictionary.WILDCARD_VALUE)));
 		craftingModifier.addInputsToKeepForOutput(new ItemStack(Items.blaze_rod), new ItemStack(Items.flint_and_steel, 1, OreDictionary.WILDCARD_VALUE));
@@ -708,6 +719,8 @@ public class Content
 
 	private static void soap()
 	{
+		OreDictionary.registerOre(woodAshOreDict, charcoal.copy());
+
 		fluidLyeWater = new Fluid(ModInfo.MODID + ".lyeWater");
 		FluidRegistry.registerFluid(fluidLyeWater);
 		lyeWater = new BlockLyeWater(fluidLyeWater)
@@ -723,7 +736,7 @@ public class Content
 				.setContainerItem(Items.bucket);
 		GameRegistry.registerItem(bucketLyeWater, "bucketLyeWater");
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidLyeWater, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketLyeWater), new ItemStack(Items.bucket));
-		GameRegistry.addShapelessRecipe(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket), charcoal, charcoal, charcoal);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket), woodAshOreDict, woodAshOreDict, woodAshOreDict));
 		craftingModifier.addInputsToRemoveForOutput(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket));
 
 		soap = new ItemSoap()
