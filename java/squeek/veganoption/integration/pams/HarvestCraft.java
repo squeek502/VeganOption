@@ -8,8 +8,6 @@ import squeek.veganoption.integration.IIntegrator;
 
 public class HarvestCraft implements IIntegrator
 {
-	// TODO: False Morel Soup
-
 	public static final String rootPackage = "com.pam.harvestcraft.";
 
 	public static HashMap<String, Item> itemCache = new HashMap<String, Item>();

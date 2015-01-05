@@ -13,7 +13,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "")
+@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "after:" + IntegrationHandler.MODID_HARVESTCRAFT)
 public class VeganOption
 {
 	public static final Logger Log = LogManager.getLogger(ModInfo.MODID);

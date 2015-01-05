@@ -490,18 +490,18 @@ public class Content
 		OreDictionary.registerOre(eggOreDict, new ItemStack(Items.egg));
 		recipeModifier.convertInput(new ItemStack(Items.egg), eggOreDict);
 
+		appleSauce = new ItemFoodContainered(3, 1f, false)
+				.setUnlocalizedName(ModInfo.MODID + ".appleSauce")
+				.setCreativeTab(CreativeTabs.tabFood)
+				.setTextureName(ModInfo.MODID_LOWER + ":apple_sauce")
+				.setContainerItem(Items.bowl);
+		GameRegistry.registerItem(appleSauce, "appleSauce");
 		if (IntegrationHandler.modExists(IntegrationHandler.MODID_HARVESTCRAFT))
 		{
 			appleSauce = HarvestCraft.getItem("applesauceItem");
 		}
 		else
 		{
-			appleSauce = new ItemFoodContainered(3, 1f, false)
-					.setUnlocalizedName(ModInfo.MODID + ".appleSauce")
-					.setCreativeTab(CreativeTabs.tabFood)
-					.setTextureName(ModInfo.MODID_LOWER + ":apple_sauce")
-					.setContainerItem(Items.bowl);
-			GameRegistry.registerItem(appleSauce, "appleSauce");
 			GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.apple), new ItemStack(Items.bowl));
 		}
 		OreDictionary.registerOre(eggOreDict, new ItemStack(appleSauce));
