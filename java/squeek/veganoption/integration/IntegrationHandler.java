@@ -9,7 +9,7 @@ public class IntegrationHandler
 	private static Map<String, IIntegrator> integrators = new HashMap<String, IIntegrator>();
 
 	public static final String MODID_THERMAL_EXPANSION = "ThermalExpansion";
-	public static final String MODID_HARVESTCRAFT = "HarvestCraft";
+	public static final String MODID_HARVESTCRAFT = "harvestcraft";
 	public static final String MODID_MINEFACTORY_RELOADED = "MineFactoryReloaded";
 	public static final String MODID_TINKERS_CONSTRUCT = "TConstruct";
 	public static final String MODID_WITCHERY = "Witchery";
@@ -19,7 +19,7 @@ public class IntegrationHandler
 	static
 	{
 		tryIntegration(MODID_THERMAL_EXPANSION, "cofh");
-		tryIntegration(MODID_HARVESTCRAFT, "pams");
+		tryIntegration(MODID_HARVESTCRAFT, "pams", "HarvestCraft");
 		tryIntegration(MODID_MINEFACTORY_RELOADED, "mfr");
 		tryIntegration(MODID_TINKERS_CONSTRUCT, "tic");
 		tryIntegration(MODID_WITCHERY, "witchery");
@@ -53,11 +53,16 @@ public class IntegrationHandler
 
 	public static boolean tryIntegration(String modId, String packageName)
 	{
+		return tryIntegration(modId, packageName, modId);
+	}
+
+	public static boolean tryIntegration(String modId, String packageName, String className)
+	{
 		if (Loader.isModLoaded(modId))
 		{
 			try
 			{
-				String fullClassName = "squeek.veganoption.integration." + packageName + "." + modId;
+				String fullClassName = "squeek.veganoption.integration." + packageName + "." + className;
 				Class<?> clazz = IntegrationHandler.class.getClassLoader().loadClass(fullClassName);
 				IIntegrator integrator = (IIntegrator) clazz.newInstance();
 				integrators.put(modId, integrator);
