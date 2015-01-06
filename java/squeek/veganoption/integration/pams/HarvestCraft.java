@@ -6,9 +6,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.VeganOption;
+import squeek.veganoption.content.CompostRegistry;
+import squeek.veganoption.content.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.integration.IIntegrator;
-import squeek.veganoption.registry.CompostRegistry;
-import squeek.veganoption.registry.CompostRegistry.FoodSpecifier;
 
 public class HarvestCraft implements IIntegrator
 {

@@ -12,13 +12,13 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.content.ContentModuleHandler;
+import squeek.veganoption.content.DropsModifier.BlockSpecifier;
+import squeek.veganoption.content.DropsModifier.DropInfo;
+import squeek.veganoption.content.DropsModifier.DropSpecifier;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
-import squeek.veganoption.modifications.DropsModifier.BlockSpecifier;
-import squeek.veganoption.modifications.DropsModifier.DropInfo;
-import squeek.veganoption.modifications.DropsModifier.DropSpecifier;
-import squeek.veganoption.registry.Content;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.guihook.GuiContainerManager;
@@ -60,14 +60,14 @@ public class DropsHandler extends TemplateRecipeHandler
 		this.itemStack.stackSize = 1;
 		this.isUsage = isUsage;
 		if (isUsage)
-			this.blockDropSpecifiers = Content.dropsModifier.getSubsetByBlock(this.itemStack);
+			this.blockDropSpecifiers = ContentModuleHandler.dropsModifier.getSubsetByBlock(this.itemStack);
 		else
-			this.blockDropSpecifiers = Content.dropsModifier.getSubsetByDroppedItem(this.itemStack);
+			this.blockDropSpecifiers = ContentModuleHandler.dropsModifier.getSubsetByDroppedItem(this.itemStack);
 	}
 
 	public boolean isApplicable(ItemStack itemStack)
 	{
-		return Content.dropsModifier.dropExists(itemStack) || Content.dropsModifier.hasDrops(itemStack);
+		return ContentModuleHandler.dropsModifier.dropExists(itemStack) || ContentModuleHandler.dropsModifier.hasDrops(itemStack);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class DropsHandler extends TemplateRecipeHandler
 	{
 		if (outputId.equals(getOverlayIdentifier()))
 		{
-			blockDropSpecifiers = Content.dropsModifier.getAllDrops();
+			blockDropSpecifiers = ContentModuleHandler.dropsModifier.getAllDrops();
 			return this;
 		}
 		else if (outputId.equals("item"))
@@ -96,7 +96,7 @@ public class DropsHandler extends TemplateRecipeHandler
 	{
 		if (inputId.equals(getOverlayIdentifier()))
 		{
-			blockDropSpecifiers = Content.dropsModifier.getAllDrops();
+			blockDropSpecifiers = ContentModuleHandler.dropsModifier.getAllDrops();
 			return this;
 		}
 		else if (inputId.equals("item"))

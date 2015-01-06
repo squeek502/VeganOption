@@ -3,9 +3,9 @@ package squeek.veganoption.integration.mfr;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.integration.IIntegrator;
 import squeek.veganoption.integration.IntegrationHandler;
-import squeek.veganoption.registry.Content;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class MineFactoryReloaded implements IIntegrator
@@ -18,7 +18,7 @@ public class MineFactoryReloaded implements IIntegrator
 	@Override
 	public void init()
 	{
-		registerFertilizer(new ItemStack(Content.fertilizer), FertilizerType.GrowPlant);
+		registerFertilizer(new ItemStack(ContentModuleHandler.fertilizer), FertilizerType.GrowPlant);
 	}
 
 	@Override

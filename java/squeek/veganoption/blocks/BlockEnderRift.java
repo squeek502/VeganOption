@@ -12,8 +12,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
+import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.helpers.BlockHelper;
-import squeek.veganoption.registry.Content;
 
 public class BlockEnderRift extends BlockEndPortal
 {
@@ -74,7 +74,7 @@ public class BlockEnderRift extends BlockEndPortal
 
 				if (!world.isDaytime())
 				{
-					world.setBlock(x, y - 1, z, Content.rawEnder, 7, 3);
+					world.setBlock(x, y - 1, z, ContentModuleHandler.rawEnder, 7, 3);
 				}
 				else
 				{

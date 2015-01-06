@@ -3,9 +3,9 @@ package squeek.veganoption.integration.witchery;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.integration.IIntegrator;
 import squeek.veganoption.integration.IntegrationHandler;
-import squeek.veganoption.registry.Content;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Witchery implements IIntegrator
@@ -24,7 +24,7 @@ public class Witchery implements IIntegrator
 		if (ingredient != null)
 		{
 			ItemStack woodAsh = new ItemStack(ingredient, 1, woodAshMetadata);
-			OreDictionary.registerOre(Content.woodAshOreDict, woodAsh);
+			OreDictionary.registerOre(ContentModuleHandler.woodAshOreDict, woodAsh);
 		}
 	}
 

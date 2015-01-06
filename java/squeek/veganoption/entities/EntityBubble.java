@@ -10,13 +10,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.BlockHelper.BlockPos;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.helpers.TemperatureHelper;
 import squeek.veganoption.network.MessageBubblePop;
 import squeek.veganoption.network.NetworkHandler;
-import squeek.veganoption.registry.Content;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class EntityBubble extends EntityThrowable
@@ -123,7 +123,7 @@ public class EntityBubble extends EntityThrowable
 	{
 		if (!this.worldObj.isRemote)
 		{
-			EntityItem frozenBubble = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Content.frozenBubble));
+			EntityItem frozenBubble = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(ContentModuleHandler.frozenBubble));
 			worldObj.spawnEntityInWorld(frozenBubble);
 			this.setDead();
 		}

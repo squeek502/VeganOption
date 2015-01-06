@@ -1,4 +1,4 @@
-package squeek.veganoption.registry;
+package squeek.veganoption.content;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,7 @@ public class CompostRegistry
 
 	public static void registerAllFoods()
 	{
+		// TODO: Check for/handle metadata-based sub items
 		for (Object obj : Item.itemRegistry)
 		{
 			ItemStack itemStack = new ItemStack((Item) obj);

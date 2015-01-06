@@ -1,4 +1,4 @@
-package squeek.veganoption.modifications;
+package squeek.veganoption.content;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package squeek.veganoption.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityBreakingFX;
-import squeek.veganoption.registry.Content;
+import squeek.veganoption.content.ContentModuleHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -45,7 +45,7 @@ public class MessageBubblePop implements IMessage, IMessageHandler<MessageBubble
 		Minecraft mc = Minecraft.getMinecraft();
 		for (int i = 0; i < 8; ++i)
 		{
-			mc.effectRenderer.addEffect(new EntityBreakingFX(mc.theWorld, message.x, message.y, message.z, Content.frozenBubble));
+			mc.effectRenderer.addEffect(new EntityBreakingFX(mc.theWorld, message.x, message.y, message.z, ContentModuleHandler.frozenBubble));
 		}
 		return null;
 	}

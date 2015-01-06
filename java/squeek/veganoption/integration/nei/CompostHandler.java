@@ -10,11 +10,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.content.CompostRegistry;
+import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
-import squeek.veganoption.registry.CompostRegistry;
-import squeek.veganoption.registry.Content;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.ICraftingHandler;
@@ -38,7 +38,7 @@ public class CompostHandler extends TemplateRecipeHandler
 	@Override
 	public void loadTransferRects()
 	{
-		if (itemStack != null && itemStack.getItem() == Item.getItemFromBlock(Content.composter))
+		if (itemStack != null && itemStack.getItem() == Item.getItemFromBlock(ContentModuleHandler.composter))
 			transferRects.add(new RecipeTransferRect(new Rectangle(WIDTH / 2 + 20, 16, 22, 15), getOverlayIdentifier()));
 		else
 			transferRects.add(new RecipeTransferRect(new Rectangle(WIDTH / 2 + 4, 16, 22, 15), getOverlayIdentifier()));
@@ -63,7 +63,7 @@ public class CompostHandler extends TemplateRecipeHandler
 	{
 		if (outputId.equals(getOverlayIdentifier()))
 		{
-			return new CompostHandler(new ItemStack(Content.composter), true);
+			return new CompostHandler(new ItemStack(ContentModuleHandler.composter), true);
 		}
 		else if (outputId.equals("item"))
 		{
@@ -83,7 +83,7 @@ public class CompostHandler extends TemplateRecipeHandler
 	{
 		if (inputId.equals(getOverlayIdentifier()))
 		{
-			return new CompostHandler(new ItemStack(Content.composter), true);
+			return new CompostHandler(new ItemStack(ContentModuleHandler.composter), true);
 		}
 		else if (inputId.equals("item"))
 		{
@@ -93,7 +93,7 @@ public class CompostHandler extends TemplateRecipeHandler
 				{
 					return new CompostHandler((ItemStack) ingredient, true);
 				}
-				else if (ingredient instanceof ItemStack && ((ItemStack) ingredient).getItem() == Item.getItemFromBlock(Content.composter))
+				else if (ingredient instanceof ItemStack && ((ItemStack) ingredient).getItem() == Item.getItemFromBlock(ContentModuleHandler.composter))
 				{
 					return new CompostHandler((ItemStack) ingredient, true);
 				}
@@ -104,7 +104,7 @@ public class CompostHandler extends TemplateRecipeHandler
 
 	public boolean isCompostResult(ItemStack itemStack)
 	{
-		return itemStack != null && itemStack.getItem() != null && (itemStack.isItemEqual(new ItemStack(Content.compost)) || itemStack.getItem() == Content.rottenPlants);
+		return itemStack != null && itemStack.getItem() != null && (itemStack.isItemEqual(new ItemStack(ContentModuleHandler.compost)) || itemStack.getItem() == ContentModuleHandler.rottenPlants);
 	}
 
 	@Override
@@ -175,7 +175,7 @@ public class CompostHandler extends TemplateRecipeHandler
 		ItemStack greenStack = CompostRegistry.isGreen(itemStack) && isUsage ? itemStack : CompostRegistry.greens.get(curGreen).copy();
 		positionedStacks.add(new PositionedStack(greenStack, x, y, false));
 
-		if (recipe == 0 && (isUsage || itemStack == null || itemStack.getItem() != Content.rottenPlants))
+		if (recipe == 0 && (isUsage || itemStack == null || itemStack.getItem() != ContentModuleHandler.rottenPlants))
 		{
 			int curSecondGreen = (curGreen + 1) % CompostRegistry.greens.size();
 			int curBrown = (int) ((cycleticks / ticksPerStackSize) % (CompostRegistry.browns.size()));
@@ -197,7 +197,7 @@ public class CompostHandler extends TemplateRecipeHandler
 		Point recipePos = getRecipePosition(recipe);
 		int x = recipePos.x - (GuiHelper.STANDARD_SLOT_WIDTH / 2);
 		int y = recipePos.y + 4;
-		positionedStacks.add(new PositionedStack(new ItemStack(Content.composter), x, y, false));
+		positionedStacks.add(new PositionedStack(new ItemStack(ContentModuleHandler.composter), x, y, false));
 		return positionedStacks;
 	}
 
@@ -207,7 +207,7 @@ public class CompostHandler extends TemplateRecipeHandler
 		Point recipePos = getRecipePosition(recipe);
 		int x = recipePos.x + (GuiHelper.STANDARD_SLOT_WIDTH * 2) + 4;
 		int y = recipePos.y + 4;
-		ItemStack result = recipe == 0 && (isUsage || itemStack == null || itemStack.getItem() != Content.rottenPlants) ? new ItemStack(Content.compost) : new ItemStack(Content.rottenPlants);
+		ItemStack result = recipe == 0 && (isUsage || itemStack == null || itemStack.getItem() != ContentModuleHandler.rottenPlants) ? new ItemStack(ContentModuleHandler.compost) : new ItemStack(ContentModuleHandler.rottenPlants);
 		return new PositionedStack(result, x, y, false);
 	}
 

@@ -1,4 +1,4 @@
-package squeek.veganoption.registry;
+package squeek.veganoption.content;
 
 import java.util.ArrayList;
 import java.util.HashMap;

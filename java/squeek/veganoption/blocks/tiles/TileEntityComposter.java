@@ -20,13 +20,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
+import squeek.veganoption.content.CompostRegistry;
+import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.InventoryHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.helpers.TemperatureHelper;
-import squeek.veganoption.registry.CompostRegistry;
-import squeek.veganoption.registry.Content;
 
 public class TileEntityComposter extends TileEntity implements IInventory
 {
@@ -151,7 +151,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 			List<Integer> rottenPlantSlots = new ArrayList<Integer>();
 			for (Integer slotNum : greenSlots)
 			{
-				if (getStackInSlot(slotNum).getItem() == Content.rottenPlants)
+				if (getStackInSlot(slotNum).getItem() == ContentModuleHandler.rottenPlants)
 				{
 					rottenPlantSlots.add(slotNum);
 				}
@@ -161,7 +161,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 			{
 				int randomGreen = greenSlots.get(RandomHelper.random.nextInt(greenSlots.size()));
 
-				setInventorySlotContents(randomGreen, new ItemStack(Content.rottenPlants));
+				setInventorySlotContents(randomGreen, new ItemStack(ContentModuleHandler.rottenPlants));
 				return true;
 			}
 		}
@@ -178,7 +178,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 				int secondRandomGreen = greenSlots.get(RandomHelper.random.nextInt(greenSlots.size()));
 				int randomBrown = brownSlots.get(RandomHelper.random.nextInt(brownSlots.size()));
 
-				setInventorySlotContents(firstRandomGreen, new ItemStack(Content.compost));
+				setInventorySlotContents(firstRandomGreen, new ItemStack(ContentModuleHandler.compost));
 				setInventorySlotContents(secondRandomGreen, null);
 				setInventorySlotContents(randomBrown, null);
 				return true;
@@ -477,7 +477,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	@Override
 	public String getInventoryName()
 	{
-		return new ItemStack(Content.composter).getDisplayName();
+		return new ItemStack(ContentModuleHandler.composter).getDisplayName();
 	}
 
 	@Override
@@ -507,7 +507,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int slotNum, ItemStack itemStack)
 	{
-		return CompostRegistry.isCompostable(itemStack) || Block.getBlockFromItem(itemStack.getItem()) == Content.compost;
+		return CompostRegistry.isCompostable(itemStack) || Block.getBlockFromItem(itemStack.getItem()) == ContentModuleHandler.compost;
 	}
 
 	/*

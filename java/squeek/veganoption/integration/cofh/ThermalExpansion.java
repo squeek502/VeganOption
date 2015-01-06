@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.integration.IIntegrator;
-import squeek.veganoption.registry.Content;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class ThermalExpansion implements IIntegrator
@@ -23,8 +23,8 @@ public class ThermalExpansion implements IIntegrator
 	@Override
 	public void init()
 	{
-		addTransposerFill(4000, new ItemStack(Content.frozenBubble), new ItemStack(Items.ender_pearl), new FluidStack(Content.fluidRawEnder, Content.RAW_ENDER_PER_PEARL), true);
-		addTransposerFill(4000, new ItemStack(Content.frozenBubble), new ItemStack(Items.ender_pearl), FluidRegistry.getFluidStack(RESONANT_ENDER_FLUID_NAME, RESONANT_ENDER_PER_PEARL), false);
+		addTransposerFill(4000, new ItemStack(ContentModuleHandler.frozenBubble), new ItemStack(Items.ender_pearl), new FluidStack(ContentModuleHandler.fluidRawEnder, ContentModuleHandler.RAW_ENDER_PER_PEARL), true);
+		addTransposerFill(4000, new ItemStack(ContentModuleHandler.frozenBubble), new ItemStack(Items.ender_pearl), FluidRegistry.getFluidStack(RESONANT_ENDER_FLUID_NAME, RESONANT_ENDER_PER_PEARL), false);
 	}
 
 	@Override

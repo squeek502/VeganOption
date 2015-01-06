@@ -1,4 +1,4 @@
-package squeek.veganoption.registry;
+package squeek.veganoption.content;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +38,9 @@ import squeek.veganoption.blocks.renderers.RenderComposter;
 import squeek.veganoption.blocks.renderers.RenderEnderRift;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
+import squeek.veganoption.content.CompostRegistry.FoodSpecifier;
+import squeek.veganoption.content.DropsModifier.BlockSpecifier;
+import squeek.veganoption.content.DropsModifier.DropSpecifier;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.entities.EntityBubbleDispenserBehavior;
 import squeek.veganoption.helpers.ConstantHelper;
@@ -50,12 +53,6 @@ import squeek.veganoption.items.ItemFoodContainered;
 import squeek.veganoption.items.ItemFrozenBubble;
 import squeek.veganoption.items.ItemSoap;
 import squeek.veganoption.items.ItemSoapSolution;
-import squeek.veganoption.modifications.CraftingModifier;
-import squeek.veganoption.modifications.DropsModifier;
-import squeek.veganoption.modifications.DropsModifier.BlockSpecifier;
-import squeek.veganoption.modifications.DropsModifier.DropSpecifier;
-import squeek.veganoption.modifications.RecipeModifier;
-import squeek.veganoption.registry.CompostRegistry.FoodSpecifier;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -63,7 +60,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-public class Content
+public class ContentModuleHandler
 {
 	// helper itemstacks for vanilla stuff
 	public static final ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
@@ -321,7 +318,7 @@ public class Content
 		GameRegistry.registerBlock(juteBundled, "juteBundled");
 		GameRegistry.addShapedRecipe(new ItemStack(juteBundled), "///", "///", "///", '/', new ItemStack(juteStalk));
 
-		Content.dropsModifier.addDropsToBlock(
+		ContentModuleHandler.dropsModifier.addDropsToBlock(
 												new DropsModifier.NEIBlockSpecifier(juteBundled, OreDictionary.WILDCARD_VALUE, new ItemStack(juteBundled, 1, juteBundled.numRettingStages)),
 												new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops)
 				);

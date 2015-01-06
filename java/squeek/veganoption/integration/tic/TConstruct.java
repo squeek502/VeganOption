@@ -8,12 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.oredict.OreDictionary;
+import squeek.veganoption.content.CompostRegistry;
+import squeek.veganoption.content.ContentModuleHandler;
+import squeek.veganoption.content.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.IIntegrator;
 import squeek.veganoption.integration.IntegrationHandler;
-import squeek.veganoption.registry.CompostRegistry;
-import squeek.veganoption.registry.CompostRegistry.FoodSpecifier;
-import squeek.veganoption.registry.Content;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class TConstruct implements IIntegrator
@@ -86,18 +86,18 @@ public class TConstruct implements IIntegrator
 
 			tag = new NBTTagCompound();
 			tag.setInteger("MaterialId", MATID_PLASTIC);
-			tag.setTag("Item", new ItemStack(Content.bioplastic).writeToNBT(new NBTTagCompound()));
+			tag.setTag("Item", new ItemStack(ContentModuleHandler.bioplastic).writeToNBT(new NBTTagCompound()));
 			tag.setInteger("Value", 1);
 			FMLInterModComms.sendMessage(modID, "addPartBuilderMaterial", tag);
 
 			// without MFR, there is no need to register a shard, so just add the rod
 			// note: this doesn't really do much afaik
-			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, null, new ItemStack(Content.plasticRod), MATID_PLASTIC);
+			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, null, new ItemStack(ContentModuleHandler.plasticRod), MATID_PLASTIC);
 		}
 		else
 		{
 			// mfr registers plastic sheets as shards, so do the same
-			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, new ItemStack(Content.bioplastic), new ItemStack(Content.plasticRod), MATID_PLASTIC);
+			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, new ItemStack(ContentModuleHandler.bioplastic), new ItemStack(ContentModuleHandler.plasticRod), MATID_PLASTIC);
 		}
 	}
 	
@@ -116,7 +116,7 @@ public class TConstruct implements IIntegrator
 	public static ItemStack getRealHandle(ItemStack itemStack)
 	{
 		if (plasticRodItems == null)
-			plasticRodItems = OreDictionary.getOres(Content.plasticRodOreDict);
+			plasticRodItems = OreDictionary.getOres(ContentModuleHandler.plasticRodOreDict);
 
 		for (ItemStack item : plasticRodItems)
 		{
