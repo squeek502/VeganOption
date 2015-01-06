@@ -27,6 +27,15 @@ public class IntegrationHandler
 		tryIntegration(MODID_VERSION_CHECKER, "versionchecker");
 	}
 
+	// TODO: Register overrides and make the NEI text handler let people know about them
+	public static void overrideContent()
+	{
+		for (IIntegrator integrator : integrators.values())
+		{
+			integrator.overrideContent();
+		}
+	}
+
 	public static void preInit()
 	{
 		for (IIntegrator integrator : integrators.values())

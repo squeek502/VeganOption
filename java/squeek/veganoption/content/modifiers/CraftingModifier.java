@@ -1,4 +1,4 @@
-package squeek.veganoption.content;
+package squeek.veganoption.content.modifiers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,9 +27,29 @@ public class CraftingModifier
 		inputsToRemoveForOutput.put(output, inputs);
 	}
 
+	public void addInputsToRemoveForOutput(ItemStack output, String... inputOreDicts)
+	{
+		for (String inputOreDict : inputOreDicts)
+		{
+			List<ItemStack> oreStacks = OreDictionary.getOres(inputOreDict);
+			if (oreStacks.size() > 0)
+				addInputsToRemoveForOutput(output.copy(), oreStacks.toArray(new ItemStack[oreStacks.size()]));
+		}
+	}
+
 	public void addInputsToKeepForOutput(ItemStack output, ItemStack... inputs)
 	{
 		inputsToKeepForOutput.put(output, inputs);
+	}
+
+	public void addInputsToKeepForOutput(ItemStack output, String... inputOreDicts)
+	{
+		for (String inputOreDict : inputOreDicts)
+		{
+			List<ItemStack> oreStacks = OreDictionary.getOres(inputOreDict);
+			if (oreStacks.size() > 0)
+				addInputsToKeepForOutput(output.copy(), oreStacks.toArray(new ItemStack[oreStacks.size()]));
+		}
 	}
 
 	@SubscribeEvent

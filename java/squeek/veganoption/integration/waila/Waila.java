@@ -7,6 +7,11 @@ public class Waila implements IIntegrator
 {
 
 	@Override
+	public void overrideContent()
+	{
+	}
+
+	@Override
 	public void preInit()
 	{
 	}

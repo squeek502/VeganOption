@@ -3,6 +3,7 @@ package squeek.veganoption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import squeek.veganoption.content.ContentModuleHandler;
+import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.network.NetworkHandler;
@@ -24,7 +25,9 @@ public class VeganOption
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		ContentModuleHandler.create();
+		ContentModuleHandler.createAndOreDict();
+		IntegrationHandler.overrideContent();
+		ContentModuleHandler.preInit();
 		IntegrationHandler.preInit();
 	}
 
@@ -33,13 +36,15 @@ public class VeganOption
 	{
 		GuiHelper.init();
 		NetworkHandler.init();
+		ContentModuleHandler.init();
 		IntegrationHandler.init();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		ContentModuleHandler.finish();
+		ContentModuleHandler.postInit();
 		IntegrationHandler.postInit();
+		Modifiers.recipes.replaceRecipes();
 	}
 }

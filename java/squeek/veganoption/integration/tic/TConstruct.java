@@ -8,9 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.oredict.OreDictionary;
-import squeek.veganoption.content.CompostRegistry;
-import squeek.veganoption.content.ContentModuleHandler;
-import squeek.veganoption.content.CompostRegistry.FoodSpecifier;
+import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.modules.Bioplastic;
+import squeek.veganoption.content.registry.CompostRegistry;
+import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.IIntegrator;
 import squeek.veganoption.integration.IntegrationHandler;
@@ -33,6 +34,11 @@ public class TConstruct implements IIntegrator
 	public static final String ITEMNAME_JERKY = modID + ":jerky";
 	public static final String ITEMNAME_GOLDENHEAD = modID + ":goldHead";
 	public static final String ITEMNAME_DIAMONDAPPLE = modID + ":diamondApple";
+
+	@Override
+	public void overrideContent()
+	{
+	}
 
 	@Override
 	public void preInit()
@@ -86,21 +92,21 @@ public class TConstruct implements IIntegrator
 
 			tag = new NBTTagCompound();
 			tag.setInteger("MaterialId", MATID_PLASTIC);
-			tag.setTag("Item", new ItemStack(ContentModuleHandler.bioplastic).writeToNBT(new NBTTagCompound()));
+			tag.setTag("Item", new ItemStack(Bioplastic.bioplastic).writeToNBT(new NBTTagCompound()));
 			tag.setInteger("Value", 1);
 			FMLInterModComms.sendMessage(modID, "addPartBuilderMaterial", tag);
 
 			// without MFR, there is no need to register a shard, so just add the rod
 			// note: this doesn't really do much afaik
-			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, null, new ItemStack(ContentModuleHandler.plasticRod), MATID_PLASTIC);
+			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, null, new ItemStack(Bioplastic.plasticRod), MATID_PLASTIC);
 		}
 		else
 		{
 			// mfr registers plastic sheets as shards, so do the same
-			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, new ItemStack(ContentModuleHandler.bioplastic), new ItemStack(ContentModuleHandler.plasticRod), MATID_PLASTIC);
+			registerShardAndRod(KEY_PLASTICROD_MATERIALSET, new ItemStack(Bioplastic.bioplastic), new ItemStack(Bioplastic.plasticRod), MATID_PLASTIC);
 		}
 	}
-	
+
 	// avoid the oredict lookup every getRealHandle call
 	public static List<ItemStack> plasticRodItems = null;
 
@@ -116,7 +122,7 @@ public class TConstruct implements IIntegrator
 	public static ItemStack getRealHandle(ItemStack itemStack)
 	{
 		if (plasticRodItems == null)
-			plasticRodItems = OreDictionary.getOres(ContentModuleHandler.plasticRodOreDict);
+			plasticRodItems = OreDictionary.getOres(ContentHelper.plasticRodOreDict);
 
 		for (ItemStack item : plasticRodItems)
 		{

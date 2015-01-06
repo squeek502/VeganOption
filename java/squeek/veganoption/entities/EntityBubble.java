@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import squeek.veganoption.content.ContentModuleHandler;
+import squeek.veganoption.content.modules.FrozenBubble;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.BlockHelper.BlockPos;
 import squeek.veganoption.helpers.RandomHelper;
@@ -123,7 +123,7 @@ public class EntityBubble extends EntityThrowable
 	{
 		if (!this.worldObj.isRemote)
 		{
-			EntityItem frozenBubble = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(ContentModuleHandler.frozenBubble));
+			EntityItem frozenBubble = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(FrozenBubble.frozenBubble));
 			worldObj.spawnEntityInWorld(frozenBubble);
 			this.setDead();
 		}
@@ -134,7 +134,6 @@ public class EntityBubble extends EntityThrowable
 	{
 		pop();
 	}
-
 
 	public static float getSurroundingAirTemperature(World world, double x, double y, double z)
 	{

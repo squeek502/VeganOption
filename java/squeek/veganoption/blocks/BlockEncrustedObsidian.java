@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
-import squeek.veganoption.content.ContentModuleHandler;
+import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
 
 public class BlockEncrustedObsidian extends BlockObsidian
@@ -26,11 +26,11 @@ public class BlockEncrustedObsidian extends BlockObsidian
 		BlockHelper.BlockPos blockPos = BlockHelper.blockPos(world, x, y, z);
 		for (BlockHelper.BlockPos blockToCheck : BlockHelper.getBlocksAdjacentTo(blockPos))
 		{
-			if (blockToCheck.getBlock() != ContentModuleHandler.enderRift
+			if (blockToCheck.getBlock() != Ender.enderRift
 					&& BlockEnderRift.isValidPortalLocation(blockToCheck.world, blockToCheck.x, blockToCheck.y, blockToCheck.z)
 					&& blockToCheck.getBlock().isReplaceable(blockToCheck.world, blockToCheck.x, blockToCheck.y, blockToCheck.z))
 			{
-				world.setBlock(blockToCheck.x, blockToCheck.y, blockToCheck.z, ContentModuleHandler.enderRift);
+				world.setBlock(blockToCheck.x, blockToCheck.y, blockToCheck.z, Ender.enderRift);
 			}
 		}
 	}

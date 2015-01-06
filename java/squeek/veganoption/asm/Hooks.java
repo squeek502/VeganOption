@@ -8,7 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import squeek.veganoption.blocks.BlockEnderRift;
-import squeek.veganoption.content.ContentModuleHandler;
+import squeek.veganoption.content.modules.EggReplacers;
+import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.integration.tic.TConstruct;
 
@@ -18,7 +19,7 @@ public class Hooks
 	public static boolean onFlowIntoBlock(World world, int x, int y, int z, int flowDecay)
 	{
 		Block block = world.getBlock(x, y, z);
-		if (block == ContentModuleHandler.enderRift)
+		if (block == Ender.enderRift)
 			return ((BlockEnderRift) block).onFluidFlowInto(world, x, y, z, flowDecay);
 		else
 			return false;
@@ -32,7 +33,7 @@ public class Hooks
 			if (entityItem.worldObj.getBlock(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ)) == Blocks.piston_head)
 			{
 				int stackSize = entityItem.getEntityItem().stackSize;
-				entityItem.setEntityItemStack(new ItemStack(ContentModuleHandler.potatoStarch, stackSize));
+				entityItem.setEntityItemStack(new ItemStack(EggReplacers.potatoStarch, stackSize));
 				return true;
 			}
 		}

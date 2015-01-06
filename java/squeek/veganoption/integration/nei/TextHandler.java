@@ -13,7 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.oredict.OreDictionary;
-import squeek.veganoption.content.RelationshipRegistry;
+import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.helpers.ColorHelper;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.LangHelper;

@@ -12,10 +12,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.content.ContentModuleHandler;
-import squeek.veganoption.content.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.DropsModifier.DropInfo;
-import squeek.veganoption.content.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
+import squeek.veganoption.content.modifiers.DropsModifier.DropInfo;
+import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
@@ -60,14 +60,14 @@ public class DropsHandler extends TemplateRecipeHandler
 		this.itemStack.stackSize = 1;
 		this.isUsage = isUsage;
 		if (isUsage)
-			this.blockDropSpecifiers = ContentModuleHandler.dropsModifier.getSubsetByBlock(this.itemStack);
+			this.blockDropSpecifiers = Modifiers.drops.getSubsetByBlock(this.itemStack);
 		else
-			this.blockDropSpecifiers = ContentModuleHandler.dropsModifier.getSubsetByDroppedItem(this.itemStack);
+			this.blockDropSpecifiers = Modifiers.drops.getSubsetByDroppedItem(this.itemStack);
 	}
 
 	public boolean isApplicable(ItemStack itemStack)
 	{
-		return ContentModuleHandler.dropsModifier.dropExists(itemStack) || ContentModuleHandler.dropsModifier.hasDrops(itemStack);
+		return Modifiers.drops.dropExists(itemStack) || Modifiers.drops.hasDrops(itemStack);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class DropsHandler extends TemplateRecipeHandler
 	{
 		if (outputId.equals(getOverlayIdentifier()))
 		{
-			blockDropSpecifiers = ContentModuleHandler.dropsModifier.getAllDrops();
+			blockDropSpecifiers = Modifiers.drops.getAllDrops();
 			return this;
 		}
 		else if (outputId.equals("item"))
@@ -96,7 +96,7 @@ public class DropsHandler extends TemplateRecipeHandler
 	{
 		if (inputId.equals(getOverlayIdentifier()))
 		{
-			blockDropSpecifiers = ContentModuleHandler.dropsModifier.getAllDrops();
+			blockDropSpecifiers = Modifiers.drops.getAllDrops();
 			return this;
 		}
 		else if (inputId.equals("item"))

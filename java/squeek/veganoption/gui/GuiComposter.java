@@ -10,7 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.opengl.GL11;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
-import squeek.veganoption.content.CompostRegistry;
+import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.helpers.ColorHelper;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.inventory.ContainerComposter;

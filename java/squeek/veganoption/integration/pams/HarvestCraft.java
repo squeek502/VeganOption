@@ -6,8 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.VeganOption;
-import squeek.veganoption.content.CompostRegistry;
-import squeek.veganoption.content.CompostRegistry.FoodSpecifier;
+import squeek.veganoption.content.registry.CompostRegistry;
+import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.integration.IIntegrator;
 
 public class HarvestCraft implements IIntegrator
@@ -46,6 +46,11 @@ public class HarvestCraft implements IIntegrator
 			}
 		}
 		return item;
+	}
+
+	@Override
+	public void overrideContent()
+	{
 	}
 
 	@Override
