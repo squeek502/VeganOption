@@ -34,6 +34,7 @@ public class TConstruct implements IIntegrator
 	public static final String ITEMNAME_JERKY = modID + ":jerky";
 	public static final String ITEMNAME_GOLDENHEAD = modID + ":goldHead";
 	public static final String ITEMNAME_DIAMONDAPPLE = modID + ":diamondApple";
+	public static final String ITEMNAME_STRANGEFOOD = modID + ":strangeFood";
 
 	@Override
 	public void overrideContent()
@@ -57,7 +58,7 @@ public class TConstruct implements IIntegrator
 			{
 				// meat and diamonds are bad for composting
 				String itemName = Item.itemRegistry.getNameForObject(itemStack.getItem());
-				return itemName.equals(ITEMNAME_JERKY) || itemName.equals(ITEMNAME_GOLDENHEAD) || itemName.equals(ITEMNAME_DIAMONDAPPLE);
+				return itemName.equals(ITEMNAME_JERKY) || itemName.equals(ITEMNAME_GOLDENHEAD) || itemName.equals(ITEMNAME_DIAMONDAPPLE) || itemName.equals(ITEMNAME_STRANGEFOOD);
 			}
 		});
 	}
