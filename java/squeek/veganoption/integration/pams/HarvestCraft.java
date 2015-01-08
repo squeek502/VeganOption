@@ -1,51 +1,24 @@
 package squeek.veganoption.integration.pams;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import squeek.veganoption.VeganOption;
+import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.integration.IIntegrator;
+import squeek.veganoption.integration.IntegrationHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 
+// TODO: More oils
 public class HarvestCraft implements IIntegrator
 {
 	public static final String rootPackage = "com.pam.harvestcraft.";
-
-	public static HashMap<String, Item> itemCache = new HashMap<String, Item>();
-
-	public static Class<?> ItemRegistry;
-	static
-	{
-		try
-		{
-			ItemRegistry = Class.forName(rootPackage + "ItemRegistry");
-		}
-		catch (Exception e)
-		{
-			VeganOption.Log.error("Something went wrong when initializing HarvestCraft integration:");
-			e.printStackTrace();
-		}
-	}
+	public static final String modId = IntegrationHandler.MODID_HARVESTCRAFT;
 
 	public static Item getItem(String name)
 	{
-		Item item = itemCache.get(name);
-		if (item == null)
-		{
-			try
-			{
-				Field itemField = ItemRegistry.getDeclaredField(name);
-				item = (Item) itemField.get(null);
-				itemCache.put(name, item);
-			}
-			catch (Exception e)
-			{
-			}
-		}
-		return item;
+		return GameRegistry.findItem(modId, name);
 	}
 
 	@Override
@@ -56,6 +29,7 @@ public class HarvestCraft implements IIntegrator
 	@Override
 	public void preInit()
 	{
+		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, new ItemStack(HarvestCraft.getItem("juicerItem")));
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package squeek.veganoption.content;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ContentHelper
 {
@@ -44,6 +44,8 @@ public class ContentHelper
 	public static final String rosinOreDict = "materialRosin";
 	public static final String starchOreDict = "starch";
 	public static final String kapokOreDict = "materialFluffy";
+	public static final String sunflowerSeedOreDict = "cropSunflower"; // HarvestCraft's oredict entry
+	public static final String oilPresserOreDict = "presserOil";
 
 	public static void addOreSmelting(String inputOreName, ItemStack output, float xp)
 	{

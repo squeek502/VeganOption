@@ -14,14 +14,13 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
-import squeek.veganoption.integration.IntegrationHandler;
-import squeek.veganoption.integration.pams.HarvestCraft;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class VegetableOil implements IContentModule
@@ -34,21 +33,13 @@ public class VegetableOil implements IContentModule
 	@Override
 	public void create()
 	{
-		if (IntegrationHandler.modExists(IntegrationHandler.MODID_HARVESTCRAFT))
-			oilPresser = new ItemStack(HarvestCraft.getItem("juicerItem"));
-		else
-			oilPresser = new ItemStack(Blocks.heavy_weighted_pressure_plate);
+		oilPresser = new ItemStack(Blocks.heavy_weighted_pressure_plate);
 
 		seedSunflower = new ItemFood(1, 0.05f, false)
 				.setUnlocalizedName(ModInfo.MODID + ".seedSunflower")
 				.setCreativeTab(CreativeTabs.tabFood)
 				.setTextureName(ModInfo.MODID_LOWER + ":sunflower_seeds");
 		GameRegistry.registerItem(seedSunflower, "seedSunflower");
-
-		if (IntegrationHandler.modExists(IntegrationHandler.MODID_HARVESTCRAFT))
-		{
-			seedSunflower = HarvestCraft.getItem("sunflowerseedsItem");
-		}
 
 		oilSunflower = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".oilSunflower")
@@ -61,6 +52,8 @@ public class VegetableOil implements IContentModule
 	@Override
 	public void oredict()
 	{
+		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, oilPresser.copy());
+		OreDictionary.registerOre(ContentHelper.sunflowerSeedOreDict, new ItemStack(seedSunflower));
 		OreDictionary.registerOre(ContentHelper.vegetableOilOreDict, new ItemStack(oilSunflower));
 	}
 
@@ -100,7 +93,7 @@ public class VegetableOil implements IContentModule
 		};
 		Modifiers.drops.addDropsToBlock(sunflowerTopSpecifier, sunflowerDropSpecifier);
 
-		addOilRecipe(new ItemStack(oilSunflower), new ItemStack(seedSunflower));
+		addOilRecipe(new ItemStack(oilSunflower), ContentHelper.sunflowerSeedOreDict);
 	}
 
 	@Override
@@ -108,15 +101,15 @@ public class VegetableOil implements IContentModule
 	{
 	}
 
-	public static void addOilRecipe(ItemStack output, ItemStack... inputs)
+	public static void addOilRecipe(ItemStack output, Object... inputs)
 	{
-		List<ItemStack> recipeInputs = new ArrayList<ItemStack>(Arrays.asList(inputs));
-		recipeInputs.add(0, oilPresser);
+		List<Object> recipeInputs = new ArrayList<Object>(Arrays.asList(inputs));
+		recipeInputs.add(0, ContentHelper.oilPresserOreDict);
 		if (output.getItem().hasContainerItem(output))
 		{
 			recipeInputs.add(output.getItem().getContainerItem(output));
 		}
-		GameRegistry.addShapelessRecipe(output, (Object[]) recipeInputs.toArray(new ItemStack[recipeInputs.size()]));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(output, (Object[]) recipeInputs.toArray(new Object[recipeInputs.size()])));
 		if (!oilPresser.getItem().hasContainerItem(oilPresser))
 		{
 			Modifiers.crafting.addInputsToKeepForOutput(output, oilPresser);
