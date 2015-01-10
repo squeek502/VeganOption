@@ -7,11 +7,6 @@ public class VersionChecker implements IIntegrator
 {
 
 	@Override
-	public void overrideContent()
-	{
-	}
-
-	@Override
 	public void preInit()
 	{
 		FMLInterModComms.sendMessage("VersionChecker", "addVersionCheck", "http://www.ryanliptak.com/minecraft/versionchecker/squeek502/VeganOption");

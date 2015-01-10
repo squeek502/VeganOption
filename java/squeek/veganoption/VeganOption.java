@@ -25,8 +25,6 @@ public class VeganOption
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		ContentModuleHandler.createAndOreDict();
-		IntegrationHandler.overrideContent();
 		ContentModuleHandler.preInit();
 		IntegrationHandler.preInit();
 	}

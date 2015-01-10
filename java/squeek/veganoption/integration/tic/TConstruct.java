@@ -37,11 +37,6 @@ public class TConstruct implements IIntegrator
 	public static final String ITEMNAME_STRANGEFOOD = modID + ":strangeFood";
 
 	@Override
-	public void overrideContent()
-	{
-	}
-
-	@Override
 	public void preInit()
 	{
 	}

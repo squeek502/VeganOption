@@ -42,7 +42,7 @@ public class ContentModuleHandler
 		compatModules.put("EnderBubble", new CompatEnderBubble());
 	}
 
-	public static void createAndOreDict()
+	public static void preInit()
 	{
 		for (IContentModule module : modules.values())
 		{
@@ -56,7 +56,7 @@ public class ContentModuleHandler
 		}
 	}
 
-	public static void preInit()
+	public static void init()
 	{
 		for (IContentModule module : modules.values())
 		{
@@ -66,11 +66,6 @@ public class ContentModuleHandler
 		{
 			compatModule.recipes();
 		}
-	}
-
-	public static void init()
-	{
-
 	}
 
 	public static void postInit()

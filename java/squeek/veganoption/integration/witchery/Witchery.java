@@ -13,11 +13,6 @@ public class Witchery implements IIntegrator
 	public static final int woodAshMetadata = 18;
 
 	@Override
-	public void overrideContent()
-	{
-	}
-
-	@Override
 	public void preInit()
 	{
 	}

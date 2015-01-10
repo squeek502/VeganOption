@@ -22,11 +22,6 @@ public class HarvestCraft implements IIntegrator
 	}
 
 	@Override
-	public void overrideContent()
-	{
-	}
-
-	@Override
 	public void preInit()
 	{
 		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, new ItemStack(HarvestCraft.getItem("juicerItem")));

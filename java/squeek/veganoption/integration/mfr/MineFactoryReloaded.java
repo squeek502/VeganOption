@@ -11,11 +11,6 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 public class MineFactoryReloaded implements IIntegrator
 {
 	@Override
-	public void overrideContent()
-	{
-	}
-
-	@Override
 	public void preInit()
 	{
 	}

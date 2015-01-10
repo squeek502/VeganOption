@@ -17,11 +17,6 @@ public class ThermalExpansion implements IIntegrator
 	public static final String RESONANT_ENDER_FLUID_NAME = "ender";
 
 	@Override
-	public void overrideContent()
-	{
-	}
-
-	@Override
 	public void preInit()
 	{
 	}
