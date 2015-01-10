@@ -47,6 +47,7 @@ public class Kapok implements IContentModule
 	public void oredict()
 	{
 		OreDictionary.registerOre(ContentHelper.kapokOreDict, new ItemStack(kapokTuft));
+		OreDictionary.registerOre(ContentHelper.vegetableOilSourceOreDict, new ItemStack(kapokTuft));
 		OreDictionary.registerOre(ContentHelper.woolOreDict, new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre(ContentHelper.woolOreDict, new ItemStack(kapokBlock, 1, OreDictionary.WILDCARD_VALUE));
 		for (int i = 0; i < ConstantHelper.dyeColors.length; i++)

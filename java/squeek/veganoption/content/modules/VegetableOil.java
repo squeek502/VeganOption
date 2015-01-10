@@ -26,7 +26,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class VegetableOil implements IContentModule
 {
 	public static Item seedSunflower;
-	public static Item oilSunflower;
+	public static Item oilVegetable;
 
 	public static ItemStack oilPresser;
 
@@ -41,12 +41,12 @@ public class VegetableOil implements IContentModule
 				.setTextureName(ModInfo.MODID_LOWER + ":sunflower_seeds");
 		GameRegistry.registerItem(seedSunflower, "seedSunflower");
 
-		oilSunflower = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".oilSunflower")
+		oilVegetable = new Item()
+				.setUnlocalizedName(ModInfo.MODID + ".oilVegetable")
 				.setCreativeTab(CreativeTabs.tabFood)
-				.setTextureName(ModInfo.MODID_LOWER + ":sunflower_oil")
+				.setTextureName(ModInfo.MODID_LOWER + ":vegetable_oil")
 				.setContainerItem(Items.glass_bottle);
-		GameRegistry.registerItem(oilSunflower, "oilSunflower");
+		GameRegistry.registerItem(oilVegetable, "oilVegetable");
 	}
 
 	@Override
@@ -54,7 +54,18 @@ public class VegetableOil implements IContentModule
 	{
 		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, oilPresser.copy());
 		OreDictionary.registerOre(ContentHelper.sunflowerSeedOreDict, new ItemStack(seedSunflower));
-		OreDictionary.registerOre(ContentHelper.vegetableOilOreDict, new ItemStack(oilSunflower));
+		OreDictionary.registerOre(ContentHelper.vegetableOilOreDict, new ItemStack(oilVegetable));
+
+		ContentHelper.remapOre(ContentHelper.sunflowerSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.grapeSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.soybeanOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.cottonSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.coconutOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.oliveOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.cornOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.nutOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.teaSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.avocadoOreDict, ContentHelper.vegetableOilSourceOreDict);
 	}
 
 	@Override
@@ -93,7 +104,7 @@ public class VegetableOil implements IContentModule
 		};
 		Modifiers.drops.addDropsToBlock(sunflowerTopSpecifier, sunflowerDropSpecifier);
 
-		addOilRecipe(new ItemStack(oilSunflower), ContentHelper.sunflowerSeedOreDict);
+		addOilRecipe(new ItemStack(oilVegetable), ContentHelper.vegetableOilSourceOreDict);
 	}
 
 	@Override

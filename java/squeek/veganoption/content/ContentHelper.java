@@ -46,12 +46,32 @@ public class ContentHelper
 	public static final String kapokOreDict = "materialFluffy";
 	public static final String sunflowerSeedOreDict = "cropSunflower"; // HarvestCraft's oredict entry
 	public static final String oilPresserOreDict = "presserOil";
+	public static final String vegetableOilSourceOreDict = "sourceVegetableOil";
+
+	// various vegetable oil sources from other mods
+	public static final String grapeSeedOreDict = "seedGrape";
+	public static final String soybeanOreDict = "cropSoybean";
+	public static final String cottonSeedOreDict = "seedCotton";
+	public static final String coconutOreDict = "cropCoconut";
+	public static final String oliveOreDict = "cropOlive";
+	public static final String cornOreDict = "cropCorn";
+	public static final String nutOreDict = "listAllnut";
+	public static final String teaSeedOreDict = "seedTea";
+	public static final String avocadoOreDict = "cropAvocado";
 
 	public static void addOreSmelting(String inputOreName, ItemStack output, float xp)
 	{
 		for (ItemStack ore : OreDictionary.getOres(inputOreName))
 		{
 			GameRegistry.addSmelting(ore.copy(), output, 0.2f);
+		}
+	}
+
+	public static void remapOre(String from, String to)
+	{
+		for (ItemStack ore : OreDictionary.getOres(from))
+		{
+			OreDictionary.registerOre(to, ore.copy());
 		}
 	}
 }
