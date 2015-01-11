@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockPumpkinSeedMilk;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
@@ -37,6 +38,7 @@ public class PlantMilk implements IContentModule
 
 		bucketPumpkinSeedMilk = new ItemBucketGeneric(pumpkinSeedMilk)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketPumpkinSeedMilk")
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName("bucket_milk")
 				.setContainerItem(Items.bucket);
 		GameRegistry.registerItem(bucketPumpkinSeedMilk, "bucketPumpkinSeedMilk");

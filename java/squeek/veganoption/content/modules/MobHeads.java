@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -8,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.CompostRegistry;
@@ -31,13 +31,13 @@ public class MobHeads implements IContentModule
 	{
 		papierMache = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".papierMache")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":papier_mache");
 		GameRegistry.registerItem(papierMache, "papierMache");
 
 		mobHeadBlank = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".mobHeadBlank")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":blank_mob_head");
 		GameRegistry.registerItem(mobHeadBlank, "mobHeadBlank");
 	}

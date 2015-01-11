@@ -1,6 +1,5 @@
 package squeek.veganoption.items;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
@@ -12,7 +11,6 @@ public class ItemFertilizer extends Item
 	public ItemFertilizer()
 	{
 		super();
-		this.setCreativeTab(CreativeTabs.tabMaterials);
 	}
 
 	@Override

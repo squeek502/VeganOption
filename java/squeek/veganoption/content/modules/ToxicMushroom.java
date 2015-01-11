@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -11,6 +10,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -30,14 +30,14 @@ public class ToxicMushroom implements IContentModule
 				.setPotionEffect(Potion.poison.id, 5, 0, 1.0F)
 				.setPotionEffect(PotionHelper.spiderEyeEffect)
 				.setUnlocalizedName(ModInfo.MODID + ".falseMorel")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":false_morel");
 		GameRegistry.registerItem(falseMorel, "falseMorel");
 
 		falseMorelFermented = new Item()
 				.setPotionEffect(PotionHelper.fermentedSpiderEyeEffect)
 				.setUnlocalizedName(ModInfo.MODID + ".falseMorelFermented")
-				.setCreativeTab(CreativeTabs.tabBrewing)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":false_morel_fermented");
 		GameRegistry.registerItem(falseMorelFermented, "falseMorelFermented");
 	}

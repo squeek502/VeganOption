@@ -3,7 +3,6 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -12,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -30,12 +30,13 @@ public class Kapok implements IContentModule
 	{
 		kapokTuft = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".kapokTuft")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":kapok_tuft");
 		GameRegistry.registerItem(kapokTuft, "kapokTuft");
 
 		kapokBlock = (BlockColored) new BlockColored(Material.cloth)
 				.setHardness(0.8F)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setStepSound(Block.soundTypeCloth)
 				.setBlockName(ModInfo.MODID + ".kapok")
 				.setBlockTextureName("wool_colored");

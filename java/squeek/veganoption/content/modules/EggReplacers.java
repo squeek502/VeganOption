@@ -1,12 +1,12 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -28,14 +28,14 @@ public class EggReplacers implements IContentModule
 	{
 		appleSauce = new ItemFoodContainered(3, 1f, false)
 				.setUnlocalizedName(ModInfo.MODID + ".appleSauce")
-				.setCreativeTab(CreativeTabs.tabFood)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":apple_sauce")
 				.setContainerItem(Items.bowl);
 		GameRegistry.registerItem(appleSauce, "appleSauce");
 
 		potatoStarch = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".potatoStarch")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":potato_starch");
 		GameRegistry.registerItem(potatoStarch, "potatoStarch");
 	}

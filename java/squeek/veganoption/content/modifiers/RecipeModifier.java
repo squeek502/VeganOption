@@ -147,7 +147,7 @@ public class RecipeModifier
 		recipes.addAll(recipesToAdd);
 		if (recipesToRemove.size() + oreRecipesReplaced > 0)
 		{
-			VeganOption.Log.info("Replaced " + (recipesToRemove.size() + oreRecipesReplaced) + " recipies with OreDictionary'd equivalents");
+			VeganOption.Log.info("Replaced " + (recipesToRemove.size() + oreRecipesReplaced) + " recipes with OreDictionary'd equivalents");
 		}
 	}
 

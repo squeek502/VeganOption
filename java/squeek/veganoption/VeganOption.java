@@ -1,9 +1,11 @@
 package squeek.veganoption;
 
+import net.minecraft.creativetab.CreativeTabs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.helpers.CreativeTabHelper;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.network.NetworkHandler;
@@ -21,6 +23,9 @@ public class VeganOption
 
 	@Instance(ModInfo.MODID)
 	public static VeganOption instance;
+
+	// creative tab
+	public static CreativeTabs creativeTab = CreativeTabHelper.createTab(ModInfo.MODID, ModInfo.MODID_LOWER + ":creative_tab");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)

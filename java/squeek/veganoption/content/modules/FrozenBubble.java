@@ -2,7 +2,6 @@ package squeek.veganoption.content.modules;
 
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -11,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -38,14 +38,14 @@ public class FrozenBubble implements IContentModule
 	{
 		soapSolution = new ItemSoapSolution()
 				.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
-				.setCreativeTab(CreativeTabs.tabMisc)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":soap_solution")
 				.setContainerItem(Items.glass_bottle);
 		GameRegistry.registerItem(soapSolution, "soapSolution");
 
 		frozenBubble = new ItemFrozenBubble()
 				.setUnlocalizedName(ModInfo.MODID + ".frozenBubble")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":frozen_bubble");
 		GameRegistry.registerItem(frozenBubble, "frozenBubble");
 

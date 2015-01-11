@@ -2,12 +2,12 @@ package squeek.veganoption.content.modules;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
@@ -30,13 +30,13 @@ public class Jute implements IContentModule
 	{
 		juteFibre = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".juteFibre")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":jute_fibre");
 		GameRegistry.registerItem(juteFibre, "juteFibre");
 
 		juteStalk = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".juteStalk")
-				.setCreativeTab(CreativeTabs.tabMisc)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":jute_stalk");
 		GameRegistry.registerItem(juteStalk, "juteStalk");
 
@@ -44,7 +44,7 @@ public class Jute implements IContentModule
 				.setHardness(0.5F)
 				.setStepSound(Block.soundTypeGrass)
 				.setBlockName(ModInfo.MODID + ".juteBundled")
-				.setCreativeTab(CreativeTabs.tabBlock)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":jute_block");
 		juteBundled.setHarvestLevel("axe", 0);
 		GameRegistry.registerBlock(juteBundled, "juteBundled");

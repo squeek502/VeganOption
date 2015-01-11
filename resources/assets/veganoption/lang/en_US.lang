@@ -1,3 +1,6 @@
+# creative tab
+itemGroup.VeganOption=The Vegan Option
+
 # jute
 tile.VeganOption.juteBundled.name=Bundled Jute
 tile.VeganOption.juteBundled.nei.usage=In order to extract the [[VeganOption:juteFibre]], %1$s must be first be retted (submerged in water).
@@ -63,7 +66,7 @@ item.VeganOption.oilVegetable.name=Vegetable Oil
 
 # vegetable oil ink
 item.VeganOption.inkVegetableOil.name=Vegetable Oil Ink
-item.VeganOption.inkVegetableOil.nei.usage=%1$s is a [[minecraft:dye:0]] alternative.
+item.VeganOption.inkVegetableOil.nei.usage=%1$s is an [[minecraft:dye:0]] alternative.
 item.VeganOption.waxVegetable.name=Vegetable Wax
 item.VeganOption.rosin.name=Rosin
 

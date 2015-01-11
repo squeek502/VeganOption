@@ -4,6 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockBedGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
@@ -20,10 +21,12 @@ public class StrawBed implements IContentModule
 	{
 		bedStrawBlock = (BlockBedGeneric) new BlockBedGeneric()
 				.setHardness(0.2F)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setBlockName(ModInfo.MODID + ".bedStraw")
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":straw_bed");
 		bedStrawItem = (ItemBedGeneric) new ItemBedGeneric(bedStrawBlock)
 				.setMaxStackSize(1)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setUnlocalizedName(ModInfo.MODID + ".bedStraw")
 				.setTextureName(ModInfo.MODID_LOWER + ":straw_bed");
 		bedStrawBlock.setBedItem(bedStrawItem);

@@ -1,7 +1,6 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -11,6 +10,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockEncrustedObsidian;
 import squeek.veganoption.blocks.BlockEnderRift;
 import squeek.veganoption.blocks.BlockRawEnder;
@@ -42,7 +42,7 @@ public class Ender implements IContentModule
 				.setResistance(2000.0F)
 				.setStepSound(Block.soundTypePiston)
 				.setBlockName(ModInfo.MODID + ".encrustedObsidian")
-				.setCreativeTab(CreativeTabs.tabBlock)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":encrusted_obsidian");
 		GameRegistry.registerBlock(encrustedObsidian, "encrustedObsidian");
 		encrustedObsidian.setHarvestLevel("pickaxe", 3);
@@ -71,7 +71,7 @@ public class Ender implements IContentModule
 
 		bucketRawEnder = new ItemBucketGeneric(rawEnder)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketRawEnder")
-				.setCreativeTab(CreativeTabs.tabMisc)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":raw_ender_bucket")
 				.setContainerItem(Items.bucket);
 		GameRegistry.registerItem(bucketRawEnder, "bucketRawEnder");

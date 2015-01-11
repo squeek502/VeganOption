@@ -1,7 +1,6 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -15,6 +14,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockCompost;
 import squeek.veganoption.blocks.BlockComposter;
 import squeek.veganoption.blocks.renderers.RenderComposter;
@@ -45,7 +45,7 @@ public class Composting implements IContentModule
 				.setHardness(2.5F)
 				.setStepSound(Block.soundTypeWood)
 				.setBlockName(ModInfo.MODID + ".composter")
-				.setCreativeTab(CreativeTabs.tabInventory)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":composter");
 		GameRegistry.registerBlock(composter, "composter");
 		GameRegistry.registerTileEntity(TileEntityComposter.class, ModInfo.MODID + ".composter");
@@ -57,13 +57,13 @@ public class Composting implements IContentModule
 		rottenPlants = new ItemFood(4, 0.1F, true)
 				.setPotionEffect(Potion.hunger.id, 30, 0, 0.8F)
 				.setUnlocalizedName(ModInfo.MODID + ".rottenPlants")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":rotten_plants");
 		GameRegistry.registerItem(rottenPlants, "rottenPlants");
 
 		fertilizer = new ItemFertilizer()
 				.setUnlocalizedName(ModInfo.MODID + ".fertilizer")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":fertilizer");
 		GameRegistry.registerItem(fertilizer, "fertilizer");
 
@@ -71,7 +71,7 @@ public class Composting implements IContentModule
 				.setHardness(0.5F)
 				.setStepSound(Block.soundTypeGravel)
 				.setBlockName(ModInfo.MODID + ".compost")
-				.setCreativeTab(CreativeTabs.tabBlock)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":compost");
 		GameRegistry.registerBlock(compost, "compost");
 

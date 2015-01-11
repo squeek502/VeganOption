@@ -3,7 +3,6 @@ package squeek.veganoption.blocks;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
@@ -17,7 +16,6 @@ public class BlockCompost extends Block
 	public BlockCompost()
 	{
 		super(Material.ground);
-		this.setCreativeTab(CreativeTabs.tabBlock);
 		setHarvestLevel("shovel", 0);
 		setTickRandomly(true);
 	}

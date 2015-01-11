@@ -1,12 +1,12 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -22,7 +22,7 @@ public class Feather implements IContentModule
 	{
 		fauxFeather = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".fauxFeather")
-				.setCreativeTab(CreativeTabs.tabMaterials)
+				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName("feather");
 		GameRegistry.registerItem(fauxFeather, "fauxFeather");
 	}
