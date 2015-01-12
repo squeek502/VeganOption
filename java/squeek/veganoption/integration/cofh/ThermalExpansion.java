@@ -8,29 +8,21 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.content.modules.FrozenBubble;
-import squeek.veganoption.integration.IIntegrator;
+import squeek.veganoption.integration.IntegratorBase;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
-public class ThermalExpansion implements IIntegrator
+public class ThermalExpansion extends IntegratorBase
 {
 	public static final int RESONANT_ENDER_PER_PEARL = FluidContainerRegistry.BUCKET_VOLUME / 4;
 	public static final String RESONANT_ENDER_FLUID_NAME = "ender";
 
 	@Override
-	public void preInit()
-	{
-	}
-
-	@Override
 	public void init()
 	{
+		super.init();
+
 		addTransposerFill(4000, new ItemStack(FrozenBubble.frozenBubble), new ItemStack(Items.ender_pearl), new FluidStack(Ender.fluidRawEnder, Ender.RAW_ENDER_PER_PEARL), true);
 		addTransposerFill(4000, new ItemStack(FrozenBubble.frozenBubble), new ItemStack(Items.ender_pearl), FluidRegistry.getFluidStack(RESONANT_ENDER_FLUID_NAME, RESONANT_ENDER_PER_PEARL), false);
-	}
-
-	@Override
-	public void postInit()
-	{
 	}
 
 	/**

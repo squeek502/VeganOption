@@ -4,32 +4,20 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.content.ContentHelper;
-import squeek.veganoption.integration.IIntegrator;
-import squeek.veganoption.integration.IntegrationHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
+import squeek.veganoption.integration.IntegratorBase;
 
-public class Witchery implements IIntegrator
+public class Witchery extends IntegratorBase
 {
 	public static final int woodAshMetadata = 18;
 
 	@Override
-	public void preInit()
+	public void oredict()
 	{
-	}
-
-	@Override
-	public void init()
-	{
-		Item ingredient = GameRegistry.findItem(IntegrationHandler.MODID_WITCHERY, "ingredient");
+		Item ingredient = getItem("ingredient");
 		if (ingredient != null)
 		{
 			ItemStack woodAsh = new ItemStack(ingredient, 1, woodAshMetadata);
 			OreDictionary.registerOre(ContentHelper.woodAshOreDict, woodAsh);
 		}
-	}
-
-	@Override
-	public void postInit()
-	{
 	}
 }

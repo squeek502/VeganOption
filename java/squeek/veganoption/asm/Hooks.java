@@ -43,7 +43,7 @@ public class Hooks
 	// return the TiC ToolRod version of the given handle if it exists
 	public static ItemStack getRealHandle(ItemStack handle)
 	{
-		if (IntegrationHandler.modExists(IntegrationHandler.MODID_TINKERS_CONSTRUCT))
+		if (IntegrationHandler.integrationExists(IntegrationHandler.MODID_TINKERS_CONSTRUCT))
 			return TConstruct.getRealHandle(handle);
 
 		return handle;

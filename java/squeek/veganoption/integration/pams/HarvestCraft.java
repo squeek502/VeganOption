@@ -1,35 +1,26 @@
 package squeek.veganoption.integration.pams;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
-import squeek.veganoption.integration.IIntegrator;
-import squeek.veganoption.integration.IntegrationHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
+import squeek.veganoption.integration.IntegratorBase;
 
-// TODO: More oils
-public class HarvestCraft implements IIntegrator
+public class HarvestCraft extends IntegratorBase
 {
 	public static final String rootPackage = "com.pam.harvestcraft.";
-	public static final String modId = IntegrationHandler.MODID_HARVESTCRAFT;
-
-	public static Item getItem(String name)
-	{
-		return GameRegistry.findItem(modId, name);
-	}
 
 	@Override
-	public void preInit()
+	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, new ItemStack(HarvestCraft.getItem("juicerItem")));
+		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, new ItemStack(getItem("juicerItem")));
 	}
 
 	@Override
 	public void init()
 	{
+		super.init();
 		CompostRegistry.blacklist(new FoodSpecifier()
 		{
 			@Override
@@ -48,10 +39,5 @@ public class HarvestCraft implements IIntegrator
 				return false;
 			}
 		});
-	}
-
-	@Override
-	public void postInit()
-	{
 	}
 }

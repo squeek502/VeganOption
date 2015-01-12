@@ -66,9 +66,9 @@ item.VeganOption.oilVegetable.name=Vegetable Oil
 
 # vegetable oil ink
 item.VeganOption.inkVegetableOilBlack.name=Black Vegetable Oil Ink
-item.VeganOption.inkVegetableOilBlack.nei.usage=%1$s is an [[minecraft:dye:0]] alternative.
+item.VeganOption.inkVegetableOilBlack.nei.usage=%1$s is an [[minecraft:dye:0]] dye alternative.
 item.VeganOption.inkVegetableOilWhite.name=White Vegetable Oil Ink
-item.VeganOption.inkVegetableOilWhite.nei.usage=%1$s is a [[minecraft:dye:15]] alternative.
+item.VeganOption.inkVegetableOilWhite.nei.usage=%1$s is a [[minecraft:dye:15]] dye alternative.
 item.VeganOption.waxVegetable.name=Vegetable Wax
 item.VeganOption.rosin.name=Rosin
 

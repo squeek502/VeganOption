@@ -1,25 +1,14 @@
 package squeek.veganoption.integration.waila;
 
+import squeek.veganoption.integration.IntegratorBase;
 import cpw.mods.fml.common.event.FMLInterModComms;
-import squeek.veganoption.integration.IIntegrator;
 
-public class Waila implements IIntegrator
+public class Waila extends IntegratorBase
 {
-
-	@Override
-	public void preInit()
-	{
-	}
-
 	@Override
 	public void init()
 	{
-		FMLInterModComms.sendMessage("Waila", "register", "squeek.veganoption.integration.waila.WailaRegistrar.register");
+		super.init();
+		FMLInterModComms.sendMessage(modID, "register", "squeek.veganoption.integration.waila.WailaRegistrar.register");
 	}
-
-	@Override
-	public void postInit()
-	{
-	}
-	
 }

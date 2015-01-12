@@ -1,12 +1,13 @@
 package squeek.veganoption.integration;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import cpw.mods.fml.common.Loader;
 
 public class IntegrationHandler
 {
-	private static Map<String, IIntegrator> integrators = new HashMap<String, IIntegrator>();
+	private static Map<String, IntegratorBase> integrators = new HashMap<String, IntegratorBase>();
 
 	public static final String MODID_THERMAL_EXPANSION = "ThermalExpansion";
 	public static final String MODID_HARVESTCRAFT = "harvestcraft";
@@ -29,8 +30,7 @@ public class IntegrationHandler
 
 	public static void preInit()
 	{
-		// TODO: Register overrides and make the NEI text handler let people know about them
-		for (IIntegrator integrator : integrators.values())
+		for (IntegratorBase integrator : integrators.values())
 		{
 			integrator.preInit();
 		}
@@ -38,7 +38,7 @@ public class IntegrationHandler
 
 	public static void init()
 	{
-		for (IIntegrator integrator : integrators.values())
+		for (IntegratorBase integrator : integrators.values())
 		{
 			integrator.init();
 		}
@@ -46,7 +46,7 @@ public class IntegrationHandler
 
 	public static void postInit()
 	{
-		for (IIntegrator integrator : integrators.values())
+		for (IntegratorBase integrator : integrators.values())
 		{
 			integrator.postInit();
 		}
@@ -65,7 +65,8 @@ public class IntegrationHandler
 			{
 				String fullClassName = "squeek.veganoption.integration." + packageName + "." + className;
 				Class<?> clazz = IntegrationHandler.class.getClassLoader().loadClass(fullClassName);
-				IIntegrator integrator = (IIntegrator) clazz.newInstance();
+				Constructor<?> constructor = clazz.getConstructor(String.class);
+				IntegratorBase integrator = (IntegratorBase) constructor.newInstance(modId);
 				integrators.put(modId, integrator);
 				return true;
 			}
@@ -77,7 +78,7 @@ public class IntegrationHandler
 		return false;
 	}
 
-	public static boolean modExists(String modId)
+	public static boolean integrationExists(String modId)
 	{
 		return integrators.containsKey(modId);
 	}

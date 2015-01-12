@@ -4,26 +4,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import squeek.veganoption.content.modules.Composting;
-import squeek.veganoption.integration.IIntegrator;
 import squeek.veganoption.integration.IntegrationHandler;
+import squeek.veganoption.integration.IntegratorBase;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
-public class MineFactoryReloaded implements IIntegrator
+public class MineFactoryReloaded extends IntegratorBase
 {
-	@Override
-	public void preInit()
-	{
-	}
-
 	@Override
 	public void init()
 	{
+		super.init();
 		registerFertilizer(new ItemStack(Composting.fertilizer), FertilizerType.GrowPlant);
-	}
-
-	@Override
-	public void postInit()
-	{
 	}
 
 	// copied from powercrystals.minefactoryreloaded.api.FertilizerType

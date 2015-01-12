@@ -11,8 +11,6 @@ import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.registry.RelationshipRegistry;
-import squeek.veganoption.integration.IntegrationHandler;
-import squeek.veganoption.integration.pams.HarvestCraft;
 import squeek.veganoption.items.ItemFoodContainered;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -51,14 +49,7 @@ public class EggReplacers implements IContentModule
 	@Override
 	public void recipes()
 	{
-		if (IntegrationHandler.modExists(IntegrationHandler.MODID_HARVESTCRAFT))
-		{
-			appleSauce = HarvestCraft.getItem("applesauceItem");
-		}
-		else
-		{
-			GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.apple), new ItemStack(Items.bowl));
-		}
+		GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.apple), new ItemStack(Items.bowl));
 
 		OreDictionary.registerOre(ContentHelper.eggOreDict, new ItemStack(Items.egg));
 		Modifiers.recipes.convertInput(new ItemStack(Items.egg), ContentHelper.eggOreDict);

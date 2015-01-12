@@ -2,7 +2,10 @@ package squeek.veganoption.integration.tic;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,14 +16,12 @@ import squeek.veganoption.content.modules.Bioplastic;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.helpers.LangHelper;
-import squeek.veganoption.integration.IIntegrator;
 import squeek.veganoption.integration.IntegrationHandler;
+import squeek.veganoption.integration.IntegratorBase;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
-public class TConstruct implements IIntegrator
+public class TConstruct extends IntegratorBase
 {
-	public static final String modID = IntegrationHandler.MODID_TINKERS_CONSTRUCT;
-
 	public static final int MATID_PLASTIC = 1000; // what MFR uses
 	public static final String MATNAME_PLASTIC = "Plastic"; // what MFR uses
 	/**
@@ -30,44 +31,45 @@ public class TConstruct implements IIntegrator
 	 */
 	public static final String KEY_PLASTICROD_MATERIALSET = "BioplasticRodSet";
 
-	public static final String ITEMNAME_TOOLROD = modID + ":toolRod";
-	public static final String ITEMNAME_JERKY = modID + ":jerky";
-	public static final String ITEMNAME_GOLDENHEAD = modID + ":goldHead";
-	public static final String ITEMNAME_DIAMONDAPPLE = modID + ":diamondApple";
-	public static final String ITEMNAME_STRANGEFOOD = modID + ":strangeFood";
-
-	@Override
-	public void preInit()
-	{
-	}
+	public static final String ITEMNAME_TOOLROD = "toolRod";
+	public static final String ITEMNAME_JERKY = "jerky";
+	public static final String ITEMNAME_GOLDENHEAD = "goldHead";
+	public static final String ITEMNAME_DIAMONDAPPLE = "diamondApple";
+	public static final String ITEMNAME_STRANGEFOOD = "strangeFood";
 
 	@Override
 	public void init()
 	{
+		super.init();
+
 		registerPlasticToolMaterial();
 
 		CompostRegistry.blacklist(new FoodSpecifier()
 		{
+			private final Set<String> itemNameBlacklist = new HashSet<String>(
+					Arrays.asList(
+									fullItemName(ITEMNAME_JERKY),
+									fullItemName(ITEMNAME_GOLDENHEAD),
+									fullItemName(ITEMNAME_DIAMONDAPPLE),
+									fullItemName(ITEMNAME_STRANGEFOOD)
+							)
+					);
+
 			@Override
 			public boolean matches(ItemStack itemStack)
 			{
 				// meat and diamonds are bad for composting
 				String itemName = Item.itemRegistry.getNameForObject(itemStack.getItem());
-				return itemName.equals(ITEMNAME_JERKY) || itemName.equals(ITEMNAME_GOLDENHEAD) || itemName.equals(ITEMNAME_DIAMONDAPPLE) || itemName.equals(ITEMNAME_STRANGEFOOD);
+				return itemNameBlacklist.contains(itemName);
 			}
 		});
-	}
-
-	@Override
-	public void postInit()
-	{
 	}
 
 	public void registerPlasticToolMaterial()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 
-		if (!IntegrationHandler.modExists(IntegrationHandler.MODID_MINEFACTORY_RELOADED))
+		if (!IntegrationHandler.integrationExists(IntegrationHandler.MODID_MINEFACTORY_RELOADED))
 		{
 			// material values mirrored from from MFR's plastic
 			tag.setInteger("Id", MATID_PLASTIC);
