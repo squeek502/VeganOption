@@ -7,11 +7,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public abstract class IntegratorBase implements IContentModule
 {
-	public final String modID;
+	// initialized by IntegrationHandler
+	public String modID;
 
 	public IntegratorBase()
 	{
-		this.modID = null;
 	}
 
 	public IntegratorBase(String modId)

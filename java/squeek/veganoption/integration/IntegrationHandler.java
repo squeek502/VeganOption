@@ -1,6 +1,5 @@
 package squeek.veganoption.integration;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import cpw.mods.fml.common.Loader;
@@ -52,34 +51,34 @@ public class IntegrationHandler
 		}
 	}
 
-	public static boolean tryIntegration(String modId, String packageName)
+	public static boolean tryIntegration(String modID, String packageName)
 	{
-		return tryIntegration(modId, packageName, modId);
+		return tryIntegration(modID, packageName, modID);
 	}
 
-	public static boolean tryIntegration(String modId, String packageName, String className)
+	public static boolean tryIntegration(String modID, String packageName, String className)
 	{
-		if (Loader.isModLoaded(modId))
+		if (Loader.isModLoaded(modID))
 		{
 			try
 			{
 				String fullClassName = "squeek.veganoption.integration." + packageName + "." + className;
-				Class<?> clazz = IntegrationHandler.class.getClassLoader().loadClass(fullClassName);
-				Constructor<?> constructor = clazz.getConstructor(String.class);
-				IntegratorBase integrator = (IntegratorBase) constructor.newInstance(modId);
-				integrators.put(modId, integrator);
+				Class<?> clazz = Class.forName(fullClassName);
+				IntegratorBase integrator = (IntegratorBase) clazz.newInstance();
+				integrator.modID = modID;
+				integrators.put(modID, integrator);
 				return true;
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		return false;
 	}
 
-	public static boolean integrationExists(String modId)
+	public static boolean integrationExists(String modID)
 	{
-		return integrators.containsKey(modId);
+		return integrators.containsKey(modID);
 	}
 }

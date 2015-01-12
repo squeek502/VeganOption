@@ -126,7 +126,7 @@ public class TConstruct extends IntegratorBase
 		{
 			if (OreDictionary.itemMatches(item, itemStack, false))
 			{
-				Item toolRodItem = (Item) Item.itemRegistry.getObject(ITEMNAME_TOOLROD);
+				Item toolRodItem = (Item) Item.itemRegistry.getObject(IntegrationHandler.MODID_TINKERS_CONSTRUCT + ":" + ITEMNAME_TOOLROD);
 				if (toolRodItem != null)
 				{
 					return new ItemStack(toolRodItem, 1, MATID_PLASTIC);
