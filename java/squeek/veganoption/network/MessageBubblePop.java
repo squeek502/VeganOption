@@ -4,9 +4,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityBreakingFX;
 import squeek.veganoption.content.modules.FrozenBubble;
+import squeek.veganoption.helpers.NetworkHelper;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class MessageBubblePop implements IMessage, IMessageHandler<MessageBubblePop, IMessage>
 {
@@ -40,12 +43,13 @@ public class MessageBubblePop implements IMessage, IMessageHandler<MessageBubble
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageBubblePop message, MessageContext ctx)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		for (int i = 0; i < 8; ++i)
 		{
-			mc.effectRenderer.addEffect(new EntityBreakingFX(mc.theWorld, message.x, message.y, message.z, FrozenBubble.frozenBubble));
+			mc.effectRenderer.addEffect(new EntityBreakingFX(NetworkHelper.getSidedWorld(ctx), message.x, message.y, message.z, FrozenBubble.frozenBubble));
 		}
 		return null;
 	}

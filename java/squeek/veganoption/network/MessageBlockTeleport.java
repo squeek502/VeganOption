@@ -1,9 +1,8 @@
 package squeek.veganoption.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.World;
 import squeek.veganoption.blocks.BlockEnderRift;
+import squeek.veganoption.helpers.NetworkHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -42,9 +41,8 @@ public class MessageBlockTeleport implements IMessage, IMessageHandler<MessageBl
 
 	@Override
 	public IMessage onMessage(MessageBlockTeleport message, MessageContext ctx)
-	{	
-		Minecraft mc = Minecraft.getMinecraft();
-		BlockEnderRift.spawnBlockTeleportFX((World) mc.theWorld, message.x, message.y, message.z, RandomHelper.random);
+	{
+		BlockEnderRift.spawnBlockTeleportFX(NetworkHelper.getSidedWorld(ctx), message.x, message.y, message.z, RandomHelper.random);
 		return null;
 	}
 }

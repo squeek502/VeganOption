@@ -3,7 +3,6 @@ package squeek.veganoption.content.registry;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -18,8 +17,6 @@ public class CompostRegistry
 
 	public static void registerAllFoods()
 	{
-		List<ItemStack> stackList = new ArrayList<ItemStack>();
-
 		for (Object obj : Item.itemRegistry)
 		{
 			Item item = ((Item) obj);
@@ -27,21 +24,9 @@ public class CompostRegistry
 			if (item == null)
 				continue;
 
-			for (CreativeTabs itemTab : item.getCreativeTabs())
+			if (isCompostableFood(new ItemStack(item)))
 			{
-				if (itemTab == null)
-					continue;
-
-				stackList.clear();
-				item.getSubItems(item, itemTab, stackList);
-			}
-
-			for (ItemStack itemStack : stackList)
-			{
-				if (isCompostableFood(itemStack))
-				{
-					addGreen(itemStack);
-				}
+				addGreen(item);
 			}
 		}
 	}

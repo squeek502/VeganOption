@@ -16,7 +16,6 @@ public class CreativeTabHelper
 
 	public static class ItemCreativeTabIconProxy extends Item
 	{
-		@SideOnly(Side.CLIENT)
 		public ItemCreativeTabIconProxy()
 		{
 			super();
