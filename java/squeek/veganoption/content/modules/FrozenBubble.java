@@ -30,6 +30,7 @@ public class FrozenBubble implements IContentModule
 {
 	public static Item soapSolution;
 	public static Item frozenBubble;
+	public static final int ENTITY_BUBBLE_ID = 0;
 
 	public static final ItemStack pufferFish = new ItemStack(Items.fish, 1, ItemFishFood.FishType.PUFFERFISH.ordinal());
 
@@ -49,7 +50,7 @@ public class FrozenBubble implements IContentModule
 				.setTextureName(ModInfo.MODID_LOWER + ":frozen_bubble");
 		GameRegistry.registerItem(frozenBubble, "frozenBubble");
 
-		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", EntityRegistry.findGlobalUniqueEntityId(), ModInfo.MODID, 80, 1, true);
+		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", ENTITY_BUBBLE_ID, ModInfo.MODID, 80, 1, true);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
 			createBubbleRenderer();
