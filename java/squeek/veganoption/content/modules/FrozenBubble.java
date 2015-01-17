@@ -49,7 +49,7 @@ public class FrozenBubble implements IContentModule
 				.setTextureName(ModInfo.MODID_LOWER + ":frozen_bubble");
 		GameRegistry.registerItem(frozenBubble, "frozenBubble");
 
-		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", EntityRegistry.findGlobalUniqueEntityId(), ModInfo.MODID, 80, 10, true);
+		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", EntityRegistry.findGlobalUniqueEntityId(), ModInfo.MODID, 80, 1, true);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
 			createBubbleRenderer();

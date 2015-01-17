@@ -91,9 +91,14 @@ public class EntityBubble extends EntityThrowable
 
 		super.onUpdate();
 
-		this.motionX *= 0.9F;
-		this.motionY *= 0.9F;
-		this.motionZ *= 0.9F;
+		// this check helps avoid low velocities which minecraft seems to struggle with? (visually stutters)
+		// have not looked into the cause; this is basically an ugly/fast workaround
+		if (motionX * motionX + motionY * motionY + motionZ * motionZ > 0.025f)
+		{
+			this.motionX *= 0.9F;
+			this.motionY *= 0.9F;
+			this.motionZ *= 0.9F;
+		}
 	}
 
 	// initial speed
@@ -106,7 +111,7 @@ public class EntityBubble extends EntityThrowable
 	@Override
 	protected float getGravityVelocity()
 	{
-		return 0.0001F;
+		return 0.0F;
 	}
 
 	public void pop()
