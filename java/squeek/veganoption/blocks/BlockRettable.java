@@ -94,6 +94,12 @@ public class BlockRettable extends BlockHay
 	}
 
 	@Override
+	protected boolean canSilkHarvest()
+	{
+		return false;
+	}
+
+	@Override
 	public Item getItemDropped(int meta, Random random, int fortune)
 	{
 		if (isRetted(meta))
