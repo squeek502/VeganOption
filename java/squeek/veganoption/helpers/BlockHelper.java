@@ -210,6 +210,9 @@ public class BlockHelper
 			if (isBlockUnbreakable(block, blockPos.world, blockPos.x, blockPos.y, blockPos.z))
 				continue;
 
+			if (block.getMaterial().isLiquid())
+				continue;
+
 			filteredBlocks.add(blockPos);
 		}
 		return filteredBlocks.toArray(new BlockPos[0]);
