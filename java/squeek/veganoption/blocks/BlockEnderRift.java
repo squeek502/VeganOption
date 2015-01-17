@@ -10,13 +10,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
+import squeek.veganoption.helpers.BlockHelper.BlockPos;
+import squeek.veganoption.helpers.RandomHelper;
+import squeek.veganoption.network.MessageBlockTeleport;
+import squeek.veganoption.network.NetworkHandler;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEnderRift extends BlockEndPortal
 {
+	public static final int BLOCK_TELEPORT_RADIUS = 4;
+
 	public static class MaterialEnderRift extends MaterialLogic
 	{
 		public MaterialEnderRift()
@@ -78,10 +86,39 @@ public class BlockEnderRift extends BlockEndPortal
 				}
 				else
 				{
-					// TODO: negative consequences
-					VeganOption.Log.info("too bad it's daytime");
+					BlockPos[] blocksInRadius = BlockHelper.getBlocksInRadiusAround(new BlockPos(world, x, y, z), BLOCK_TELEPORT_RADIUS);
+					blocksInRadius = BlockHelper.filterBlockListToBreakableBlocks(blocksInRadius);
+					if (blocksInRadius.length > 0)
+					{
+						// TODO: teleport block to the end?
+						BlockPos blockPosToSwallow = blocksInRadius[RandomHelper.random.nextInt(blocksInRadius.length)];
+						blockPosToSwallow.world.setBlockToAir(blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z);
+						blockPosToSwallow.world.playSoundEffect(blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z, "mob.endermen.portal", 1.0F, 1.0F);
+
+						if (!world.isRemote)
+						{
+							TargetPoint target = new TargetPoint(world.provider.dimensionId, blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z, 80);
+							NetworkHandler.channel.sendToAllAround(new MessageBlockTeleport(blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z), target);
+						}
+					}
 				}
 			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void spawnBlockTeleportFX(World world, double x, double y, double z, Random rand)
+	{
+		for (int i = 0; i < 128; ++i)
+		{
+			double posX = x + rand.nextDouble();
+			double posY = y + rand.nextDouble();
+			double posZ = z + rand.nextDouble();
+			double velX = rand.nextDouble() - 0.5D;
+			double velY = rand.nextDouble() - 0.5D;
+			double velZ = rand.nextDouble() - 0.5D;
+
+			world.spawnParticle("portal", posX, posY, posZ, velX, velY, velZ);
 		}
 	}
 

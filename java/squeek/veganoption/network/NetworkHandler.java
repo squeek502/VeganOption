@@ -12,5 +12,6 @@ public class NetworkHandler
 	public static void init()
 	{
 		channel.registerMessage(MessageBubblePop.class, MessageBubblePop.class, 0, Side.CLIENT);
+		channel.registerMessage(MessageBlockTeleport.class, MessageBlockTeleport.class, 1, Side.CLIENT);
 	}
 }

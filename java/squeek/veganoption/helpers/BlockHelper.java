@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 
 public class BlockHelper
 {
+	public static final float BLOCK_HARDNESS_UNBREAKABLE = -1.0f;
+
 	public static class BlockPos
 	{
 		public final World world;
@@ -159,16 +161,16 @@ public class BlockHelper
 		}
 		return null;
 	}
-	
+
 	public static BlockPos[] getBlocksInRadiusAround(BlockPos centerBlock, int radius)
 	{
 		List<BlockPos> blocks = new ArrayList<BlockPos>();
 		int radiusSq = radius * radius;
-		for (int xOffset=0; xOffset <= radius; xOffset++)
+		for (int xOffset = 0; xOffset <= radius; xOffset++)
 		{
-			for (int yOffset=0; yOffset <= radius; yOffset++)
+			for (int yOffset = 0; yOffset <= radius; yOffset++)
 			{
-				for (int zOffset=0; zOffset <= radius; zOffset++)
+				for (int zOffset = 0; zOffset <= radius; zOffset++)
 				{
 					BlockPos block = centerBlock.getOffset(xOffset, yOffset, zOffset);
 					int xDelta = block.x - centerBlock.x;
@@ -190,5 +192,31 @@ public class BlockHelper
 			}
 		}
 		return blocks.toArray(new BlockPos[0]);
+	}
+
+	public static BlockPos[] filterBlockListToBreakableBlocks(BlockPos... blocks)
+	{
+		List<BlockPos> filteredBlocks = new ArrayList<BlockPos>();
+		for (BlockPos blockPos : blocks)
+		{
+			Block block = blockPos.getBlock();
+
+			if (block == null)
+				continue;
+
+			if (block.isAir(blockPos.world, blockPos.x, blockPos.y, blockPos.z))
+				continue;
+
+			if (isBlockUnbreakable(block, blockPos.world, blockPos.x, blockPos.y, blockPos.z))
+				continue;
+
+			filteredBlocks.add(blockPos);
+		}
+		return filteredBlocks.toArray(new BlockPos[0]);
+	}
+
+	public static boolean isBlockUnbreakable(Block block, World world, int x, int y, int z)
+	{
+		return block.getBlockHardness(world, x, y, z) == BLOCK_HARDNESS_UNBREAKABLE;
 	}
 }
