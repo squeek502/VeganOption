@@ -16,7 +16,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "after:" + IntegrationHandler.MODID_HARVESTCRAFT)
+// dependency of after:* seems necessary to ensure that the RecipeModifier doesn't miss any recipes
+@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "after:*")
 public class VeganOption
 {
 	public static final Logger Log = LogManager.getLogger(ModInfo.MODID);
