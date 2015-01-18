@@ -20,6 +20,7 @@ import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.integration.IntegratorBase;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
+// TODO: Faux feather as a valid fletching material
 public class TConstruct extends IntegratorBase
 {
 	public static final int MATID_PLASTIC = 1000; // what MFR uses
@@ -36,6 +37,15 @@ public class TConstruct extends IntegratorBase
 	public static final String ITEMNAME_GOLDENHEAD = "goldHead";
 	public static final String ITEMNAME_DIAMONDAPPLE = "diamondApple";
 	public static final String ITEMNAME_STRANGEFOOD = "strangeFood";
+
+	@Override
+	public void oredict()
+	{
+		super.oredict();
+
+		ItemStack plasticToolRod = new ItemStack(getItem(ITEMNAME_TOOLROD), 1, MATID_PLASTIC);
+		OreDictionary.registerOre(ContentHelper.plasticRodOreDict, plasticToolRod);
+	}
 
 	@Override
 	public void init()
