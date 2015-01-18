@@ -127,6 +127,15 @@ public class BlockRettable extends BlockHay
 	}
 
 	@Override
+	public void setHarvestLevel(String toolClass, int level, int metadata)
+	{
+		if (isRetted(metadata))
+			return;
+
+		super.setHarvestLevel(toolClass, level, metadata);
+	}
+
+	@Override
 	public int damageDropped(int p_149692_1_)
 	{
 		return 0;
