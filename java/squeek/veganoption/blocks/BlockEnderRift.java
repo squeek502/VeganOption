@@ -6,6 +6,9 @@ import net.minecraft.block.BlockEndPortal;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLogic;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -14,6 +17,7 @@ import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.BlockHelper.BlockPos;
+import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.network.MessageBlockTeleport;
 import squeek.veganoption.network.NetworkHandler;
@@ -24,6 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockEnderRift extends BlockEndPortal
 {
 	public static final int BLOCK_TELEPORT_RADIUS = 4;
+	public static final int NAUSEA_LENGTH_IN_SECONDS = 5;
 
 	public static class MaterialEnderRift extends MaterialLogic
 	{
@@ -148,10 +153,15 @@ public class BlockEnderRift extends BlockEndPortal
 		return true;
 	}
 
-	// stop from teleporting to the end
+	// by not calling the super's method, this also stops colliding entities from teleporting to the end
 	@Override
-	public void onEntityCollidedWithBlock(World p_149670_1_, int p_149670_2_, int p_149670_3_, int p_149670_4_, Entity p_149670_5_)
+	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
+		if (entity instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) entity;
+			player.addPotionEffect(new PotionEffect(Potion.confusion.id, MiscHelper.TICKS_PER_SEC * NAUSEA_LENGTH_IN_SECONDS));
+		}
 		return;
 	}
 }
