@@ -33,7 +33,7 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 	public static final int HEIGHT = 130;
 	public static final int Y_START = 22;
 	public static final int PADDING = 4;
-	public static final int MAX_LINES_PER_PAGE = (HEIGHT - Y_START) / fontRenderer.FONT_HEIGHT;
+	public static final int MAX_LINES_PER_PAGE = (HEIGHT - Y_START) / fontRenderer.FONT_HEIGHT - 1;
 
 	public String text = null;
 	public ItemStack itemStack = null;
@@ -59,7 +59,7 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 		this.parents = !isUsage ? RelationshipRegistry.getParents(itemStack) : null;
 
 		this.text = isUsage ? getUsageOfItemStack(this.itemStack) : getCraftingOfItemStack(this.itemStack);
-		
+
 		if (parents != null)
 		{
 			for (ItemStack parent : parents)
@@ -82,18 +82,28 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 				}
 			}
 		}
-		
+
 		if (parents != null || children != null)
 			firstPageMaxLines -= 3;
 
 		this.text = processText(text);
-		
+
 		if (referenced.size() > 0)
-			firstPageMaxLines -= 4;
+			firstPageMaxLines -= 3;
 
 		splitText = splitText(text);
+
+		// remove blank lines at the start of pages
+		for (int page = 0; page < numRecipes(); page++)
+		{
+			int startingLineIndex = getStartingLine(page);
+			while (EnumChatFormatting.getTextWithoutFormattingCodes(splitText.get(startingLineIndex)).isEmpty())
+			{
+				splitText.remove(startingLineIndex);
+			}
+		}
 	}
-	
+
 	public String getStringOfItemStack(String string, ItemStack itemStack)
 	{
 		if (LangHelper.existsRaw(string))
@@ -119,13 +129,15 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 		if (text == null)
 			return null;
 
-		return fontRenderer.listFormattedStringToWidth(text, WIDTH - PADDING * 2);
+		return new ArrayList<String>(fontRenderer.listFormattedStringToWidth(text, WIDTH - PADDING * 2));
 	}
-	
+
 	public String processText(String text)
 	{
 		if (text == null)
 			return null;
+
+		text = text.replaceAll("\\\\n", String.valueOf('\n'));
 
 		// {unlocalized.string.name} looks up the localized string
 		Matcher localizationMatcher = Pattern.compile("\\{([^\\}]+)\\}").matcher(text);
@@ -265,7 +277,7 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 			int maxLines = recipe == 0 ? firstPageMaxLines : MAX_LINES_PER_PAGE;
 			int startLine = getStartingLine(recipe);
 			int endLine = Math.min(startLine + maxLines, splitText.size());
-			for (int i=startLine; i < endLine; i++)
+			for (int i = startLine; i < endLine; i++)
 			{
 				String line = splitText.get(i);
 				GuiDraw.drawString(line, WIDTH / 2 - GuiDraw.getStringWidth(line) / 2, y, ColorHelper.DEFAULT_TEXT_COLOR, false);
