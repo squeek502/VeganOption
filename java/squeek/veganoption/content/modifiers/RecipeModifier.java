@@ -15,6 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.VeganOption;
+import squeek.veganoption.helpers.MiscHelper;
 
 public class RecipeModifier
 {
@@ -47,16 +48,18 @@ public class RecipeModifier
 			{
 				ShapedRecipes recipe = (ShapedRecipes) obj;
 				ItemStack output = recipe.getRecipeOutput();
-				if (output != null && containsMatch(false, excludedRecipeOutputs, output))
+				if (output != null && containsMatch(excludedRecipeOutputs, output))
 				{
 					continue;
 				}
 
-				if (containsMatch(true, replaceStacks, recipe.recipeItems))
+				if (containsMatch(replaceStacks, recipe.recipeItems))
 				{
 					try
 					{
-						recipesToAdd.add(shapedOreRecipeReplaceConstructor.newInstance(recipe, itemToOreDictConversions));
+						ShapedOreRecipe oreRecipe = shapedOreRecipeReplaceConstructor.newInstance(recipe, itemToOreDictConversions);
+						convertOreRecipe(oreRecipe, replaceStacks);
+						recipesToAdd.add(oreRecipe);
 						recipesToRemove.add(recipe);
 					}
 					catch (Exception e)
@@ -69,18 +72,20 @@ public class RecipeModifier
 			{
 				ShapelessRecipes recipe = (ShapelessRecipes) obj;
 				ItemStack output = recipe.getRecipeOutput();
-				if (output != null && containsMatch(false, excludedRecipeOutputs, output))
+				if (output != null && containsMatch(excludedRecipeOutputs, output))
 				{
 					continue;
 				}
 
 				@SuppressWarnings("unchecked")
 				ItemStack[] recipeItems = (ItemStack[]) recipe.recipeItems.toArray(new ItemStack[recipe.recipeItems.size()]);
-				if (containsMatch(true, replaceStacks, recipeItems))
+				if (containsMatch(replaceStacks, recipeItems))
 				{
 					try
 					{
-						recipesToAdd.add(shapelessOreRecipeReplaceConstructor.newInstance(recipe, itemToOreDictConversions));
+						ShapelessOreRecipe oreRecipe = shapelessOreRecipeReplaceConstructor.newInstance(recipe, itemToOreDictConversions);
+						convertOreRecipe(oreRecipe, replaceStacks);
+						recipesToAdd.add(oreRecipe);
 						recipesToRemove.add(recipe);
 					}
 					catch (Exception e)
@@ -89,57 +94,9 @@ public class RecipeModifier
 					}
 				}
 			}
-			else if (obj instanceof ShapedOreRecipe)
+			else if (convertOreRecipe(obj, replaceStacks))
 			{
-				ShapedOreRecipe recipe = (ShapedOreRecipe) obj;
-				ItemStack output = recipe.getRecipeOutput();
-				if (output != null && containsMatch(false, excludedRecipeOutputs, output))
-				{
-					continue;
-				}
-
-				Object[] inputs = recipe.getInput();
-				boolean inputReplaced = false;
-				for (int i = 0; i < inputs.length; i++)
-				{
-					Object inputObj = inputs[i];
-					if (inputObj instanceof ItemStack && containsMatch(true, replaceStacks, (ItemStack) inputObj))
-					{
-						inputs[i] = OreDictionary.getOres(getConversionFor((ItemStack) inputObj));
-						inputReplaced = true;
-					}
-				}
-				if (inputReplaced)
-					oreRecipesReplaced++;
-			}
-			else if (obj instanceof ShapelessOreRecipe)
-			{
-				ShapelessOreRecipe recipe = (ShapelessOreRecipe) obj;
-				ItemStack output = recipe.getRecipeOutput();
-				if (output != null && containsMatch(false, excludedRecipeOutputs, output))
-				{
-					continue;
-				}
-
-				List<ItemStack> inputsToRemove = new ArrayList<ItemStack>();
-				List<ArrayList<ItemStack>> inputsToAdd = new ArrayList<ArrayList<ItemStack>>();
-
-				ArrayList<Object> inputs = recipe.getInput();
-				for (Object inputObj : inputs)
-				{
-					if (inputObj instanceof ItemStack && containsMatch(true, replaceStacks, (ItemStack) inputObj))
-					{
-						inputsToRemove.add((ItemStack) inputObj);
-						inputsToAdd.add(OreDictionary.getOres(getConversionFor((ItemStack) inputObj)));
-					}
-				}
-
-				if (inputsToRemove.size() > 0)
-				{
-					inputs.removeAll(inputsToRemove);
-					inputs.addAll(inputsToAdd);
-					oreRecipesReplaced++;
-				}
+				oreRecipesReplaced++;
 			}
 		}
 
@@ -151,25 +108,88 @@ public class RecipeModifier
 		}
 	}
 
+	public boolean convertOreRecipe(Object obj, List<ItemStack> replaceStacks)
+	{
+		if (obj instanceof ShapedOreRecipe)
+		{
+			ShapedOreRecipe recipe = (ShapedOreRecipe) obj;
+			ItemStack output = recipe.getRecipeOutput();
+			if (output != null && containsMatch(excludedRecipeOutputs, output))
+			{
+				return false;
+			}
+
+			Object[] inputs = recipe.getInput();
+			boolean inputReplaced = false;
+			for (int i = 0; i < inputs.length; i++)
+			{
+				Object inputObj = inputs[i];
+				if (inputObj instanceof ItemStack && containsMatch(replaceStacks, (ItemStack) inputObj))
+				{
+					inputs[i] = OreDictionary.getOres(getConversionFor((ItemStack) inputObj));
+					inputReplaced = true;
+				}
+			}
+			if (inputReplaced)
+				return true;
+		}
+		else if (obj instanceof ShapelessOreRecipe)
+		{
+			ShapelessOreRecipe recipe = (ShapelessOreRecipe) obj;
+			ItemStack output = recipe.getRecipeOutput();
+			if (output != null && containsMatch(excludedRecipeOutputs, output))
+			{
+				return false;
+			}
+
+			List<ItemStack> inputsToRemove = new ArrayList<ItemStack>();
+			List<ArrayList<ItemStack>> inputsToAdd = new ArrayList<ArrayList<ItemStack>>();
+
+			ArrayList<Object> inputs = recipe.getInput();
+			for (Object inputObj : inputs)
+			{
+				if (inputObj instanceof ItemStack && containsMatch(replaceStacks, (ItemStack) inputObj))
+				{
+					inputsToRemove.add((ItemStack) inputObj);
+					inputsToAdd.add(OreDictionary.getOres(getConversionFor((ItemStack) inputObj)));
+				}
+			}
+
+			if (inputsToRemove.size() > 0)
+			{
+				inputs.removeAll(inputsToRemove);
+				inputs.addAll(inputsToAdd);
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private String getConversionFor(ItemStack itemStack)
 	{
+		String bestMatch = null;
 		for (Entry<ItemStack, String> conversion : itemToOreDictConversions.entrySet())
 		{
-			if (OreDictionary.itemMatches(conversion.getKey(), itemStack, true))
+			if (conversion.getKey().isItemEqual(itemStack))
 			{
 				return conversion.getValue();
 			}
+
+			if (MiscHelper.wildcardItemStacksMatch(conversion.getKey(), itemStack))
+			{
+				bestMatch = conversion.getValue();
+			}
 		}
-		return null;
+		return bestMatch;
 	}
 
-	private boolean containsMatch(boolean strict, List<ItemStack> inputs, ItemStack... targets)
+	private boolean containsMatch(List<ItemStack> inputs, ItemStack... targets)
 	{
 		for (ItemStack input : inputs)
 		{
 			for (ItemStack target : targets)
 			{
-				if (OreDictionary.itemMatches(target, input, strict))
+				if (MiscHelper.wildcardItemStacksMatch(target, input))
 				{
 					return true;
 				}
