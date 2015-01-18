@@ -107,6 +107,7 @@ death.attack.VeganOption.lyeWater.player=%1$s bathed in lye whilst trying to esc
 item.VeganOption.soap.name=Soap
 item.VeganOption.soap.nei.usage=When %1$s is used, it will remove all status effects from the player.
 item.VeganOption.soapSolution.name=Soap Solution
+item.VeganOption.soapSolution.nei.usage=%1$s can be used to create a {entity.VeganOption.bubble.name}. It can be used by either a player or a [[minecraft:dispenser]].
 
 # frozen bubble
 entity.VeganOption.bubble.name=Bubble
@@ -121,7 +122,7 @@ tile.VeganOption.encrustedObsidian.name=Encrusted Obsidian
 tile.VeganOption.encrustedObsidian.nei.usage=An [[VeganOption:enderRift]] can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center.
 item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
 tile.VeganOption.rawEnder.name=Raw Ender
-tile.VeganOption.rawEnder.nei.crafting=Water flowing through an [[VeganOption:enderRift]] at night has a chance to be converted into %1$s. If this is done during the day, there will be consequences.
+tile.VeganOption.rawEnder.nei.crafting=Water flowing through an [[VeganOption:enderRift]] at night has a chance to be converted into %1$s. However, if this is done during the day, a random block around the [[VeganOption:enderRift]] will be consumed by it and lost forever.
 fluid.tile.VeganOption.rawEnder=Raw Ender
 tile.VeganOption.enderRift.name=Ender Rift
 
