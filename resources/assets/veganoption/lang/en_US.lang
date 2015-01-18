@@ -125,7 +125,7 @@ tile.VeganOption.rawEnder.nei.crafting=Water flowing through an [[VeganOption:en
 fluid.tile.VeganOption.rawEnder=Raw Ender
 tile.VeganOption.enderRift.name=Ender Rift
 
-# poison
+# false morel
 item.VeganOption.falseMorel.name=False Morel
 item.VeganOption.falseMorel.nei.usage=A %1$s is a toxic mushroom that can be used as a [[minecraft:spider_eye]] alternative.
 item.VeganOption.falseMorelFermented.name=Fermented False Morel
@@ -142,6 +142,12 @@ item.VeganOption.saltpeter.name=Saltpeter
 item.VeganOption.sufferingFragment.name=Fragment of Suffering
 item.VeganOption.sufferingProof.name=Proof of Suffering
 item.VeganOption.sufferingProof.nei.usage=%1$s is a [[minecraft:ghast_tear]] alternative.
+
+# dolls eye
+item.VeganOption.dollsEye.name=Doll's Eye
+item.VeganOption.dollsEye.nei.common=A %1$s is the poisonous berry of the plant Actaea Pachypoda (also known as white baneberry).
+item.VeganOption.dollsEye.nei.usage={item.VeganOption.dollsEye.nei.common}\n\n%1$s is a [[minecraft:spider_eye]] alternative.
+item.VeganOption.dollsEye.nei.crafting={item.VeganOption.dollsEye.nei.common}\n\n%1$s can only be found by breaking [[minecraft:tallgrass:1]] in temperate forest biomes.
 
 # nei strings
 VeganOption.nei.byproduct.of=Byproduct Of

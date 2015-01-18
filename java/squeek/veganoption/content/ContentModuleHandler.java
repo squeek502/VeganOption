@@ -39,6 +39,7 @@ public class ContentModuleHandler
 		modules.put("ToxicMushroom", new ToxicMushroom());
 		modules.put("VegetableOil", new VegetableOil());
 		modules.put("ProofOfSuffering", new ProofOfSuffering());
+		modules.put("DollsEye", new DollsEye());
 
 		compatModules.put("EnderBubble", new CompatEnderBubble());
 	}
