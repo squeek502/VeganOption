@@ -11,7 +11,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.helpers.ColorHelper;
@@ -144,7 +143,7 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 		StringBuffer localizedBuffer = new StringBuffer(text.length());
 		while (localizationMatcher.find())
 		{
-			localizationMatcher.appendReplacement(localizedBuffer, StatCollector.translateToLocal(localizationMatcher.group(1)));
+			localizationMatcher.appendReplacement(localizedBuffer, getStringOfItemStack(localizationMatcher.group(1), itemStack));
 		}
 		localizationMatcher.appendTail(localizedBuffer);
 		text = localizedBuffer.toString();
