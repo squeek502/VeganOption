@@ -13,7 +13,7 @@ VeganOption.waila.retted=Retted
 
 # burlap
 item.VeganOption.burlap.name=Burlap
-item.VeganOption.helmetBurlap.name=Burlap Hat
+item.VeganOption.helmetBurlap.name=Burlap Cap
 item.VeganOption.helmetBurlap.nei.usage=%1$s is a [[minecraft:leather_helmet]] alternative.
 item.VeganOption.chestplateBurlap.name=Burlap Tunic
 item.VeganOption.chestplateBurlap.nei.usage=%1$s is a [[minecraft:leather_chestplate]] alternative.
@@ -48,8 +48,11 @@ item.VeganOption.fauxFeather.name=Faux Feather
 
 # straw bed
 item.VeganOption.bedStraw.name=Straw Bed
-item.VeganOption.bedStraw.nei.usage=%1$s is a [[minecraft:bed]]. It's a bit itchy.
+item.VeganOption.bedStraw.tooltip=A bit itchy
+item.VeganOption.bedStraw.nei.usage=%1$s is a [[minecraft:bed]]; however, it's a bit itchy (it deals 1/2 heart of damage after it is used).
 tile.VeganOption.bedStraw.name=Straw Bed
+death.attack.VeganOption.itchyBed=%1$s itched themselves to death in their sleep
+death.attack.VeganOption.itchyBed.player=%1$s itched themselves to death in their sleep whilst trying to escape %2$s
 
 # pumpkin seed milk
 item.VeganOption.bucketPumpkinSeedMilk.name=Pumpkin Seed Milk Bucket

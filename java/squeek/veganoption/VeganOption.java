@@ -17,7 +17,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 // dependency of after:* seems necessary to ensure that the RecipeModifier doesn't miss any recipes
-@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "after:*")
+@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, dependencies = "required-after:Forge@10.13.1.1225;after:*")
 public class VeganOption
 {
 	public static final Logger Log = LogManager.getLogger(ModInfo.MODID);

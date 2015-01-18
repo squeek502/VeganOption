@@ -32,7 +32,7 @@ public class ClassTransformer implements IClassTransformer
 			toInject.add(new VarInsnNode(Opcodes.ILOAD, 3));
 			toInject.add(new VarInsnNode(Opcodes.ILOAD, 4));
 			toInject.add(new VarInsnNode(Opcodes.ILOAD, 5));
-			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onFlowIntoBlock", "(Lnet/minecraft/world/World;IIII)Z"));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onFlowIntoBlock", "(Lnet/minecraft/world/World;IIII)Z", false));
 			toInject.add(new JumpInsnNode(Opcodes.IFEQ, ifNotCanceled));
 			toInject.add(new InsnNode(Opcodes.RETURN));
 			toInject.add(ifNotCanceled);
@@ -56,7 +56,7 @@ public class ClassTransformer implements IClassTransformer
 			InsnList toInject = new InsnList();
 			LabelNode ifNotCanceled = new LabelNode();
 			toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onEntityItemUpdate", "(Lnet/minecraft/entity/item/EntityItem;)Z"));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onEntityItemUpdate", "(Lnet/minecraft/entity/item/EntityItem;)Z", false));
 			toInject.add(new JumpInsnNode(Opcodes.IFEQ, ifNotCanceled));
 			toInject.add(new InsnNode(Opcodes.RETURN));
 			toInject.add(ifNotCanceled);
@@ -80,7 +80,7 @@ public class ClassTransformer implements IClassTransformer
 				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
 				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
 				toInject.add(new FieldInsnNode(Opcodes.GETFIELD, "tconstruct/library/event/ToolBuildEvent", "handleStack", "Lnet/minecraft/item/ItemStack;"));
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "getRealHandle", "(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;"));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "getRealHandle", "(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;", false));
 				toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, "tconstruct/library/event/ToolBuildEvent", "handleStack", "Lnet/minecraft/item/ItemStack;"));
 	
 				method.instructions.insertBefore(findFirstInstruction(method), toInject);
