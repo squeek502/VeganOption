@@ -3,7 +3,7 @@ itemGroup.VeganOption=The Vegan Option
 
 # jute
 tile.VeganOption.juteBundled.name=Bundled Jute
-tile.VeganOption.juteBundled.nei.usage=In order to extract the [[VeganOption:juteFibre]], %1$s must be first be retted (submerged in water).
+tile.VeganOption.juteBundled.nei.usage=In order to extract the [[VeganOption:juteFibre]], %1$s must be first be retted (submerged in water). [[minecraft:comparator]] output is based on the current retting stage of the %1$s.
 item.VeganOption.juteStalk.name=Jute Stalk
 item.VeganOption.juteFibre.name=Jute Fibre
 item.VeganOption.juteFibre.nei.crafting=%1$s is obtained by breaking fully retted [[VeganOption:juteBundled]].
@@ -49,7 +49,7 @@ item.VeganOption.fauxFeather.name=Faux Feather
 # straw bed
 item.VeganOption.bedStraw.name=Straw Bed
 item.VeganOption.bedStraw.tooltip=A bit itchy
-item.VeganOption.bedStraw.nei.usage=%1$s is a [[minecraft:bed]]; however, it's a bit itchy (it deals 1/2 heart of damage after it is used).
+item.VeganOption.bedStraw.nei.usage=%1$s is a [[minecraft:bed]]. However, it's a bit itchy: it deals 1/2 heart of damage whenever it is used.
 tile.VeganOption.bedStraw.name=Straw Bed
 death.attack.VeganOption.itchyBed=%1$s itched themselves to death in their sleep
 death.attack.VeganOption.itchyBed.player=%1$s itched themselves to death in their sleep whilst trying to escape %2$s
@@ -86,9 +86,8 @@ item.VeganOption.plasticRod.name=Plastic Rod
 
 # composting
 item.VeganOption.rottenPlants.name=Rotten Plants
-item.VeganOption.composter.name=Composter
-#TODO: item.VeganOption.composter.nei.usage=
 tile.VeganOption.composter.name=Composter
+tile.VeganOption.composter.nei.usage=A %1$s can be used to turn plant matter into [[VeganOption:compost]] or [[VeganOption:rottenPlants]].\n\nTo create [[VeganOption:compost]], fill the %1$s with a mixture of "green" and "brown" materials. To create [[VeganOption:rottenPlants]], only use "green" materials. See the "{VeganOption.nei.composting}" tab in NEI for the list of "green" and "brown" materials.\n\nThe higher the temperature inside the composter, the faster the material will decompose. The speed that the temperature increases is determined by 3 factors:\n\n1) The last time the compost was tumbled (sneak + use the %1$s with an empty hand to tumble it)\n\n2) The fullness of the composter (the more full it is, the faster it will decompose)\n\n3) The ratio of "green" to "brown" materials (a ratio of 2:1 provides the maximum speed)\n\nIf the %1$s has not been tumbled in a while, it will start to lose its heat. Every time the %1$s is tumbled, it will lose heat initially, but will gain more heat in the long run. The %1$s should be tumbled about once every Minecraft day.\n\n[[minecraft:comparator]] output from the %1$s is based on its current temperature.
 tile.VeganOption.compost.name=Compost
 tile.VeganOption.compost.nei.usage=%1$s provides passive improvement to adjacent [[minecraft:farmland]].
 item.VeganOption.fertilizer.name=Fertilizer

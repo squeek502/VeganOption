@@ -23,6 +23,7 @@ import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.registry.CompostRegistry;
+import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.items.ItemFertilizer;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -99,6 +100,9 @@ public class Composting implements IContentModule
 	@Override
 	public void finish()
 	{
+		RelationshipRegistry.addRelationship(new ItemStack(compost), new ItemStack(composter));
+		RelationshipRegistry.addRelationship(new ItemStack(rottenPlants), new ItemStack(composter));
+
 		CompostRegistry.addBrown(ContentHelper.stickOreDict);
 		CompostRegistry.addBrown(Items.paper);
 		CompostRegistry.addBrown(ContentHelper.bastFibreOreDict);
