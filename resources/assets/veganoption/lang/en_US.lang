@@ -14,9 +14,13 @@ VeganOption.waila.retted=Retted
 # burlap
 item.VeganOption.burlap.name=Burlap
 item.VeganOption.helmetBurlap.name=Burlap Hat
+item.VeganOption.helmetBurlap.nei.usage=%1$s is a [[minecraft:leather_helmet]] alternative.
 item.VeganOption.chestplateBurlap.name=Burlap Tunic
+item.VeganOption.chestplateBurlap.nei.usage=%1$s is a [[minecraft:leather_chestplate]] alternative.
 item.VeganOption.leggingsBurlap.name=Burlap Pants
+item.VeganOption.leggingsBurlap.nei.usage=%1$s is a [[minecraft:leather_leggings]] alternative.
 item.VeganOption.bootsBurlap.name=Burlap Boots
+item.VeganOption.bootsBurlap.nei.usage=%1$s is a [[minecraft:leather_boots]] alternative.
 
 # kapok
 tile.VeganOption.kapok.name=Kapok Block
@@ -44,6 +48,7 @@ item.VeganOption.fauxFeather.name=Faux Feather
 
 # straw bed
 item.VeganOption.bedStraw.name=Straw Bed
+item.VeganOption.bedStraw.nei.usage=%1$s is a [[minecraft:bed]]. It's a bit itchy.
 tile.VeganOption.bedStraw.name=Straw Bed
 
 # pumpkin seed milk
@@ -55,7 +60,7 @@ fluid.tile.VeganOption.pumpkinSeedMilk=Pumpkin Seed Milk
 # egg replacers
 item.VeganOption.appleSauce.name=Apple Sauce
 item.VeganOption.potatoStarch.name=Potato Starch
-item.VeganOption.potatoStarch.nei.crafting=%1$s can be made by crushing a [[minecraft:potato]] with a [[minecraft:piston]]
+item.VeganOption.potatoStarch.nei.crafting=%1$s can be made by crushing a [[minecraft:potato]] with a [[minecraft:piston]] (in the world).
 
 # resin
 item.VeganOption.resin.name=Resin
@@ -132,8 +137,8 @@ item.VeganOption.saltpeter.name=Saltpeter
 
 # proof of suffering
 item.VeganOption.sufferingFragment.name=Fragment of Suffering
-item.VeganOption.sufferingFragment.nei.usage=%1$s is a [[minecraft:ghast_tear]] alternative.
 item.VeganOption.sufferingProof.name=Proof of Suffering
+item.VeganOption.sufferingProof.nei.usage=%1$s is a [[minecraft:ghast_tear]] alternative.
 
 # nei strings
 VeganOption.nei.byproduct.of=Byproduct Of
