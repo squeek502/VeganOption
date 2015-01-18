@@ -13,6 +13,11 @@ public class MiscHelper
 	public static final int TICKS_PER_SEC = 20;
 	public static final int TICKS_PER_DAY = 24000; // 20 minutes realtime
 
+	public static boolean wildcardItemStacksMatch(ItemStack a, ItemStack b)
+	{
+		return OreDictionary.itemMatches(a, b, false) || OreDictionary.itemMatches(b, a, false);
+	}
+
 	public static boolean isItemStackInList(Collection<ItemStack> haystack, ItemStack needle)
 	{
 		return isItemStackInList(haystack, needle, false);
@@ -34,7 +39,9 @@ public class MiscHelper
 		{
 			for (ItemStack itemStack : haystack)
 			{
-				if (OreDictionary.itemMatches(itemStack, needle, strict))
+				if (strict && OreDictionary.itemMatches(itemStack, needle, strict))
+					return itemStack;
+				else if (!strict && wildcardItemStacksMatch(itemStack, needle))
 					return itemStack;
 			}
 		}
