@@ -51,6 +51,7 @@ public class Ink implements IContentModule
 		OreDictionary.registerOre(ContentHelper.whiteDyeOreDict, whiteVegetableOilInk);
 		OreDictionary.registerOre(ContentHelper.waxOreDict, new ItemStack(waxVegetable));
 		OreDictionary.registerOre(ContentHelper.waxOreDictForestry, new ItemStack(waxVegetable));
+		OreDictionary.registerOre(ContentHelper.waxOreDictHarvestCraft, new ItemStack(waxVegetable));
 	}
 
 	@Override
