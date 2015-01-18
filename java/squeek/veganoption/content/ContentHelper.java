@@ -50,6 +50,8 @@ public class ContentHelper
 	public static final String sunflowerSeedOreDict = "cropSunflower"; // HarvestCraft's oredict entry
 	public static final String oilPresserOreDict = "presserOil";
 	public static final String vegetableOilSourceOreDict = "sourceVegetableOil";
+	public static final String tearOreDict = "reagentTear";
+	public static final String goldNuggetOreDict = "nuggetGold"; // Forge's oredict entry
 
 	// various vegetable oil sources from other mods
 	public static final String grapeSeedOreDict = "seedGrape";

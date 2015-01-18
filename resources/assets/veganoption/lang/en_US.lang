@@ -130,6 +130,11 @@ item.VeganOption.mobHeadBlank.name=Blank Mob Head
 item.VeganOption.sulfur.name=Sulfur
 item.VeganOption.saltpeter.name=Saltpeter
 
+# proof of suffering
+item.VeganOption.sufferingFragment.name=Fragment of Suffering
+item.VeganOption.sufferingFragment.nei.usage=%1$s is a [[minecraft:ghast_tear]] alternative.
+item.VeganOption.sufferingProof.name=Proof of Suffering
+
 # nei strings
 VeganOption.nei.byproduct.of=Byproduct Of
 VeganOption.nei.byproducts=Byproducts
