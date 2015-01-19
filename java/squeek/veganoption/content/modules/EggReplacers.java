@@ -41,6 +41,8 @@ public class EggReplacers implements IContentModule
 	@Override
 	public void oredict()
 	{
+		OreDictionary.registerOre(ContentHelper.eggOreDict, new ItemStack(Items.egg));
+
 		OreDictionary.registerOre(ContentHelper.starchOreDict, potatoStarch);
 		OreDictionary.registerOre(ContentHelper.eggOreDict, new ItemStack(appleSauce));
 		OreDictionary.registerOre(ContentHelper.eggOreDict, new ItemStack(potatoStarch));
@@ -49,10 +51,9 @@ public class EggReplacers implements IContentModule
 	@Override
 	public void recipes()
 	{
-		GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.apple), new ItemStack(Items.bowl));
+		Modifiers.recipes.convertInputForFoodOutput(new ItemStack(Items.egg), ContentHelper.eggOreDict);
 
-		OreDictionary.registerOre(ContentHelper.eggOreDict, new ItemStack(Items.egg));
-		Modifiers.recipes.convertInput(new ItemStack(Items.egg), ContentHelper.eggOreDict);
+		GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.apple), new ItemStack(Items.bowl));
 
 		GameRegistry.addShapelessRecipe(new ItemStack(potatoStarch), potatoCrusher, new ItemStack(Items.potato));
 		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(potatoStarch), potatoCrusher);
