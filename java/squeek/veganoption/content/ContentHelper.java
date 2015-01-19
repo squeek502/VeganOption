@@ -9,6 +9,8 @@ public class ContentHelper
 {
 	// helper itemstacks for vanilla stuff
 	public static final ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
+	public static final ItemStack inkSac = new ItemStack(Items.dye, 1, 0);
+	public static final ItemStack boneMeal = new ItemStack(Items.dye, 1, 15);
 
 	// oredict
 	public static final String leatherOreDict = "materialLeather";
@@ -23,7 +25,9 @@ public class ContentHelper
 	public static final String waxOreDictForestry = "itemBeeswax"; // Forestry's oredict entry
 	public static final String waxOreDictHarvestCraft = "materialPressedwax"; // HarvestCraft's oredict entry
 	public static final String blackDyeOreDict = "dyeBlack"; // Forge's oredict entry
+	public static final String blackInkOreDict = "inkBlack";
 	public static final String whiteDyeOreDict = "dyeWhite"; // Forge's oredict entry
+	public static final String whiteInkOreDict = "inkWhite";
 	public static final String brownDyeOreDict = "dyeBrown"; // Forge's oredict entry
 	public static final String plasticOreDict = "sheetPlastic"; // MFR's oredict entry
 	public static final String plasticRodOreDict = "stickPlastic";

@@ -45,10 +45,14 @@ public class Ink implements IContentModule
 	@Override
 	public void oredict()
 	{
+		OreDictionary.registerOre(ContentHelper.blackInkOreDict, ContentHelper.inkSac.copy());
+
 		OreDictionary.registerOre(ContentHelper.blackPigmentOreDict, ContentHelper.charcoal.copy());
 		OreDictionary.registerOre(ContentHelper.whitePigmentOreDict, Items.quartz);
 		OreDictionary.registerOre(ContentHelper.blackDyeOreDict, blackVegetableOilInk);
+		OreDictionary.registerOre(ContentHelper.blackInkOreDict, blackVegetableOilInk);
 		OreDictionary.registerOre(ContentHelper.whiteDyeOreDict, whiteVegetableOilInk);
+		OreDictionary.registerOre(ContentHelper.whiteInkOreDict, whiteVegetableOilInk);
 		OreDictionary.registerOre(ContentHelper.waxOreDict, new ItemStack(waxVegetable));
 		OreDictionary.registerOre(ContentHelper.waxOreDictForestry, new ItemStack(waxVegetable));
 		OreDictionary.registerOre(ContentHelper.waxOreDictHarvestCraft, new ItemStack(waxVegetable));
@@ -57,6 +61,8 @@ public class Ink implements IContentModule
 	@Override
 	public void recipes()
 	{
+		Modifiers.recipes.convertInput(ContentHelper.inkSac.copy(), ContentHelper.blackInkOreDict);
+
 		ContentHelper.addOreSmelting(ContentHelper.vegetableOilOreDict, new ItemStack(waxVegetable), 0.2f);
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(blackVegetableOilInk, ContentHelper.vegetableOilOreDict, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.blackPigmentOreDict));
