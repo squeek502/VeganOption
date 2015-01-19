@@ -74,7 +74,7 @@ frozen bubble + raw/liquid ender
 False Morel as a rare drop from Mycelium
 http://en.wikipedia.org/wiki/Gyromitra_esculenta
 
-Doll's Eyes; too good to pass up, but I can't figure out how to incorperate them
+Doll's Eyes; too good to pass up, but I can't figure out how to incorporate them
 http://en.wikipedia.org/wiki/Actaea_pachypoda
 
 Mistletoe?

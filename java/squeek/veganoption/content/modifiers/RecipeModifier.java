@@ -22,6 +22,7 @@ import squeek.veganoption.helpers.MiscHelper;
 
 public class RecipeModifier
 {
+	// TODO: Split these different <ItemStack, String> maps into modules for more fine-grained control
 	public HashMap<ItemStack, String> itemToOreDictConversions = new HashMap<ItemStack, String>();
 	public HashMap<ItemStack, String> itemToOreDictConversionsForFoodOutputs = new HashMap<ItemStack, String>();
 	public HashMap<ItemStack, String> itemToOreDictConversionsForNonFoodOutputs = new HashMap<ItemStack, String>();

@@ -1,7 +1,7 @@
 The Vegan Option
 ================
 
-Minecraft mod that seeks to add vegan alternatives to all Minecraft animal products using the following guidelines:
+Minecraft mod that seeks to add vegan alternatives to all Minecraft mob/animal products using the following guidelines:
 
 - Nothing added to worldgen
 - No new crops added
@@ -40,7 +40,7 @@ Minecraft mod that seeks to add vegan alternatives to all Minecraft animal produ
 #### Egg Replacers (egg)
 
 - Apples can be crafted into Apple Sauce (Apple + Bowl)
-- Potatoes can be crafted into Potato Starch (Potato + Weighted Pressure Plate + Water + Bowl)
+- Potatoes can be crafted into Potato Starch (Potato + Piston)
 - Apple Sauce and Potato Starch are 1:1 alternatives to Eggs
 
 #### Resin (slimeball)
@@ -54,8 +54,8 @@ Minecraft mod that seeks to add vegan alternatives to all Minecraft animal produ
 - Sunflower Seeds can be crafted into Sunflower Oil (Sunflower Seeds + Weighted Pressure Plate + Bottle)
 - Sunflower Oil can be smelted into Vegetable Wax in a furnace
 - Resin can be smelted into Rosin in a furnace
-- Vegetable Oil Ink can be crafted from Sunflower Oil + Rosin + Vegetable Wax + Charcoal
-- Vegetable Oil Ink is a 1:1 alternative to Ink Sacs
+- Black Vegetable Oil Ink can be crafted from Sunflower Oil + Rosin + Vegetable Wax + Charcoal
+- Black Vegetable Oil Ink is a 1:1 alternative to Ink Sacs
 
 ### Building
 
