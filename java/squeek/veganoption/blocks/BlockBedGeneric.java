@@ -12,7 +12,7 @@ import net.minecraft.world.IBlockAccess;
  */
 public class BlockBedGeneric extends BlockBed
 {
-	Item bedItem;
+	public Item bedItem;
 
 	public BlockBedGeneric()
 	{

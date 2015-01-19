@@ -1,6 +1,7 @@
 package squeek.veganoption.integration.waila;
 
 import mcp.mobius.waila.api.IWailaRegistrar;
+import squeek.veganoption.blocks.BlockBedGeneric;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 
@@ -21,5 +22,7 @@ public class WailaRegistrar
 		registrar.registerSyncedNBTKey("Compost", TileEntityComposter.class);
 		registrar.registerSyncedNBTKey("Temperature", TileEntityComposter.class);
 		registrar.registerSyncedNBTKey("Start", TileEntityComposter.class);
+
+		registrar.registerStackProvider(new ProviderBed(), BlockBedGeneric.class);
 	}
 }
