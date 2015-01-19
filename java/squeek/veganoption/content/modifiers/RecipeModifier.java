@@ -2,10 +2,13 @@ package squeek.veganoption.content.modifiers;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -20,11 +23,17 @@ import squeek.veganoption.helpers.MiscHelper;
 public class RecipeModifier
 {
 	public HashMap<ItemStack, String> itemToOreDictConversions = new HashMap<ItemStack, String>();
+	public HashMap<ItemStack, String> itemToOreDictConversionsForFoodOutputs = new HashMap<ItemStack, String>();
 	public List<ItemStack> excludedRecipeOutputs = new ArrayList<ItemStack>();
 
 	public void convertInput(ItemStack inputToConvert, String oreDictEntry)
 	{
 		itemToOreDictConversions.put(inputToConvert, oreDictEntry);
+	}
+
+	public void convertInputForFoodOutput(ItemStack inputToConvert, String oreDictEntry)
+	{
+		itemToOreDictConversionsForFoodOutputs.put(inputToConvert, oreDictEntry);
 	}
 
 	public void excludeOutput(ItemStack outputToExclude)
@@ -40,66 +49,21 @@ public class RecipeModifier
 		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 		List<IRecipe> recipesToRemove = new ArrayList<IRecipe>();
 		List<IRecipe> recipesToAdd = new ArrayList<IRecipe>();
-		List<ItemStack> replaceStacks = new ArrayList<ItemStack>(itemToOreDictConversions.keySet());
-		int oreRecipesReplaced = 0;
+		int recipesConverted = 0;
 
-		// Search vanilla recipes for recipes to replace
-		for (Object obj : recipes)
+		for (IRecipe recipe : recipes)
 		{
-			if (obj instanceof ShapedRecipes)
-			{
-				ShapedRecipes recipe = (ShapedRecipes) obj;
-				ItemStack output = recipe.getRecipeOutput();
-				if (output != null && containsMatch(excludedRecipeOutputs, output))
-				{
-					continue;
-				}
+			IRecipe convertedRecipe = convertRecipe(recipe);
 
-				if (containsMatch(replaceStacks, recipe.recipeItems))
-				{
-					try
-					{
-						ShapedOreRecipe oreRecipe = shapedOreRecipeReplaceConstructor.newInstance(recipe, itemToOreDictConversions);
-						convertOreRecipe(oreRecipe, replaceStacks);
-						recipesToAdd.add(oreRecipe);
-						recipesToRemove.add(recipe);
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
-			}
-			else if (obj instanceof ShapelessRecipes)
-			{
-				ShapelessRecipes recipe = (ShapelessRecipes) obj;
-				ItemStack output = recipe.getRecipeOutput();
-				if (output != null && containsMatch(excludedRecipeOutputs, output))
-				{
-					continue;
-				}
+			if (convertedRecipe == null)
+				continue;
 
-				@SuppressWarnings("unchecked")
-				ItemStack[] recipeItems = (ItemStack[]) recipe.recipeItems.toArray(new ItemStack[recipe.recipeItems.size()]);
-				if (containsMatch(replaceStacks, recipeItems))
-				{
-					try
-					{
-						ShapelessOreRecipe oreRecipe = shapelessOreRecipeReplaceConstructor.newInstance(recipe, itemToOreDictConversions);
-						convertOreRecipe(oreRecipe, replaceStacks);
-						recipesToAdd.add(oreRecipe);
-						recipesToRemove.add(recipe);
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
-			}
-			else if (convertOreRecipe(obj, replaceStacks))
+			if (convertedRecipe != recipe)
 			{
-				oreRecipesReplaced++;
+				recipesToRemove.add(recipe);
+				recipesToAdd.add(convertedRecipe);
 			}
+			recipesConverted++;
 		}
 
 		recipes.removeAll(recipesToRemove);
@@ -107,67 +71,135 @@ public class RecipeModifier
 
 		long timeSpentInMilliseconds = System.currentTimeMillis() - millisecondsStart;
 		String timeTakenString = "took " + (timeSpentInMilliseconds / 1000.0f) + " seconds";
-		VeganOption.Log.info("Replaced " + (recipesToRemove.size() + oreRecipesReplaced) + " recipes with OreDictionary'd equivalents (" + timeTakenString + ")");
+		VeganOption.Log.info("Replaced " + recipesConverted + " recipes with OreDictionary'd equivalents (" + timeTakenString + ")");
 	}
 
-	public boolean convertOreRecipe(Object obj, List<ItemStack> replaceStacks)
+	public IRecipe convertRecipe(IRecipe recipe)
 	{
-		if (obj instanceof ShapedOreRecipe)
+		ItemStack output = recipe.getRecipeOutput();
+
+		if (output == null || containsMatch(excludedRecipeOutputs, output))
 		{
-			ShapedOreRecipe recipe = (ShapedOreRecipe) obj;
-			ItemStack output = recipe.getRecipeOutput();
-			if (output != null && containsMatch(excludedRecipeOutputs, output))
-			{
-				return false;
-			}
-
-			Object[] inputs = recipe.getInput();
-			boolean inputReplaced = false;
-			for (int i = 0; i < inputs.length; i++)
-			{
-				Object inputObj = inputs[i];
-				if (inputObj instanceof ItemStack && containsMatch(replaceStacks, (ItemStack) inputObj))
-				{
-					inputs[i] = OreDictionary.getOres(getConversionFor((ItemStack) inputObj));
-					inputReplaced = true;
-				}
-			}
-			if (inputReplaced)
-				return true;
+			return null;
 		}
-		else if (obj instanceof ShapelessOreRecipe)
+
+		IRecipe convertedRecipe = convertRecipe(recipe, itemToOreDictConversions);
+
+		if (isFood(output))
 		{
-			ShapelessOreRecipe recipe = (ShapelessOreRecipe) obj;
-			ItemStack output = recipe.getRecipeOutput();
-			if (output != null && containsMatch(excludedRecipeOutputs, output))
-			{
-				return false;
-			}
-
-			List<ItemStack> inputsToRemove = new ArrayList<ItemStack>();
-			List<ArrayList<ItemStack>> inputsToAdd = new ArrayList<ArrayList<ItemStack>>();
-
-			ArrayList<Object> inputs = recipe.getInput();
-			for (Object inputObj : inputs)
-			{
-				if (inputObj instanceof ItemStack && containsMatch(replaceStacks, (ItemStack) inputObj))
-				{
-					inputsToRemove.add((ItemStack) inputObj);
-					inputsToAdd.add(OreDictionary.getOres(getConversionFor((ItemStack) inputObj)));
-				}
-			}
-
-			if (inputsToRemove.size() > 0)
-			{
-				inputs.removeAll(inputsToRemove);
-				inputs.addAll(inputsToAdd);
-				return true;
-			}
+			IRecipe recipeToConvert = convertedRecipe != null ? convertedRecipe : recipe;
+			IRecipe convertedFoodRecipe = convertRecipe(recipeToConvert, itemToOreDictConversionsForFoodOutputs);
+			convertedRecipe = convertedFoodRecipe != null ? convertedFoodRecipe : convertedRecipe;
 		}
-		return false;
+
+		return convertedRecipe;
 	}
 
-	private String getConversionFor(ItemStack itemStack)
+	public IRecipe convertRecipe(IRecipe recipe, Map<ItemStack, String> itemToOredictMap)
+	{
+		if (recipe instanceof ShapedRecipes)
+		{
+			return convertShapedRecipe((ShapedRecipes) recipe, itemToOredictMap);
+		}
+		else if (recipe instanceof ShapelessRecipes)
+		{
+			return convertShapelessRecipe((ShapelessRecipes) recipe, itemToOredictMap);
+		}
+		else if (recipe instanceof ShapedOreRecipe)
+		{
+			return convertShapedOreRecipe((ShapedOreRecipe) recipe, itemToOredictMap);
+		}
+		else if (recipe instanceof ShapelessOreRecipe)
+		{
+			return convertShapelessOreRecipe((ShapelessOreRecipe) recipe, itemToOredictMap);
+		}
+		return null;
+	}
+
+	public IRecipe convertShapedRecipe(ShapedRecipes recipe, Map<ItemStack, String> itemToOredictMap)
+	{
+		if (containsMatch(itemToOredictMap.keySet(), recipe.recipeItems))
+		{
+			try
+			{
+				ShapedOreRecipe oreRecipe = shapedOreRecipeReplaceConstructor.newInstance(recipe, itemToOredictMap);
+				// the replace constructor doesn't take care of all cases that our conversion does,
+				// so run it through the conversion again
+				convertRecipe(oreRecipe);
+				return oreRecipe;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	public IRecipe convertShapelessRecipe(ShapelessRecipes recipe, Map<ItemStack, String> itemToOredictMap)
+	{
+		@SuppressWarnings("unchecked")
+		ItemStack[] recipeItems = (ItemStack[]) recipe.recipeItems.toArray(new ItemStack[recipe.recipeItems.size()]);
+		if (containsMatch(itemToOredictMap.keySet(), recipeItems))
+		{
+			try
+			{
+				ShapelessOreRecipe oreRecipe = shapelessOreRecipeReplaceConstructor.newInstance(recipe, itemToOredictMap);
+				// the replace constructor doesn't take care of all cases that our conversion does,
+				// so run it through the conversion again
+				convertRecipe(oreRecipe);
+				return oreRecipe;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	public IRecipe convertShapedOreRecipe(ShapedOreRecipe recipe, Map<ItemStack, String> itemToOredictMap)
+	{
+		Object[] inputs = recipe.getInput();
+		boolean inputReplaced = false;
+		for (int i = 0; i < inputs.length; i++)
+		{
+			Object inputObj = inputs[i];
+			if (inputObj instanceof ItemStack && containsMatch(itemToOredictMap.keySet(), (ItemStack) inputObj))
+			{
+				inputs[i] = OreDictionary.getOres(getConversionFor((ItemStack) inputObj, itemToOredictMap));
+				inputReplaced = true;
+			}
+		}
+		return inputReplaced ? recipe : null;
+	}
+
+	public IRecipe convertShapelessOreRecipe(ShapelessOreRecipe recipe, Map<ItemStack, String> itemToOredictMap)
+	{
+		List<ItemStack> inputsToRemove = new ArrayList<ItemStack>();
+		List<ArrayList<ItemStack>> inputsToAdd = new ArrayList<ArrayList<ItemStack>>();
+
+		ArrayList<Object> inputs = recipe.getInput();
+		for (Object inputObj : inputs)
+		{
+			if (inputObj instanceof ItemStack && containsMatch(itemToOredictMap.keySet(), (ItemStack) inputObj))
+			{
+				inputsToRemove.add((ItemStack) inputObj);
+				inputsToAdd.add(OreDictionary.getOres(getConversionFor((ItemStack) inputObj, itemToOredictMap)));
+			}
+		}
+
+		if (inputsToRemove.size() > 0)
+		{
+			inputs.removeAll(inputsToRemove);
+			inputs.addAll(inputsToAdd);
+			return recipe;
+		}
+
+		return null;
+	}
+
+	private String getConversionFor(ItemStack itemStack, Map<ItemStack, String> itemToOreDictConversions)
 	{
 		String bestMatch = null;
 		for (Entry<ItemStack, String> conversion : itemToOreDictConversions.entrySet())
@@ -185,7 +217,7 @@ public class RecipeModifier
 		return bestMatch;
 	}
 
-	private boolean containsMatch(List<ItemStack> inputs, ItemStack... targets)
+	private boolean containsMatch(Collection<ItemStack> inputs, ItemStack... targets)
 	{
 		for (ItemStack input : inputs)
 		{
@@ -198,6 +230,15 @@ public class RecipeModifier
 			}
 		}
 		return false;
+	}
+
+	// TODO: Optionally use the AppleCore API method
+	public boolean isFood(ItemStack itemStack)
+	{
+		if (itemStack == null || itemStack.getItem() == null)
+			return false;
+
+		return itemStack.getItem() instanceof ItemFood || itemStack.getItem() == Items.cake;
 	}
 
 	// reflection
