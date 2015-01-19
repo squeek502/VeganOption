@@ -22,8 +22,9 @@ public class ContentHelper
 	public static final String featherOreDict = "materialFeather";
 	public static final String bastFibreOreDict = "materialFiber";
 	public static final String milkOreDict = "listAllmilk"; // HarvestCraft's oredict entry
-	public static final String eggOreDict = "objectEgg"; // not for food equivalents
-	public static final String eggBakingOreDict = "listAllegg"; // HarvestCraft's oredict entry
+	public static final String eggObjectOreDict = "objectEgg"; // not for food equivalents
+	public static final String eggBakingOreDict = "bakingEgg";
+	public static final String eggFoodOreDict = "listAllegg"; // HarvestCraft's oredict entry
 	public static final String slimeballOreDict = "slimeball"; // Forge's oredict entry
 	public static final String vegetableOilOreDict = "foodOliveoil"; // HarvestCraft's oredict entry
 	public static final String waxOreDict = "materialWax";

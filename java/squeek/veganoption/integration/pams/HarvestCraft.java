@@ -1,8 +1,10 @@
 package squeek.veganoption.integration.pams;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.integration.IntegratorBase;
@@ -15,6 +17,35 @@ public class HarvestCraft extends IntegratorBase
 	public void oredict()
 	{
 		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, new ItemStack(getItem("juicerItem")));
+		OreDictionary.registerOre(ContentHelper.eggBakingOreDict, new ItemStack(getItem("firmtofuItem")));
+	}
+
+	@Override
+	public void recipes()
+	{
+		// exclude non-baked goods from egg replacer conversion
+		final String[] foodNamesToExclude = new String[]
+		{
+		"boiledeggItem",
+		"scrambledeggItem",
+		"friedriceItem",
+		"stuffedeggplantItem",
+		"asparagusquicheItem",
+		"custardItem",
+		"omeletItem",
+		"marshmellowsItem",
+		"mayoItem",
+		"coconutshrimpItem",
+		"eggnogItem",
+		"zucchinifriesItem"
+		};
+		for (String foodNameToExclude : foodNamesToExclude)
+		{
+			Item item = getItem(foodNameToExclude);
+
+			if (item != null)
+				Modifiers.recipes.excludeOutput(new ItemStack(item));
+		}
 	}
 
 	@Override

@@ -69,8 +69,8 @@ public class Egg implements IContentModule
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.eggOreDict, new ItemStack(Items.egg));
-		OreDictionary.registerOre(ContentHelper.eggOreDict, new ItemStack(plasticEgg));
+		OreDictionary.registerOre(ContentHelper.eggObjectOreDict, new ItemStack(Items.egg));
+		OreDictionary.registerOre(ContentHelper.eggObjectOreDict, new ItemStack(plasticEgg));
 
 		OreDictionary.registerOre(ContentHelper.eggBakingOreDict, new ItemStack(Items.egg));
 		OreDictionary.registerOre(ContentHelper.eggBakingOreDict, new ItemStack(appleSauce));
@@ -82,8 +82,9 @@ public class Egg implements IContentModule
 	@Override
 	public void recipes()
 	{
+		Modifiers.recipes.convertOreDict(ContentHelper.eggFoodOreDict, ContentHelper.eggBakingOreDict);
 		Modifiers.recipes.convertInputForFoodOutput(new ItemStack(Items.egg), ContentHelper.eggBakingOreDict);
-		Modifiers.recipes.convertInputForNonFoodOutput(new ItemStack(Items.egg), ContentHelper.eggOreDict);
+		Modifiers.recipes.convertInputForNonFoodOutput(new ItemStack(Items.egg), ContentHelper.eggObjectOreDict);
 
 		GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.apple), new ItemStack(Items.bowl));
 

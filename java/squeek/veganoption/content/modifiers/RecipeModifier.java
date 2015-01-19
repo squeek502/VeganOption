@@ -25,6 +25,7 @@ public class RecipeModifier
 	public HashMap<ItemStack, String> itemToOreDictConversions = new HashMap<ItemStack, String>();
 	public HashMap<ItemStack, String> itemToOreDictConversionsForFoodOutputs = new HashMap<ItemStack, String>();
 	public HashMap<ItemStack, String> itemToOreDictConversionsForNonFoodOutputs = new HashMap<ItemStack, String>();
+	public HashMap<String, String> oreDictToOreDictConversions = new HashMap<String, String>();
 	public List<ItemStack> excludedRecipeOutputs = new ArrayList<ItemStack>();
 
 	public void convertInput(ItemStack inputToConvert, String oreDictEntry)
@@ -40,6 +41,11 @@ public class RecipeModifier
 	public void convertInputForNonFoodOutput(ItemStack inputToConvert, String oreDictEntry)
 	{
 		itemToOreDictConversionsForNonFoodOutputs.put(inputToConvert, oreDictEntry);
+	}
+
+	public void convertOreDict(String oreDictFrom, String oreDictTo)
+	{
+		oreDictToOreDictConversions.put(oreDictFrom, oreDictTo);
 	}
 
 	public void excludeOutput(ItemStack outputToExclude)
@@ -182,14 +188,26 @@ public class RecipeModifier
 				inputs[i] = OreDictionary.getOres(getConversionFor((ItemStack) inputObj, itemToOredictMap));
 				inputReplaced = true;
 			}
+			else if (inputObj instanceof ArrayList)
+			{
+				@SuppressWarnings("unchecked")
+				ArrayList<ItemStack> inputOres = (ArrayList<ItemStack>) inputObj;
+				String currentOreDict = findMatchingOreDict(inputOres, oreDictToOreDictConversions.keySet());
+				if (currentOreDict != null)
+				{
+					String newOreDict = oreDictToOreDictConversions.get(currentOreDict);
+					inputs[i] = OreDictionary.getOres(newOreDict);
+					inputReplaced = true;
+				}
+			}
 		}
 		return inputReplaced ? recipe : null;
 	}
 
 	public IRecipe convertShapelessOreRecipe(ShapelessOreRecipe recipe, Map<ItemStack, String> itemToOredictMap)
 	{
-		List<ItemStack> inputsToRemove = new ArrayList<ItemStack>();
-		List<ArrayList<ItemStack>> inputsToAdd = new ArrayList<ArrayList<ItemStack>>();
+		List<Object> inputsToRemove = new ArrayList<Object>();
+		List<Object> inputsToAdd = new ArrayList<Object>();
 
 		ArrayList<Object> inputs = recipe.getInput();
 		for (Object inputObj : inputs)
@@ -198,6 +216,18 @@ public class RecipeModifier
 			{
 				inputsToRemove.add((ItemStack) inputObj);
 				inputsToAdd.add(OreDictionary.getOres(getConversionFor((ItemStack) inputObj, itemToOredictMap)));
+			}
+			else if (inputObj instanceof ArrayList)
+			{
+				@SuppressWarnings("unchecked")
+				ArrayList<ItemStack> inputOres = (ArrayList<ItemStack>) inputObj;
+				String currentOreDict = findMatchingOreDict(inputOres, oreDictToOreDictConversions.keySet());
+				if (currentOreDict != null)
+				{
+					String newOreDict = oreDictToOreDictConversions.get(currentOreDict);
+					inputsToRemove.add(inputObj);
+					inputsToAdd.add(OreDictionary.getOres(newOreDict));
+				}
 			}
 		}
 
@@ -208,6 +238,16 @@ public class RecipeModifier
 			return recipe;
 		}
 
+		return null;
+	}
+	
+	private String findMatchingOreDict(Collection<ItemStack> inputOres, Collection<String> oreDicts)
+	{
+		for (String oreDict : oreDicts)
+		{
+			if (inputOres == OreDictionary.getOres(oreDict))
+				return oreDict;
+		}
 		return null;
 	}
 
