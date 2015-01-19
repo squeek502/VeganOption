@@ -3,6 +3,7 @@ package squeek.veganoption.blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -29,7 +30,10 @@ public class BlockLyeWater extends BlockFluidClassic
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity collidedEntity)
 	{
-		collidedEntity.attackEntityFrom(lyeDamage, 0.25f);
+		if (collidedEntity instanceof EntityLivingBase)
+		{
+			collidedEntity.attackEntityFrom(lyeDamage, 0.25f);
+		}
 		super.onEntityCollidedWithBlock(world, x, y, z, collidedEntity);
 	}
 
