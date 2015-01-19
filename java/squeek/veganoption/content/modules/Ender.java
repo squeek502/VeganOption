@@ -76,7 +76,6 @@ public class Ender implements IContentModule
 				.setContainerItem(Items.bucket);
 		GameRegistry.registerItem(bucketRawEnder, "bucketRawEnder");
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.bucket));
-
 	}
 
 	@SideOnly(Side.CLIENT)

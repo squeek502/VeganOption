@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -15,7 +14,6 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.entities.EntityPlasticEgg;
-import squeek.veganoption.entities.EntityThrowableGenericDispenserBehavior;
 import squeek.veganoption.items.ItemFoodContainered;
 import squeek.veganoption.items.ItemThrowableGeneric;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -93,8 +91,6 @@ public class Egg implements IContentModule
 		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(potatoStarch), potatoCrusher);
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(plasticEgg), " o ", "o o", " o ", 'o', ContentHelper.plasticOreDict));
-
-		BlockDispenser.dispenseBehaviorRegistry.putObject(plasticEgg, new EntityThrowableGenericDispenserBehavior((ItemThrowableGeneric) plasticEgg));
 	}
 
 	@Override

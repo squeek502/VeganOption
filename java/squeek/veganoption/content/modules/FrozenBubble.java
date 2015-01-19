@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -16,7 +15,6 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.entities.EntityBubble;
-import squeek.veganoption.entities.EntityBubbleDispenserBehavior;
 import squeek.veganoption.items.ItemFrozenBubble;
 import squeek.veganoption.items.ItemSoapSolution;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -83,8 +81,6 @@ public class FrozenBubble implements IContentModule
 
 		GameRegistry.addShapedRecipe(new ItemStack(frozenBubble), "iii", "isi", "iii", 'i', Blocks.ice, 's', soapSolution);
 		GameRegistry.addShapelessRecipe(new ItemStack(frozenBubble), Blocks.packed_ice, soapSolution);
-
-		BlockDispenser.dispenseBehaviorRegistry.putObject(soapSolution, new EntityBubbleDispenserBehavior());
 	}
 
 	@Override

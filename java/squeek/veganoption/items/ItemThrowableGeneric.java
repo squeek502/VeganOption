@@ -1,7 +1,11 @@
 package squeek.veganoption.items;
 
 import java.lang.reflect.Constructor;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.dispenser.BehaviorProjectileDispense;
+import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.Item;
@@ -36,6 +40,8 @@ public class ItemThrowableGeneric extends Item
 		{
 			throw new RuntimeException(e);
 		}
+
+		BlockDispenser.dispenseBehaviorRegistry.putObject(this, new ItemThrowableGeneric.DispenserBehavior(this));
 	}
 
 	@Override
@@ -79,6 +85,23 @@ public class ItemThrowableGeneric extends Item
 		{
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	public static class DispenserBehavior extends BehaviorProjectileDispense
+	{
+		public ItemThrowableGeneric itemThrowableGeneric;
+
+		public DispenserBehavior(ItemThrowableGeneric itemThrowableGeneric)
+		{
+			super();
+			this.itemThrowableGeneric = itemThrowableGeneric;
+		}
+
+		@Override
+		protected IProjectile getProjectileEntity(World world, IPosition position)
+		{
+			return itemThrowableGeneric.getNewThrownEntity(world, position.getX(), position.getY(), position.getZ());
 		}
 	}
 }

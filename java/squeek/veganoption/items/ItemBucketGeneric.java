@@ -1,10 +1,15 @@
 package squeek.veganoption.items;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.material.Material;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
@@ -21,6 +26,7 @@ public class ItemBucketGeneric extends ItemBucket
 		super(filledWith);
 		this.filledWith = filledWith;
 		MinecraftForge.EVENT_BUS.register(this);
+		BlockDispenser.dispenseBehaviorRegistry.putObject(this, new ItemBucketGeneric.DispenserBehavior());
 	}
 
 	@SubscribeEvent
@@ -38,51 +44,75 @@ public class ItemBucketGeneric extends ItemBucket
 			event.setResult(Event.Result.ALLOW);
 		}
 	}
-	
+
 	public int getPlacedLiquidMetadata()
 	{
 		return filledWith instanceof BlockFluidFinite ? 7 : 0;
 	}
-	
+
 	@Override
-	public boolean tryPlaceContainedLiquid(World p_77875_1_, int p_77875_2_, int p_77875_3_, int p_77875_4_)
+	public boolean tryPlaceContainedLiquid(World world, int x, int y, int z)
 	{
-        if (this.filledWith == Blocks.air)
-        {
-            return false;
-        }
-        else
-        {
-            Material material = p_77875_1_.getBlock(p_77875_2_, p_77875_3_, p_77875_4_).getMaterial();
-            boolean flag = !material.isSolid();
+		if (this.filledWith == Blocks.air)
+		{
+			return false;
+		}
+		else
+		{
+			Material material = world.getBlock(x, y, z).getMaterial();
+			boolean flag = !material.isSolid();
 
-            if (!p_77875_1_.isAirBlock(p_77875_2_, p_77875_3_, p_77875_4_) && !flag)
-            {
-                return false;
-            }
-            else
-            {
-                if (p_77875_1_.provider.isHellWorld && this.filledWith == Blocks.flowing_water)
-                {
-                    p_77875_1_.playSoundEffect((double)((float)p_77875_2_ + 0.5F), (double)((float)p_77875_3_ + 0.5F), (double)((float)p_77875_4_ + 0.5F), "random.fizz", 0.5F, 2.6F + (p_77875_1_.rand.nextFloat() - p_77875_1_.rand.nextFloat()) * 0.8F);
+			if (!world.isAirBlock(x, y, z) && !flag)
+			{
+				return false;
+			}
+			else
+			{
+				if (world.provider.isHellWorld && this.filledWith == Blocks.flowing_water)
+				{
+					world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), "random.fizz", 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
 
-                    for (int l = 0; l < 8; ++l)
-                    {
-                        p_77875_1_.spawnParticle("largesmoke", (double)p_77875_2_ + Math.random(), (double)p_77875_3_ + Math.random(), (double)p_77875_4_ + Math.random(), 0.0D, 0.0D, 0.0D);
-                    }
-                }
-                else
-                {
-                    if (!p_77875_1_.isRemote && flag && !material.isLiquid())
-                    {
-                        p_77875_1_.func_147480_a(p_77875_2_, p_77875_3_, p_77875_4_, true);
-                    }
+					for (int l = 0; l < 8; ++l)
+					{
+						world.spawnParticle("largesmoke", (double) x + Math.random(), (double) y + Math.random(), (double) z + Math.random(), 0.0D, 0.0D, 0.0D);
+					}
+				}
+				else
+				{
+					if (!world.isRemote && flag && !material.isLiquid())
+					{
+						world.func_147480_a(x, y, z, true);
+					}
 
-                    p_77875_1_.setBlock(p_77875_2_, p_77875_3_, p_77875_4_, this.filledWith, getPlacedLiquidMetadata(), 3);
-                }
+					world.setBlock(x, y, z, this.filledWith, getPlacedLiquidMetadata(), 3);
+				}
 
-                return true;
-            }
-        }
+				return true;
+			}
+		}
+	}
+
+	public static class DispenserBehavior extends BehaviorDefaultDispenseItem
+	{
+		@Override
+		public ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
+		{
+			ItemBucket itembucket = (ItemBucket) itemStack.getItem();
+			int x = blockSource.getXInt();
+			int y = blockSource.getYInt();
+			int z = blockSource.getZInt();
+			EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockMetadata());
+
+			if (itembucket.tryPlaceContainedLiquid(blockSource.getWorld(), x + enumfacing.getFrontOffsetX(), y + enumfacing.getFrontOffsetY(), z + enumfacing.getFrontOffsetZ()))
+			{
+				itemStack.func_150996_a(Items.bucket);
+				itemStack.stackSize = 1;
+				return itemStack;
+			}
+			else
+			{
+				return super.dispense(blockSource, itemStack);
+			}
+		}
 	}
 }
