@@ -96,7 +96,7 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 		for (int page = 0; page < numRecipes(); page++)
 		{
 			int startingLineIndex = getStartingLine(page);
-			while (EnumChatFormatting.getTextWithoutFormattingCodes(splitText.get(startingLineIndex)).isEmpty())
+			while (!splitText.isEmpty() && EnumChatFormatting.getTextWithoutFormattingCodes(splitText.get(startingLineIndex)).isEmpty())
 			{
 				splitText.remove(startingLineIndex);
 			}
