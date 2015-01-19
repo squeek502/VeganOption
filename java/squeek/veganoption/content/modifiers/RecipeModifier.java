@@ -34,6 +34,8 @@ public class RecipeModifier
 
 	public void replaceRecipes()
 	{
+		long millisecondsStart = System.currentTimeMillis();
+
 		@SuppressWarnings("unchecked")
 		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 		List<IRecipe> recipesToRemove = new ArrayList<IRecipe>();
@@ -102,10 +104,10 @@ public class RecipeModifier
 
 		recipes.removeAll(recipesToRemove);
 		recipes.addAll(recipesToAdd);
-		if (recipesToRemove.size() + oreRecipesReplaced > 0)
-		{
-			VeganOption.Log.info("Replaced " + (recipesToRemove.size() + oreRecipesReplaced) + " recipes with OreDictionary'd equivalents");
-		}
+
+		long timeSpentInMilliseconds = System.currentTimeMillis() - millisecondsStart;
+		String timeTakenString = "took " + (timeSpentInMilliseconds / 1000.0f) + " seconds";
+		VeganOption.Log.info("Replaced " + (recipesToRemove.size() + oreRecipesReplaced) + " recipes with OreDictionary'd equivalents (" + timeTakenString + ")");
 	}
 
 	public boolean convertOreRecipe(Object obj, List<ItemStack> replaceStacks)

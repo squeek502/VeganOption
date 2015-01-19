@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.helpers.MiscHelper;
 
 public class CompostRegistry
@@ -17,6 +18,9 @@ public class CompostRegistry
 
 	public static void registerAllFoods()
 	{
+		long millisecondsStart = System.currentTimeMillis();
+		int numRegistered = 0;
+
 		for (Object obj : Item.itemRegistry)
 		{
 			Item item = ((Item) obj);
@@ -27,8 +31,13 @@ public class CompostRegistry
 			if (isCompostableFood(new ItemStack(item)))
 			{
 				addGreen(item);
+				numRegistered++;
 			}
 		}
+
+		long timeSpentInMilliseconds = System.currentTimeMillis() - millisecondsStart;
+		String timeTakenString = "took " + (timeSpentInMilliseconds / 1000.0f) + " seconds";
+		VeganOption.Log.info("Found and registered " + numRegistered + " compostable foods (" + timeTakenString + ")");
 	}
 
 	public abstract static class FoodSpecifier
