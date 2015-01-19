@@ -56,7 +56,7 @@ death.attack.VeganOption.itchyBed.player=%1$s itched themselves to death in thei
 
 # pumpkin seed milk
 item.VeganOption.bucketPumpkinSeedMilk.name=Pumpkin Seed Milk Bucket
-item.VeganOption.bucketPumpkinSeedMilk.nei.usage=If you're looking for the curative effects that Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead
+item.VeganOption.bucketPumpkinSeedMilk.nei.usage=If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead
 tile.VeganOption.pumpkinSeedMilk.name=Pumpkin Seed Milk
 fluid.tile.VeganOption.pumpkinSeedMilk=Pumpkin Seed Milk
 
