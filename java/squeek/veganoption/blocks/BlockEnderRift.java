@@ -19,7 +19,7 @@ import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.BlockHelper.BlockPos;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
-import squeek.veganoption.network.MessageBlockTeleport;
+import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
@@ -103,7 +103,7 @@ public class BlockEnderRift extends BlockEndPortal
 						if (!world.isRemote)
 						{
 							TargetPoint target = new TargetPoint(world.provider.dimensionId, blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z, 80);
-							NetworkHandler.channel.sendToAllAround(new MessageBlockTeleport(blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z), target);
+							NetworkHandler.channel.sendToAllAround(new MessageFX(blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z, MessageFX.FX.BLOCK_TELEPORT), target);
 						}
 					}
 				}

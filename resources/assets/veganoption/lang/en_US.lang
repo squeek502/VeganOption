@@ -60,10 +60,13 @@ item.VeganOption.bucketPumpkinSeedMilk.nei.usage=If you're looking for the curat
 tile.VeganOption.pumpkinSeedMilk.name=Pumpkin Seed Milk
 fluid.tile.VeganOption.pumpkinSeedMilk=Pumpkin Seed Milk
 
-# egg replacers
+# egg
 item.VeganOption.appleSauce.name=Apple Sauce
 item.VeganOption.potatoStarch.name=Potato Starch
 item.VeganOption.potatoStarch.nei.crafting=%1$s can be made by crushing a [[minecraft:potato]] with a [[minecraft:piston]] (in the world).
+item.VeganOption.plasticEgg.name=Plastic Egg
+item.VeganOption.plasticEgg.nei.usage=A %1$s is an [[minecraft:egg]] alternative for non-baking purposes.
+entity.VeganOption.plasticEgg.name=Plastic Egg
 
 # resin
 item.VeganOption.resin.name=Resin

@@ -22,7 +22,7 @@ public class ContentModuleHandler
 		modules.put("Bioplastic", new Bioplastic());
 		modules.put("Burlap", new Burlap());
 		modules.put("Composting", new Composting());
-		modules.put("EggReplacers", new EggReplacers());
+		modules.put("EggReplacers", new Egg());
 		modules.put("Ender", new Ender());
 		modules.put("Feather", new Feather());
 		modules.put("Fossils", new Fossils());

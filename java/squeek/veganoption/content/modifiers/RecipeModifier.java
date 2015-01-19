@@ -24,6 +24,7 @@ public class RecipeModifier
 {
 	public HashMap<ItemStack, String> itemToOreDictConversions = new HashMap<ItemStack, String>();
 	public HashMap<ItemStack, String> itemToOreDictConversionsForFoodOutputs = new HashMap<ItemStack, String>();
+	public HashMap<ItemStack, String> itemToOreDictConversionsForNonFoodOutputs = new HashMap<ItemStack, String>();
 	public List<ItemStack> excludedRecipeOutputs = new ArrayList<ItemStack>();
 
 	public void convertInput(ItemStack inputToConvert, String oreDictEntry)
@@ -34,6 +35,11 @@ public class RecipeModifier
 	public void convertInputForFoodOutput(ItemStack inputToConvert, String oreDictEntry)
 	{
 		itemToOreDictConversionsForFoodOutputs.put(inputToConvert, oreDictEntry);
+	}
+
+	public void convertInputForNonFoodOutput(ItemStack inputToConvert, String oreDictEntry)
+	{
+		itemToOreDictConversionsForNonFoodOutputs.put(inputToConvert, oreDictEntry);
 	}
 
 	public void excludeOutput(ItemStack outputToExclude)
@@ -90,6 +96,12 @@ public class RecipeModifier
 			IRecipe recipeToConvert = convertedRecipe != null ? convertedRecipe : recipe;
 			IRecipe convertedFoodRecipe = convertRecipe(recipeToConvert, itemToOreDictConversionsForFoodOutputs);
 			convertedRecipe = convertedFoodRecipe != null ? convertedFoodRecipe : convertedRecipe;
+		}
+		else
+		{
+			IRecipe recipeToConvert = convertedRecipe != null ? convertedRecipe : recipe;
+			IRecipe convertedNonFoodRecipe = convertRecipe(recipeToConvert, itemToOreDictConversionsForNonFoodOutputs);
+			convertedRecipe = convertedNonFoodRecipe != null ? convertedNonFoodRecipe : convertedRecipe;
 		}
 
 		return convertedRecipe;

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import squeek.veganoption.blocks.BlockEnderRift;
-import squeek.veganoption.content.modules.EggReplacers;
+import squeek.veganoption.content.modules.Egg;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.integration.tic.TConstruct;
@@ -33,7 +33,7 @@ public class Hooks
 			if (entityItem.worldObj.getBlock(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ)) == Blocks.piston_head)
 			{
 				int stackSize = entityItem.getEntityItem().stackSize;
-				entityItem.setEntityItemStack(new ItemStack(EggReplacers.potatoStarch, stackSize));
+				entityItem.setEntityItemStack(new ItemStack(Egg.potatoStarch, stackSize));
 				return true;
 			}
 		}

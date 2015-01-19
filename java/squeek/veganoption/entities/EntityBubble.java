@@ -15,7 +15,7 @@ import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.BlockHelper.BlockPos;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.helpers.TemperatureHelper;
-import squeek.veganoption.network.MessageBubblePop;
+import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -119,7 +119,7 @@ public class EntityBubble extends EntityThrowable
 		if (!this.worldObj.isRemote)
 		{
 			TargetPoint target = new TargetPoint(dimension, posX, posY, posZ, 80);
-			NetworkHandler.channel.sendToAllAround(new MessageBubblePop(posX, posY, posZ), target);
+			NetworkHandler.channel.sendToAllAround(new MessageFX(posX, posY, posZ, MessageFX.FX.BUBBLE_POP), target);
 			this.setDead();
 		}
 	}

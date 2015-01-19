@@ -7,6 +7,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ContentHelper
 {
+	// entity ids; mod-specific, don't need to be universally unique
+	public static final int ENTITYID_BUBBLE = 0;
+	public static final int ENTITYID_PLASTIC_EGG = 1;
+
 	// helper itemstacks for vanilla stuff
 	public static final ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
 	public static final ItemStack inkSac = new ItemStack(Items.dye, 1, 0);
@@ -18,7 +22,8 @@ public class ContentHelper
 	public static final String featherOreDict = "materialFeather";
 	public static final String bastFibreOreDict = "materialFiber";
 	public static final String milkOreDict = "listAllmilk"; // HarvestCraft's oredict entry
-	public static final String eggOreDict = "listAllegg"; // HarvestCraft's oredict entry
+	public static final String eggOreDict = "objectEgg"; // not for food equivalents
+	public static final String eggBakingOreDict = "listAllegg"; // HarvestCraft's oredict entry
 	public static final String slimeballOreDict = "slimeball"; // Forge's oredict entry
 	public static final String vegetableOilOreDict = "foodOliveoil"; // HarvestCraft's oredict entry
 	public static final String waxOreDict = "materialWax";
