@@ -15,6 +15,11 @@ public class IntegrationHandler
 	public static final String MODID_WITCHERY = "Witchery";
 	public static final String MODID_WAILA = "Waila";
 	public static final String MODID_VERSION_CHECKER = "VersionChecker";
+	public static final String MODID_THAUMCRAFT = "Thaumcraft";
+	public static final String MODID_TWILIGHT_FOREST = "TwilightForest";
+	public static final String MODID_NATURA = "Natura";
+	public static final String MODID_EXTRA_TREES = "ExtraTrees";
+	public static final String MODID_BIOMES_O_PLENTY = "BiomesOPlenty";
 
 	static
 	{
@@ -25,6 +30,11 @@ public class IntegrationHandler
 		tryIntegration(MODID_WITCHERY, "witchery");
 		tryIntegration(MODID_WAILA, "waila");
 		tryIntegration(MODID_VERSION_CHECKER, "versionchecker");
+		tryIntegration(MODID_THAUMCRAFT, "thaumcraft");
+		tryIntegration(MODID_TWILIGHT_FOREST, "twilightforest");
+		tryIntegration(MODID_NATURA, "natura");
+		tryIntegration(MODID_EXTRA_TREES, "forestry");
+		tryIntegration(MODID_BIOMES_O_PLENTY, "bop");
 	}
 
 	public static void preInit()
