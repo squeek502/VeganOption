@@ -26,6 +26,8 @@ public class ContentHelper
 	public static final String eggBakingOreDict = "bakingEgg";
 	public static final String eggFoodOreDict = "listAllegg"; // HarvestCraft's oredict entry
 	public static final String slimeballOreDict = "slimeball"; // Forge's oredict entry
+	public static final String resinOreDict = "resin";
+	public static final String rosinOreDict = "rosin";
 	public static final String vegetableOilOreDict = "foodOliveoil"; // HarvestCraft's oredict entry
 	public static final String waxOreDict = "materialWax";
 	public static final String waxOreDictForestry = "itemBeeswax"; // Forestry's oredict entry
@@ -54,7 +56,6 @@ public class ContentHelper
 	public static final String blackPigmentOreDict = "pigmentBlack";
 	public static final String whitePigmentOreDict = "pigmentWhite";
 	public static final String woodPlankOreDict = "plankWood"; // Forge's oredict entry
-	public static final String rosinOreDict = "materialRosin";
 	public static final String starchOreDict = "starch";
 	public static final String kapokOreDict = "materialFluffy";
 	public static final String sunflowerSeedOreDict = "cropSunflower"; // HarvestCraft's oredict entry
