@@ -140,9 +140,9 @@ Dragon Egg | No alternative yet
 > *References: [Papier-mâché](http://en.wikipedia.org/wiki/Papier-m%C3%A2ch%C3%A9)*
 
 #### Plant Milk
-- Water + 2 Pumpkin Seeds + Sugar crafted together creates Pumpkin Seed Milk (Milk [as a food] alternative)
+- Water + 2 Pumpkin Seeds (or other plant milk sources) + Sugar crafted together creates Plant Milk (Milk [as a food] alternative)
 
-> *References: [Perfect Pumpkin Seed Milk](http://healthyblenderrecipes.com/recipes/homemade_raw_pumpkin_seed_milk)*
+> *References: [Plant milk](http://en.wikipedia.org/wiki/Plant_milk), [Perfect Pumpkin Seed Milk](http://healthyblenderrecipes.com/recipes/homemade_raw_pumpkin_seed_milk)*
 
 #### Proof of Suffering
 - Fragments of Suffering occasionally drop when mining Soul Sand

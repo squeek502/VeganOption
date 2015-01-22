@@ -10,7 +10,7 @@ import squeek.veganoption.ModInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockPumpkinSeedMilk extends BlockFluidClassic
+public class BlockPlantMilk extends BlockFluidClassic
 {
 	@SideOnly(Side.CLIENT)
 	public IIcon stillIcon;
@@ -25,7 +25,7 @@ public class BlockPumpkinSeedMilk extends BlockFluidClassic
 		}
 	}
 
-	public BlockPumpkinSeedMilk(Fluid fluid)
+	public BlockPlantMilk(Fluid fluid)
 	{
 		super(fluid, new MaterialMilk());
 	}

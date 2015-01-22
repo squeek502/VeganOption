@@ -9,9 +9,10 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
-import squeek.veganoption.blocks.BlockPumpkinSeedMilk;
+import squeek.veganoption.blocks.BlockPlantMilk;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -21,55 +22,63 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class PlantMilk implements IContentModule
 {
-	public static Fluid fluidPumpkinSeedMilk;
-	public static Block pumpkinSeedMilk;
-	public static Item bucketPumpkinSeedMilk;
+	public static Fluid fluidPlantMilk;
+	public static Block plantMilk;
+	public static Item bucketPlantMilk;
 
 	@Override
 	public void create()
 	{
-		fluidPumpkinSeedMilk = new Fluid(ModInfo.MODID + ".pumpkinSeedMilk");
-		FluidRegistry.registerFluid(fluidPumpkinSeedMilk);
-		pumpkinSeedMilk = new BlockPumpkinSeedMilk(fluidPumpkinSeedMilk)
-				.setBlockName(ModInfo.MODID + ".pumpkinSeedMilk");
-		fluidPumpkinSeedMilk.setBlock(pumpkinSeedMilk);
-		fluidPumpkinSeedMilk.setUnlocalizedName(pumpkinSeedMilk.getUnlocalizedName());
-		GameRegistry.registerBlock(pumpkinSeedMilk, "pumpkinSeedMilk");
+		fluidPlantMilk = new Fluid(ModInfo.MODID + ".plantMilk");
+		FluidRegistry.registerFluid(fluidPlantMilk);
+		plantMilk = new BlockPlantMilk(fluidPlantMilk)
+				.setBlockName(ModInfo.MODID + ".plantMilk");
+		fluidPlantMilk.setBlock(plantMilk);
+		fluidPlantMilk.setUnlocalizedName(plantMilk.getUnlocalizedName());
+		GameRegistry.registerBlock(plantMilk, "plantMilk");
 
-		bucketPumpkinSeedMilk = new ItemBucketGeneric(pumpkinSeedMilk)
-				.setUnlocalizedName(ModInfo.MODID + ".bucketPumpkinSeedMilk")
+		bucketPlantMilk = new ItemBucketGeneric(plantMilk)
+				.setUnlocalizedName(ModInfo.MODID + ".bucketPlantMilk")
 				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName("bucket_milk")
 				.setContainerItem(Items.bucket);
-		GameRegistry.registerItem(bucketPumpkinSeedMilk, "bucketPumpkinSeedMilk");
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPumpkinSeedMilk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketPumpkinSeedMilk), new ItemStack(Items.bucket));
+		GameRegistry.registerItem(bucketPlantMilk, "bucketPlantMilk");
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPlantMilk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketPlantMilk), new ItemStack(Items.bucket));
 	}
 
 	@Override
 	public void oredict()
 	{
 		OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(Items.milk_bucket));
-		OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(bucketPumpkinSeedMilk));
+		OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(bucketPlantMilk));
+
+		OreDictionary.registerOre(ContentHelper.plantMilkSourceOreDict, new ItemStack(Items.pumpkin_seeds));
 	}
 
 	@Override
 	public void recipes()
 	{
+		ContentHelper.remapOre(ContentHelper.soybeanOreDict, ContentHelper.plantMilkSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.coconutOreDict, ContentHelper.plantMilkSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.almondOreDict, ContentHelper.plantMilkSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.riceOreDict, ContentHelper.plantMilkSourceOreDict);
+		ContentHelper.remapOre(ContentHelper.oatOreDict, ContentHelper.plantMilkSourceOreDict);
+
 		Modifiers.recipes.convertInput(new ItemStack(Items.milk_bucket), ContentHelper.milkOreDict);
 
-		GameRegistry.addShapelessRecipe(new ItemStack(bucketPumpkinSeedMilk), // output
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bucketPlantMilk), // output
 										new ItemStack(Items.water_bucket),
-										new ItemStack(Items.pumpkin_seeds),
-										new ItemStack(Items.pumpkin_seeds),
-										new ItemStack(Items.sugar));
-		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketPumpkinSeedMilk), // output
+										ContentHelper.plantMilkSourceOreDict,
+										ContentHelper.plantMilkSourceOreDict,
+										new ItemStack(Items.sugar)));
+		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketPlantMilk), // output
 														new ItemStack(Items.water_bucket));
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(bucketPumpkinSeedMilk), new ItemStack(pumpkinSeedMilk));
-		RelationshipRegistry.addRelationship(new ItemStack(pumpkinSeedMilk), new ItemStack(bucketPumpkinSeedMilk));
+		RelationshipRegistry.addRelationship(new ItemStack(bucketPlantMilk), new ItemStack(plantMilk));
+		RelationshipRegistry.addRelationship(new ItemStack(plantMilk), new ItemStack(bucketPlantMilk));
 	}
 }

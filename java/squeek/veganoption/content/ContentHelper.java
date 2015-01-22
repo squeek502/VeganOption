@@ -63,6 +63,7 @@ public class ContentHelper
 	public static final String vegetableOilSourceOreDict = "sourceVegetableOil";
 	public static final String tearOreDict = "reagentTear";
 	public static final String goldNuggetOreDict = "nuggetGold"; // Forge's oredict entry
+	public static final String plantMilkSourceOreDict = "sourcePlantMilk";
 
 	// various vegetable oil sources from other mods
 	public static final String grapeSeedOreDict = "seedGrape";
@@ -74,6 +75,11 @@ public class ContentHelper
 	public static final String nutOreDict = "listAllnut";
 	public static final String teaSeedOreDict = "seedTea";
 	public static final String avocadoOreDict = "cropAvocado";
+
+	// various plant milk sources from other mods
+	public static final String almondOreDict = "cropAlmond";
+	public static final String oatOreDict = "cropOats";
+	public static final String riceOreDict = "cropRice";
 
 	public static void addOreSmelting(String inputOreName, ItemStack output, float xp)
 	{

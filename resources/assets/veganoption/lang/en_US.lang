@@ -82,11 +82,11 @@ tile.VeganOption.bedStraw.name=Straw Bed
 death.attack.VeganOption.itchyBed=%1$s itched themselves to death in their sleep
 death.attack.VeganOption.itchyBed.player=%1$s itched themselves to death in their sleep whilst trying to escape %2$s
 
-# pumpkin seed milk
-item.VeganOption.bucketPumpkinSeedMilk.name=Pumpkin Seed Milk Bucket
-item.VeganOption.bucketPumpkinSeedMilk.nei.usage=If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead
-tile.VeganOption.pumpkinSeedMilk.name=Pumpkin Seed Milk
-fluid.tile.VeganOption.pumpkinSeedMilk=Pumpkin Seed Milk
+# plant milk
+item.VeganOption.bucketPlantMilk.name=Plant Milk Bucket
+item.VeganOption.bucketPlantMilk.nei.usage=If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead
+tile.VeganOption.plantMilk.name=Plant Milk
+fluid.tile.VeganOption.plantMilk=Plant Milk
 
 # egg
 item.VeganOption.appleSauce.name=Apple Sauce
