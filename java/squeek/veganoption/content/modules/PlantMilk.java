@@ -9,13 +9,13 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockPlantMilk;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.ShapelessMatchingOreRecipe;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.items.ItemBucketGeneric;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -66,11 +66,11 @@ public class PlantMilk implements IContentModule
 
 		Modifiers.recipes.convertInput(new ItemStack(Items.milk_bucket), ContentHelper.milkOreDict);
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bucketPlantMilk), // output
-										new ItemStack(Items.water_bucket),
-										ContentHelper.plantMilkSourceOreDict,
-										ContentHelper.plantMilkSourceOreDict,
-										new ItemStack(Items.sugar)));
+		GameRegistry.addRecipe(new ShapelessMatchingOreRecipe(new ItemStack(bucketPlantMilk),
+				new ItemStack(Items.water_bucket),
+				ContentHelper.plantMilkSourceOreDict,
+				ContentHelper.plantMilkSourceOreDict,
+				new ItemStack(Items.sugar)));
 		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketPlantMilk), // output
 														new ItemStack(Items.water_bucket));
 	}
