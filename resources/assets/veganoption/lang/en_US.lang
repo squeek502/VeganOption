@@ -84,7 +84,8 @@ death.attack.VeganOption.itchyBed.player=%1$s itched themselves to death in thei
 
 # plant milk
 item.VeganOption.bucketPlantMilk.name=Plant Milk Bucket
-item.VeganOption.bucketPlantMilk.nei.usage=If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead
+item.VeganOption.bucketPlantMilk.nei.crafting=Note: %1$s can only be crafted using two of the same items as the plant milk source.
+item.VeganOption.bucketPlantMilk.nei.usage=If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead.
 tile.VeganOption.plantMilk.name=Plant Milk
 fluid.tile.VeganOption.plantMilk=Plant Milk
 
