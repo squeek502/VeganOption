@@ -188,3 +188,4 @@ Dragon Egg | No alternative yet
 - Support for the [Version Checker mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2091981-version-checker)
 - Various Waila integration
 - Wood Ash from Witchery can be used to create [Wood Ash Lye](#soap)
+- Blank Mob Head recipes added for Iguanas Tinker Tweaks' mob heads

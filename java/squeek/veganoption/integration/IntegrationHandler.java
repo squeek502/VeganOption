@@ -12,6 +12,7 @@ public class IntegrationHandler
 	public static final String MODID_HARVESTCRAFT = "harvestcraft";
 	public static final String MODID_MINEFACTORY_RELOADED = "MineFactoryReloaded";
 	public static final String MODID_TINKERS_CONSTRUCT = "TConstruct";
+	public static final String MODID_IGUANAS_TINKER_TWEAKS = "IguanaTweaksTConstruct";
 	public static final String MODID_WITCHERY = "Witchery";
 	public static final String MODID_WAILA = "Waila";
 	public static final String MODID_VERSION_CHECKER = "VersionChecker";
@@ -27,6 +28,7 @@ public class IntegrationHandler
 		tryIntegration(MODID_HARVESTCRAFT, "pams", "HarvestCraft");
 		tryIntegration(MODID_MINEFACTORY_RELOADED, "mfr");
 		tryIntegration(MODID_TINKERS_CONSTRUCT, "tic");
+		tryIntegration(MODID_IGUANAS_TINKER_TWEAKS, "tic");
 		tryIntegration(MODID_WITCHERY, "witchery");
 		tryIntegration(MODID_WAILA, "waila");
 		tryIntegration(MODID_VERSION_CHECKER, "versionchecker");
