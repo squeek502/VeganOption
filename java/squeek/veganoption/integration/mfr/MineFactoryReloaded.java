@@ -3,6 +3,7 @@ package squeek.veganoption.integration.mfr;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.integration.IntegratorBase;
@@ -10,6 +11,22 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class MineFactoryReloaded extends IntegratorBase
 {
+	@Override
+	public void recipes()
+	{
+		Item milkBottleItem = getItem("milkbottle");
+		if (milkBottleItem != null)
+		{
+			// milk bottle can't use oredict because it's included in the ingredient's 
+			// oredict, thus allowing infinite duping
+			//
+			// don't add a replacement recipe because milk's curative properties are
+			// found in VO's soap instead of plant milk, and the only purpose of the milk bottle is
+			// the curative effect
+			Modifiers.recipes.excludeOutput(new ItemStack(milkBottleItem));
+		}
+	}
+
 	@Override
 	public void init()
 	{
