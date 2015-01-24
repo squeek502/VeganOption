@@ -37,7 +37,8 @@ public class HarvestCraft extends IntegratorBase
 		"mayoItem",
 		"coconutshrimpItem",
 		"eggnogItem",
-		"zucchinifriesItem"
+		"zucchinifriesItem",
+		"friedeggItem"
 		};
 		for (String foodNameToExclude : foodNamesToExclude)
 		{
