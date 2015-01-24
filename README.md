@@ -96,8 +96,7 @@ Dragon Egg | No alternative yet
 #### Frozen Bubble
 - [Soap](#soap) + Water + Sugar + Glass Bottle crafted together creates ![](resources/assets/veganoption/textures/items/soap_solution.png) Soap Solution
 - Soap Solution + 8 Ice (or 1 Packed Ice) crafted together creates a ![](resources/assets/veganoption/textures/items/frozen_bubble.png) Frozen Bubble (Pufferfish alternative)
-- Soap Solution used by a player or a dispenser creates a ![](resources/assets/veganoption/textures/items/frozen_bubble.png) Bubble in the world
-- A Bubble will freeze if it is surrounded by enough Ice/Snow/Packed Ice
+- Soap Solution used by a player or a dispenser creates a ![](resources/assets/veganoption/textures/items/frozen_bubble.png) Bubble in the world, and the Bubble will freeze if it is surrounded by enough Ice/Snow/Packed Ice
 - Frozen Bubble + Raw Ender Bucket crafted together creates an Ender Pearl
 - Frozen Bubble placed in Raw Ender (in the world) will soak up the Raw Ender and become an Ender Pearl once it is fully filled
 
