@@ -13,7 +13,7 @@ public class IntegrationHandler
 	public static final String MODID_MINEFACTORY_RELOADED = "MineFactoryReloaded";
 	public static final String MODID_TINKERS_CONSTRUCT = "TConstruct";
 	public static final String MODID_IGUANAS_TINKER_TWEAKS = "IguanaTweaksTConstruct";
-	public static final String MODID_WITCHERY = "Witchery";
+	public static final String MODID_WITCHERY = "witchery";
 	public static final String MODID_WAILA = "Waila";
 	public static final String MODID_VERSION_CHECKER = "VersionChecker";
 	public static final String MODID_THAUMCRAFT = "Thaumcraft";
@@ -29,7 +29,7 @@ public class IntegrationHandler
 		tryIntegration(MODID_MINEFACTORY_RELOADED, "mfr");
 		tryIntegration(MODID_TINKERS_CONSTRUCT, "tic");
 		tryIntegration(MODID_IGUANAS_TINKER_TWEAKS, "tic");
-		tryIntegration(MODID_WITCHERY, "witchery");
+		tryIntegration(MODID_WITCHERY, "witchery", "Witchery");
 		tryIntegration(MODID_WAILA, "waila");
 		tryIntegration(MODID_VERSION_CHECKER, "versionchecker");
 		tryIntegration(MODID_THAUMCRAFT, "thaumcraft");
