@@ -47,6 +47,13 @@ dependencies {
     compile "mcp.mobius.waila:Waila:1.5.5_1.7.10"
 }
 
+jar {
+	manifest {
+		attributes 'FMLCorePlugin': 'squeek.veganoption.asm.ASMPlugin'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+	}
+}
+
 // variable substitution in java files
 task processSourceMainJava(type:Copy) {
 	inputs.property "vars", project.version + project.minecraft.version
