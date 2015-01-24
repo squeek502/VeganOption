@@ -22,6 +22,7 @@ public class IntegrationHandler
 	public static final String MODID_EXTRA_TREES = "ExtraTrees";
 	public static final String MODID_BIOMES_O_PLENTY = "BiomesOPlenty";
 	public static final String MODID_FOOD_PLUS = "FoodPlus";
+	public static final String MODID_STILL_HUNGRY = "stillhungry";
 
 	static
 	{
@@ -39,6 +40,7 @@ public class IntegrationHandler
 		tryIntegration(MODID_EXTRA_TREES, "forestry");
 		tryIntegration(MODID_BIOMES_O_PLENTY, "bop");
 		tryIntegration(MODID_FOOD_PLUS, "foodplus");
+		tryIntegration(MODID_STILL_HUNGRY, "stillhungry", "StillHungry");
 	}
 
 	public static void preInit()
