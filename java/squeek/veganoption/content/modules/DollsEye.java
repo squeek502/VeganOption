@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.oredict.OreDictionary;
@@ -52,10 +53,10 @@ public class DollsEye implements IContentModule
 			{
 				boolean blockMatches = super.matches(world, x, y, z, block, meta);
 
-				if (!blockMatches)
+				if (!blockMatches || !(world instanceof World))
 					return false;
 
-				BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+				BiomeGenBase biome = ((World) world).provider.getBiomeGenForCoords(x, z);
 
 				boolean isForest = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.FOREST);
 
