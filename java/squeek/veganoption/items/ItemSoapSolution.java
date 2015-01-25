@@ -80,6 +80,10 @@ public class ItemSoapSolution extends Item
 			{
 				itemStack.stackSize = 0;
 			}
+			if (itemStack.stackSize == 0 && itemStack.getItem().getContainerItem() != null)
+			{
+				return new ItemStack(itemStack.getItem().getContainerItem());
+			}
 			return itemStack;
 		}
 
