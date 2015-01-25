@@ -1,0 +1,191 @@
+#####################################################################################################
+# About the NEI Crafting and Usage handler syntax
+# To define crafting or usage text for an item or block, create a string with the following name:
+#
+# 	<unlocalizedName>.nei.crafting
+# 	<unlocalizedName>.nei.usage
+#
+# where <unlocalizedName> is the unlocalized name of the item or block (usually item.VeganOption.itemName or tile.VeganOption.blockName)
+#
+# To insert the name of the corresponding item or block, use %1$s
+# To insert another localized string inside a usage/crafting string, use the format {unlocalized.string.name}
+# To reference another block or item use the syntax [[modid:item_name]] (when specifying metadata, use [[modid:item_name:meta]] instead)
+# To insert a line break, use \n
+#
+# Example:
+#
+#   example.string=Nested string example
+# 	item.VeganOption.exampleItem.name=Example
+# 	item.VeganOption.exampleItem.nei.usage=%1$s is nothing like [[minecraft:wheat]] or [[minecraft:golden_apple:1]], but it can do a {example.string}.\n\nLines broken.
+#
+# would give exampleItem a Usage tab in NEI that looks like:
+#
+# 	Example is nothing like Wheat or Golden Apple, but it can do a Nested string example.
+#	
+#	Lines broken.
+#
+#####################################################################################################
+
+# Creative Tab
+itemGroup.VeganOption=The Vegan Option
+
+# Jute
+tile.VeganOption.juteBundled.name=Связка джута
+tile.VeganOption.juteBundled.nei.usage=Для того, чтобы извлечь [[VeganOption:juteFibre]], %1$s необходимо сначала смочить (погрузить в воду). Выход [[minecraft:comparator]] основан на текущей стадии замочки %1$s.
+item.VeganOption.juteStalk.name=Джутовый стебель
+item.VeganOption.juteFibre.name=Джутовое волокно
+item.VeganOption.juteFibre.nei.crafting=%1$s получают добыванием полностью смоченной [[VeganOption:juteBundled]].
+VeganOption.waila.retting=Смачивание
+VeganOption.waila.retting.not.submerged=Нужно погрузить в воду
+VeganOption.waila.retted=Смочен
+
+# Burlap
+item.VeganOption.burlap.name=Рогожа
+item.VeganOption.helmetBurlap.name=Рогожная кепка
+item.VeganOption.helmetBurlap.nei.usage=%1$s - это альтернатива [[minecraft:leather_helmet]].
+item.VeganOption.chestplateBurlap.name=Рогожная туника
+item.VeganOption.chestplateBurlap.nei.usage=%1$s - это альтернатива [[minecraft:leather_chestplate]].
+item.VeganOption.leggingsBurlap.name=Рогожные брюки
+item.VeganOption.leggingsBurlap.nei.usage=%1$s - это альтернатива [[minecraft:leather_leggings]].
+item.VeganOption.bootsBurlap.name=Рогожные ботинки
+item.VeganOption.bootsBurlap.nei.usage=%1$s - это альтернатива [[minecraft:leather_boots]].
+
+# Kapok
+tile.VeganOption.kapok.name=Хлопковый блок
+tile.VeganOption.kapok.nei.usage=%1$s - это альтернатива [[minecraft:wool]].
+tile.VeganOption.kapok.white.name=Белый хлопковый блок
+tile.VeganOption.kapok.orange.name=Оранжевый хлопковый блок
+tile.VeganOption.kapok.magenta.name=Сиреневый хлопковый блок
+tile.VeganOption.kapok.lightBlue.name=Светло-синий хлопковый блок
+tile.VeganOption.kapok.yellow.name=Жёлтый хлопковый блок
+tile.VeganOption.kapok.lime.name=Лаймовый хлопковый блок
+tile.VeganOption.kapok.pink.name=Розовый хлопковый блок
+tile.VeganOption.kapok.gray.name=Серый хлопковый блок
+tile.VeganOption.kapok.silver.name=Светло-серый хлопковый блок
+tile.VeganOption.kapok.cyan.name=Бирюзовый хлопковый блок
+tile.VeganOption.kapok.purple.name=Фиолетовый хлопковый блок
+tile.VeganOption.kapok.blue.name=Синий хлопковый блок
+tile.VeganOption.kapok.brown.name=Коричневый хлопковый блок
+tile.VeganOption.kapok.green.name=Зелёный хлопковый блок
+tile.VeganOption.kapok.red.name=Красный хлопковый блок
+tile.VeganOption.kapok.black.name=Чёрный хлопковый блок
+item.VeganOption.kapokTuft.name=Пучок хлопка
+
+# Faux Feather
+item.VeganOption.fauxFeather.name=Искусственное перо
+
+# Straw Bed
+item.VeganOption.bedStraw.name=Соломенная кровать
+item.VeganOption.bedStraw.tooltip=Немного зудящая
+item.VeganOption.bedStraw.nei.usage=%1$s - это [[minecraft:bed]]. Однако, она немного зудящая: она наносит 1/2 сердца урона при использовании.
+tile.VeganOption.bedStraw.name=Соломенная кровать
+death.attack.VeganOption.itchyBed=Зуд довёл %1$s до смерти во время сна
+death.attack.VeganOption.itchyBed.player=Зуд довёл %1$s до смерти во время сна, когда он убегал от %2$s
+
+# Plant Milk
+item.VeganOption.bucketPlantMilk.name=Ведро молока растения
+item.VeganOption.bucketPlantMilk.nei.crafting=Примечание: %1$s может быть создано только при использовании двух одинаковых предметов, в качестве источника молока.
+item.VeganOption.bucketPlantMilk.nei.usage=Если Вам нужны лечебные эффекты, которые даёт [[minecraft:milk_bucket]] Minecraft, используйте [[VeganOption:soap]].
+tile.VeganOption.plantMilk.name=Молоко растения
+fluid.tile.VeganOption.plantMilk=Молоко растения
+
+# Egg
+item.VeganOption.appleSauce.name=Яблочное пюре
+item.VeganOption.potatoStarch.name=Картофельный крахмал
+item.VeganOption.potatoStarch.nei.crafting=%1$s можно получить размолов [[minecraft:potato]] с помощью [[minecraft:piston]] (В игровом мире).
+item.VeganOption.plasticEgg.name=Пластиковое яйцо
+item.VeganOption.plasticEgg.nei.usage=%1$s - это альтернатива [[minecraft:egg]] для целей, не связанных с кулинарией.
+entity.VeganOption.plasticEgg.name=Пластиковое яйцо
+
+# Resin
+item.VeganOption.resin.name=Резина
+
+# Vegetable Oil
+item.VeganOption.seedSunflower.name=Семечки подсолнечника
+item.VeganOption.oilVegetable.name=Растительное масло
+
+# Vegetable Oil Ink
+item.VeganOption.inkVegetableOilBlack.name=Чёрные растительные чернила
+item.VeganOption.inkVegetableOilBlack.nei.usage=%1$s - это альтернатива [[minecraft:dye:0]].
+item.VeganOption.inkVegetableOilWhite.name=Белые растительные чернила
+item.VeganOption.inkVegetableOilWhite.nei.usage=%1$s - это альтернатива [[minecraft:dye:15]].
+item.VeganOption.waxVegetable.name=Растительный воск
+item.VeganOption.rosin.name=Канифоль
+
+# Bioplastic
+item.VeganOption.bioplastic.name=Биопластик
+item.VeganOption.plasticRod.name=Пластиковая палка
+
+# Composting
+item.VeganOption.rottenPlants.name=Гнилые растения
+tile.VeganOption.composter.name=Компостер
+tile.VeganOption.composter.nei.usage=%1$s может использоваться для переработки растительного вещества в [[VeganOption:compost]] или [[VeganOption:rottenPlants]].\n\nЧтобы сделать [[VeganOption:compost]], заполните %1$s смесью из "зелёных" и "коричневых" материалов. Чтобы сделать [[VeganOption:rottenPlants]], используйте только "зелёные" материалы. Откройте вкладку "{VeganOption.nei.composting}" в NEI, чтобы увидеть список "зелёных" и "коричневых" материалов.\n\nЧем выше температура в компостере, тем быстрее материал будет разлагаться. Скорость, которую повышает температура, определяется 3 факторами:\n\n1) Последний сбор компоста (сидя, используйте %1$s пустой рукой, чтобы собрать компост)\n\n2) Заполненность компостера (чем больше он заполнен, тем быстрее будет разложение)\n\n3) Соотношение "зелёных" и "коричневых" материалов (соотношение 2:1 даёт максимальную скорость)\n\nЕсли %1$s не опустошается какое-то время, он начнёт терять нагрев. При каждом опустошении %1$s, он будет терять начальный нагрев, но наберёт больше нагрева в дальнейшем. %1$s должен опустошаться дважды в Minecraft день.\n\nВыход [[minecraft:comparator]] из %1$s основан на его температуре.
+tile.VeganOption.compost.name=Компост
+tile.VeganOption.compost.nei.usage=%1$s обеспечивает пассивное улучшение, если находится рядом с [[minecraft:farmland]].
+item.VeganOption.fertilizer.name=Удобрение
+item.VeganOption.fertilizer.nei.usage=%1$s - это альтернатива [[minecraft:dye:15]].
+VeganOption.waila.composter.empty=Пусто
+VeganOption.waila.composter.composting=Компостирование
+VeganOption.waila.composter.temperature=Температура
+
+# Soap
+item.VeganOption.bucketLyeWater.name=Ведро древесной пепельной щёлочи
+tile.VeganOption.lyeWater.name=Древесная пепельная щёлочь
+tile.VeganOption.lyeWater.nei.usage=Внимание: %1$s едка.
+fluid.tile.VeganOption.lyeWater=Древесная пепельная щёлочь
+death.attack.VeganOption.lyeWater=%1$s искупался в щёлочи
+death.attack.VeganOption.lyeWater.player=%1$s искупался в щёлочи, когда убегал от %2$s
+item.VeganOption.soap.name=Мыло
+item.VeganOption.soap.nei.usage=Использование %1$s, снимет все эффекты с игрока.
+item.VeganOption.soapSolution.name=Мыльный раствор
+item.VeganOption.soapSolution.nei.usage=%1$s может использоваться для создания {entity.VeganOption.bubble.name}. Он может использоваться либо игроком, либо [[minecraft:dispenser]].
+
+# Frozen Bubble
+entity.VeganOption.bubble.name=Пузырь
+item.VeganOption.frozenBubble.name=Замороженный пузырь
+item.VeganOption.frozenBubble.nei.crafting=%1$s может быть создан путём использования [[VeganOption:soapSolution]] для создания {entity.VeganOption.bubble.name} в очень холодной области (Окружённой [[minecraft:ice]]/[[minecraft:snow]]).
+item.VeganOption.frozenBubbleFilled.name=Замороженный пузырь (Наполовину заполненный)
+item.VeganOption.frozenBubbleFilled.nei.crafting=%1$s может быть сделан путём размещения [[VeganOption:frozenBubble]] в [[VeganOption:rawEnder]].
+item.VeganOption.frozenBubbleFilled.nei.usage=%1$s может быть превращён в [[minecraft:ender_pearl]], путём его полного заполнения [[VeganOption:rawEnder]].
+
+# Raw Ender
+tile.VeganOption.encrustedObsidian.name=Инкрустированный обсидиан
+tile.VeganOption.encrustedObsidian.nei.usage=[[VeganOption:enderRift]] может быть создан путём размещения 4 блоков %1$s в форме алмаза с пустым центром.
+item.VeganOption.bucketRawEnder.name=Ведро сырья Края
+tile.VeganOption.rawEnder.name=Сырьё Края
+tile.VeganOption.rawEnder.nei.crafting=У воды, которая течёт через [[VeganOption:enderRift]] ночью есть шанс превращения в %1$s. Однако, если делать это днём, случайный блок вблизи [[VeganOption:enderRift]] будет потерян навсегда.
+fluid.tile.VeganOption.rawEnder=Сырьё Края
+tile.VeganOption.enderRift.name=Рифт Края
+
+# False Morel
+item.VeganOption.falseMorel.name=Ложный строчок
+item.VeganOption.falseMorel.nei.usage=%1$s - это токсичный гриб, который может использоваться в качестве альтернативы [[minecraft:spider_eye]].
+item.VeganOption.falseMorelFermented.name=Маринованный ложный строчок
+
+# Mob Heads
+item.VeganOption.papierMache.name=Папье-маше
+item.VeganOption.mobHeadBlank.name=Пустая голова моба
+
+# Gunpowder
+item.VeganOption.sulfur.name=Сера
+item.VeganOption.saltpeter.name=Селитра
+
+# Proof of Suffering
+item.VeganOption.sufferingFragment.name=Фрагмент страдания
+item.VeganOption.sufferingProof.name=Доказательство страдания
+item.VeganOption.sufferingProof.nei.usage=%1$s - это альтернатива [[minecraft:ghast_tear]].
+
+# Dolls Eye
+item.VeganOption.dollsEye.name=Кукольные глазки
+item.VeganOption.dollsEye.nei.common=%1$s - это ядовитые ягоды растения воронец (также известного как белый воронец).
+item.VeganOption.dollsEye.nei.usage={item.VeganOption.dollsEye.nei.common}\n\n%1$s - это альтернатива [[minecraft:spider_eye]].
+item.VeganOption.dollsEye.nei.crafting={item.VeganOption.dollsEye.nei.common}\n\n%1$s можно добыть только, сломав [[minecraft:tallgrass:1]] в биомах "temperate forest".
+
+# NEI Strings
+VeganOption.nei.byproduct.of=Побочный продукт
+VeganOption.nei.byproducts=Побочные продукты
+VeganOption.nei.usage=Использование
+VeganOption.nei.crafting=Создание
+VeganOption.nei.drops=Получаемые предметы
+VeganOption.nei.composting=Компостирование
+VeganOption.nei.references=References

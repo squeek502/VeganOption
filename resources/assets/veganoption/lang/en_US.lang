@@ -26,10 +26,10 @@
 #
 #####################################################################################################
 
-# creative tab
+# Creative Tab
 itemGroup.VeganOption=The Vegan Option
 
-# jute
+# Jute
 tile.VeganOption.juteBundled.name=Bundled Jute
 tile.VeganOption.juteBundled.nei.usage=In order to extract the [[VeganOption:juteFibre]], %1$s must be first be retted (submerged in water). [[minecraft:comparator]] output is based on the current retting stage of the %1$s.
 item.VeganOption.juteStalk.name=Jute Stalk
@@ -39,7 +39,7 @@ VeganOption.waila.retting=Retting
 VeganOption.waila.retting.not.submerged=Needs to be submerged in water
 VeganOption.waila.retted=Retted
 
-# burlap
+# Burlap
 item.VeganOption.burlap.name=Burlap
 item.VeganOption.helmetBurlap.name=Burlap Cap
 item.VeganOption.helmetBurlap.nei.usage=%1$s is a [[minecraft:leather_helmet]] alternative.
@@ -50,10 +50,10 @@ item.VeganOption.leggingsBurlap.nei.usage=%1$s is a [[minecraft:leather_leggings
 item.VeganOption.bootsBurlap.name=Burlap Boots
 item.VeganOption.bootsBurlap.nei.usage=%1$s is a [[minecraft:leather_boots]] alternative.
 
-# kapok
+# Kapok
 tile.VeganOption.kapok.name=Kapok Block
 tile.VeganOption.kapok.nei.usage=A %1$s is a [[minecraft:wool]] alternative.
-tile.VeganOption.kapok.white.name=Kapok Block
+tile.VeganOption.kapok.white.name=White Kapok Block
 tile.VeganOption.kapok.orange.name=Orange Kapok Block
 tile.VeganOption.kapok.magenta.name=Magenta Kapok Block
 tile.VeganOption.kapok.lightBlue.name=Light Blue Kapok Block
@@ -71,10 +71,10 @@ tile.VeganOption.kapok.red.name=Red Kapok Block
 tile.VeganOption.kapok.black.name=Black Kapok Block
 item.VeganOption.kapokTuft.name=Kapok Tuft
 
-# faux feather
+# Faux Feather
 item.VeganOption.fauxFeather.name=Faux Feather
 
-# straw bed
+# Straw Bed
 item.VeganOption.bedStraw.name=Straw Bed
 item.VeganOption.bedStraw.tooltip=A bit itchy
 item.VeganOption.bedStraw.nei.usage=%1$s is a [[minecraft:bed]]. However, it's a bit itchy: it deals 1/2 heart of damage whenever it is used.
@@ -82,14 +82,14 @@ tile.VeganOption.bedStraw.name=Straw Bed
 death.attack.VeganOption.itchyBed=%1$s itched themselves to death in their sleep
 death.attack.VeganOption.itchyBed.player=%1$s itched themselves to death in their sleep whilst trying to escape %2$s
 
-# plant milk
+# Plant Milk
 item.VeganOption.bucketPlantMilk.name=Plant Milk Bucket
 item.VeganOption.bucketPlantMilk.nei.crafting=Note: %1$s can only be crafted using two of the same items as the plant milk source.
 item.VeganOption.bucketPlantMilk.nei.usage=If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead.
 tile.VeganOption.plantMilk.name=Plant Milk
 fluid.tile.VeganOption.plantMilk=Plant Milk
 
-# egg
+# Egg
 item.VeganOption.appleSauce.name=Apple Sauce
 item.VeganOption.potatoStarch.name=Potato Starch
 item.VeganOption.potatoStarch.nei.crafting=%1$s can be made by crushing a [[minecraft:potato]] with a [[minecraft:piston]] (in the world).
@@ -97,14 +97,14 @@ item.VeganOption.plasticEgg.name=Plastic Egg
 item.VeganOption.plasticEgg.nei.usage=A %1$s is an [[minecraft:egg]] alternative for non-baking purposes.
 entity.VeganOption.plasticEgg.name=Plastic Egg
 
-# resin
+# Resin
 item.VeganOption.resin.name=Resin
 
-# vegetable oil
+# Vegetable Oil
 item.VeganOption.seedSunflower.name=Sunflower Seeds
 item.VeganOption.oilVegetable.name=Vegetable Oil
 
-# vegetable oil ink
+# Vegetable Oil Ink
 item.VeganOption.inkVegetableOilBlack.name=Black Vegetable Oil Ink
 item.VeganOption.inkVegetableOilBlack.nei.usage=%1$s is an [[minecraft:dye:0]] dye alternative.
 item.VeganOption.inkVegetableOilWhite.name=White Vegetable Oil Ink
@@ -112,11 +112,11 @@ item.VeganOption.inkVegetableOilWhite.nei.usage=%1$s is a [[minecraft:dye:15]] d
 item.VeganOption.waxVegetable.name=Vegetable Wax
 item.VeganOption.rosin.name=Rosin
 
-# bioplastic
+# Bioplastic
 item.VeganOption.bioplastic.name=Bioplastic
 item.VeganOption.plasticRod.name=Plastic Rod
 
-# composting
+# Composting
 item.VeganOption.rottenPlants.name=Rotten Plants
 tile.VeganOption.composter.name=Composter
 tile.VeganOption.composter.nei.usage=A %1$s can be used to turn plant matter into [[VeganOption:compost]] or [[VeganOption:rottenPlants]].\n\nTo create [[VeganOption:compost]], fill the %1$s with a mixture of "green" and "brown" materials. To create [[VeganOption:rottenPlants]], only use "green" materials. See the "{VeganOption.nei.composting}" tab in NEI for the list of "green" and "brown" materials.\n\nThe higher the temperature inside the composter, the faster the material will decompose. The speed that the temperature increases is determined by 3 factors:\n\n1) The last time the compost was tumbled (sneak + use the %1$s with an empty hand to tumble it)\n\n2) The fullness of the composter (the more full it is, the faster it will decompose)\n\n3) The ratio of "green" to "brown" materials (a ratio of 2:1 provides the maximum speed)\n\nIf the %1$s has not been tumbled in a while, it will start to lose its heat. Every time the %1$s is tumbled, it will lose heat initially, but will gain more heat in the long run. The %1$s should be tumbled about twice every Minecraft day.\n\n[[minecraft:comparator]] output from the %1$s is based on its current temperature.
@@ -128,7 +128,7 @@ VeganOption.waila.composter.empty=Empty
 VeganOption.waila.composter.composting=Composting
 VeganOption.waila.composter.temperature=Temperature
 
-# soap
+# Soap
 item.VeganOption.bucketLyeWater.name=Wood Ash Lye Bucket
 tile.VeganOption.lyeWater.name=Wood Ash Lye
 tile.VeganOption.lyeWater.nei.usage=Warning: %1$s is corrosive.
@@ -140,7 +140,7 @@ item.VeganOption.soap.nei.usage=When %1$s is used, it will remove all status eff
 item.VeganOption.soapSolution.name=Soap Solution
 item.VeganOption.soapSolution.nei.usage=%1$s can be used to create a {entity.VeganOption.bubble.name}. It can be used by either a player or a [[minecraft:dispenser]].
 
-# frozen bubble
+# Frozen Bubble
 entity.VeganOption.bubble.name=Bubble
 item.VeganOption.frozenBubble.name=Frozen Bubble
 item.VeganOption.frozenBubble.nei.crafting=A %1$s can be created by using [[VeganOption:soapSolution]] to create a {entity.VeganOption.bubble.name} in a very cold area (surrounded by [[minecraft:ice]]/[[minecraft:snow]]).
@@ -148,7 +148,7 @@ item.VeganOption.frozenBubbleFilled.name=Frozen Bubble (Partially Filled)
 item.VeganOption.frozenBubbleFilled.nei.crafting=A %1$s can be created by placing a [[VeganOption:frozenBubble]] in [[VeganOption:rawEnder]].
 item.VeganOption.frozenBubbleFilled.nei.usage=A %1$s can be turned into an [[minecraft:ender_pearl]] by filling it completely with [[VeganOption:rawEnder]].
 
-# raw ender
+# Raw Ender
 tile.VeganOption.encrustedObsidian.name=Encrusted Obsidian
 tile.VeganOption.encrustedObsidian.nei.usage=An [[VeganOption:enderRift]] can be created by placing 4 %1$s blocks in a diamond shape with a gap in the center.
 item.VeganOption.bucketRawEnder.name=Raw Ender Bucket
@@ -157,32 +157,32 @@ tile.VeganOption.rawEnder.nei.crafting=Water flowing through an [[VeganOption:en
 fluid.tile.VeganOption.rawEnder=Raw Ender
 tile.VeganOption.enderRift.name=Ender Rift
 
-# false morel
+# False Morel
 item.VeganOption.falseMorel.name=False Morel
 item.VeganOption.falseMorel.nei.usage=A %1$s is a toxic mushroom that can be used as a [[minecraft:spider_eye]] alternative.
 item.VeganOption.falseMorelFermented.name=Fermented False Morel
 
-# mob heads
+# Mob Heads
 item.VeganOption.papierMache.name=Papier-Mâché
 item.VeganOption.mobHeadBlank.name=Blank Mob Head
 
-# gunpowder
+# Gunpowder
 item.VeganOption.sulfur.name=Sulfur
 item.VeganOption.saltpeter.name=Saltpeter
 
-# proof of suffering
+# Proof of Suffering
 item.VeganOption.sufferingFragment.name=Fragment of Suffering
 item.VeganOption.sufferingProof.name=Proof of Suffering
 item.VeganOption.sufferingProof.nei.usage=%1$s is a [[minecraft:ghast_tear]] alternative.
 
-# dolls eye
+# Dolls Eye
 item.VeganOption.dollsEye.name=Doll's Eye
 item.VeganOption.dollsEye.nei.common=A %1$s is the poisonous berry of the plant Actaea Pachypoda (also known as white baneberry).
 item.VeganOption.dollsEye.nei.usage={item.VeganOption.dollsEye.nei.common}\n\n%1$s is a [[minecraft:spider_eye]] alternative.
 item.VeganOption.dollsEye.nei.crafting={item.VeganOption.dollsEye.nei.common}\n\n%1$s can only be found by breaking [[minecraft:tallgrass:1]] in temperate forest biomes.
 
-# nei strings
-VeganOption.nei.byproduct.of=Byproduct Of
+# NEI Strings
+VeganOption.nei.byproduct.of=Byproduct of
 VeganOption.nei.byproducts=Byproducts
 VeganOption.nei.usage=Usage
 VeganOption.nei.crafting=Crafting
