@@ -100,7 +100,7 @@ Dragon Egg | No alternative yet
 - Frozen Bubble + Raw Ender Bucket crafted together creates an Ender Pearl
 - Frozen Bubble placed in Raw Ender (in the world) will soak up the Raw Ender and become an Ender Pearl once it is fully filled
 
-> *References: [Frozen Bubbles Freeze at -40c](https://www.youtube.com/watch?v=b0eCAL_t7pg)*
+> *References: [Frozen Bubbles Freeze at -40c](http://y2u.be/b0eCAL_t7pg)*
 
 #### Saltpeter
 - ![](resources/assets/veganoption/textures/items/saltpeter.png) Saltpeter occasionally drops when mining Sandstone
