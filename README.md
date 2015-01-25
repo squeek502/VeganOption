@@ -30,8 +30,8 @@ Feather | [Faux Feather](#faux-feather)
 String | [Jute Fiber](#jute) or [Kapok Tufts](#kapok)
 Leather | [Burlap](#burlap)
 Leather Armor | [Burlap Armor](#burlap)
-Raw/Cooked Meat/Fish (as a food) | No alternative yet (HarvestCraft's tofu is recommended for this purpose)
-Egg (as a food) | No alternative yet (HarvestCraft's tofu is recommended for this purpose)
+Raw/Cooked Meat/Fish (as a food) | No alternative yet ([HarvestCraft](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1294413-pams-mods)'s tofu is recommended for this purpose)
+Egg (as a food) | No alternative yet ([HarvestCraft](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1294413-pams-mods)'s tofu is recommended for this purpose)
 Egg (as a baking agent) | [Potato Starch](#egg-replacers) or [Apple Sauce](#egg-replacers)
 Egg (as an object) | [Plastic Egg](#bioplastic) 
 Gunpowder | Charcoal + [Sulfur](#sulfur) + [Saltpeter](#saltpeter)
@@ -180,11 +180,11 @@ Dragon Egg | No alternative yet
 
 ### Integration With Other Mods
 
-- Extensive NEI integration (every single item has both Usage and Crafting of some sort defined for it)
-- [Bioplastic](#bioplastic) is added as a tool material to Tinkers' Construct (defers to MFR's plastic if it exists)
-- [Frozen Bubbles](#frozen-bubble) can be filled with and drained of their Raw Ender in a Thermal Expansion Fluid Transposer
-- [Fertilizer](#fertilizer) is a valid fertilizer for MFR's Fertilizer
+- Extensive [NEI](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1279956-chickenbones-mods) integration (every single item has both Usage and Crafting of some sort defined for it)
+- [Bioplastic](#bioplastic) is added as a tool material to [Tinkers' Construct](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2218638-tinkers-construct) (defers to [MFR](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292152-powercrystals-mods-minefactoryreloaded)'s plastic if it exists)
+- [Frozen Bubbles](#frozen-bubble) can be filled with and drained of their Raw Ender in a [Thermal Expansion](http://minecraft.curseforge.com/mc-mods/69163-thermalexpansion) Fluid Transposer
+- [Fertilizer](#fertilizer) is a valid fertilizer for [MFR](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292152-powercrystals-mods-minefactoryreloaded)'s Fertilizer
 - Support for the [Version Checker mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2091981-version-checker)
-- Various Waila integration
-- Wood Ash from Witchery can be used to create [Wood Ash Lye](#soap)
-- Blank Mob Head recipes added for Iguanas Tinker Tweaks' mob heads
+- Various [Waila](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289765-waila) integration
+- Wood Ash from [Witchery](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289765-waila) can be used to create [Wood Ash Lye](#soap)
+- Blank Mob Head recipes added for [Iguanas Tinker Tweaks](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2176855-iguanas-tinker-tweaks)' mob heads
