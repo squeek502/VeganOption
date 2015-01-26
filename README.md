@@ -83,8 +83,8 @@ Dragon Egg | No alternative yet
 > *References: [Egg Substitutions in Baking](http://chefinyou.com/egg-substitutes-cooking/), [Ener-G Egg Replacer](http://www.ener-g.com/egg-replacer.html)*
 
 #### Raw Ender
-- 2 Obsidian + Diamond + Emerald creates ![](resources/assets/veganoption/textures/blocks/encrusted_obsidian.png) Encrusted Diamond
-- 4 Encrusted Diamond blocks placed in a diamond shape creates an Ender Rift in the center of it
+- 2 Obsidian + Diamond + Emerald creates ![](resources/assets/veganoption/textures/blocks/encrusted_obsidian.png) Encrusted Obsidian
+- 4 Encrusted Obsidian blocks placed in a diamond shape creates an Ender Rift in the center of it
 - Water flowing through an Ender Rift at night has a chance to be converted into ![](resources/assets/veganoption/textures/items/raw_ender_bucket.png) Raw Ender. However, if this is done during the day, a random block around the Ender Rift will be consumed by it and lost forever.
 
 #### Faux Feather
