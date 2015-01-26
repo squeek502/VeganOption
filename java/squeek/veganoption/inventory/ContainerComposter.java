@@ -1,8 +1,10 @@
 package squeek.veganoption.inventory;
 
+import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 
+@ChestContainer
 public class ContainerComposter extends ContainerGeneric
 {
 	public TileEntityComposter composter;
