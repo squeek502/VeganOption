@@ -81,6 +81,7 @@ public class Composting implements IContentModule
 	@Override
 	public void oredict()
 	{
+		OreDictionary.registerOre(ContentHelper.rottenOreDict, new ItemStack(Items.rotten_flesh));
 		OreDictionary.registerOre(ContentHelper.rottenOreDict, rottenPlants);
 		OreDictionary.registerOre(ContentHelper.fertilizerOreDict, fertilizer);
 		OreDictionary.registerOre(ContentHelper.brownDyeOreDict, fertilizer);
@@ -89,7 +90,6 @@ public class Composting implements IContentModule
 	@Override
 	public void recipes()
 	{
-		OreDictionary.registerOre(ContentHelper.rottenOreDict, new ItemStack(Items.rotten_flesh));
 		Modifiers.recipes.convertInput(new ItemStack(Items.rotten_flesh), ContentHelper.rottenOreDict);
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(composter), "/c/", "/ /", '/', ContentHelper.stickOreDict, 'c', new ItemStack(Blocks.chest)));
