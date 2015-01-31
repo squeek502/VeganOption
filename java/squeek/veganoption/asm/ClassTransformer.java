@@ -82,12 +82,112 @@ public class ClassTransformer implements IClassTransformer
 				toInject.add(new FieldInsnNode(Opcodes.GETFIELD, "tconstruct/library/event/ToolBuildEvent", "handleStack", "Lnet/minecraft/item/ItemStack;"));
 				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "getRealHandle", "(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;", false));
 				toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, "tconstruct/library/event/ToolBuildEvent", "handleStack", "Lnet/minecraft/item/ItemStack;"));
-	
+
 				method.instructions.insertBefore(findFirstInstruction(method), toInject);
+				return writeClassToBytes(classNode);
+			}
+		}
+		/*
+		 * BEGIN Mystcraft descriptive book Burlap support
+		 */
+		else if (transformedName.equals("com.xcompwiz.mystcraft.data.RecipeLinkingbook"))
+		{
+			ClassNode classNode = readClassFromBytes(bytes);
+
+			MethodNode method = findMethodNodeOfClass(classNode, "isValidCover", "(Lnet/minecraft/item/ItemStack;)Z");
+
+			if (method != null)
+			{
+				/*
+				if (Hooks.isLeather(itemStack))
+					return true;
+				*/
+				InsnList toInject = new InsnList();
+				LabelNode afterIf = new LabelNode();
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "isLeather", "(Lnet/minecraft/item/ItemStack;)Z", false));
+				toInject.add(new JumpInsnNode(Opcodes.IFEQ, afterIf));
+				toInject.add(new InsnNode(Opcodes.ICONST_1));
+				toInject.add(new InsnNode(Opcodes.IRETURN));
+				toInject.add(afterIf);
+
+				method.instructions.insertBefore(findFirstInstruction(method), toInject);
+				return writeClassToBytes(classNode);
+			}
+		}
+		else if (transformedName.equals("com.xcompwiz.mystcraft.tileentity.TileEntityBookBinder"))
+		{
+			ClassNode classNode = readClassFromBytes(bytes);
+			boolean didTransform = false;
+
+			MethodNode method = findMethodNodeOfClass(classNode, "func_94041_b", "(ILnet/minecraft/item/ItemStack;)Z");
+
+			if (method == null)
+				method = findMethodNodeOfClass(classNode, "isItemValidForSlot", "(ILnet/minecraft/item/ItemStack;)Z");
+
+			if (method != null)
+			{
+				/*
+				if (slotIndex == 1 && Hooks.isLeather(itemStack))
+					return true;
+				*/
+
+				InsnList toInject = new InsnList();
+				LabelNode afterIf = new LabelNode();
+				toInject.add(new VarInsnNode(Opcodes.ILOAD, 1));
+				toInject.add(new InsnNode(Opcodes.ICONST_1));
+				toInject.add(new JumpInsnNode(Opcodes.IF_ICMPNE, afterIf));
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 2));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "isLeather", "(Lnet/minecraft/item/ItemStack;)Z", false));
+				toInject.add(new JumpInsnNode(Opcodes.IFEQ, afterIf));
+				toInject.add(new InsnNode(Opcodes.ICONST_1));
+				toInject.add(new InsnNode(Opcodes.IRETURN));
+				toInject.add(afterIf);
+
+				method.instructions.insertBefore(findFirstInstruction(method), toInject);
+				didTransform = true;
 			}
 
-			return writeClassToBytes(classNode);
+			method = findMethodNodeOfClass(classNode, "canBuildItem", "()Z");
+
+			if (method != null)
+			{
+				AbstractInsnNode knownInsn = method.instructions.getFirst();
+				while (knownInsn != null && (knownInsn.getOpcode() != Opcodes.GETSTATIC
+						|| !((FieldInsnNode) knownInsn).owner.equals("net/minecraft/init/Items")
+						|| !(((FieldInsnNode) knownInsn).name.equals("field_151116_aA") || ((FieldInsnNode) knownInsn).name.equals("leather"))))
+				{
+					knownInsn = knownInsn.getNext();
+				}
+
+				/*
+				 * Convert from:
+				 * 	    if (this.itemstacks[1].func_77973_b() != Items.field_151116_aA) return false;
+				 * to:
+				 * 		if (!Hooks.isLeather(this.itemstacks[1])) return false;
+				 */
+				if (knownInsn != null && knownInsn.getPrevious().getOpcode() == Opcodes.INVOKEVIRTUAL)
+				{
+					JumpInsnNode jumpInsn = (JumpInsnNode) knownInsn.getNext();
+					jumpInsn.setOpcode(Opcodes.IFNE);
+
+					InsnList replacementInsns = new InsnList();
+					replacementInsns.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "isLeather", "(Lnet/minecraft/item/ItemStack;)Z", false));
+					method.instructions.insert(knownInsn, replacementInsns);
+
+					method.instructions.remove(knownInsn.getPrevious()); // itemStack.getItem() INVOKEVIRTUAL
+					method.instructions.remove(knownInsn); // Items.leather GETSTATIC
+
+					didTransform = true;
+				}
+			}
+
+			if (didTransform)
+				return writeClassToBytes(classNode);
 		}
+		/*
+		 * END Mystcraft descriptive book Burlap support
+		 */
 		return bytes;
 	}
 
