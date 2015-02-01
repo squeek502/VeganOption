@@ -1,4 +1,4 @@
-The Vegan Option
+[The Vegan Option](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2339963-the-vegan-option)
 ================
 
 A Minecraft mod that seeks to add vegan alternatives to all Minecraft mob/animal products using the following guidelines:
