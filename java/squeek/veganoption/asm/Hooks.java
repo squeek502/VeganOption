@@ -50,7 +50,7 @@ public class Hooks
 
 		return handle;
 	}
-	
+
 	// helper function for Mystcraft linking book recipe compatibility
 	public static boolean isLeather(ItemStack itemStack)
 	{

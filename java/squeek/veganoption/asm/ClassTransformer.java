@@ -162,7 +162,7 @@ public class ClassTransformer implements IClassTransformer
 
 				/*
 				 * Convert from:
-				 * 	    if (this.itemstacks[1].func_77973_b() != Items.field_151116_aA) return false;
+				 * 	    if (this.itemstacks[1].getItem() != Items.leather) return false;
 				 * to:
 				 * 		if (!Hooks.isLeather(this.itemstacks[1])) return false;
 				 */
