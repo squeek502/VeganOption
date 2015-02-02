@@ -145,6 +145,8 @@ item.VeganOption.soap.name=Soap
 item.VeganOption.soap.nei.usage=When %1$s is used, it will remove all status effects from the player.
 item.VeganOption.soapSolution.name=Soap Solution
 item.VeganOption.soapSolution.nei.usage=%1$s can be used to create a {entity.VeganOption.bubble.name}. It can be used by either a player or a [[minecraft:dispenser]].
+fluid.tile.VeganOption.fluidSoapSolution=Soap Solution
+tile.VeganOption.fluidSoapSolution.name=Soap Solution
 
 # Frozen Bubble
 entity.VeganOption.bubble.name=Bubble

@@ -1,15 +1,23 @@
 package squeek.veganoption.content.modules;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFishFood;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
+import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -28,18 +36,30 @@ public class FrozenBubble implements IContentModule
 {
 	public static Item soapSolution;
 	public static Item frozenBubble;
+	public static Fluid fluidSoapSolution;
+	public static Block blockFluidSoapSolution;
 
 	public static final ItemStack pufferFish = new ItemStack(Items.fish, 1, ItemFishFood.FishType.PUFFERFISH.ordinal());
 
 	@Override
 	public void create()
 	{
+		fluidSoapSolution = new Fluid(ModInfo.MODID + ".fluidSoapSolution");
+		FluidRegistry.registerFluid(fluidSoapSolution);
+		blockFluidSoapSolution = new BlockFluidGeneric(fluidSoapSolution, new MaterialLiquid(MapColor.iceColor), "soap_solution")
+				.setBlockName(ModInfo.MODID + ".fluidSoapSolution");
+		fluidSoapSolution.setBlock(blockFluidSoapSolution);
+		fluidSoapSolution.setUnlocalizedName(blockFluidSoapSolution.getUnlocalizedName());
+		GameRegistry.registerBlock(blockFluidSoapSolution, "fluidSoapSolution");
+
 		soapSolution = new ItemSoapSolution()
 				.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
 				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":soap_solution")
 				.setContainerItem(Items.glass_bottle);
 		GameRegistry.registerItem(soapSolution, "soapSolution");
+
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidSoapSolution, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(soapSolution), new ItemStack(soapSolution.getContainerItem()));
 
 		frozenBubble = new ItemFrozenBubble()
 				.setUnlocalizedName(ModInfo.MODID + ".frozenBubble")
@@ -89,6 +109,8 @@ public class FrozenBubble implements IContentModule
 		RelationshipRegistry.addRelationship(new ItemStack(frozenBubble), new ItemStack(soapSolution));
 		RelationshipRegistry.addRelationship(new ItemStack(frozenBubble, 1, 1), new ItemStack(frozenBubble));
 		RelationshipRegistry.addRelationship(new ItemStack(Items.ender_pearl), new ItemStack(frozenBubble, 1, 1));
+		RelationshipRegistry.addRelationship(new ItemStack(soapSolution), new ItemStack(blockFluidSoapSolution));
+		RelationshipRegistry.addRelationship(new ItemStack(blockFluidSoapSolution), new ItemStack(soapSolution));
 	}
 
 }

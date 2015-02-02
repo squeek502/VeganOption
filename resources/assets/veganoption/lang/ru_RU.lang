@@ -145,6 +145,8 @@ item.VeganOption.soap.name=Мыло
 item.VeganOption.soap.nei.usage=Использование %1$s, снимет все эффекты с игрока.
 item.VeganOption.soapSolution.name=Мыльный раствор
 item.VeganOption.soapSolution.nei.usage=%1$s может использоваться для создания {entity.VeganOption.bubble.name}. Он может использоваться либо игроком, либо [[minecraft:dispenser]].
+fluid.tile.VeganOption.fluidSoapSolution=Мыльный раствор
+tile.VeganOption.fluidSoapSolution.name=Мыльный раствор
 
 # Frozen Bubble
 entity.VeganOption.bubble.name=Пузырь
