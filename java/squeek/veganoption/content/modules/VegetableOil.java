@@ -28,6 +28,7 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.registry.RelationshipRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class VegetableOil implements IContentModule
@@ -129,6 +130,8 @@ public class VegetableOil implements IContentModule
 	@Override
 	public void finish()
 	{
+		RelationshipRegistry.addRelationship(new ItemStack(fluidBlockVegetableOil), new ItemStack(oilVegetable));
+		RelationshipRegistry.addRelationship(new ItemStack(oilVegetable), new ItemStack(fluidBlockVegetableOil));
 	}
 
 	public static void addOilRecipe(ItemStack output, Object... inputs)

@@ -18,6 +18,7 @@ import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.registry.RelationshipRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Ink implements IContentModule
@@ -107,6 +108,10 @@ public class Ink implements IContentModule
 	@Override
 	public void finish()
 	{
+		RelationshipRegistry.addRelationship(new ItemStack(whiteVegetableOilInk), new ItemStack(whiteInk));
+		RelationshipRegistry.addRelationship(new ItemStack(whiteInk), new ItemStack(whiteVegetableOilInk));
+		RelationshipRegistry.addRelationship(new ItemStack(blackVegetableOilInk), new ItemStack(blackInk));
+		RelationshipRegistry.addRelationship(new ItemStack(blackInk), new ItemStack(blackVegetableOilInk));
 	}
 
 }
