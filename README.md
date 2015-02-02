@@ -188,3 +188,4 @@ Dragon Egg | No alternative yet
 - Various [Waila](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289765-waila) integration
 - Wood Ash from [Witchery](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289765-waila) can be used to create [Wood Ash Lye](#soap)
 - Blank Mob Head recipes added for [Iguanas Tinker Tweaks](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2176855-iguanas-tinker-tweaks)' mob heads
+- Burlap and Black Vegetable Oil Ink are usable in the [Mystcraft](http://xcompwiz.com/) Book Binder/Ink Mixer
