@@ -28,6 +28,12 @@ public class RecipeModifier
 	public HashMap<ItemStack, String> itemToOreDictConversionsForNonFoodOutputs = new HashMap<ItemStack, String>();
 	public HashMap<String, String> oreDictToOreDictConversions = new HashMap<String, String>();
 	public List<ItemStack> excludedRecipeOutputs = new ArrayList<ItemStack>();
+	public List<RecipeModification> customModifications = new ArrayList<RecipeModification>();
+
+	public abstract static class RecipeModification
+	{
+		public abstract IRecipe modify(IRecipe recipe);
+	}
 
 	public void convertInput(ItemStack inputToConvert, String oreDictEntry)
 	{
@@ -54,6 +60,11 @@ public class RecipeModifier
 		excludedRecipeOutputs.add(outputToExclude);
 	}
 
+	public void addCustomModification(RecipeModification recipeMod)
+	{
+		customModifications.add(recipeMod);
+	}
+
 	public void replaceRecipes()
 	{
 		long millisecondsStart = System.currentTimeMillis();
@@ -67,8 +78,23 @@ public class RecipeModifier
 		for (IRecipe recipe : recipes)
 		{
 			IRecipe convertedRecipe = convertRecipe(recipe);
+			boolean didMakeModification = convertedRecipe != null;
+			IRecipe recipeToConvert = convertedRecipe != null ? convertedRecipe : recipe;
 
-			if (convertedRecipe == null)
+			for (RecipeModification customModification : customModifications)
+			{
+				convertedRecipe = customModification.modify(recipeToConvert);
+
+				if (convertedRecipe != null)
+				{
+					recipeToConvert = convertedRecipe;
+					didMakeModification = true;
+				}
+				else
+					convertedRecipe = recipeToConvert;
+			}
+
+			if (!didMakeModification)
 				continue;
 
 			if (convertedRecipe != recipe)
@@ -241,7 +267,7 @@ public class RecipeModifier
 
 		return null;
 	}
-	
+
 	private String findMatchingOreDict(Collection<ItemStack> inputOres, Collection<String> oreDicts)
 	{
 		for (String oreDict : oreDicts)

@@ -24,6 +24,7 @@ public class IntegrationHandler
 	public static final String MODID_FOOD_PLUS = "FoodPlus";
 	public static final String MODID_STILL_HUNGRY = "stillhungry";
 	public static final String MODID_MAGICAL_CROPS = "magicalcrops";
+	public static final String MODID_MYSTCRAFT = "Mystcraft";
 
 	static
 	{
@@ -43,6 +44,7 @@ public class IntegrationHandler
 		tryIntegration(MODID_FOOD_PLUS, "foodplus");
 		tryIntegration(MODID_STILL_HUNGRY, "stillhungry", "StillHungry");
 		tryIntegration(MODID_MAGICAL_CROPS, "magicalcrops", "MagicalCrops");
+		tryIntegration(MODID_MYSTCRAFT, "mystcraft");
 	}
 
 	public static void preInit()
