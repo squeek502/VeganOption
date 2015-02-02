@@ -103,6 +103,8 @@ item.VeganOption.resin.name=Резина
 # Vegetable Oil
 item.VeganOption.seedSunflower.name=Семечки подсолнечника
 item.VeganOption.oilVegetable.name=Растительное масло
+fluid.tile.VeganOption.fluidOilVegetable=Растительное масло
+tile.VeganOption.fluidOilVegetable.name=Растительное масло
 
 # Vegetable Oil Ink
 item.VeganOption.inkVegetableOilBlack.name=Чёрные растительные чернила

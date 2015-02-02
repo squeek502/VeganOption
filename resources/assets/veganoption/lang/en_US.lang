@@ -103,6 +103,8 @@ item.VeganOption.resin.name=Resin
 # Vegetable Oil
 item.VeganOption.seedSunflower.name=Sunflower Seeds
 item.VeganOption.oilVegetable.name=Vegetable Oil
+fluid.tile.VeganOption.fluidOilVegetable=Vegetable Oil
+tile.VeganOption.fluidOilVegetable.name=Vegetable Oil
 
 # Vegetable Oil Ink
 item.VeganOption.inkVegetableOilBlack.name=Black Vegetable Oil Ink
