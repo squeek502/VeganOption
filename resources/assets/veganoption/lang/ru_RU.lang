@@ -107,8 +107,12 @@ item.VeganOption.oilVegetable.name=Растительное масло
 # Vegetable Oil Ink
 item.VeganOption.inkVegetableOilBlack.name=Чёрные растительные чернила
 item.VeganOption.inkVegetableOilBlack.nei.usage=%1$s - это альтернатива [[minecraft:dye:0]].
+fluid.tile.VeganOption.inkBlack=Чёрные растительные чернила
+tile.VeganOption.inkBlack.name=Чёрные растительные чернила
 item.VeganOption.inkVegetableOilWhite.name=Белые растительные чернила
 item.VeganOption.inkVegetableOilWhite.nei.usage=%1$s - это альтернатива [[minecraft:dye:15]].
+fluid.tile.VeganOption.inkWhite=Белые растительные чернила
+tile.VeganOption.inkWhite.name=Белые растительные чернила
 item.VeganOption.waxVegetable.name=Растительный воск
 item.VeganOption.rosin.name=Канифоль
 
