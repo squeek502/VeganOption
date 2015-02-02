@@ -1,6 +1,7 @@
 package squeek.veganoption.blocks;
 
 import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
@@ -19,22 +20,7 @@ public class BlockRawEnder extends BlockFluidFinite
 	@SideOnly(Side.CLIENT)
 	protected IIcon flowIcon;
 
-	public static class MaterialRawEnder extends MaterialLiquid
-	{
-		public MaterialRawEnder()
-		{
-			super(MapColor.greenColor);
-			this.setNoPushMobility();
-		}
-
-		@Override
-		public boolean blocksMovement()
-		{
-			return false;
-		}
-	}
-
-	public static MaterialRawEnder materialRawEnder = new MaterialRawEnder();
+	public static Material materialRawEnder = new MaterialLiquid(MapColor.greenColor);
 
 	public BlockRawEnder(Fluid fluid)
 	{

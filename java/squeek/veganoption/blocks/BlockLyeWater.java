@@ -1,39 +1,23 @@
 package squeek.veganoption.blocks;
 
 import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import squeek.veganoption.ModInfo;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockLyeWater extends BlockFluidClassic
+public class BlockLyeWater extends BlockFluidGeneric
 {
-	@SideOnly(Side.CLIENT)
-	public IIcon stillIcon;
-	@SideOnly(Side.CLIENT)
-	public IIcon flowIcon;
-
 	public static final DamageSource lyeDamage = new DamageSource(ModInfo.MODID + ".lyeWater");
-
-	public static class MaterialLyeWater extends MaterialLiquid
-	{
-		public MaterialLyeWater()
-		{
-			super(MapColor.waterColor);
-		}
-	}
+	public static Material lyeMaterial = new MaterialLiquid(MapColor.waterColor);
 
 	public BlockLyeWater(Fluid fluid)
 	{
-		super(fluid, new MaterialLyeWater());
+		super(fluid, lyeMaterial, "lye_water");
 	}
 
 	@Override
@@ -44,20 +28,5 @@ public class BlockLyeWater extends BlockFluidClassic
 			collidedEntity.attackEntityFrom(lyeDamage, 0.25f);
 		}
 		super.onEntityCollidedWithBlock(world, x, y, z, collidedEntity);
-	}
-
-	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		return (side == 0 || side == 1) ? stillIcon : flowIcon;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerBlockIcons(IIconRegister register)
-	{
-		stillIcon = register.registerIcon(ModInfo.MODID_LOWER + ":" + "lye_water_still");
-		flowIcon = register.registerIcon(ModInfo.MODID_LOWER + ":" + "lye_water_flow");
-		getFluid().setIcons(stillIcon, flowIcon);
 	}
 }
