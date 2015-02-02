@@ -2,6 +2,8 @@ package squeek.veganoption.content.modules.compat;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.content.modules.FrozenBubble;
@@ -14,6 +16,7 @@ public class CompatEnderBubble implements IContentModule
 	@Override
 	public void create()
 	{
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(Ender.fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.ender_pearl), new ItemStack(FrozenBubble.frozenBubble));
 	}
 
 	@Override
