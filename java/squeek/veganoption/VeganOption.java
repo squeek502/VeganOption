@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.helpers.CreativeTabHelper;
+import squeek.veganoption.helpers.FluidContainerHelper;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.network.NetworkHandler;
@@ -38,6 +39,7 @@ public class VeganOption
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		FluidContainerHelper.init();
 		GuiHelper.init();
 		NetworkHandler.init();
 		ContentModuleHandler.init();
