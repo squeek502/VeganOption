@@ -37,7 +37,7 @@ public class ItemBucketGeneric extends ItemBucket
 
 		Block block = event.world.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ);
 
-		if (block == filledWith && event.world.getBlockMetadata(event.target.blockX, event.target.blockY, event.target.blockZ) == 7)
+		if (block == filledWith && event.world.getBlockMetadata(event.target.blockX, event.target.blockY, event.target.blockZ) == getPlacedLiquidMetadata())
 		{
 			event.world.setBlockToAir(event.target.blockX, event.target.blockY, event.target.blockZ);
 			event.result = new ItemStack(this);
