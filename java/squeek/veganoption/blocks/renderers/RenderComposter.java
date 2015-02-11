@@ -97,15 +97,10 @@ public class RenderComposter extends TileEntitySpecialRenderer implements IItemR
 		GL11.glScalef(axis == Axis.X ? 0.8F : 1.0F, -0.8F, axis == Axis.X ? -1.0F : -0.8F);
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 
-		if (tile.hasWorldObj())
+		if (tile.hasWorldObj() && tile.isAerating())
 		{
-			long ticksSinceLastAeration = tile.getWorldObj().getWorldTime() - tile.lastAeration;
-			if (ticksSinceLastAeration <= TileEntityComposter.NUM_TICKS_FOR_FULL_AERATION)
-			{
-				final int num_turns = 3;
-				double percent = (double) ticksSinceLastAeration / (double) TileEntityComposter.NUM_TICKS_FOR_FULL_AERATION;
-				GL11.glRotatef((float) -(percent * 360f * num_turns), axis == Axis.X ? 0F : 1F, 0.0F, axis == Axis.X ? 1F : 0F);
-			}
+			final int num_turns = 3;
+			GL11.glRotatef(-(tile.getAeratingPercent() * 360f * num_turns), axis == Axis.X ? 0F : 1F, 0.0F, axis == Axis.X ? 1F : 0F);
 		}
 
 		GL11.glRotatef((float) rotation, 0.0F, 1.0F, 0.0F);

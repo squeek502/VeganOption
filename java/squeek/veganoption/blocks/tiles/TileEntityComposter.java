@@ -43,6 +43,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	public static final int CLIENT_EVENT_NUM_USING_PLAYERS = 1;
 
 	public static final long NOT_COMPOSTING = -1;
+	public static final float NOT_AERATING = -1;
 
 	protected ItemStack[] inventoryItems;
 	protected float compostPercent;
@@ -203,7 +204,15 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	public boolean isAerating()
 	{
 		long ticksSinceLastAeration = worldObj.getWorldTime() - lastAeration;
-		return ticksSinceLastAeration <= NUM_TICKS_FOR_FULL_AERATION;
+		return ticksSinceLastAeration >= 0 && ticksSinceLastAeration <= NUM_TICKS_FOR_FULL_AERATION;
+	}
+
+	public float getAeratingPercent()
+	{
+		if (!isAerating())
+			return NOT_AERATING;
+
+		return (float) ((worldObj.getWorldTime() - lastAeration) / (double) TileEntityComposter.NUM_TICKS_FOR_FULL_AERATION);
 	}
 
 	public void clampTemperature()
