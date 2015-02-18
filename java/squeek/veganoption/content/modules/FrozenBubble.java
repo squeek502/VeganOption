@@ -1,8 +1,7 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.MaterialLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -46,7 +45,7 @@ public class FrozenBubble implements IContentModule
 	{
 		fluidSoapSolution = new Fluid(ModInfo.MODID + ".fluidSoapSolution");
 		FluidRegistry.registerFluid(fluidSoapSolution);
-		blockFluidSoapSolution = new BlockFluidGeneric(fluidSoapSolution, new MaterialLiquid(MapColor.iceColor), "soap_solution")
+		blockFluidSoapSolution = new BlockFluidGeneric(fluidSoapSolution, Material.water, "soap_solution")
 				.setBlockName(ModInfo.MODID + ".fluidSoapSolution");
 		fluidSoapSolution.setBlock(blockFluidSoapSolution);
 		fluidSoapSolution.setUnlocalizedName(blockFluidSoapSolution.getUnlocalizedName());

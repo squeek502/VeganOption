@@ -10,10 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
@@ -24,9 +26,29 @@ public class FluidContainerHelper
 		MinecraftForge.EVENT_BUS.register(new FluidContainerHelper());
 	}
 
-	protected static Method getMovingObjectPositionFromPlayer = ReflectionHelper.findMethod(Item.class, null, new String[] {"getMovingObjectPositionFromPlayer", "func_77621_a", "a"}, World.class, EntityPlayer.class, boolean.class);
+	protected static Method getMovingObjectPositionFromPlayer = ReflectionHelper.findMethod(Item.class, null, new String[]{"getMovingObjectPositionFromPlayer", "func_77621_a", "a"}, World.class, EntityPlayer.class, boolean.class);
+
+	// fix non-water fluids being able to create water buckets
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onFillBucket(FillBucketEvent event)
+	{
+		if (event.isCanceled() || event.getResult() != Event.Result.DEFAULT)
+			return;
+
+		Block block = event.world.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ);
+
+		// if we've gotten this far, then it shouldn't be able to be picked up by a bucket
+		// ItemBucketGeneric would have handled it if it was possible to pick it up
+		// this stops BlockFluidGenerics creating water buckets if they don't have a bucket item
+		if (block instanceof BlockFluidGeneric)
+		{
+			event.setCanceled(true);
+			event.setResult(Event.Result.DENY);
+		}
+	}
 
 	// all this just for picking up generic fluids with a glass bottle
+	// and fixing non-water fluids being able to create water bottles
 	//
 	// note: this *could* be expanded to support all containers registered in the FluidContainerRegistry,
 	// but that is likely to cause unwanted behaviour due to containers being registered
@@ -34,7 +56,7 @@ public class FluidContainerHelper
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		if (event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
+		if (event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && event.action != PlayerInteractEvent.Action.RIGHT_CLICK_AIR)
 			return;
 
 		if (event.isCanceled() || event.useItem != Event.Result.DEFAULT)
@@ -72,29 +94,43 @@ public class FluidContainerHelper
 		if (!(block instanceof BlockFluidGeneric))
 			return;
 
-		ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(new FluidStack(((BlockFluidGeneric) block).getFluid(), FluidContainerRegistry.BUCKET_VOLUME), emptyContainer);
-
-		if (filledContainer == null)
-			return;
-
 		if (!event.world.canMineBlock(event.entityPlayer, x, y, z))
 			return;
 
 		if (!event.entityPlayer.canPlayerEdit(x, y, z, movingObjectPosition.sideHit, emptyContainer))
 			return;
 
-		if (!event.entityPlayer.capabilities.isCreativeMode)
+		boolean didFill = tryFillBottle(event.entityPlayer, emptyContainer, (BlockFluidGeneric) block, event.world, x, y, z);
+		// this cancels the interaction if the bottle is unable to be filled with the fluid,
+		// which stops mod fluid blocks from creating water bottles, because all fluids *have* to use
+		// Material.water to actually have the properties of a liquid...
+		if (!didFill)
+		{
+			event.setCanceled(true);
+			event.useItem = Event.Result.DENY;
+		}
+	}
+
+	public boolean tryFillBottle(EntityPlayer player, ItemStack emptyContainer, BlockFluidGeneric block, World world, int x, int y, int z)
+	{
+		ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(new FluidStack(block.getFluid(), FluidContainerRegistry.BUCKET_VOLUME), emptyContainer);
+
+		if (filledContainer == null)
+			return false;
+
+		if (!player.capabilities.isCreativeMode)
 			--emptyContainer.stackSize;
 
 		if (emptyContainer.stackSize <= 0)
 		{
-			event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, filledContainer);
+			player.inventory.setInventorySlotContents(player.inventory.currentItem, filledContainer);
 		}
-		else if (!event.entityPlayer.inventory.addItemStackToInventory(filledContainer))
+		else if (!player.inventory.addItemStackToInventory(filledContainer))
 		{
-			event.entityPlayer.dropPlayerItemWithRandomChoice(filledContainer, false);
+			player.dropPlayerItemWithRandomChoice(filledContainer, false);
 		}
 
-		event.world.setBlockToAir(x, y, z);
+		world.setBlockToAir(x, y, z);
+		return true;
 	}
 }

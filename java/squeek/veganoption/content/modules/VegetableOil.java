@@ -5,8 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.MaterialLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -53,7 +52,7 @@ public class VegetableOil implements IContentModule
 
 		fluidVegetableOil = new Fluid(ModInfo.MODID + ".fluidOilVegetable");
 		FluidRegistry.registerFluid(fluidVegetableOil);
-		fluidBlockVegetableOil = new BlockFluidGeneric(fluidVegetableOil, new MaterialLiquid(MapColor.yellowColor), "vegetable_oil")
+		fluidBlockVegetableOil = new BlockFluidGeneric(fluidVegetableOil, Material.water, "vegetable_oil")
 				.setBlockName(ModInfo.MODID + ".fluidOilVegetable");
 		fluidVegetableOil.setBlock(fluidBlockVegetableOil);
 		fluidVegetableOil.setUnlocalizedName(fluidBlockVegetableOil.getUnlocalizedName());

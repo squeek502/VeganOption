@@ -1,8 +1,7 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.MaterialLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -49,7 +48,7 @@ public class Ink implements IContentModule
 
 		blackInkFluid = new Fluid(ModInfo.MODID + ".inkBlack");
 		FluidRegistry.registerFluid(blackInkFluid);
-		blackInk = new BlockFluidGeneric(blackInkFluid, new MaterialLiquid(MapColor.blackColor), "black_ink")
+		blackInk = new BlockFluidGeneric(blackInkFluid, Material.water, "black_ink")
 				.setBlockName(ModInfo.MODID + ".inkBlack");
 		blackInkFluid.setBlock(blackInk);
 		blackInkFluid.setUnlocalizedName(blackInk.getUnlocalizedName());
@@ -66,7 +65,7 @@ public class Ink implements IContentModule
 
 		whiteInkFluid = new Fluid(ModInfo.MODID + ".inkWhite");
 		FluidRegistry.registerFluid(whiteInkFluid);
-		whiteInk = new BlockFluidGeneric(whiteInkFluid, new MaterialLiquid(MapColor.snowColor), "white_ink")
+		whiteInk = new BlockFluidGeneric(whiteInkFluid, Material.water, "white_ink")
 				.setBlockName(ModInfo.MODID + ".inkWhite");
 		whiteInkFluid.setBlock(whiteInk);
 		whiteInkFluid.setUnlocalizedName(whiteInk.getUnlocalizedName());

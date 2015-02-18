@@ -1,8 +1,6 @@
 package squeek.veganoption.blocks;
 
-import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
@@ -13,7 +11,7 @@ import squeek.veganoption.ModInfo;
 public class BlockLyeWater extends BlockFluidGeneric
 {
 	public static final DamageSource lyeDamage = new DamageSource(ModInfo.MODID + ".lyeWater");
-	public static Material lyeMaterial = new MaterialLiquid(MapColor.waterColor);
+	public static Material lyeMaterial = Material.water;
 
 	public BlockLyeWater(Fluid fluid)
 	{

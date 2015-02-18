@@ -1,8 +1,7 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.MaterialLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,7 +32,7 @@ public class PlantMilk implements IContentModule
 	{
 		fluidPlantMilk = new Fluid(ModInfo.MODID + ".plantMilk");
 		FluidRegistry.registerFluid(fluidPlantMilk);
-		plantMilk = new BlockFluidGeneric(fluidPlantMilk, new MaterialLiquid(MapColor.snowColor), "plant_milk")
+		plantMilk = new BlockFluidGeneric(fluidPlantMilk, Material.water, "plant_milk")
 				.setBlockName(ModInfo.MODID + ".plantMilk");
 		fluidPlantMilk.setBlock(plantMilk);
 		fluidPlantMilk.setUnlocalizedName(plantMilk.getUnlocalizedName());
