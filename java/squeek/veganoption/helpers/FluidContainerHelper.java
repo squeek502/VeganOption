@@ -2,6 +2,7 @@ package squeek.veganoption.helpers;
 
 import java.lang.reflect.Method;
 import squeek.veganoption.blocks.BlockFluidGeneric;
+import squeek.veganoption.content.modules.Ender;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -90,6 +91,14 @@ public class FluidContainerHelper
 		int y = movingObjectPosition.blockY;
 		int z = movingObjectPosition.blockZ;
 		Block block = event.world.getBlock(x, y, z);
+
+		// raw ender is not bottle fillable
+		if (block == Ender.rawEnder)
+		{
+			event.setCanceled(true);
+			event.useItem = Event.Result.DENY;
+			return;
+		}
 
 		if (!(block instanceof BlockFluidGeneric))
 			return;
