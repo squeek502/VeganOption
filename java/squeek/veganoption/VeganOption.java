@@ -8,6 +8,7 @@ import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.helpers.CreativeTabHelper;
 import squeek.veganoption.helpers.FluidContainerHelper;
 import squeek.veganoption.helpers.GuiHelper;
+import squeek.veganoption.helpers.TooltipHelper;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.network.NetworkHandler;
 import cpw.mods.fml.common.Mod;
@@ -41,6 +42,7 @@ public class VeganOption
 	{
 		FluidContainerHelper.init();
 		GuiHelper.init();
+		TooltipHelper.init();
 		NetworkHandler.init();
 		ContentModuleHandler.init();
 		IntegrationHandler.init();

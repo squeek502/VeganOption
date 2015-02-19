@@ -64,6 +64,7 @@ public class ContentHelper
 	public static final String tearOreDict = "reagentTear";
 	public static final String goldNuggetOreDict = "nuggetGold"; // Forge's oredict entry
 	public static final String plantMilkSourceOreDict = "sourcePlantMilk";
+	public static final String bbqSauceOreDict = "foodBBQSauce";
 
 	// various vegetable oil sources from other mods
 	public static final String grapeSeedOreDict = "seedGrape";

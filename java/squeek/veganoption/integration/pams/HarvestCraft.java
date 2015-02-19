@@ -1,28 +1,58 @@
 package squeek.veganoption.integration.pams;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import squeek.veganoption.ModInfo;
+import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
+import squeek.veganoption.helpers.TooltipHelper;
 import squeek.veganoption.integration.IntegratorBase;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class HarvestCraft extends IntegratorBase
 {
 	public static final String rootPackage = "com.pam.harvestcraft.";
+	public static Item bbqSauce;
+	public static Item bbqTofu;
+
+	@Override
+	public void create()
+	{
+		bbqSauce = new Item()
+				.setUnlocalizedName(ModInfo.MODID + ".bbqSauce")
+				.setCreativeTab(VeganOption.creativeTab)
+				.setTextureName(ModInfo.MODID_LOWER + ":bbq_sauce");
+		GameRegistry.registerItem(bbqSauce, "bbqSauce");
+
+		bbqTofu = new ItemFood(8, 0.8F, false)
+				.setUnlocalizedName(ModInfo.MODID + ".bbqTofu")
+				.setCreativeTab(VeganOption.creativeTab)
+				.setTextureName(ModInfo.MODID_LOWER + ":bbq_tofu");
+		GameRegistry.registerItem(bbqTofu, "bbqTofu");
+		TooltipHelper.registerItem(bbqTofu);
+	}
 
 	@Override
 	public void oredict()
 	{
 		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, new ItemStack(getItem("juicerItem")));
 		OreDictionary.registerOre(ContentHelper.eggBakingOreDict, new ItemStack(getItem("firmtofuItem")));
+		OreDictionary.registerOre(ContentHelper.bbqSauceOreDict, new ItemStack(bbqSauce));
 	}
 
 	@Override
 	public void recipes()
 	{
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqSauce), "toolSaucepan", "foodKetchup", "foodVinegar", Items.sugar, "foodMustard", "listAllwater", "foodSalt", "foodBlackpepper"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqTofu), "toolBakeware", "foodFirmtofu", ContentHelper.bbqSauceOreDict));
+
 		// exclude non-baked goods from egg replacer conversion
 		final String[] foodNamesToExclude = new String[]
 		{

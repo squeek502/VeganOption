@@ -197,3 +197,8 @@ VeganOption.nei.crafting=Crafting
 VeganOption.nei.drops=Drops
 VeganOption.nei.composting=Composting
 VeganOption.nei.references=References
+
+# Additional HarvestCraft content
+item.VeganOption.bbqSauce.name=BBQ Sauce
+item.VeganOption.bbqTofu.name=BBQ Tofu
+item.VeganOption.bbqTofu.tooltip=Cut on a bias
