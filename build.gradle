@@ -54,6 +54,53 @@ jar {
 	}
 }
 
+def getLastTaggedCommit() {
+	return getLastTaggedCommit(0)
+}
+
+def getLastTaggedCommit(int skip) {
+	def lastTagProc = "git rev-list HEAD --tags --max-count=1 --no-walk --skip=$skip".execute()
+	lastTagProc.waitForOrKill(1000)
+	assert lastTagProc.exitValue() == 0, lastTagProc.err.text
+	def lastTag = lastTagProc.in.text.trim()
+
+	if (lastTag.equals(getHeadCommit()))
+		return getLastTaggedCommit(1)
+	else
+		return lastTag
+}
+
+def getHeadCommit() {
+	def headProc = "git rev-parse HEAD".execute()
+	headProc.waitForOrKill(1000)
+	assert headProc.exitValue() == 0, headProc.err.text
+	return headProc.in.text.trim()
+}
+
+def getChangelogSince(String commitSHA) {
+	def changelog = ""
+	def range = commitSHA.isEmpty() ? "HEAD" : "$commitSHA..HEAD"
+	def cmd = ["git", "log", "--no-merges", "--format=- %B", "$range"]
+	def changelogProc = cmd.execute()
+	changelogProc.in.eachLine { line ->
+		if (!line.isEmpty()) {
+			changelog += line + "\n"
+		}
+	}
+	changelogProc.err.eachLine { line -> println line }
+	return changelog
+}
+
+task changelog() << {
+	def changelogFile = new File(project.buildDir.getPath() + '/changelog.md')
+	changelogFile.delete()
+
+	def lastTag = getLastTaggedCommit()
+	def changelog = getChangelogSince(lastTag)
+	println changelog
+	changelogFile << changelog
+}
+
 // variable substitution in java files
 task processSourceMainJava(type:Copy) {
 	inputs.property "vars", project.version + project.minecraft.version
