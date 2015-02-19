@@ -93,6 +93,8 @@ def getChangelogSince(String commitSHA) {
 
 task changelog() << {
 	def changelogFile = new File(project.buildDir.getPath() + '/changelog.md')
+	if (!changelogFile.getParentFile().exists())
+		changelogFile.getParentFile().mkdirs()
 	changelogFile.delete()
 
 	def lastTag = getLastTaggedCommit()
