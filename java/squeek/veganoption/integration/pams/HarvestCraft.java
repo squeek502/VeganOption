@@ -31,7 +31,7 @@ public class HarvestCraft extends IntegratorBase
 				.setTextureName(ModInfo.MODID_LOWER + ":bbq_sauce");
 		GameRegistry.registerItem(bbqSauce, "bbqSauce");
 
-		bbqTofu = new ItemFood(8, 0.8F, false)
+		bbqTofu = new ItemFood(14, 1.0F, false)
 				.setUnlocalizedName(ModInfo.MODID + ".bbqTofu")
 				.setCreativeTab(VeganOption.creativeTab)
 				.setTextureName(ModInfo.MODID_LOWER + ":bbq_tofu");
