@@ -65,6 +65,45 @@ public class ClassTransformer implements IClassTransformer
 
 			return writeClassToBytes(classNode);
 		}
+		else if (transformedName.equals("net.minecraft.block.BlockPistonBase"))
+		{
+			boolean isObfuscated = name != transformedName;
+
+			ClassNode classNode = readClassFromBytes(bytes);
+
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "i" : "tryExtend", isObfuscated ? "(Lahb;IIII)Z" : "(Lnet/minecraft/world/World;IIII)Z");
+
+			/*
+			Hooks.onPistonTryExtend(world, x, y, z, facing)
+			*/
+			InsnList toInject = new InsnList();
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 2));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 3));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 4));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 5));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonTryExtend", "(Lnet/minecraft/world/World;IIII)V", false));
+
+			method.instructions.insertBefore(findFirstInstruction(method), toInject);
+
+			method = findMethodNodeOfClass(classNode, isObfuscated ? "a" : "onBlockEventReceived", isObfuscated ? "(Lahb;IIIII)Z" : "(Lnet/minecraft/world/World;IIIII)Z");
+
+			/*
+			Hooks.onPistonBlockEventReceived(world, x, y, z, event, data)
+			*/
+			toInject.clear();
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 2));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 3));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 4));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 5));
+			toInject.add(new VarInsnNode(Opcodes.ILOAD, 6));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonBlockEventReceived", "(Lnet/minecraft/world/World;IIIII)V", false));
+
+			method.instructions.insertBefore(getOrFindInstruction(method.instructions.getLast(), true).getPrevious(), toInject);
+
+			return writeClassToBytes(classNode);
+		}
 		else if (transformedName.equals("tconstruct.tools.TinkerToolEvents"))
 		{
 			ClassNode classNode = readClassFromBytes(bytes);

@@ -23,6 +23,8 @@ public class NEIVeganOptionConfig implements IConfigureNEI
 	{
 		API.registerRecipeHandler(new TextHandler());
 		API.registerUsageHandler(new TextHandler());
+		API.registerRecipeHandler(new PistonCraftingHandler());
+		API.registerUsageHandler(new PistonCraftingHandler());
 		API.registerRecipeHandler(new DropsHandler());
 		API.registerUsageHandler(new DropsHandler());
 		API.registerRecipeHandler(new CompostHandler());

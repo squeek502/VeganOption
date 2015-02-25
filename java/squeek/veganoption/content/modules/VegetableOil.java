@@ -27,6 +27,8 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.recipes.PistonCraftingRecipe;
+import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -124,6 +126,8 @@ public class VegetableOil implements IContentModule
 		Modifiers.drops.addDropsToBlock(sunflowerTopSpecifier, sunflowerDropSpecifier);
 
 		addOilRecipe(new ItemStack(oilVegetable), ContentHelper.vegetableOilSourceOreDict);
+
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidVegetableOil, ContentHelper.vegetableOilSourceOreDict));
 	}
 
 	@Override

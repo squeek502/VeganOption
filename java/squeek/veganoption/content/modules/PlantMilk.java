@@ -16,7 +16,10 @@ import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.InputItemStack;
+import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.recipes.ShapelessMatchingOreRecipe;
+import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.items.ItemBucketGeneric;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -74,6 +77,8 @@ public class PlantMilk implements IContentModule
 				new ItemStack(Items.sugar)));
 		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketPlantMilk), // output
 														new ItemStack(Items.water_bucket));
+
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidPlantMilk, FluidRegistry.WATER, Items.sugar, new InputItemStack(ContentHelper.plantMilkSourceOreDict, 2)));
 	}
 
 	@Override

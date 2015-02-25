@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.crafting.PistonCraftingHandler;
 import squeek.veganoption.helpers.CreativeTabHelper;
 import squeek.veganoption.helpers.FluidContainerHelper;
 import squeek.veganoption.helpers.GuiHelper;
@@ -46,6 +47,7 @@ public class VeganOption
 		NetworkHandler.init();
 		ContentModuleHandler.init();
 		IntegrationHandler.init();
+		PistonCraftingHandler.init();
 	}
 
 	@EventHandler

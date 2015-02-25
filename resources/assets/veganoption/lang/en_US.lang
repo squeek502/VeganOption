@@ -92,7 +92,6 @@ fluid.tile.VeganOption.plantMilk=Plant Milk
 # Egg
 item.VeganOption.appleSauce.name=Apple Sauce
 item.VeganOption.potatoStarch.name=Potato Starch
-item.VeganOption.potatoStarch.nei.crafting=%1$s can be made by crushing a [[minecraft:potato]] with a [[minecraft:piston]] (in the world).
 item.VeganOption.plasticEgg.name=Plastic Egg
 item.VeganOption.plasticEgg.nei.usage=A %1$s is an [[minecraft:egg]] alternative for non-baking purposes.
 entity.VeganOption.plasticEgg.name=Plastic Egg
@@ -197,6 +196,9 @@ VeganOption.nei.crafting=Crafting
 VeganOption.nei.drops=Drops
 VeganOption.nei.composting=Composting
 VeganOption.nei.references=References
+VeganOption.nei.pistonCrafting=Piston Crafting
+VeganOption.nei.pistonCrafting.tooltip.fluidInput=Fluid inputs must be displaced by the piston
+VeganOption.nei.pistonCrafting.tooltip.fluidOutput=Fluid outputs require a fluid handler (tank, drum, etc) below the piston head
 
 # Additional HarvestCraft content
 item.VeganOption.bbqSauce.name=BBQ Sauce

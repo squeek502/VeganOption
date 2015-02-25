@@ -92,7 +92,6 @@ fluid.tile.VeganOption.plantMilk=Молоко растения
 # Egg
 item.VeganOption.appleSauce.name=Яблочное пюре
 item.VeganOption.potatoStarch.name=Картофельный крахмал
-item.VeganOption.potatoStarch.nei.crafting=%1$s можно получить размолов [[minecraft:potato]] с помощью [[minecraft:piston]] (В игровом мире).
 item.VeganOption.plasticEgg.name=Пластиковое яйцо
 item.VeganOption.plasticEgg.nei.usage=%1$s - это альтернатива [[minecraft:egg]] для целей, не связанных с кулинарией.
 entity.VeganOption.plasticEgg.name=Пластиковое яйцо

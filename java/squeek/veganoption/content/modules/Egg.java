@@ -12,7 +12,8 @@ import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.registry.RelationshipRegistry;
+import squeek.veganoption.content.recipes.PistonCraftingRecipe;
+import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.entities.EntityPlasticEgg;
 import squeek.veganoption.items.ItemFoodContainered;
 import squeek.veganoption.items.ItemThrowableGeneric;
@@ -91,13 +92,13 @@ public class Egg implements IContentModule
 		GameRegistry.addShapelessRecipe(new ItemStack(potatoStarch), potatoCrusher, new ItemStack(Items.potato));
 		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(potatoStarch), potatoCrusher);
 
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new ItemStack(potatoStarch), Items.potato));
+
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(plasticEgg), " o ", "o o", " o ", 'o', ContentHelper.plasticOreDict));
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(potatoStarch), new ItemStack(Items.potato));
-		RelationshipRegistry.addRelationship(new ItemStack(potatoStarch), new ItemStack(Blocks.piston));
 	}
 }
