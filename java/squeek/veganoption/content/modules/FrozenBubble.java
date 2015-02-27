@@ -20,6 +20,8 @@ import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.PistonCraftingRecipe;
+import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.items.ItemFrozenBubble;
@@ -100,6 +102,8 @@ public class FrozenBubble implements IContentModule
 
 		GameRegistry.addShapedRecipe(new ItemStack(frozenBubble), "iii", "isi", "iii", 'i', Blocks.ice, 's', soapSolution);
 		GameRegistry.addShapelessRecipe(new ItemStack(frozenBubble), Blocks.packed_ice, soapSolution);
+
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidSoapSolution, FluidRegistry.WATER, ContentHelper.soapOreDict, new ItemStack(Items.sugar)));
 	}
 
 	@Override

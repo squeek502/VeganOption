@@ -17,6 +17,8 @@ import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.PistonCraftingRecipe;
+import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -100,8 +102,12 @@ public class Ink implements IContentModule
 		GameRegistry.addRecipe(new ShapelessOreRecipe(blackVegetableOilInk, ContentHelper.vegetableOilOreDict, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.blackPigmentOreDict));
 		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(blackVegetableOilInk), ContentHelper.vegetableOilOreDict);
 
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(blackInkFluid, VegetableOil.fluidVegetableOil, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.blackPigmentOreDict));
+
 		GameRegistry.addRecipe(new ShapelessOreRecipe(whiteVegetableOilInk, ContentHelper.vegetableOilOreDict, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.whitePigmentOreDict));
 		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(whiteVegetableOilInk), ContentHelper.vegetableOilOreDict);
+
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(whiteInkFluid, VegetableOil.fluidVegetableOil, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.whitePigmentOreDict));
 	}
 
 	@Override

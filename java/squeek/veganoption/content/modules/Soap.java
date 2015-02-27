@@ -16,6 +16,9 @@ import squeek.veganoption.blocks.BlockLyeWater;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.InputItemStack;
+import squeek.veganoption.content.recipes.PistonCraftingRecipe;
+import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.items.ItemBucketGeneric;
 import squeek.veganoption.items.ItemSoap;
@@ -71,6 +74,8 @@ public class Soap implements IContentModule
 				new ItemStack(bucketLyeWater),
 				ContentHelper.vegetableOilOreDict,
 				ContentHelper.rosinOreDict));
+
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidLyeWater, FluidRegistry.WATER, new InputItemStack(ContentHelper.woodAshOreDict, 3)));
 	}
 
 	@Override
