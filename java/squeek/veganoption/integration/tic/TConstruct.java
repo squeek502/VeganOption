@@ -27,7 +27,7 @@ public class TConstruct extends IntegratorBase
 	public static final String MATNAME_PLASTIC = "Plastic"; // what MFR uses
 	/**
 	 * VO specific, necessary to make sure that VO's MaterialSet (shard/rod combo)
-	 * doesn't overwrite the MaterialSet that uses {@link MATNAME_PLASTIC} added
+	 * doesn't overwrite the MaterialSet that uses {@link #MATNAME_PLASTIC} added
 	 * by the addPartBuilderMaterial IMC (in either VO or MFR)
 	 */
 	public static final String KEY_PLASTICROD_MATERIALSET = "BioplasticRodSet";

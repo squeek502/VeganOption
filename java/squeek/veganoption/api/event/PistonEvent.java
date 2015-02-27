@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
+import static cpw.mods.fml.common.eventhandler.Event.HasResult;
 
 /**
  * Base class for all PistonEvent events.<br>
@@ -21,7 +22,7 @@ public abstract class PistonEvent extends Event
 	 * Fired when a piston tries to extend. 
 	 * Note: The piston is not guaranteed to extend after this event is fired.
 	 * 
-	 * This event is fired in {@link BlockPistonBase#tryExtend()}.<br>
+	 * This event is fired in {@link BlockPistonBase#tryExtend(World, int, int, int, int)}.<br>
 	 * <br>
 	 * This event is not {@link Cancelable}.<br>
 	 * <br>
@@ -56,7 +57,7 @@ public abstract class PistonEvent extends Event
 	/**
 	 * Fired every time a piston retracts.
 	 * 
-	 * This event is fired in {@link BlockPistonBase#tryExtend()}.<br>
+	 * This event is fired in {@link BlockPistonBase#tryExtend(World, int, int, int, int)}.<br>
 	 * <br>
 	 * This event is not {@link Cancelable}.<br>
 	 * <br>
