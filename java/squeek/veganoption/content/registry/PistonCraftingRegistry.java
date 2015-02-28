@@ -54,7 +54,7 @@ public class PistonCraftingRegistry
 		List<PistonCraftingRecipe> matchingRecipes = new ArrayList<PistonCraftingRecipe>();
 		for (PistonCraftingRecipe recipe : getRecipes())
 		{
-			if (recipe.fluidOutput != null && recipe.fluidInput.isFluidEqual(FluidHelper.fromItemStack(search)))
+			if (recipe.fluidOutput != null && recipe.fluidOutput.isFluidEqual(FluidHelper.fromItemStack(search)))
 				matchingRecipes.add(recipe);
 			else
 			{
