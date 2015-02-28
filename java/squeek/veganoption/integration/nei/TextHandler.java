@@ -11,9 +11,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.helpers.ColorHelper;
+import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
@@ -198,13 +200,20 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 	@Override
 	public IUsageHandler getUsageHandler(String inputId, Object... ingredients)
 	{
-		if (inputId.equals("item"))
+		if (inputId.equals("item") || inputId.equals("liquid"))
 		{
 			for (Object ingredient : ingredients)
 			{
-				if (ingredient instanceof ItemStack && hasUsageText((ItemStack) ingredient))
+				ItemStack itemStackToCheck = null;
+
+				if (ingredient instanceof ItemStack)
+					itemStackToCheck = (ItemStack) ingredient;
+				else if (ingredient instanceof FluidStack)
+					itemStackToCheck = FluidHelper.toItemStack((FluidStack) ingredient);
+
+				if (itemStackToCheck != null && hasUsageText(itemStackToCheck))
 				{
-					return new TextHandler((ItemStack) ingredient, true);
+					return new TextHandler(itemStackToCheck, true);
 				}
 			}
 		}
@@ -214,13 +223,20 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 	@Override
 	public ICraftingHandler getRecipeHandler(String outputId, Object... results)
 	{
-		if (outputId.equals("item"))
+		if (outputId.equals("item") || outputId.equals("liquid"))
 		{
 			for (Object result : results)
 			{
-				if (result instanceof ItemStack && hasRecipeText((ItemStack) result))
+				ItemStack itemStackToCheck = null;
+
+				if (result instanceof ItemStack)
+					itemStackToCheck = (ItemStack) result;
+				else if (result instanceof FluidStack)
+					itemStackToCheck = FluidHelper.toItemStack((FluidStack) result);
+
+				if (itemStackToCheck != null && hasRecipeText(itemStackToCheck))
 				{
-					return new TextHandler((ItemStack) result, false);
+					return new TextHandler(itemStackToCheck, false);
 				}
 			}
 		}
