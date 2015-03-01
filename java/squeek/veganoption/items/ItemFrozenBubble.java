@@ -9,8 +9,9 @@ import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.BlockRawEnder;
+import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
+import squeek.veganoption.helpers.FluidHelper;
 
 public class ItemFrozenBubble extends Item
 {
@@ -78,7 +79,7 @@ public class ItemFrozenBubble extends Item
 		if (entityItem.worldObj.isRemote || entityItem == null || entityItem.getEntityItem() == null)
 			return false;
 
-		if (!isFull(entityItem.getEntityItem()) && entityItem.isInsideOfMaterial(BlockRawEnder.materialRawEnder))
+		if (!isFull(entityItem.getEntityItem()) && Ender.fluidRawEnder == FluidHelper.getFluidTypeOfBlock(entityItem.worldObj.getBlock(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ))))
 		{
 			EntityItem entityItemToFill = entityItem;
 			ItemStack bubbleToFill = entityItemToFill.getEntityItem();
