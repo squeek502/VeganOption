@@ -248,7 +248,7 @@ public class PistonCraftingRecipe
 				matchingEntities.add(entityItem);
 			}
 		}
-		if (target.isOreDict() && target.stackSize() > 1)
+		if (!matchingEntities.isEmpty() && target.isOreDict() && target.stackSize() > 1)
 		{
 			List<EntityItem> entitiesOfOneTypeWithLargestStackSize = null;
 			int largestStackSize = 0;
