@@ -21,6 +21,7 @@ public class ItemSoapSolution extends Item
 		setMaxStackSize(1);
 		setMaxDamage(15); // 16 uses
 		BlockDispenser.dispenseBehaviorRegistry.putObject(this, new ItemSoapSolution.DispenserBehavior());
+		setNoRepair();
 	}
 
 	@Override
