@@ -63,6 +63,12 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		this.inventoryItems = new ItemStack[getSizeInventory()];
 	}
 
+	@Override
+	public boolean shouldRenderInPass(int pass)
+	{
+		return pass <= 1;
+	}
+
 	/*
 	 * BlockComposter delegated methods
 	 */
@@ -110,15 +116,11 @@ public class TileEntityComposter extends TileEntity implements IInventory
 				if (deltaTemperature > 0)
 					deltaTemperature *= getBatchTemperatureMultiplier();
 
-				compostTemperature += deltaTemperature;
-				clampTemperature();
-				markDirty();
+				setTemperature(compostTemperature + deltaTemperature);
 			}
 			else if (isAerating())
 			{
-				compostTemperature *= AERATION_PERCENT_TEMPERATURE_RETAINED_PER_TICK;
-				clampTemperature();
-				markDirty();
+				setTemperature(compostTemperature * AERATION_PERCENT_TEMPERATURE_RETAINED_PER_TICK);
 			}
 
 			float compostingSpeedMultiplier = getCompostingSpeedMultiplier();
@@ -213,6 +215,24 @@ public class TileEntityComposter extends TileEntity implements IInventory
 			return NOT_AERATING;
 
 		return (float) ((worldObj.getWorldTime() - lastAeration) / (double) TileEntityComposter.NUM_TICKS_FOR_FULL_AERATION);
+	}
+
+	public void setTemperature(float temperature)
+	{
+		float oldTemp = compostTemperature;
+		compostTemperature = temperature;
+		clampTemperature();
+		markDirty();
+		
+		if (Math.round(compostTemperature) != Math.round(oldTemp))
+		{
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+	}
+
+	public void resetTemperature()
+	{
+		setTemperature(TemperatureHelper.getBiomeTemperature(worldObj, xCoord, yCoord, zCoord));
 	}
 
 	public void clampTemperature()
@@ -361,13 +381,6 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	{
 		compostStart = NOT_COMPOSTING;
 		compostPercent = 0;
-	}
-
-	public void resetTemperature()
-	{
-		compostTemperature = TemperatureHelper.getBiomeTemperature(worldObj, xCoord, yCoord, zCoord);
-		clampTemperature();
-		markDirty();
 	}
 
 	/*
@@ -649,6 +662,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	{
 		NBTTagCompound compound = pkt.func_148857_g();
 		lastAeration = compound.getLong("LastAeration");
+		compostTemperature = compound.getFloat("Temp");
 		super.onDataPacket(net, pkt);
 	}
 
@@ -657,6 +671,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	{
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setLong("LastAeration", lastAeration);
+		compound.setFloat("Temp", compostTemperature);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, compound);
 	}
 

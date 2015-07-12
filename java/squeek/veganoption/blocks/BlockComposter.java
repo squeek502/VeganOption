@@ -101,4 +101,18 @@ public class BlockComposter extends BlockContainer
 	{
 		return false;
 	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getRenderBlockPass()
+	{
+		return 1;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean canRenderInPass(int pass)
+	{
+		return pass <= getRenderBlockPass();
+	}
 }
