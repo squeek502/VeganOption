@@ -83,7 +83,6 @@ public class GuiComposter extends GuiContainer
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(guiTexture);
-		this.drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
 
 		int xStart = (this.width - this.xSize) / 2;
 		int yStart = (this.height - this.ySize) / 2;
