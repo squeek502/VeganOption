@@ -12,5 +12,6 @@ public class NetworkHandler
 	public static void init()
 	{
 		channel.registerMessage(MessageFX.class, MessageFX.class, 0, Side.CLIENT);
+		channel.registerMessage(MessageComposterTumble.class, MessageComposterTumble.class, 1, Side.SERVER);
 	}
 }

@@ -132,6 +132,12 @@ item.VeganOption.fertilizer.nei.usage=%1$s is a [[minecraft:dye:15]] alternative
 VeganOption.waila.composter.empty=Empty
 VeganOption.waila.composter.composting=Composting
 VeganOption.waila.composter.temperature=Temperature
+VeganOption.gui.composter.tumble=Tumble Composter
+VeganOption.gui.composter.tumble.desc=Every time the composter is tumbled, it will lose heat initially, but will gain more heat in the long run. The composter should be tumbled about twice every Minecraft day.
+VeganOption.gui.composter.temperature=Temperature: %s
+VeganOption.gui.composter.temperature.desc=Temperature increase is determined by:\n- The last time the composter was tumbled\n- The fullness of the composter\n- The ratio of "green" to "brown" materials (a ratio of 2:1 is ideal)
+VeganOption.gui.composter.composting=Composting: %s
+VeganOption.gui.composter.composting.desc=The higher the temperature inside the composter, the faster the material will decompose.
 
 # Soap
 item.VeganOption.bucketLyeWater.name=Wood Ash Lye Bucket
@@ -187,6 +193,12 @@ item.VeganOption.dollsEye.name=Doll's Eye
 item.VeganOption.dollsEye.nei.common=A %1$s is the poisonous berry of the plant Actaea Pachypoda (also known as white baneberry).
 item.VeganOption.dollsEye.nei.usage={item.VeganOption.dollsEye.nei.common}\n\n%1$s is a [[minecraft:spider_eye]] alternative.
 item.VeganOption.dollsEye.nei.crafting={item.VeganOption.dollsEye.nei.common}\n\n%1$s can only be found by breaking [[minecraft:tallgrass:1]] in temperate forest biomes.
+
+# Basin
+tile.VeganOption.basin.name=Basin
+VeganOption.waila.basin.empty=Empty
+VeganOption.waila.basin.open=Open
+VeganOption.waila.basin.closed=Closed
 
 # NEI Strings
 VeganOption.nei.byproduct.of=Byproduct of
