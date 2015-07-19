@@ -50,6 +50,8 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	public long lastAeration;
 	public long compostStart = NOT_COMPOSTING;
 	public float compostTemperature;
+	public float biomeTemperature;
+	protected boolean initialUpdate = true;
 
 	// lid stuff copied from TileEntityChest
 	public int numPlayersUsing = 0;
@@ -107,6 +109,10 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	{
 		if (!worldObj.isRemote)
 		{
+			if (initialUpdate)
+			{
+				updateBiomeTemperature();
+			}
 			if (isComposting() && !isAerating())
 			{
 				long ticksSinceCycleStart = worldObj.getWorldTime() - Math.max(compostStart, lastAeration);
@@ -139,11 +145,18 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		updateLidAngle();
 
 		super.updateEntity();
+
+		initialUpdate = false;
 	}
 
 	public float getCompostingPercent()
 	{
 		return compostPercent;
+	}
+	
+	public void setCompostingPercent(float compostPercent)
+	{
+		this.compostPercent = compostPercent;
 	}
 
 	public boolean attemptCompost()
@@ -232,7 +245,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 	public void resetTemperature()
 	{
-		setTemperature(TemperatureHelper.getBiomeTemperature(worldObj, xCoord, yCoord, zCoord));
+		setTemperature(getBiomeTemperature());
 	}
 
 	public void clampTemperature()
@@ -244,6 +257,16 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	public float getCompostTemperature()
 	{
 		return compostTemperature;
+	}
+
+	public float getBiomeTemperature()
+	{
+		return biomeTemperature;
+	}
+
+	public void updateBiomeTemperature()
+	{
+		biomeTemperature = TemperatureHelper.getBiomeTemperature(worldObj, xCoord, yCoord, zCoord);
 	}
 
 	/**
