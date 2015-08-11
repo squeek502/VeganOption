@@ -73,7 +73,7 @@ public class ItemSoap extends Item
 			int x = blockSource.getXInt() + enumfacing.getFrontOffsetX();
 			int y = blockSource.getYInt() + enumfacing.getFrontOffsetY();
 			int z = blockSource.getZInt() + enumfacing.getFrontOffsetZ();
-			AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox((double) x, (double) y, (double) z, (double) (x + 1), (double) (y + 1), (double) (z + 1));
+			AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
 
 			@SuppressWarnings("unchecked")
 			List<EntityLivingBase> entitiesInFront = blockSource.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);

@@ -158,6 +158,10 @@ public class TConstruct extends IntegratorBase
 			PatternBuilder = instanceField.get(null);
 			registerMaterialSet = patternBuilderClass.getDeclaredMethod("registerMaterialSet", String.class, ItemStack.class, ItemStack.class, int.class);
 		}
+		catch (RuntimeException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
@@ -169,6 +173,10 @@ public class TConstruct extends IntegratorBase
 		try
 		{
 			registerMaterialSet.invoke(PatternBuilder, key, shard, rod, matID);
+		}
+		catch (RuntimeException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{

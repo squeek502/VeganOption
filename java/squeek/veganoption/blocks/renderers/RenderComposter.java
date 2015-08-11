@@ -82,7 +82,7 @@ public class RenderComposter extends TileEntitySpecialRenderer implements IItemR
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glTranslatef((float) x + 0.5f, (float) y + 1.5F, (float) z + 0.5f);
 			GL11.glScalef(1F, -1F, -1F);
-			GL11.glRotatef((float) rotation, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
 
 			modelLegs.renderAll();
 
@@ -118,7 +118,7 @@ public class RenderComposter extends TileEntitySpecialRenderer implements IItemR
 			GL11.glRotatef(-(tile.getAeratingPercent() * 360f * num_turns), axis == Axis.X ? 0F : 1F, 0.0F, axis == Axis.X ? 1F : 0F);
 		}
 
-		GL11.glRotatef((float) rotation, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 		float f1 = tile.prevLidAngle + (tile.lidAngle - tile.prevLidAngle) * partialTickTime;
 
@@ -159,13 +159,9 @@ public class RenderComposter extends TileEntitySpecialRenderer implements IItemR
 				return;
 			}
 			case EQUIPPED:
-			{
-				renderTileEntityAt(dummyItemRenderTile, 0.0F, 0.0F, 0.0F, 0.0F);
-				return;
-			}
 			case EQUIPPED_FIRST_PERSON:
 			{
-				renderTileEntityAt(dummyItemRenderTile, 0F, 0F, 0F, 0.0F);
+				renderTileEntityAt(dummyItemRenderTile, 0.0F, 0.0F, 0.0F, 0.0F);
 				return;
 			}
 			case INVENTORY:

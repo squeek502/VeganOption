@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
@@ -28,22 +26,7 @@ public class ShapelessMatchingOreRecipe extends ShapelessOreRecipe
 	{
 		super(result, recipe);
 
-		int inputIndex = 0;
 		ArrayList<Object> inputs = getInput();
-		String[] inputOreDicts = new String[inputs.size()];
-
-		for (Object in : recipe)
-		{
-			if (in instanceof ItemStack || in instanceof Item || in instanceof Block)
-			{
-				inputIndex++;
-			}
-			else if (in instanceof String)
-			{
-				inputOreDicts[inputIndex] = (String) in;
-				inputIndex++;
-			}
-		}
 
 		for (int i = 0; i < inputs.size(); i++)
 		{

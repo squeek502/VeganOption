@@ -310,7 +310,7 @@ public class PistonCraftingHandler extends TemplateRecipeHandler
 		if (gui.isMouseOver(cachedRecipe.result, recipeIndex))
 		{
 			@SuppressWarnings("unchecked")
-			List<String> splitFluidOutputTooltip = (List<String>) fontRenderer.listFormattedStringToWidth(LangHelper.translate("nei.pistonCrafting.tooltip.fluidOutput"), WIDTH);
+			List<String> splitFluidOutputTooltip = fontRenderer.listFormattedStringToWidth(LangHelper.translate("nei.pistonCrafting.tooltip.fluidOutput"), WIDTH);
 			styleFluidTooltip(splitFluidOutputTooltip);
 			currenttip.addAll(splitFluidOutputTooltip);
 		}
@@ -321,7 +321,7 @@ public class PistonCraftingHandler extends TemplateRecipeHandler
 				if (gui.isMouseOver(positionedIngredient, recipeIndex))
 				{
 					@SuppressWarnings("unchecked")
-					List<String> splitFluidInputTooltip = (List<String>) fontRenderer.listFormattedStringToWidth(LangHelper.translate("nei.pistonCrafting.tooltip.fluidInput"), WIDTH);
+					List<String> splitFluidInputTooltip = fontRenderer.listFormattedStringToWidth(LangHelper.translate("nei.pistonCrafting.tooltip.fluidInput"), WIDTH);
 					styleFluidTooltip(splitFluidInputTooltip);
 					currenttip.addAll(splitFluidInputTooltip);
 					break;
@@ -348,8 +348,6 @@ public class PistonCraftingHandler extends TemplateRecipeHandler
 
 		// output slot
 		GuiDraw.drawTexturedModalRect(x + GuiHelper.STANDARD_SLOT_WIDTH * 2 - 1, y - 1, 111, 30, 26, 26);
-
-		y += 4;
 
 		// input slots
 		CachedPistonCraftingRecipe cachedRecipe = (CachedPistonCraftingRecipe) arecipes.get(recipe);

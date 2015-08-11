@@ -133,27 +133,24 @@ public class PistonCraftingRecipe
 				{
 					fluidHandler.fill(ForgeDirection.UP, fluidOutput, true);
 				}
-				if (!isReplacementPossible)
+				for (Entry<InputItemStack, List<EntityItem>> inputEntry : entityItemsByInput.entrySet())
 				{
-					for (Entry<InputItemStack, List<EntityItem>> inputEntry : entityItemsByInput.entrySet())
+					int numRequired = inputEntry.getKey().stackSize();
+					int numConsumed = 0;
+					for (EntityItem inputEntity : inputEntry.getValue())
 					{
-						int numRequired = inputEntry.getKey().stackSize();
-						int numConsumed = 0;
-						for (EntityItem inputEntity : inputEntry.getValue())
-						{
-							ItemStack inputStack = inputEntity.getEntityItem();
-							int numToConsume = Math.min(inputStack.stackSize, numRequired - numConsumed);
-							inputStack.stackSize -= numToConsume;
-							numConsumed += numToConsume;
+						ItemStack inputStack = inputEntity.getEntityItem();
+						int numToConsume = Math.min(inputStack.stackSize, numRequired - numConsumed);
+						inputStack.stackSize -= numToConsume;
+						numConsumed += numToConsume;
 
-							if (numConsumed >= numRequired)
-								break;
-						}
+						if (numConsumed >= numRequired)
+							break;
 					}
-					for (Entry<ItemStack, EntityItem> entry : entityItemsByOutput.entrySet())
-					{
-						entry.getValue().getEntityItem().stackSize += entry.getKey().stackSize;
-					}
+				}
+				for (Entry<ItemStack, EntityItem> entry : entityItemsByOutput.entrySet())
+				{
+					entry.getValue().getEntityItem().stackSize += entry.getKey().stackSize;
 				}
 			}
 			while (fluidInputMatches(displacedFluid) && itemInputMatches(entityItemsByInput) && canOutputFluid(fluidHandler));

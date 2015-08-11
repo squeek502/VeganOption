@@ -44,9 +44,9 @@ public class RenderBasin implements ISimpleBlockRenderingHandler
 			z = basin.zCoord;
 
 			int colorMultiplier = block.colorMultiplier(basin.getWorldObj(), x, y, z);
-			float red = (float) (colorMultiplier >> 16 & 255) / 255.0F;
-			float green = (float) (colorMultiplier >> 8 & 255) / 255.0F;
-			float blue = (float) (colorMultiplier & 255) / 255.0F;
+			float red = (colorMultiplier >> 16 & 255) / 255.0F;
+			float green = (colorMultiplier >> 8 & 255) / 255.0F;
+			float blue = (colorMultiplier & 255) / 255.0F;
 
 			if (EntityRenderer.anaglyphEnable)
 			{
@@ -66,17 +66,17 @@ public class RenderBasin implements ISimpleBlockRenderingHandler
 
 		IIcon sideIcon = block.getBlockTextureFromSide(2);
 		float offset = (float) SIDE_WIDTH;
-		renderer.renderFaceXPos(block, (double) ((float) x - 1.0F + offset), (double) y, (double) z, sideIcon);
-		renderer.renderFaceXNeg(block, (double) ((float) x + 1.0F - offset), (double) y, (double) z, sideIcon);
-		renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 1.0F + offset), sideIcon);
-		renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 1.0F - offset), sideIcon);
+		renderer.renderFaceXPos(block, x - 1.0F + offset, y, z, sideIcon);
+		renderer.renderFaceXNeg(block, x + 1.0F - offset, y, z, sideIcon);
+		renderer.renderFaceZPos(block, x, y, z - 1.0F + offset, sideIcon);
+		renderer.renderFaceZNeg(block, x, y, z + 1.0F - offset, sideIcon);
 		IIcon innerIconBottom = block.getBlockTextureFromSide(ForgeDirection.DOWN.ordinal());
-		renderer.renderFaceYPos(block, (double) x, (double) ((float) y - 1.0F + offset), (double) z, innerIconBottom);
+		renderer.renderFaceYPos(block, x, y - 1.0F + offset, z, innerIconBottom);
 
 		if (basin.isClosed())
 		{
 			IIcon innerIconTop = block.getBlockTextureFromSide(ForgeDirection.UP.ordinal());
-			renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 1.0F - offset), (double) z, innerIconTop);
+			renderer.renderFaceYNeg(block, x, y + 1.0F - offset, z, innerIconTop);
 		}
 
 		FluidTankInfo tankInfo = basin.getTankInfo(ForgeDirection.UNKNOWN)[0];
@@ -87,9 +87,9 @@ public class RenderBasin implements ISimpleBlockRenderingHandler
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			int color = tankInfo.fluid.getFluid().getColor(tankInfo.fluid);
-			float red = (float) (color >> 16 & 255) / 255.0F;
-			float green = (float) (color >> 8 & 255) / 255.0F;
-			float blue = (float) (color & 255) / 255.0F;
+			float red = (color >> 16 & 255) / 255.0F;
+			float green = (color >> 8 & 255) / 255.0F;
+			float blue = (color & 255) / 255.0F;
 
 			tessellator.setColorOpaque_F(red, green, blue);
 			if (basin != dummyBasin)
@@ -103,11 +103,11 @@ public class RenderBasin implements ISimpleBlockRenderingHandler
 			float fluidTopOffset = offset + (percentFull * (1.0F - offset - offset));
 			renderer.setRenderBounds(offset, offset, offset, 1 - offset, fluidTopOffset, 1 - offset);
 
-			renderer.renderFaceYPos(block, (double) x, (double) y, (double) z, fluidIcon);
-			renderer.renderFaceXNeg(block, (double) x, (double) y, (double) z, fluidIcon);
-			renderer.renderFaceXPos(block, (double) x, (double) y, (double) z, fluidIcon);
-			renderer.renderFaceZNeg(block, (double) x, (double) y, (double) z, fluidIcon);
-			renderer.renderFaceZPos(block, (double) x, (double) y, (double) z, fluidIcon);
+			renderer.renderFaceYPos(block, x, y, z, fluidIcon);
+			renderer.renderFaceXNeg(block, x, y, z, fluidIcon);
+			renderer.renderFaceXPos(block, x, y, z, fluidIcon);
+			renderer.renderFaceZNeg(block, x, y, z, fluidIcon);
+			renderer.renderFaceZPos(block, x, y, z, fluidIcon);
 
 			GL11.glDisable(GL11.GL_LIGHTING);
 		}

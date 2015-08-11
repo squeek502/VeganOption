@@ -319,7 +319,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 			case NORTH:
 			case SOUTH:
 				return blockIconSide;
-			case UNKNOWN:
+			default:
 				break;
 		}
 		return super.getIcon(side, metadata);

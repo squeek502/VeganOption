@@ -38,7 +38,7 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 		for (int i = 0; i < 2; ++i)
 		{
 			GL11.glPushMatrix();
-			float f5 = (float) (i == 0 ? 16 : 1);
+			float f5 = i == 0 ? 16 : 1;
 			float f6 = 0.0625F;
 			float f7 = 1.0F / (f5 + 1.0F);
 
@@ -60,11 +60,11 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 				f6 = 0.5F;
 			}
 
-			float f8 = (float) (-(p_147500_4_ + (double) topOffset));
+			float f8 = (float) (-(p_147500_4_ + topOffset));
 			float f9 = f8 + ActiveRenderInfo.objectY;
 			float f10 = f8 + f5 + ActiveRenderInfo.objectY;
 			float f11 = f9 / f10;
-			f11 += (float) (p_147500_4_ + (double) topOffset);
+			f11 += (float) (p_147500_4_ + topOffset);
 			GL11.glTranslatef(f1, f11, f3);
 			GL11.glTexGeni(GL11.GL_S, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
 			GL11.glTexGeni(GL11.GL_T, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
@@ -82,10 +82,10 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 			GL11.glMatrixMode(GL11.GL_TEXTURE);
 			GL11.glPushMatrix();
 			GL11.glLoadIdentity();
-			GL11.glTranslatef(0.0F, (float) (Minecraft.getSystemTime() % 700000L) / 700000.0F, 0.0F);
+			GL11.glTranslatef(0.0F, Minecraft.getSystemTime() % 700000L / 700000.0F, 0.0F);
 			GL11.glScalef(f6, f6, f6);
 			GL11.glTranslatef(0.5F, 0.5F, 0.0F);
-			GL11.glRotatef((float) (i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
 			GL11.glTranslatef(-0.5F, -0.5F, 0.0F);
 			GL11.glTranslatef(-f1, -f3, -f2);
 			f9 = f8 + ActiveRenderInfo.objectY;
@@ -105,10 +105,10 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 
 			tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
 
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + (double) topOffset, p_147500_6_);
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + (double) topOffset, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + (double) topOffset, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + (double) topOffset, p_147500_6_);
+			tessellator.addVertex(p_147500_2_, p_147500_4_ + topOffset, p_147500_6_);
+			tessellator.addVertex(p_147500_2_, p_147500_4_ + topOffset, p_147500_6_ + 1.0D);
+			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + topOffset, p_147500_6_ + 1.0D);
+			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + topOffset, p_147500_6_);
 			tessellator.draw();
 			
 			GL11.glPopMatrix();
@@ -121,7 +121,7 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 		for (int i = 0; i < 2; ++i)
 		{
 			GL11.glPushMatrix();
-			float f5 = (float) (i == 0 ? 16 : 1);
+			float f5 = i == 0 ? 16 : 1;
 			float f6 = 1 - 0.0625F;
 			float f7 = 1.0F / (f5 + 1.0F);
 
@@ -143,11 +143,11 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 				f6 = 0.5F;
 			}
 
-			float f8 = (float) (p_147500_4_ + (double) bottomOffset);
+			float f8 = (float) (p_147500_4_ + bottomOffset);
 			float f9 = f8 + ActiveRenderInfo.objectY;
 			float f10 = f8 + f5 + ActiveRenderInfo.objectY;
 			float f11 = f9 / f10;
-			f11 += (float) (p_147500_4_ + (double) bottomOffset);
+			f11 += (float) (p_147500_4_ + bottomOffset);
 			GL11.glTranslatef(f1, f11, f3);
 			GL11.glTexGeni(GL11.GL_S, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
 			GL11.glTexGeni(GL11.GL_T, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
@@ -165,10 +165,10 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 			GL11.glMatrixMode(GL11.GL_TEXTURE);
 			GL11.glPushMatrix();
 			GL11.glLoadIdentity();
-			GL11.glTranslatef(0.0F, (float) (Minecraft.getSystemTime() % 700000L) / 700000.0F, 0.0F);
+			GL11.glTranslatef(0.0F, Minecraft.getSystemTime() % 700000L / 700000.0F, 0.0F);
 			GL11.glScalef(f6, f6, f6);
 			GL11.glTranslatef(0.5F, 0.5F, 0.0F);
-			GL11.glRotatef((float) (i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
 			GL11.glTranslatef(-0.5F, -0.5F, 0.0F);
 			GL11.glTranslatef(-f1, -f3, -f2);
 			f9 = f8 + ActiveRenderInfo.objectY;
@@ -188,10 +188,10 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 
 			tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
 			
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + (double) bottomOffset, p_147500_6_);
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + (double) bottomOffset, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + (double) bottomOffset, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + (double) bottomOffset, p_147500_6_);
+			tessellator.addVertex(p_147500_2_, p_147500_4_ + bottomOffset, p_147500_6_);
+			tessellator.addVertex(p_147500_2_, p_147500_4_ + bottomOffset, p_147500_6_ + 1.0D);
+			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + bottomOffset, p_147500_6_ + 1.0D);
+			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + bottomOffset, p_147500_6_);
 			tessellator.draw();
 			GL11.glPopMatrix();
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);

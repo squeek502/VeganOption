@@ -77,7 +77,7 @@ public class ItemFrozenBubble extends Item
 
 	public static boolean tryFillWithRawEnderFromWorld(EntityItem entityItem)
 	{
-		if (entityItem.worldObj.isRemote || entityItem == null || entityItem.getEntityItem() == null)
+		if (entityItem == null || entityItem.worldObj.isRemote || entityItem.getEntityItem() == null)
 			return false;
 
 		if (!isFull(entityItem.getEntityItem()) && Ender.fluidRawEnder == FluidHelper.getFluidTypeOfBlock(entityItem.worldObj.getBlock(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ))))

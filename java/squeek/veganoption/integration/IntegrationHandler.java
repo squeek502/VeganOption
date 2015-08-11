@@ -89,6 +89,10 @@ public class IntegrationHandler
 				integrators.put(modID, integrator);
 				return true;
 			}
+			catch (RuntimeException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
 				throw new RuntimeException(e);

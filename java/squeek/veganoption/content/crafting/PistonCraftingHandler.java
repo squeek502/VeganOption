@@ -8,9 +8,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.api.event.PistonEvent;
-import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.helpers.FluidHelper;
@@ -20,12 +18,10 @@ public class PistonCraftingHandler
 {
 	// TODO: Persist displacedLiquids
 	public static HashMap<WorldPosition, FluidStack> displacedLiquids = new HashMap<WorldPosition, FluidStack>();
-	public static int vegetableOilSourceOreID;
 
 	public static void init()
 	{
 		MinecraftForge.EVENT_BUS.register(new PistonCraftingHandler());
-		vegetableOilSourceOreID = OreDictionary.getOreID(ContentHelper.vegetableOilSourceOreDict);
 	}
 
 	@SubscribeEvent

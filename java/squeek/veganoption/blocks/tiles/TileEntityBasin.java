@@ -111,7 +111,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 
 			if (containerToFill.stackSize > 1)
 			{
-				containerToFill = containerToFill.splitStack(1);
+				containerToFill.splitStack(1);
 				entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, filledContainer);
 				entityItemToFill.delayBeforeCanPickup = 10;
 				entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);

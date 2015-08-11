@@ -49,11 +49,11 @@ public class InventoryHelper
 					}
 
 					itemstack.stackSize -= stackSizeToDrop;
-					EntityItem entityitem = new EntityItem(world, (double) ((float) x + xOffset), (double) ((float) y + yOffset), (double) ((float) z + zOffset), new ItemStack(itemstack.getItem(), stackSizeToDrop, itemstack.getItemDamage()));
+					EntityItem entityitem = new EntityItem(world, x + xOffset, y + yOffset, z + zOffset, new ItemStack(itemstack.getItem(), stackSizeToDrop, itemstack.getItemDamage()));
 					float velocityScale = 0.05F;
-					entityitem.motionX = (double) ((float) RandomHelper.random.nextGaussian() * velocityScale);
-					entityitem.motionY = (double) ((float) RandomHelper.random.nextGaussian() * velocityScale + 0.2F);
-					entityitem.motionZ = (double) ((float) RandomHelper.random.nextGaussian() * velocityScale);
+					entityitem.motionX = (float) RandomHelper.random.nextGaussian() * velocityScale;
+					entityitem.motionY = (float) RandomHelper.random.nextGaussian() * velocityScale + 0.2F;
+					entityitem.motionZ = (float) RandomHelper.random.nextGaussian() * velocityScale;
 
 					if (itemstack.hasTagCompound())
 					{
@@ -83,7 +83,7 @@ public class InventoryHelper
 			}
 		}
 
-		filledPercent /= (float) inventory.getSizeInventory();
+		filledPercent /= inventory.getSizeInventory();
 		return filledPercent;
 	}
 }

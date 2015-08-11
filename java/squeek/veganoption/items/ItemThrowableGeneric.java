@@ -36,7 +36,11 @@ public class ItemThrowableGeneric extends Item
 			thrownEntityThrowerConstructor = this.thrownEntityClass.getDeclaredConstructor(World.class, EntityLivingBase.class);
 			thrownEntityCoordinatesConstructor = this.thrownEntityClass.getDeclaredConstructor(World.class, double.class, double.class, double.class);
 		}
-		catch (Exception e)
+		catch (NoSuchMethodException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (SecurityException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -80,6 +84,10 @@ public class ItemThrowableGeneric extends Item
 		try
 		{
 			return thrownEntityCoordinatesConstructor.newInstance(world, x, y, z);
+		}
+		catch (RuntimeException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{

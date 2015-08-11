@@ -90,6 +90,9 @@ public class ContainerComposter extends ContainerGeneric
 				break;
 			case PROGRESS_ID_BIOME_TEMPERATURE:
 				composter.biomeTemperature = value;
+				break;
+			default:
+				throw new RuntimeException("Unexpected composter progress bar id: " + id);
 		}
 	}
 

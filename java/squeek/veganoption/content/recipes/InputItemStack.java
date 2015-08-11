@@ -15,7 +15,7 @@ public class InputItemStack
 
 	public InputItemStack(String oredict, int stackSize)
 	{
-		this((Object) oredict);
+		this(oredict);
 		this.oreDictStackSize = stackSize;
 	}
 
