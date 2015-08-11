@@ -76,6 +76,10 @@ public class FluidContainerHelper
 		{
 			movingObjectPosition = (MovingObjectPosition) getMovingObjectPositionFromPlayer.invoke(emptyContainer.getItem(), event.world, event.entityPlayer, true);
 		}
+		catch (RuntimeException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			throw new RuntimeException(e);

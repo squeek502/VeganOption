@@ -69,6 +69,10 @@ public abstract class ContainerGeneric extends Container
 			{
 				this.addSlotToContainer(slotClass.getConstructor(IInventory.class, int.class, int.class, int.class).newInstance(inventory, getNextSlotIndex(), xStart + col * 18, yStart + row * 18));
 			}
+			catch (RuntimeException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
 				e.printStackTrace();

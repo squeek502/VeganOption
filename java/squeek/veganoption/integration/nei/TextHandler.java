@@ -161,7 +161,7 @@ public class TextHandler implements IUsageHandler, ICraftingHandler
 			{
 				try
 				{
-					meta = new Integer(referenceMatcher.group(2));
+					meta = Integer.parseInt(referenceMatcher.group(2));
 				}
 				catch (NumberFormatException e)
 				{

@@ -47,6 +47,10 @@ public class Mystcraft extends IntegratorBase
 			Set<String> validInks = (Set<String>) validInksField.get(null);
 			validInks.add(Ink.blackInkFluid.getName());
 		}
+		catch (RuntimeException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			e.printStackTrace();

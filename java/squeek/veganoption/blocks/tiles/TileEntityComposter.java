@@ -610,7 +610,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 			this.numPlayersUsing = 0;
 			f = 5.0F;
 			@SuppressWarnings("rawtypes")
-			List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox((double) ((float) this.xCoord - f), (double) ((float) this.yCoord - f), (double) ((float) this.zCoord - f), (double) ((float) (this.xCoord + 1) + f), (double) ((float) (this.yCoord + 1) + f), (double) ((float) (this.zCoord + 1) + f)));
+			List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - f, this.yCoord - f, this.zCoord - f, this.xCoord + 1 + f, this.yCoord + 1 + f, this.zCoord + 1 + f));
 			@SuppressWarnings("rawtypes")
 			Iterator iterator = list.iterator();
 
@@ -636,10 +636,10 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 		if (this.numPlayersUsing > 0 && this.lidAngle == 0.0F)
 		{
-			double d1 = (double) this.xCoord + 0.5D;
-			d2 = (double) this.zCoord + 0.5D;
+			double d1 = this.xCoord + 0.5D;
+			d2 = this.zCoord + 0.5D;
 
-			this.worldObj.playSoundEffect(d1, (double) this.yCoord + 0.5D, d2, "random.chestopen", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			this.worldObj.playSoundEffect(d1, this.yCoord + 0.5D, d2, "random.chestopen", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
 		}
 
 		if (this.numPlayersUsing <= 0 && this.lidAngle > 0.0F || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
@@ -664,10 +664,10 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 			if (this.lidAngle < f2 && f1 >= f2)
 			{
-				d2 = (double) this.xCoord + 0.5D;
-				double d0 = (double) this.zCoord + 0.5D;
+				d2 = this.xCoord + 0.5D;
+				double d0 = this.zCoord + 0.5D;
 
-				this.worldObj.playSoundEffect(d2, (double) this.yCoord + 0.5D, d0, "random.chestclosed", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+				this.worldObj.playSoundEffect(d2, this.yCoord + 0.5D, d0, "random.chestclosed", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
 			}
 
 			if (this.lidAngle < 0.0F)
@@ -740,7 +740,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		NBTTagList items = data.getTagList("Items", Constants.NBT.TAG_COMPOUND);
 		for (int slotNum = 0; slotNum < items.tagCount(); slotNum++)
 		{
-			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(slotNum);
+			NBTTagCompound item = items.getCompoundTagAt(slotNum);
 			int slot = item.getByte("Slot");
 
 			if (slot >= 0 && slot < getSizeInventory())

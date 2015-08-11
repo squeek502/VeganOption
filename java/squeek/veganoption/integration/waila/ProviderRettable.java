@@ -26,7 +26,7 @@ public class ProviderRettable implements IWailaDataProvider
 	public List<String> getWailaBody(ItemStack itemStack, List<String> toolTip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
 		BlockRettable blockRettable = (BlockRettable) accessor.getBlock();
-		float rettingPercent = (float) blockRettable.getRettingPercentFromMeta(accessor.getMetadata());
+		float rettingPercent = blockRettable.getRettingPercentFromMeta(accessor.getMetadata());
 		if (rettingPercent >= 1)
 			toolTip.add(LangHelper.translate("waila.retted"));
 		else

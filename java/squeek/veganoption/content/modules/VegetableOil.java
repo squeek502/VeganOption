@@ -117,7 +117,7 @@ public class VegetableOil implements IContentModule
 					}
 					drops.removeAll(dropsToRemove);
 
-					super.modifyDrops(drops, harvester, fortuneLevel, isSilkTouching);
+					super.modifyDrops(drops, null, fortuneLevel, isSilkTouching);
 				}
 			}
 		};
@@ -141,7 +141,7 @@ public class VegetableOil implements IContentModule
 		{
 			recipeInputs.add(output.getItem().getContainerItem(output));
 		}
-		GameRegistry.addRecipe(new ShapelessOreRecipe(output, (Object[]) recipeInputs.toArray(new Object[recipeInputs.size()])));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(output, recipeInputs.toArray(new Object[recipeInputs.size()])));
 		if (!oilPresser.getItem().hasContainerItem(oilPresser))
 		{
 			Modifiers.crafting.addInputsToKeepForOutput(output, oilPresser);

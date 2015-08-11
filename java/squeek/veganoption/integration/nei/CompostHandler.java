@@ -38,10 +38,7 @@ public class CompostHandler extends TemplateRecipeHandler
 	@Override
 	public void loadTransferRects()
 	{
-		if (itemStack != null && itemStack.getItem() == Item.getItemFromBlock(Composting.composter))
-			transferRects.add(new RecipeTransferRect(new Rectangle(WIDTH / 2 + 20, 16, 22, 15), getOverlayIdentifier()));
-		else
-			transferRects.add(new RecipeTransferRect(new Rectangle(WIDTH / 2 + 4, 16, 22, 15), getOverlayIdentifier()));
+		transferRects.add(new RecipeTransferRect(new Rectangle(WIDTH / 2 + 4, 16, 22, 15), getOverlayIdentifier()));
 		super.loadTransferRects();
 	}
 
@@ -166,7 +163,7 @@ public class CompostHandler extends TemplateRecipeHandler
 	{
 		List<PositionedStack> positionedStacks = new ArrayList<PositionedStack>();
 		int ticksPerStackSize = MiscHelper.TICKS_PER_SEC * 1;
-		int curGreen = (int) ((cycleticks / ticksPerStackSize) % (CompostRegistry.greens.size()));
+		int curGreen = (cycleticks / ticksPerStackSize) % (CompostRegistry.greens.size());
 
 		Point recipePos = getRecipePosition(recipe);
 		int x = recipePos.x - (GuiHelper.STANDARD_SLOT_WIDTH * 2);
@@ -178,7 +175,7 @@ public class CompostHandler extends TemplateRecipeHandler
 		if (recipe == 0 && (isUsage || itemStack == null || itemStack.getItem() != Composting.rottenPlants))
 		{
 			int curSecondGreen = (curGreen + 1) % CompostRegistry.greens.size();
-			int curBrown = (int) ((cycleticks / ticksPerStackSize) % (CompostRegistry.browns.size()));
+			int curBrown = (cycleticks / ticksPerStackSize) % (CompostRegistry.browns.size());
 			ItemStack brownStack = CompostRegistry.isBrown(itemStack) && isUsage ? itemStack : CompostRegistry.browns.get(curBrown).copy();
 
 			x -= GuiHelper.STANDARD_SLOT_WIDTH;

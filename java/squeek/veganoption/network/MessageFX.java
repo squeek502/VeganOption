@@ -73,6 +73,8 @@ public class MessageFX implements IMessage, IMessageHandler<MessageFX, IMessage>
 			case PLASTIC_EGG_BREAK:
 				doEntityBreakFX(message, ctx, Egg.plasticEgg);
 				break;
+			default:
+				break;
 		}
 		return null;
 	}

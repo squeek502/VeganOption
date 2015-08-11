@@ -195,6 +195,10 @@ public class RecipeModifier
 				convertRecipe(oreRecipe);
 				return oreRecipe;
 			}
+			catch (RuntimeException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
@@ -241,7 +245,7 @@ public class RecipeModifier
 		{
 			if (inputObj instanceof ItemStack && containsMatch(itemToOredictMap.keySet(), (ItemStack) inputObj))
 			{
-				inputsToRemove.add((ItemStack) inputObj);
+				inputsToRemove.add(inputObj);
 				inputsToAdd.add(OreDictionary.getOres(getConversionFor((ItemStack) inputObj, itemToOredictMap)));
 			}
 			else if (inputObj instanceof ArrayList)
@@ -332,9 +336,13 @@ public class RecipeModifier
 			shapelessOreRecipeReplaceConstructor = ShapelessOreRecipe.class.getDeclaredConstructor(ShapelessRecipes.class, Map.class);
 			shapelessOreRecipeReplaceConstructor.setAccessible(true);
 		}
-		catch (Exception e)
+		catch (NoSuchMethodException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (SecurityException e)
+		{
+			throw new RuntimeException(e);
 		}
 	}
 }

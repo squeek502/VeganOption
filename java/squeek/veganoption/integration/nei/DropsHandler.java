@@ -35,7 +35,6 @@ public class DropsHandler extends TemplateRecipeHandler
 
 	ItemStack itemStack = null;
 	List<DropInfo> blockDropSpecifiers = null;
-	boolean isUsage;
 
 	public DropsHandler()
 	{
@@ -58,7 +57,6 @@ public class DropsHandler extends TemplateRecipeHandler
 	{
 		this.itemStack = itemStack.copy();
 		this.itemStack.stackSize = 1;
-		this.isUsage = isUsage;
 		if (isUsage)
 			this.blockDropSpecifiers = Modifiers.drops.getSubsetByBlock(this.itemStack);
 		else
@@ -183,7 +181,7 @@ public class DropsHandler extends TemplateRecipeHandler
 			DropSpecifier dropSpecifier = blockDropSpecifiers.get(recipe).drop;
 			ItemStack drop = dropSpecifier.itemStack.copy();
 			int ticksPerStackSize = MiscHelper.TICKS_PER_SEC * 1;
-			drop.stackSize = dropSpecifier.dropsMin + (int) ((cycleticks / ticksPerStackSize) % (dropSpecifier.dropsMax + 1 - dropSpecifier.dropsMin));
+			drop.stackSize = dropSpecifier.dropsMin + (cycleticks / ticksPerStackSize) % (dropSpecifier.dropsMax + 1 - dropSpecifier.dropsMin);
 			if (drop.stackSize > 0)
 				return new PositionedStack(drop, x, y, false);
 		}
@@ -215,6 +213,10 @@ public class DropsHandler extends TemplateRecipeHandler
 			transferRect = TemplateRecipeHandler.class.getDeclaredMethod("transferRect", GuiContainer.class, Collection.class, int.class, int.class, boolean.class);
 			transferRect.setAccessible(true);
 		}
+		catch (RuntimeException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
@@ -233,6 +235,10 @@ public class DropsHandler extends TemplateRecipeHandler
 			try
 			{
 				currenttip = (List<String>) transferRectTooltip.invoke(null, gui, transferRects, realOffset.x, realOffset.y, currenttip);
+			}
+			catch (RuntimeException e)
+			{
+				throw e;
 			}
 			catch (Exception e)
 			{
@@ -261,6 +267,10 @@ public class DropsHandler extends TemplateRecipeHandler
 		try
 		{
 			return (Boolean) transferRect.invoke(null, gui, transferRects, realOffset.x, realOffset.y, usage);
+		}
+		catch (RuntimeException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
