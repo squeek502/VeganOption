@@ -109,7 +109,9 @@ public class FluidContainerHelper
 		if (!event.entityPlayer.canPlayerEdit(x, y, z, movingObjectPosition.sideHit, emptyContainer))
 			return;
 
-		boolean didFill = tryFillBottle(event.entityPlayer, emptyContainer, (BlockFluidGeneric) block, event.world, x, y, z);
+		FluidStack fluidStack = new FluidStack(((BlockFluidGeneric) block).getFluid(), FluidContainerRegistry.BUCKET_VOLUME);
+		boolean didFill = tryFillContainer(event.entityPlayer, emptyContainer, fluidStack) != null;
+
 		// this cancels the interaction if the bottle is unable to be filled with the fluid,
 		// which stops mod fluid blocks from creating water bottles, because all fluids *have* to use
 		// Material.water to actually have the properties of a liquid...
@@ -118,28 +120,61 @@ public class FluidContainerHelper
 			event.setCanceled(true);
 			event.useItem = Event.Result.DENY;
 		}
+		else
+		{
+			event.world.setBlockToAir(x, y, z);
+		}
 	}
 
-	public boolean tryFillBottle(EntityPlayer player, ItemStack emptyContainer, BlockFluidGeneric block, World world, int x, int y, int z)
+	public static ItemStack tryFillContainer(EntityPlayer player, ItemStack emptyContainer, FluidStack fluidStack)
 	{
-		ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(new FluidStack(block.getFluid(), FluidContainerRegistry.BUCKET_VOLUME), emptyContainer);
+		ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluidStack, emptyContainer);
 
 		if (filledContainer == null)
-			return false;
+			return null;
 
 		if (!player.capabilities.isCreativeMode)
+		{
 			--emptyContainer.stackSize;
 
-		if (emptyContainer.stackSize <= 0)
-		{
-			player.inventory.setInventorySlotContents(player.inventory.currentItem, filledContainer);
-		}
-		else if (!player.inventory.addItemStackToInventory(filledContainer))
-		{
-			player.dropPlayerItemWithRandomChoice(filledContainer, false);
+			if (emptyContainer.stackSize <= 0)
+			{
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, filledContainer);
+				if (!player.worldObj.isRemote)
+					player.inventoryContainer.detectAndSendChanges();
+			}
+			else if (!player.inventory.addItemStackToInventory(filledContainer))
+			{
+				player.dropPlayerItemWithRandomChoice(filledContainer, false);
+			}
 		}
 
-		world.setBlockToAir(x, y, z);
-		return true;
+		return filledContainer;
+	}
+
+	public static ItemStack tryEmptyContainer(EntityPlayer player, ItemStack filledContainer)
+	{
+		ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(filledContainer);
+
+		if (emptyContainer == null)
+			return null;
+
+		if (!player.capabilities.isCreativeMode)
+		{
+			--filledContainer.stackSize;
+
+			if (filledContainer.stackSize <= 0)
+			{
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, emptyContainer);
+				if (!player.worldObj.isRemote)
+					player.inventoryContainer.detectAndSendChanges();
+			}
+			else if (!player.inventory.addItemStackToInventory(emptyContainer))
+			{
+				player.dropPlayerItemWithRandomChoice(emptyContainer, false);
+			}
+		}
+
+		return emptyContainer;
 	}
 }

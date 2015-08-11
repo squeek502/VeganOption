@@ -8,9 +8,14 @@ import net.minecraft.world.World;
 
 public class WorldHelper
 {
-	@SuppressWarnings("unchecked")
 	public static List<EntityItem> getItemEntitiesWithin(World world, int x, int y, int z)
 	{
-		return world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1), IEntitySelector.selectAnything);
+		return getItemEntitiesWithin(world, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<EntityItem> getItemEntitiesWithin(World world, AxisAlignedBB aabb)
+	{
+		return world.selectEntitiesWithinAABB(EntityItem.class, aabb, IEntitySelector.selectAnything);
 	}
 }

@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.api.event.PistonEvent;
 import squeek.veganoption.blocks.BlockEnderRift;
+import squeek.veganoption.blocks.IHollowBlock;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.integration.IntegrationHandler;
@@ -58,6 +59,17 @@ public class Hooks
 		{
 			MinecraftForge.EVENT_BUS.post(new PistonEvent.Retract(world, x, y, z, facing));
 		}
+	}
+
+	// return -1 to use default code, otherwise return 1 or 0 (will be interpretted as a boolean)
+	public static int isBlockFullCube(World world, int x, int y, int z)
+	{
+		Block block = world.getBlock(x, y, z);
+		if (block instanceof IHollowBlock)
+		{
+			return ((IHollowBlock) block).isBlockFullCube(world, x, y, z) ? 1 : 0;
+		}
+		return -1;
 	}
 
 	// return the TiC ToolRod version of the given handle if it exists

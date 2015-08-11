@@ -1,5 +1,6 @@
 package squeek.veganoption.asm;
 
+import static org.objectweb.asm.Opcodes.*;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -15,7 +16,7 @@ public class ClassTransformer implements IClassTransformer
 	{
 		if (transformedName.equals("net.minecraft.block.BlockDynamicLiquid"))
 		{
-			boolean isObfuscated = name != transformedName;
+			boolean isObfuscated = !name.equals(transformedName);
 
 			ClassNode classNode = readClassFromBytes(bytes);
 
@@ -43,7 +44,7 @@ public class ClassTransformer implements IClassTransformer
 		}
 		else if (transformedName.equals("net.minecraft.entity.item.EntityItem"))
 		{
-			boolean isObfuscated = name != transformedName;
+			boolean isObfuscated = !name.equals(transformedName);
 
 			ClassNode classNode = readClassFromBytes(bytes);
 
@@ -67,7 +68,7 @@ public class ClassTransformer implements IClassTransformer
 		}
 		else if (transformedName.equals("net.minecraft.block.BlockPistonBase"))
 		{
-			boolean isObfuscated = name != transformedName;
+			boolean isObfuscated = !name.equals(transformedName);
 
 			ClassNode classNode = readClassFromBytes(bytes);
 
@@ -103,6 +104,78 @@ public class ClassTransformer implements IClassTransformer
 			method.instructions.insertBefore(getOrFindInstruction(method.instructions.getLast(), true).getPrevious(), toInject);
 
 			return writeClassToBytes(classNode);
+		}
+		else if (transformedName.equals("net.minecraft.world.World"))
+		{
+			boolean isObfuscated = !name.equals(transformedName);
+
+			ClassNode classNode = readClassFromBytes(bytes);
+
+			// isFullCube
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "q" : "func_147469_q", "(III)Z");
+
+			LabelNode end = findEndLabel(method);
+			AbstractInsnNode targetNode = findFirstInstruction(method);
+
+			InsnList toInject = new InsnList();
+
+			/*
+			int isBlockFullCube = Hooks.isBlockFullCube(null, 0, 0, 0);
+			if (isBlockFullCube != -1)
+				return isBlockFullCube != 0;
+			*/
+			LabelNode varStartLabel = new LabelNode();
+			LocalVariableNode localVar = new LocalVariableNode("isBlockFullCube", "I", method.signature, varStartLabel, end, method.maxLocals);
+			method.maxLocals++;
+			method.localVariables.add(localVar);
+
+			toInject.add(new VarInsnNode(ALOAD, 0)); 					// this
+			toInject.add(new VarInsnNode(ILOAD, 1)); 					// x
+			toInject.add(new VarInsnNode(ILOAD, 2)); 					// y
+			toInject.add(new VarInsnNode(ILOAD, 3)); 					// z
+			toInject.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(Hooks.class), "isBlockFullCube", "(Lnet/minecraft/world/World;III)I", false));
+			toInject.add(new VarInsnNode(ISTORE, localVar.index));		// isBlockFullCube = Hooks.isBlockFullCube(...)
+			toInject.add(varStartLabel);								// variable scope start
+			LabelNode label = new LabelNode();							// label if condition is true
+			toInject.add(new VarInsnNode(ILOAD, localVar.index));		// isBlockFullCube
+			toInject.add(new InsnNode(ICONST_M1));						// -1
+			toInject.add(new JumpInsnNode(IF_ICMPEQ, label));			// isBlockFullCube != -1
+			LabelNode labelReturnIf = new LabelNode();					// label if second condition is true
+			toInject.add(new VarInsnNode(ILOAD, localVar.index));		// isBlockFullCube
+			toInject.add(new JumpInsnNode(IFEQ, labelReturnIf));		// isBlockFullCube != 0
+			toInject.add(new InsnNode(ICONST_1));						// 1 (true)
+			toInject.add(new InsnNode(IRETURN));						// return true;
+			toInject.add(labelReturnIf);								// if isBlockFullCube == 0, jump here
+			toInject.add(new InsnNode(ICONST_0));						// 0 (false)
+			toInject.add(new InsnNode(IRETURN));						// return false;
+			toInject.add(label);										// if isBlockFullCube == -1, jump here
+
+			method.instructions.insertBefore(targetNode, toInject);
+
+			return writeClassToBytes(classNode);
+		}
+		else if (transformedName.equals("net.minecraftforge.fluids.BlockFluidFinite"))
+		{
+			// TODO: real check
+			boolean isObfuscated = false;
+
+			ClassNode classNode = readClassFromBytes(bytes);
+
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "func_149674_a" : "updateTick", "(Lnet/minecraft/world/World;IIILjava/util/Random;)V");
+
+			final String setBlockMethodName = isObfuscated ? "func_147446_b" : "setBlock";
+			for (AbstractInsnNode insn = method.instructions.getFirst(); insn != null; insn = insn.getNext())
+			{
+				if (insn.getOpcode() == Opcodes.ICONST_2 && insn.getNext() != null && insn.getNext().getOpcode() == Opcodes.INVOKEVIRTUAL && ((MethodInsnNode) insn.getNext()).name.equals(setBlockMethodName))
+				{
+					AbstractInsnNode newInsn = new InsnNode(Opcodes.ICONST_3);
+					method.instructions.insert(insn, newInsn);
+					method.instructions.remove(insn);
+					insn = newInsn;
+				}
+			}
+
+			return writeClassToBytes(classNode, 0);
 		}
 		else if (transformedName.equals("tconstruct.tools.TinkerToolEvents"))
 		{
@@ -240,6 +313,11 @@ public class ClassTransformer implements IClassTransformer
 
 	private byte[] writeClassToBytes(ClassNode classNode)
 	{
+		return writeClassToBytes(classNode, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+	}
+
+	private byte[] writeClassToBytes(ClassNode classNode, int flags)
+	{
 		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		classNode.accept(writer);
 		return writer.toByteArray();
@@ -275,5 +353,15 @@ public class ClassTransformer implements IClassTransformer
 	public AbstractInsnNode findFirstInstruction(MethodNode method)
 	{
 		return getOrFindInstruction(method.instructions.getFirst());
+	}
+
+	public LabelNode findEndLabel(MethodNode method)
+	{
+		for (AbstractInsnNode instruction = method.instructions.getLast(); instruction != null; instruction = instruction.getPrevious())
+		{
+			if (instruction instanceof LabelNode)
+				return (LabelNode) instruction;
+		}
+		return null;
 	}
 }

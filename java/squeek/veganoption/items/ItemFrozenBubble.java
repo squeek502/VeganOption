@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
@@ -81,29 +82,27 @@ public class ItemFrozenBubble extends Item
 
 		if (!isFull(entityItem.getEntityItem()) && Ender.fluidRawEnder == FluidHelper.getFluidTypeOfBlock(entityItem.worldObj.getBlock(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ))))
 		{
-			EntityItem entityItemToFill = entityItem;
-			ItemStack bubbleToFill = entityItemToFill.getEntityItem();
-
-			if (entityItemToFill.getEntityItem().stackSize > 1)
-			{
-				bubbleToFill = entityItem.getEntityItem().splitStack(1);
-				entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, bubbleToFill);
-				entityItemToFill.delayBeforeCanPickup = 10;
-				entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);
-			}
-
 			BlockHelper.BlockPos fluidBlockPos = BlockHelper.blockPos(entityItem.worldObj, MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ));
-			int newMeta = fluidBlockPos.getMeta() - 1;
+			FluidStack consumedFluid = FluidHelper.consumePartialFiniteFluidBlock(fluidBlockPos, FluidHelper.FINITE_FLUID_MB_PER_META);
 
-			if (newMeta >= 0)
-				fluidBlockPos.world.setBlockMetadataWithNotify(fluidBlockPos.x, fluidBlockPos.y, fluidBlockPos.z, newMeta, 3);
-			else
-				fluidBlockPos.world.setBlockToAir(fluidBlockPos.x, fluidBlockPos.y, fluidBlockPos.z);
+			if (consumedFluid != null)
+			{
+				EntityItem entityItemToFill = entityItem;
+				ItemStack bubbleToFill = entityItemToFill.getEntityItem();
 
-			ItemStack filledItemStack = fill(bubbleToFill, 1);
-			entityItemToFill.setEntityItemStack(filledItemStack);
+				if (entityItemToFill.getEntityItem().stackSize > 1)
+				{
+					bubbleToFill = entityItem.getEntityItem().splitStack(1);
+					entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, bubbleToFill);
+					entityItemToFill.delayBeforeCanPickup = 10;
+					entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);
+				}
 
-			return true;
+				ItemStack filledItemStack = fill(bubbleToFill, 1);
+				entityItemToFill.setEntityItemStack(filledItemStack);
+
+				return true;
+			}
 		}
 		return false;
 	}

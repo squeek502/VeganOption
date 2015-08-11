@@ -9,6 +9,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.BlockFluidFinite;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 public class BlockHelper
 {
@@ -131,12 +134,17 @@ public class BlockHelper
 
 	public static BlockPos followWaterStreamToSourceBlock(BlockPos blockPos)
 	{
-		return followWaterStreamToSourceBlock(blockPos, new HashSet<BlockPos>());
+		return followFluidStreamToSourceBlock(blockPos, FluidRegistry.WATER);
 	}
 
-	public static BlockPos followWaterStreamToSourceBlock(BlockPos blockPos, Set<BlockPos> blocksChecked)
+	public static BlockPos followFluidStreamToSourceBlock(BlockPos blockPos, Fluid fluid)
 	{
-		if (blockPos.getMeta() == 0)
+		return followFluidStreamToSourceBlock(blockPos, fluid, new HashSet<BlockPos>());
+	}
+
+	public static BlockPos followFluidStreamToSourceBlock(BlockPos blockPos, Fluid fluid, Set<BlockPos> blocksChecked)
+	{
+		if (fluid.getBlock() instanceof BlockFluidFinite || blockPos.getMeta() == FluidHelper.getStillMetadata(fluid))
 			return blockPos;
 
 		List<BlockPos> blocksToCheck = new ArrayList<BlockPos>();
@@ -145,14 +153,14 @@ public class BlockHelper
 
 		for (BlockPos blockToCheck : blocksToCheck)
 		{
-			if (isWater(blockToCheck) && !blocksChecked.contains(blockToCheck))
+			if (FluidHelper.getFluidTypeOfBlock(blockToCheck.getBlock()) == fluid && !blocksChecked.contains(blockToCheck))
 			{
 				if (blockToCheck.getMeta() == 0)
 					return blockToCheck;
 				else
 				{
 					blocksChecked.add(blockToCheck);
-					BlockPos foundSourceBlock = followWaterStreamToSourceBlock(blockToCheck, blocksChecked);
+					BlockPos foundSourceBlock = followFluidStreamToSourceBlock(blockToCheck, fluid, blocksChecked);
 
 					if (foundSourceBlock != null)
 						return foundSourceBlock;

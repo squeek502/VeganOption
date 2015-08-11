@@ -25,7 +25,7 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockEnderRift extends BlockEndPortal
+public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 {
 	public static final int BLOCK_TELEPORT_RADIUS = 4;
 	public static final int NAUSEA_LENGTH_IN_SECONDS = 5;
@@ -65,9 +65,10 @@ public class BlockEnderRift extends BlockEndPortal
 		return side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal();
 	}
 
-	// absord fluid flow
+	@Override
 	public boolean onFluidFlowInto(World world, int x, int y, int z, int flowDecay)
 	{
+		// absorb fluid flow
 		return true;
 	}
 

@@ -40,6 +40,7 @@ public class ContentModuleHandler
 		modules.put("VegetableOil", new VegetableOil());
 		modules.put("ProofOfSuffering", new ProofOfSuffering());
 		modules.put("DollsEye", new DollsEye());
+		modules.put("Basin", new Basin());
 
 		compatModules.put("EnderBubble", new CompatEnderBubble());
 	}
