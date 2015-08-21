@@ -142,19 +142,19 @@ public class RecipeModifier
 
 	public IRecipe convertRecipe(IRecipe recipe, Map<ItemStack, String> itemToOredictMap)
 	{
-		if (recipe instanceof ShapedRecipes)
+		if (recipe.getClass() == ShapedRecipes.class)
 		{
 			return convertShapedRecipe((ShapedRecipes) recipe, itemToOredictMap);
 		}
-		else if (recipe instanceof ShapelessRecipes)
+		else if (recipe.getClass() == ShapelessRecipes.class)
 		{
 			return convertShapelessRecipe((ShapelessRecipes) recipe, itemToOredictMap);
 		}
-		else if (recipe instanceof ShapedOreRecipe)
+		else if (recipe.getClass() == ShapedOreRecipe.class)
 		{
 			return convertShapedOreRecipe((ShapedOreRecipe) recipe, itemToOredictMap);
 		}
-		else if (recipe instanceof ShapelessOreRecipe)
+		else if (recipe.getClass() == ShapelessOreRecipe.class)
 		{
 			return convertShapelessOreRecipe((ShapelessOreRecipe) recipe, itemToOredictMap);
 		}
