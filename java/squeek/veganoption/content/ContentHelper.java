@@ -27,7 +27,9 @@ public class ContentHelper
 	public static final String eggFoodOreDict = "listAllegg"; // HarvestCraft's oredict entry
 	public static final String slimeballOreDict = "slimeball"; // Forge's oredict entry
 	public static final String resinOreDict = "resin";
+	public static final String resinMaterialOreDict = "materialResin"; // ElectricalAge's oredict entry
 	public static final String rosinOreDict = "rosin";
+	public static final String rosinMaterialOreDict = "materialRosin";
 	public static final String vegetableOilOreDict = "foodOliveoil"; // HarvestCraft's oredict entry
 	public static final String waxOreDict = "materialWax";
 	public static final String waxOreDictForestry = "itemBeeswax"; // Forestry's oredict entry

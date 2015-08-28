@@ -43,7 +43,9 @@ public class Resin implements IContentModule
 		OreDictionary.registerOre(ContentHelper.slimeballOreDict, new ItemStack(Items.slime_ball));
 		OreDictionary.registerOre(ContentHelper.slimeballOreDict, new ItemStack(resin));
 		OreDictionary.registerOre(ContentHelper.resinOreDict, new ItemStack(resin));
+		OreDictionary.registerOre(ContentHelper.resinMaterialOreDict, new ItemStack(resin));
 		OreDictionary.registerOre(ContentHelper.rosinOreDict, new ItemStack(rosin));
+		OreDictionary.registerOre(ContentHelper.rosinMaterialOreDict, new ItemStack(rosin));
 	}
 
 	@Override
