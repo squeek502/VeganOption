@@ -155,7 +155,7 @@ public class RenderComposter extends TileEntitySpecialRenderer implements IItemR
 		{
 			case ENTITY:
 			{
-				renderTileEntityAt(dummyItemRenderTile, -0.5D, 0.0D, -0.5D, 0.0F);
+				renderTileEntityAt(dummyItemRenderTile, -0.5D, -0.5D, -0.5D, 0.0F);
 				return;
 			}
 			case EQUIPPED:

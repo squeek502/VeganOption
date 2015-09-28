@@ -4,46 +4,62 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import org.lwjgl.opengl.GL11;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
+import squeek.veganoption.content.modules.Basin;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class RenderBasin implements ISimpleBlockRenderingHandler
+@SideOnly(Side.CLIENT)
+public class RenderBasin extends TileEntitySpecialRenderer implements IItemRenderer
 {
-	public static int renderId;
 	public static final TileEntityBasin dummyBasin = new TileEntityBasin();
 	public static final double SIDE_WIDTH = BlockBasin.SIDE_WIDTH;
 
-	public RenderBasin()
+	public void renderTileEntityAt(TileEntityBasin basin, double x, double y, double z, float partialTickTime)
 	{
-		renderId = RenderingRegistry.getNextAvailableRenderId();
-	}
+		RenderBlocks renderer = new RenderBlocks(basin.getWorldObj());
+		
+		Block block = Basin.basin;
+		int meta = basin == dummyBasin ? 0 : basin.blockMetadata;
+		bindTexture(TextureMap.locationBlocksTexture);
+		renderer.setRenderBoundsFromBlock(block);
 
-	public void renderShared(Block block, int metadata, TileEntityBasin basin, RenderBlocks renderer)
-	{
-		renderBasin(block, metadata, basin, renderer);
-	}
+		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glTranslated(x, y, z);
 
-	public void renderBasin(Block block, int metadata, TileEntityBasin basin, RenderBlocks renderer)
-	{
-		this.renderSharedBlock(block, metadata, basin, renderer);
+		if (basin == dummyBasin)
+		{
+			GL11.glEnable(GL11.GL_LIGHTING);
+			renderStandardInventoryBlock(block, meta, renderer);
+			GL11.glDisable(GL11.GL_LIGHTING);
+		}
+		
+		GL11.glDisable(GL11.GL_LIGHTING);
 
-		int x = 0, y = 0, z = 0;
 		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+
 		int brightness = 0, innerBrightness = 0;
 		if (basin != dummyBasin)
 		{
-			x = basin.xCoord;
-			y = basin.yCoord;
-			z = basin.zCoord;
+			int xInt = basin.xCoord;
+			int yInt = basin.yCoord;
+			int zInt = basin.zCoord;
 
-			int colorMultiplier = block.colorMultiplier(basin.getWorldObj(), x, y, z);
+			int colorMultiplier = block.colorMultiplier(basin.getWorldObj(), xInt, yInt, zInt);
 			float red = (colorMultiplier >> 16 & 255) / 255.0F;
 			float green = (colorMultiplier >> 8 & 255) / 255.0F;
 			float blue = (colorMultiplier & 255) / 255.0F;
@@ -58,26 +74,29 @@ public class RenderBasin implements ISimpleBlockRenderingHandler
 				blue = newBlue;
 			}
 
-			brightness = block.getMixedBrightnessForBlock(basin.getWorldObj(), x, y, z);
-			innerBrightness = (int) (basin.isClosed() ? brightness * 0.5F : brightness * 0.75F);
+			brightness = block.getMixedBrightnessForBlock(basin.getWorldObj(), xInt, yInt, zInt);
+			innerBrightness = (int) (basin.isClosed() ? brightness * 0.35F : brightness * 0.5F);
 			tessellator.setBrightness(innerBrightness);
 			tessellator.setColorOpaque_F(red, green, blue);
 		}
 
 		IIcon sideIcon = block.getBlockTextureFromSide(2);
 		float offset = (float) SIDE_WIDTH;
-		renderer.renderFaceXPos(block, x - 1.0F + offset, y, z, sideIcon);
-		renderer.renderFaceXNeg(block, x + 1.0F - offset, y, z, sideIcon);
-		renderer.renderFaceZPos(block, x, y, z - 1.0F + offset, sideIcon);
-		renderer.renderFaceZNeg(block, x, y, z + 1.0F - offset, sideIcon);
+		renderer.renderFaceXPos(block, -1.0F + offset, 0, 0, sideIcon);
+		renderer.renderFaceXNeg(block, 1.0F - offset, 0, 0, sideIcon);
+		renderer.renderFaceZPos(block, 0, 0, -1.0F + offset, sideIcon);
+		renderer.renderFaceZNeg(block, 0, 0, 1.0F - offset, sideIcon);
 		IIcon innerIconBottom = block.getBlockTextureFromSide(ForgeDirection.DOWN.ordinal());
-		renderer.renderFaceYPos(block, x, y - 1.0F + offset, z, innerIconBottom);
+		renderer.renderFaceYPos(block, 0, -1.0F + offset, 0, innerIconBottom);
 
 		if (basin.isClosed())
 		{
 			IIcon innerIconTop = block.getBlockTextureFromSide(ForgeDirection.UP.ordinal());
-			renderer.renderFaceYNeg(block, x, y + 1.0F - offset, z, innerIconTop);
+			renderer.renderFaceYNeg(block, 0, 1.0F - offset, 0, innerIconTop);
 		}
+		
+		tessellator.draw();
+		tessellator.startDrawingQuads();
 
 		FluidTankInfo tankInfo = basin.getTankInfo(ForgeDirection.UNKNOWN)[0];
 		if (tankInfo.fluid != null && tankInfo.fluid.amount > 0)
@@ -103,76 +122,64 @@ public class RenderBasin implements ISimpleBlockRenderingHandler
 			float fluidTopOffset = offset + (percentFull * (1.0F - offset - offset));
 			renderer.setRenderBounds(offset, offset, offset, 1 - offset, fluidTopOffset, 1 - offset);
 
-			renderer.renderFaceYPos(block, x, y, z, fluidIcon);
-			renderer.renderFaceXNeg(block, x, y, z, fluidIcon);
-			renderer.renderFaceXPos(block, x, y, z, fluidIcon);
-			renderer.renderFaceZNeg(block, x, y, z, fluidIcon);
-			renderer.renderFaceZPos(block, x, y, z, fluidIcon);
+			renderer.renderFaceYPos(block, 0, 0, 0, fluidIcon);
+			renderer.renderFaceXNeg(block, 0, 0, 0, fluidIcon);
+			renderer.renderFaceXPos(block, 0, 0, 0, fluidIcon);
+			renderer.renderFaceZNeg(block, 0, 0, 0, fluidIcon);
+			renderer.renderFaceZPos(block, 0, 0, 0, fluidIcon);
 
 			GL11.glDisable(GL11.GL_LIGHTING);
 		}
-	}
 
-	public void renderSharedBlock(Block block, int metadata, TileEntityBasin basin, RenderBlocks renderer)
-	{
-		if (basin == dummyBasin)
-			renderStandardInventoryBlock(block, metadata, renderer);
-		else
-			renderer.renderStandardBlock(block, basin.xCoord, basin.yCoord, basin.zCoord);
-	}
-
-	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
-	{
-		if (modelId != renderId)
-			return;
-
-		block.setBlockBoundsForItemRender();
-		renderer.setRenderBoundsFromBlock(block);
-
-		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-		renderStandardInventoryBlock(block, metadata, renderer);
-
-		Tessellator tessellator = Tessellator.instance;
-		
-		IIcon sideIcon = block.getBlockTextureFromSide(2);
-		IIcon innerIconBottom = block.getBlockTextureFromSide(ForgeDirection.DOWN.ordinal());
-		float offset = (float) SIDE_WIDTH;
-
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(1.0F, 0.0F, 0.0F);
-		renderer.renderFaceXPos(block, -1.0D + offset, 0.0D, 0.0D, sideIcon);
-		tessellator.draw();
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-		renderer.renderFaceXNeg(block, 1.0D - offset, 0.0D, 0.0D, sideIcon);
-		tessellator.draw();
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(0.0F, 0.0F, 1.0F);
-		renderer.renderFaceZPos(block, 0.0D, 0.0D, -1.0D + offset, sideIcon);
-		tessellator.draw();
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(0.0F, 0.0F, -1.0F);
-		renderer.renderFaceZNeg(block, 0.0D, 0.0D, 1.0D - offset, sideIcon);
-		tessellator.draw();
-		
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(0.0F, 1.0F, 0.0F);
-		renderer.renderFaceYPos(block, 0.0D, -1.0D + offset, 0.0D, innerIconBottom);
 		tessellator.draw();
 
-		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+		GL11.glPopMatrix();
+		GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
+	public void renderTileEntityAt(TileEntity p_147500_1_, double p_147500_2_, double p_147500_4_, double p_147500_6_, float p_147500_8_)
 	{
-		if (modelId != renderId)
-			return false;
+		this.renderTileEntityAt((TileEntityBasin) p_147500_1_, p_147500_2_, p_147500_4_, p_147500_6_, p_147500_8_);
+	}
 
-		renderShared(block, world.getBlockMetadata(x, y, z), (TileEntityBasin) world.getTileEntity(x, y, z), renderer);
-
+	@Override
+	public boolean handleRenderType(ItemStack item, ItemRenderType type)
+	{
 		return true;
+	}
+
+	@Override
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+	{
+		return true;
+	}
+
+	@Override
+	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
+	{
+		switch (type)
+		{
+			case ENTITY:
+			{
+				renderTileEntityAt(dummyBasin, -0.5D, -0.5D, -0.5D, 0.0F);
+				return;
+			}
+			case EQUIPPED:
+			case EQUIPPED_FIRST_PERSON:
+			{
+				renderTileEntityAt(dummyBasin, 0.0F, 0.0F, 0.0F, 0.0F);
+				return;
+			}
+			case INVENTORY:
+			{
+				renderTileEntityAt(dummyBasin, 0.5F, 0.3F, 0.5F, 0.0F);
+				return;
+			}
+			default:
+				return;
+		}
 	}
 
 	public void renderStandardInventoryBlock(Block block, int metadata, RenderBlocks renderer)
@@ -202,18 +209,6 @@ public class RenderBasin implements ISimpleBlockRenderingHandler
 		tessellator.setNormal(1.0F, 0.0F, 0.0F);
 		renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 5, metadata));
 		tessellator.draw();
-	}
-
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return true;
-	}
-
-	@Override
-	public int getRenderId()
-	{
-		return renderId;
 	}
 
 }

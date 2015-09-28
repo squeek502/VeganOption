@@ -390,7 +390,6 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
 		readSyncedNBT(pkt.func_148857_g());
-		worldObj.func_147479_m(xCoord, yCoord, zCoord);
 	}
 
 	@Override

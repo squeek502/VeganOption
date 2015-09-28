@@ -14,7 +14,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import squeek.veganoption.blocks.renderers.RenderBasin;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -73,7 +72,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 			((TileEntityBasin) tile).scheduleFluidConsume();
 		}
 	}
-	
+
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
@@ -290,9 +289,10 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return RenderBasin.renderId;
+		return super.getRenderType();
 	}
 
 	@Override
