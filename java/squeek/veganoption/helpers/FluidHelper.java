@@ -146,8 +146,6 @@ public class FluidHelper
 		else
 			fluidBlockPos.world.setBlockToAir(fluidBlockPos.x, fluidBlockPos.y, fluidBlockPos.z);
 
-		System.out.println("set to " + newMeta);
-
 		return fluidConsumed;
 	}
 }
