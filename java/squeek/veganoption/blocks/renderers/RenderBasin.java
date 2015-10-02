@@ -19,6 +19,9 @@ import squeek.veganoption.content.modules.Basin;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+// TODO: Fix item rendering (insides invisible when on hotbar and inv not open)
+// TODO: Make this code sane
+// TODO: Investigate whether or not having render type 0 is an issue (default rendering for outside of block)
 @SideOnly(Side.CLIENT)
 public class RenderBasin extends TileEntitySpecialRenderer implements IItemRenderer
 {

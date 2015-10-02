@@ -42,6 +42,11 @@ public class BlockCompost extends Block
 
 	public void attemptSoilBuilding(World world, int x, int y, int z, Random random, boolean growPlantDirectly)
 	{
+		// check if the chunk is loaded to avoid force-loading the chunk for one tick in order to check the block
+		// see https://www.reddit.com/r/feedthebeast/comments/3lfjpp/1710_post_mortem_investigating_mystery_chunk/
+		if (!world.blockExists(x, y, z))
+			return;
+
 		Block block = world.getBlock(x, y, z);
 		if (block == Blocks.farmland)
 		{

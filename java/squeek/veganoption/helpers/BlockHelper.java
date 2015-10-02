@@ -30,6 +30,11 @@ public class BlockHelper
 			this.z = z;
 		}
 
+		public boolean exists()
+		{
+			return world.blockExists(x, y, z);
+		}
+
 		public Block getBlock()
 		{
 			return world.getBlock(x, y, z);
@@ -96,7 +101,7 @@ public class BlockHelper
 
 	public static boolean isMaterial(BlockPos blockPos, Material material)
 	{
-		return blockPos.getBlock().getMaterial() == material;
+		return blockPos.exists() && blockPos.getBlock().getMaterial() == material;
 	}
 
 	public static boolean isAdjacentToMaterial(BlockPos blockPos, Material material)
@@ -153,13 +158,20 @@ public class BlockHelper
 
 		for (BlockPos blockToCheck : blocksToCheck)
 		{
-			if (FluidHelper.getFluidTypeOfBlock(blockToCheck.getBlock()) == fluid && !blocksChecked.contains(blockToCheck))
+			if (blocksChecked.contains(blockToCheck))
+				continue;
+
+			blocksChecked.add(blockToCheck);
+
+			if (!blockToCheck.exists())
+				continue;
+
+			if (FluidHelper.getFluidTypeOfBlock(blockToCheck.getBlock()) == fluid)
 			{
 				if (blockToCheck.getMeta() == 0)
 					return blockToCheck;
 				else
 				{
-					blocksChecked.add(blockToCheck);
 					BlockPos foundSourceBlock = followFluidStreamToSourceBlock(blockToCheck, fluid, blocksChecked);
 
 					if (foundSourceBlock != null)
@@ -207,6 +219,9 @@ public class BlockHelper
 		List<BlockPos> filteredBlocks = new ArrayList<BlockPos>();
 		for (BlockPos blockPos : blocks)
 		{
+			if (!blockPos.exists())
+				continue;
+
 			Block block = blockPos.getBlock();
 
 			if (block == null)
