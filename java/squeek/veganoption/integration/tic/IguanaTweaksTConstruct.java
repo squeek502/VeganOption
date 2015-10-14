@@ -4,7 +4,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import squeek.veganoption.content.modules.MobHeads;
-import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.integration.IntegratorBase;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -49,7 +48,7 @@ public class IguanaTweaksTConstruct extends IntegratorBase
 					'h', MobHeads.mobHeadBlank
 					));
 
-			if (IntegrationHandler.integrationExists(IntegrationHandler.MODID_THERMAL_EXPANSION))
+			if (modExists(MODID_THERMAL_EXPANSION))
 			{
 				GameRegistry.addRecipe(new ShapedOreRecipe(
 						new ItemStack(skullItem, 1, META_BLIZZ),

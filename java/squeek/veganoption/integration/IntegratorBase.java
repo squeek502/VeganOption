@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import squeek.veganoption.content.IContentModule;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public abstract class IntegratorBase implements IContentModule
+public abstract class IntegratorBase extends IntegrationBase implements IContentModule
 {
 	// initialized by IntegrationHandler
 	public String modID;

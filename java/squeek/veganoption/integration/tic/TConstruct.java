@@ -79,7 +79,7 @@ public class TConstruct extends IntegratorBase
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 
-		if (!IntegrationHandler.integrationExists(IntegrationHandler.MODID_MINEFACTORY_RELOADED))
+		if (!modExists(MODID_MINEFACTORY_RELOADED))
 		{
 			// material values mirrored from from MFR's plastic
 			tag.setInteger("Id", MATID_PLASTIC);
