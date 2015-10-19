@@ -22,12 +22,12 @@ public abstract class IntegrationBase
 	public static final String MODID_MAGICAL_CROPS = "magicalcrops";
 	public static final String MODID_MYSTCRAFT = "Mystcraft";
 
-	public boolean integrationExists(String modID)
+	public static boolean integrationExists(String modID)
 	{
 		return IntegrationHandler.integratorExists(modID);
 	}
 
-	public boolean modExists(String modID)
+	public static boolean modExists(String modID)
 	{
 		return Loader.isModLoaded(modID);
 	}
