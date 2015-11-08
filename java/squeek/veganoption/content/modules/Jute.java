@@ -1,10 +1,16 @@
 package squeek.veganoption.content.modules;
 
+import java.lang.reflect.Method;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -17,13 +23,18 @@ import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class Jute implements IContentModule
 {
 	public static BlockRettable juteBundled;
 	public static Item juteStalk;
 	public static Item juteFibre;
+	public static final int FERN_METADATA = 3;
+	public static DropSpecifier juteDrops;
 
 	@Override
 	public void create()
@@ -65,7 +76,7 @@ public class Jute implements IContentModule
 		DropsModifier.NEIDropSpecifier juteDropSpecifier = new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops);
 		Modifiers.drops.addDropsToBlock(juteBundledBlockSpecifier, juteDropSpecifier);
 
-		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.double_plant, 3)
+		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.double_plant, FERN_METADATA)
 		{
 			@Override
 			public boolean metaMatches(int meta)
@@ -73,7 +84,12 @@ public class Jute implements IContentModule
 				return this.meta == BlockDoublePlant.func_149890_d(meta);
 			}
 		};
-		Modifiers.drops.addDropsToBlock(doubleFernSpecifier, new DropSpecifier(new ItemStack(juteStalk), 1, 3));
+		juteDrops = new DropSpecifier(new ItemStack(juteStalk), 1, 3);
+		Modifiers.drops.addDropsToBlock(doubleFernSpecifier, juteDrops);
+
+		// need to catch the top of the fern breaking really early, as it bypasses the harvest event
+		// so register this as an event handler and handle it in onBlockBreak (see onFernTopBreak function below)
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override
@@ -81,5 +97,45 @@ public class Jute implements IContentModule
 	{
 		CompostRegistry.addGreen(Jute.juteStalk);
 		RelationshipRegistry.addRelationship(new ItemStack(juteFibre), new ItemStack(juteBundled));
+	}
+
+	public static final Method doublePlantDropBlockAsItem = ReflectionHelper.findMethod(Block.class, Blocks.double_plant, new String[]{"dropBlockAsItem", "func_149642_a", "a"}, World.class, int.class, int.class, int.class, ItemStack.class);
+
+	@SubscribeEvent(priority = EventPriority.LOW)
+	public void onGetHarvestDrops(BlockEvent.BreakEvent event)
+	{
+		if (event.isCanceled())
+			return;
+
+		if (event.block != Blocks.double_plant)
+			return;
+
+		if (!BlockDoublePlant.func_149887_c(event.blockMetadata))
+			return;
+
+		if (event.world.getBlock(event.x, event.y - 1, event.z) != event.block)
+			return;
+
+		if (BlockDoublePlant.func_149890_d(event.world.getBlockMetadata(event.x, event.y - 1, event.z)) != FERN_METADATA)
+			return;
+
+		if (event.getPlayer().getCurrentEquippedItem() != null && event.getPlayer().getCurrentEquippedItem().getItem() instanceof ItemShears)
+			return;
+
+		for (ItemStack drop : juteDrops.getDrops(event.getPlayer(), EnchantmentHelper.getFortuneModifier(event.getPlayer()), EnchantmentHelper.getSilkTouchModifier(event.getPlayer())))
+		{
+			try
+			{
+				doublePlantDropBlockAsItem.invoke(event.block, event.world, event.x, event.y - 1, event.z, drop);
+			}
+			catch (RuntimeException e)
+			{
+				throw e;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }
