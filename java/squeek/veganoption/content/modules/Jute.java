@@ -9,11 +9,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
+import squeek.veganoption.blocks.BlockJutePlant;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
@@ -23,6 +25,8 @@ import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
+import squeek.veganoption.items.ItemBlockJutePlant;
+import squeek.veganoption.items.ItemSeedsGeneric;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -31,8 +35,10 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 public class Jute implements IContentModule
 {
 	public static BlockRettable juteBundled;
+	public static Block jutePlant;
 	public static Item juteStalk;
 	public static Item juteFibre;
+	public static Item juteSeeds;
 	public static final int FERN_METADATA = 3;
 	public static DropSpecifier juteDrops;
 
@@ -59,6 +65,17 @@ public class Jute implements IContentModule
 				.setBlockTextureName(ModInfo.MODID_LOWER + ":jute_block");
 		juteBundled.setHarvestLevel("axe", 0);
 		GameRegistry.registerBlock(juteBundled, "juteBundled");
+
+		jutePlant = new BlockJutePlant()
+				.setBlockName(ModInfo.MODID + ".jutePlant")
+				.setBlockTextureName(ModInfo.MODID_LOWER + ":jute_plant");
+		GameRegistry.registerBlock(jutePlant, ItemBlockJutePlant.class, "jutePlant");
+
+		juteSeeds = new ItemSeedsGeneric(jutePlant, EnumPlantType.Plains)
+				.setUnlocalizedName(ModInfo.MODID + ".juteSeeds")
+				.setCreativeTab(VeganOption.creativeTab)
+				.setTextureName(ModInfo.MODID_LOWER + ":jute_seeds");
+		GameRegistry.registerItem(juteSeeds, "juteSeeds");
 	}
 
 	@Override
@@ -90,6 +107,8 @@ public class Jute implements IContentModule
 		// need to catch the top of the fern breaking really early, as it bypasses the harvest event
 		// so register this as an event handler and handle it in onBlockBreak (see onFernTopBreak function below)
 		MinecraftForge.EVENT_BUS.register(this);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(juteSeeds), new ItemStack(juteStalk));
 	}
 
 	@Override
@@ -97,12 +116,19 @@ public class Jute implements IContentModule
 	{
 		CompostRegistry.addGreen(Jute.juteStalk);
 		RelationshipRegistry.addRelationship(new ItemStack(juteFibre), new ItemStack(juteBundled));
+		RelationshipRegistry.addRelationship(new ItemStack(jutePlant), new ItemStack(juteSeeds));
 	}
 
 	public static final Method doublePlantDropBlockAsItem = ReflectionHelper.findMethod(Block.class, Blocks.double_plant, new String[]{"dropBlockAsItem", "func_149642_a", "a"}, World.class, int.class, int.class, int.class, ItemStack.class);
 
+	/**
+	 * Catch the top of a fern being broken and do the drops manually
+	 * In the double plant code, it forces the blocks to air and bypasses
+	 * the harvest drops event, so we need to catch it early and do some
+	 * less than ideal checks
+	 */
 	@SubscribeEvent(priority = EventPriority.LOW)
-	public void onGetHarvestDrops(BlockEvent.BreakEvent event)
+	public void onFernTopBreak(BlockEvent.BreakEvent event)
 	{
 		if (event.isCanceled())
 			return;
