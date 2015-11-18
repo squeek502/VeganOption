@@ -26,6 +26,10 @@ public class BlockBedStraw extends BlockBedGeneric
 	@SubscribeEvent
 	public void onWakeUp(PlayerWakeUpEvent event)
 	{
+		// this flag is only set when the sleep was successful
+		if (!event.setSpawn)
+			return;
+
 		ChunkCoordinates chunkcoordinates = event.entityPlayer.playerLocation;
 
 		if (chunkcoordinates == null)
