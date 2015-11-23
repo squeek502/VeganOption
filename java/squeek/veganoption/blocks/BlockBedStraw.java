@@ -26,8 +26,10 @@ public class BlockBedStraw extends BlockBedGeneric
 	@SubscribeEvent
 	public void onWakeUp(PlayerWakeUpEvent event)
 	{
-		// this flag is only set when the sleep was successful
-		if (!event.setSpawn)
+		// this flag combination should only be set when the sleep was successful
+		// and the server is waking all sleeping players
+		boolean wokenByWakeAllPlayers = event.setSpawn && !event.updateWorld;
+		if (!wokenByWakeAllPlayers)
 			return;
 
 		ChunkCoordinates chunkcoordinates = event.entityPlayer.playerLocation;
