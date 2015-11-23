@@ -30,7 +30,7 @@ Feather | [Faux Feather](#faux-feather)
 String | [Jute Fiber](#jute) or [Kapok Tufts](#kapok)
 Leather | [Burlap](#burlap)
 Leather Armor | [Burlap Armor](#burlap)
-Raw/Cooked Meat/Fish (as a food) | No alternative yet ([HarvestCraft](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1294413-pams-mods)'s tofu is recommended for this purpose)
+Raw/Cooked Meat (as a food) | [Seitan](#seitan)
 Egg (as a food) | No alternative yet ([HarvestCraft](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1294413-pams-mods)'s tofu is recommended for this purpose)
 Egg (as a baking agent) | [Potato Starch](#egg-replacers) or [Apple Sauce](#egg-replacers)
 Egg (as an object) | [Plastic Egg](#bioplastic) 
@@ -177,6 +177,15 @@ Dragon Egg | No alternative yet
 - Vegetable Oil in a furnace creates ![](resources/assets/veganoption/textures/items/vegetable_wax.png) Vegetable Wax
 
 > *References: [Vegetable oil](http://en.wikipedia.org/wiki/Vegetable_oil)*
+
+#### Seitan
+- Piston + Wheat crafted together creates ![](resources/assets/veganoption/textures/items/wheat_flour.png) Wheat Flour (this can be done in the world by crushing wheat with a piston)
+- Water + Wheat Flour crafted together creates ![](resources/assets/veganoption/textures/items/wheat_dough.png) Wheat Dough
+- Water + Wheat Dough crafted together creates ![](resources/assets/veganoption/textures/items/seitan_raw_unwashed.png) Raw Seitan (Unwashed)
+- Raw Seitan (Unwashed) crafted together three more times with water creates ![](resources/assets/veganoption/textures/items/seitan_raw.png) Raw Seitan (this can be done in the world by dropping Raw Seitan (Unwashed) in a water block)
+- Raw Seitan in a furnace creates ![](resources/assets/veganoption/textures/items/seitan_cooked.png) Seitan (alternative for all raw/cooked meat)
+
+> *References: [Wheat gluten (food)](https://en.wikipedia.org/wiki/Seitan), [How to made your GLUTEN at home](http://y2u.be/5H2qzA50jZQ)*
 
 ### Integration With Other Mods
 

@@ -67,6 +67,38 @@ public class ContentHelper
 	public static final String goldNuggetOreDict = "nuggetGold"; // Forge's oredict entry
 	public static final String plantMilkSourceOreDict = "sourcePlantMilk";
 	public static final String bbqSauceOreDict = "foodBBQSauce";
+	public static final String wheatFlourOreDict = "flourWheat";
+	public static final String wheatDoughOreDict = "doughWheat";
+	public static final String rawSeitanOreDict = "seitanRaw";
+
+	// raw and cooked meats from HarvestCraft
+	public static final String rawMeatOreDict = "listAllmeatraw";
+	public static final String cookedMeatOreDict = "listAllmeatcooked";
+	public static final String rawBeefOreDict = "listAllbeefraw";
+	public static final String cookedBeefOreDict = "listAllbeefcooked";
+	public static final String rawChickenOreDict = "listAllchickenraw";
+	public static final String cookedChickenOreDict = "listAllchickencooked";
+	public static final String rawFishOreDict = "listAllfishraw";
+	public static final String cookedFishOreDict = "listAllfishcooked";
+	public static final String rawMuttonOreDict = "listAllmuttonraw";
+	public static final String cookedMuttonOreDict = "listAllmuttoncooked";
+	public static final String rawPorkOreDict = "listAllporkraw";
+	public static final String cookedPorkOreDict = "listAllporkcooked";
+	public static final String rawRabbitOreDict = "listAllrabbitraw";
+	public static final String cookedRabbitOreDict = "listAllrabbitcooked";
+	public static final String rawTurkeyOreDict = "listAllturkeyraw";
+	public static final String cookedTurkeyOreDict = "listAllturkeycooked";
+	public static final String rawVenisonOreDict = "listAllvenisonraw";
+	public static final String cookedVenisonOreDict = "listAllvenisoncooked";
+
+	public static final String[] harvestCraftRawMeatOreDicts = new String[]{
+	rawMeatOreDict, rawBeefOreDict, rawChickenOreDict, rawFishOreDict, rawMuttonOreDict,
+	rawPorkOreDict, rawRabbitOreDict, rawTurkeyOreDict, rawVenisonOreDict
+	};
+	public static final String[] harvestCraftCookedMeatOreDicts = new String[]{
+	cookedMeatOreDict, cookedBeefOreDict, cookedChickenOreDict, cookedFishOreDict, cookedMuttonOreDict,
+	cookedPorkOreDict, cookedRabbitOreDict, cookedTurkeyOreDict, cookedVenisonOreDict
+	};
 
 	// various vegetable oil sources from other mods
 	public static final String grapeSeedOreDict = "seedGrape";

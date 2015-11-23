@@ -41,6 +41,7 @@ public class ContentModuleHandler
 		modules.put("ProofOfSuffering", new ProofOfSuffering());
 		modules.put("DollsEye", new DollsEye());
 		modules.put("Basin", new Basin());
+		modules.put("Seitan", new Seitan());
 
 		compatModules.put("EnderBubble", new CompatEnderBubble());
 	}

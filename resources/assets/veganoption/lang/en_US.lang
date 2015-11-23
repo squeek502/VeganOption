@@ -203,6 +203,13 @@ VeganOption.waila.basin.empty=Empty
 VeganOption.waila.basin.open=Open
 VeganOption.waila.basin.closed=Closed
 
+# Seitan
+item.VeganOption.wheatFlour.name=Wheat Flour
+item.VeganOption.wheatDough.name=Wheat Dough
+item.VeganOption.seitanRawUnwashed.name=Raw Seitan (Unwashed)
+item.VeganOption.seitanRaw.name=Raw Seitan
+item.VeganOption.seitanCooked.name=Seitan
+
 # NEI Strings
 VeganOption.nei.byproduct.of=Byproduct of
 VeganOption.nei.byproducts=Byproducts
