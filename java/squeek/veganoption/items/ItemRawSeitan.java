@@ -73,10 +73,10 @@ public class ItemRawSeitan extends Item
 		if (entityItem == null || entityItem.worldObj.isRemote || entityItem.getEntityItem() == null)
 			return false;
 
-		if (!isReadyToCook(entityItem.getEntityItem()) && FluidRegistry.WATER == FluidHelper.getFluidTypeOfBlock(entityItem.worldObj.getBlock(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ))))
+		if (!isReadyToCook(entityItem.getEntityItem()))
 		{
 			BlockHelper.BlockPos fluidBlockPos = BlockHelper.blockPos(entityItem.worldObj, MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ));
-			FluidStack consumedFluid = FluidHelper.consumeFluid(fluidBlockPos, FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME);
+			FluidStack consumedFluid = FluidHelper.consumeExactFluid(fluidBlockPos, FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME);
 
 			if (consumedFluid != null)
 			{

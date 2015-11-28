@@ -80,10 +80,10 @@ public class ItemFrozenBubble extends Item
 		if (entityItem == null || entityItem.worldObj.isRemote || entityItem.getEntityItem() == null)
 			return false;
 
-		if (!isFull(entityItem.getEntityItem()) && Ender.fluidRawEnder == FluidHelper.getFluidTypeOfBlock(entityItem.worldObj.getBlock(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ))))
+		if (!isFull(entityItem.getEntityItem()))
 		{
 			BlockHelper.BlockPos fluidBlockPos = BlockHelper.blockPos(entityItem.worldObj, MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ));
-			FluidStack consumedFluid = FluidHelper.consumePartialFiniteFluidBlock(fluidBlockPos, FluidHelper.FINITE_FLUID_MB_PER_META);
+			FluidStack consumedFluid = FluidHelper.consumeExactFluid(fluidBlockPos, Ender.fluidRawEnder, FluidHelper.FINITE_FLUID_MB_PER_META);
 
 			if (consumedFluid != null)
 			{

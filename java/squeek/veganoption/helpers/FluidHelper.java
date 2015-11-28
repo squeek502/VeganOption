@@ -4,12 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fluids.IFluidHandler;
 import squeek.veganoption.helpers.BlockHelper.BlockPos;
 
 public class FluidHelper
@@ -87,13 +89,32 @@ public class FluidHelper
 		return null;
 	}
 
+	public static FluidStack consumeExactFluid(BlockPos blockPos, Fluid fluid, int amount)
+	{
+		return consumeFluid(blockPos, fluid, amount, amount);
+	}
+
 	public static FluidStack consumeFluid(BlockPos blockPos, Fluid fluid, int maxAmount)
+	{
+		FluidStack consumed = consumeFluid(blockPos, fluid, 0, maxAmount);
+		return consumed != null && consumed.amount > 0 ? consumed : null;
+	}
+
+	public static FluidStack consumeFluid(BlockPos blockPos, Fluid fluid, int minAmount, int maxAmount)
 	{
 		if (blockPos.world.isRemote)
 			return null;
 
-		if (maxAmount <= 0)
+		if (maxAmount < minAmount)
 			return null;
+
+		if (blockPos.getTile() instanceof IFluidHandler)
+		{
+			IFluidHandler fluidHandler = (IFluidHandler) blockPos.getTile();
+			FluidStack stackDrained = fluidHandler.drain(ForgeDirection.UP, new FluidStack(fluid, maxAmount), false);
+			if (stackDrained != null && stackDrained.amount >= minAmount)
+				return fluidHandler.drain(ForgeDirection.UP, stackDrained, true);
+		}
 
 		BlockHelper.BlockPos sourcePos = BlockHelper.followFluidStreamToSourceBlock(blockPos, fluid);
 
@@ -102,7 +123,7 @@ public class FluidHelper
 
 		FluidStack fluidToAdd = FluidHelper.getFluidStackFromBlock(sourcePos.world, sourcePos.x, sourcePos.y, sourcePos.z);
 
-		if (fluidToAdd == null || fluidToAdd.amount <= 0)
+		if (fluidToAdd == null)
 			return null;
 
 		if (fluidToAdd.amount > maxAmount)
@@ -114,12 +135,14 @@ public class FluidHelper
 			else
 				return null;
 		}
-		else
+
+		if (fluidToAdd.amount >= minAmount && fluidToAdd.amount <= maxAmount)
 		{
 			sourcePos.world.setBlockToAir(sourcePos.x, sourcePos.y, sourcePos.z);
+			return fluidToAdd;
 		}
 
-		return fluidToAdd;
+		return null;
 	}
 
 	public static FluidStack consumePartialFiniteFluidBlock(BlockPos fluidBlockPos, int maxAmount)
