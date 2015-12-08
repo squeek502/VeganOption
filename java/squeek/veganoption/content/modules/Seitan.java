@@ -14,44 +14,32 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
-import squeek.veganoption.items.ItemRawSeitan;
+import squeek.veganoption.items.ItemWashableWheat;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-// TODO: In-world dough creation (flour in water = dough)
 // TODO: Tooltips, usage, and recipe text
 public class Seitan implements IContentModule
 {
-	public static Item wheatFlour;
-	public static Item wheatDough;
-	public static Item seitanRaw;
+	public static Item washableWheat;
 	public static Item seitanCooked;
 	public static ItemStack seitanRawStack;
 	public static ItemStack seitanUnwashedStack;
+	public static ItemStack wheatFlourStack;
+	public static ItemStack wheatDoughStack;
 
 	public static final ItemStack wheatCrusher = new ItemStack(Blocks.piston);
 
 	@Override
 	public void create()
 	{
-		wheatFlour = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".wheatFlour")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":wheat_flour");
-		GameRegistry.registerItem(wheatFlour, "wheatFlour");
-
-		wheatDough = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".wheatDough")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":wheat_dough");
-		GameRegistry.registerItem(wheatDough, "wheatDough");
-
-		seitanRaw = new ItemRawSeitan()
-				.setUnlocalizedName(ModInfo.MODID + ".seitanRaw")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":seitan_raw");
-		GameRegistry.registerItem(seitanRaw, "seitanRaw");
-		seitanUnwashedStack = new ItemStack(seitanRaw);
-		seitanRawStack = new ItemStack(seitanRaw, 1, ItemRawSeitan.META_RAW);
+		washableWheat = new ItemWashableWheat()
+				.setUnlocalizedName(ModInfo.MODID)
+				.setCreativeTab(VeganOption.creativeTab);
+		GameRegistry.registerItem(washableWheat, "washableWheat");
+		wheatFlourStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_FLOUR);
+		wheatDoughStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_DOUGH);
+		seitanUnwashedStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_UNWASHED_START);
+		seitanRawStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_RAW);
 
 		seitanCooked = new ItemFood(8, 0.8f, false)
 				.setUnlocalizedName(ModInfo.MODID + ".seitanCooked")
@@ -63,8 +51,8 @@ public class Seitan implements IContentModule
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.wheatFlourOreDict, new ItemStack(wheatFlour));
-		OreDictionary.registerOre(ContentHelper.wheatDoughOreDict, new ItemStack(wheatDough));
+		OreDictionary.registerOre(ContentHelper.wheatFlourOreDict, wheatFlourStack.copy());
+		OreDictionary.registerOre(ContentHelper.wheatDoughOreDict, wheatDoughStack.copy());
 		OreDictionary.registerOre(ContentHelper.rawSeitanOreDict, seitanRawStack.copy());
 
 		// cooked seitan works as a raw/cooked meat substitute, a la HarvestCraft tofu
@@ -79,18 +67,18 @@ public class Seitan implements IContentModule
 	{
 		ContentHelper.addOreSmelting(ContentHelper.rawSeitanOreDict, new ItemStack(seitanCooked), 0.35f);
 
-		GameRegistry.addShapelessRecipe(new ItemStack(wheatFlour), wheatCrusher, new ItemStack(Items.wheat));
-		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(wheatFlour), wheatCrusher);
+		GameRegistry.addShapelessRecipe(wheatFlourStack.copy(), wheatCrusher, new ItemStack(Items.wheat));
+		Modifiers.crafting.addInputsToKeepForOutput(wheatFlourStack.copy(), wheatCrusher);
 
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(new ItemStack(wheatFlour), Items.wheat));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(wheatFlourStack.copy(), Items.wheat));
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(wheatDough), new ItemStack(Items.water_bucket), ContentHelper.wheatFlourOreDict));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(wheatDoughStack.copy(), new ItemStack(Items.water_bucket), ContentHelper.wheatFlourOreDict));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanUnwashedStack.copy(), new ItemStack(Items.water_bucket), ContentHelper.wheatDoughOreDict));
-		for (int outputMeta = 1; outputMeta < ItemRawSeitan.META_RAW; outputMeta++)
+		for (int outputMeta = ItemWashableWheat.META_UNWASHED_START + 1; outputMeta < ItemWashableWheat.META_UNWASHED_END; outputMeta++)
 		{
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(seitanRaw, 1, outputMeta), new ItemStack(Items.water_bucket), new ItemStack(seitanRaw, 1, outputMeta - 1)));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(washableWheat, 1, outputMeta), new ItemStack(Items.water_bucket), new ItemStack(washableWheat, 1, outputMeta - 1)));
 		}
-		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanRawStack.copy(), new ItemStack(Items.water_bucket), new ItemStack(seitanRaw, 1, ItemRawSeitan.META_RAW - 1)));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanRawStack.copy(), new ItemStack(Items.water_bucket), new ItemStack(washableWheat, 1, ItemWashableWheat.META_RAW - 1)));
 	}
 
 	@Override

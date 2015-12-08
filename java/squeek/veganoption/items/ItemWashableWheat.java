@@ -15,13 +15,20 @@ import squeek.veganoption.ModInfo;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.FluidHelper;
 
-public class ItemRawSeitan extends Item
+public class ItemWashableWheat extends Item
 {
+	public static IIcon flourIcon;
+	public static IIcon doughIcon;
 	public static IIcon partiallyWashedIcon;
-	public static int NUM_WASHES_NEEDED = 4;
-	public static int META_RAW = NUM_WASHES_NEEDED;
+	public static IIcon fullyWashedIcon;
+	public static final int META_FLOUR = 0;
+	public static final int META_DOUGH = META_FLOUR + 1;
+	public static final int META_UNWASHED_START = META_DOUGH + 1;
+	public static final int NUM_WASHES_NEEDED = 4;
+	public static final int META_UNWASHED_END = META_UNWASHED_START + NUM_WASHES_NEEDED;
+	public static final int META_RAW = META_UNWASHED_END;
 
-	public ItemRawSeitan()
+	public ItemWashableWheat()
 	{
 		super();
 		setHasSubtypes(true);
@@ -41,7 +48,8 @@ public class ItemRawSeitan extends Item
 
 	public static boolean isUnwashed(ItemStack itemStack)
 	{
-		return getPercentWashed(itemStack) <= 0;
+		int meta = itemStack.getItemDamage();
+		return meta >= META_UNWASHED_START && meta < META_UNWASHED_END;
 	}
 
 	public static ItemStack wash(ItemStack itemStack, int amount)
@@ -53,13 +61,13 @@ public class ItemRawSeitan extends Item
 
 	public static float getPercentWashed(ItemStack itemStack)
 	{
-		return (float) itemStack.getItemDamage() / NUM_WASHES_NEEDED;
+		return (float) (itemStack.getItemDamage() - META_UNWASHED_START) / NUM_WASHES_NEEDED;
 	}
 
 	@Override
 	public boolean showDurabilityBar(ItemStack itemStack)
 	{
-		return !isReadyToCook(itemStack);
+		return isUnwashed(itemStack);
 	}
 
 	@Override
@@ -103,27 +111,52 @@ public class ItemRawSeitan extends Item
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return super.getUnlocalizedName(itemStack) + (!isReadyToCook(itemStack) ? "Unwashed" : "");
+		String baseName = super.getUnlocalizedName(itemStack);
+		switch (itemStack.getItemDamage())
+		{
+			case META_FLOUR:
+				return baseName + ".wheatFlour";
+			case META_DOUGH:
+				return baseName + ".wheatDough";
+			case META_RAW:
+				return baseName + ".seitanRaw";
+			default:
+				return baseName + ".seitanRawUnwashed";
+		}
 	}
 
 	@Override
 	public IIcon getIconFromDamage(int meta)
 	{
-		return meta != META_RAW ? partiallyWashedIcon : super.getIconFromDamage(meta);
+		switch (meta)
+		{
+			case META_FLOUR:
+				return flourIcon;
+			case META_DOUGH:
+				return doughIcon;
+			case META_RAW:
+				return fullyWashedIcon;
+			default:
+				return partiallyWashedIcon;
+		}
 	}
 
 	@Override
 	public void registerIcons(IIconRegister iconRegister)
 	{
-		super.registerIcons(iconRegister);
+		flourIcon = iconRegister.registerIcon(ModInfo.MODID_LOWER + ":wheat_flour");
+		doughIcon = iconRegister.registerIcon(ModInfo.MODID_LOWER + ":wheat_dough");
 		partiallyWashedIcon = iconRegister.registerIcon(ModInfo.MODID_LOWER + ":seitan_raw_unwashed");
+		fullyWashedIcon = iconRegister.registerIcon(ModInfo.MODID_LOWER + ":seitan_raw");
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List subItems)
 	{
-		super.getSubItems(item, creativeTab, subItems);
+		subItems.add(new ItemStack(item, 1, META_FLOUR));
+		subItems.add(new ItemStack(item, 1, META_DOUGH));
+		subItems.add(new ItemStack(item, 1, META_UNWASHED_START));
 		subItems.add(new ItemStack(item, 1, META_RAW));
 	}
 }
