@@ -21,6 +21,8 @@ import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.recipes.ShapelessMatchingOreRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
+import squeek.veganoption.integration.IntegrationBase;
+import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.items.ItemBucketGeneric;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -53,7 +55,8 @@ public class PlantMilk implements IContentModule
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(Items.milk_bucket));
+		if (!IntegrationHandler.modExists(IntegrationBase.MODID_MINEFACTORY_RELOADED))
+			OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(Items.milk_bucket));
 		OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(bucketPlantMilk));
 
 		OreDictionary.registerOre(ContentHelper.plantMilkSourceOreDict, new ItemStack(Items.pumpkin_seeds));
