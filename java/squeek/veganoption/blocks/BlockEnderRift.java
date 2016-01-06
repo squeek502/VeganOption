@@ -165,4 +165,10 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 		}
 		return;
 	}
+
+	// by not calling the super's method, this stops the portal removing itself immediately in certain dimensions
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+	}
 }
