@@ -10,6 +10,8 @@ import org.objectweb.asm.tree.*;
 
 public class ClassTransformer implements IClassTransformer
 {
+	// gets set in ASMPlugin.injectData
+	public static boolean isEnvObfuscated = false;
 
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes)
@@ -156,14 +158,11 @@ public class ClassTransformer implements IClassTransformer
 		}
 		else if (transformedName.equals("net.minecraftforge.fluids.BlockFluidFinite"))
 		{
-			// TODO: real check
-			boolean isObfuscated = false;
-
 			ClassNode classNode = readClassFromBytes(bytes);
 
-			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "func_149674_a" : "updateTick", "(Lnet/minecraft/world/World;IIILjava/util/Random;)V");
+			MethodNode method = findMethodNodeOfClass(classNode, isEnvObfuscated ? "a" : "updateTick", isEnvObfuscated ? "(Lahb;IIILjava/util/Random;)V" : "(Lnet/minecraft/world/World;IIILjava/util/Random;)V");
 
-			final String setBlockMethodName = isObfuscated ? "func_147446_b" : "setBlock";
+			final String setBlockMethodName = isEnvObfuscated ? "d" : "setBlock";
 			for (AbstractInsnNode insn = method.instructions.getFirst(); insn != null; insn = insn.getNext())
 			{
 				if (insn.getOpcode() == Opcodes.ICONST_2 && insn.getNext() != null && insn.getNext().getOpcode() == Opcodes.INVOKEVIRTUAL && ((MethodInsnNode) insn.getNext()).name.equals(setBlockMethodName))
