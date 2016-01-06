@@ -172,7 +172,7 @@ public class BlockHelper
 
 	public static BlockPos[] getBlocksInRadiusAround(BlockPos centerBlock, int radius)
 	{
-		List<BlockPos> blocks = new ArrayList<BlockPos>();
+		Set<BlockPos> blocks = new HashSet<BlockPos>();
 		int radiusSq = radius * radius;
 		for (int xOffset = 0; xOffset <= radius; xOffset++)
 		{

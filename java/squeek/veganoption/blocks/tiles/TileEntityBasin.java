@@ -26,8 +26,6 @@ import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.WorldHelper;
 
-// TODO: Handle partially filled frozen bubbles
-// TODO: Convert open/closed to use metadata
 public class TileEntityBasin extends TileEntity implements IFluidHandler
 {
 	protected FluidTank fluid = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
