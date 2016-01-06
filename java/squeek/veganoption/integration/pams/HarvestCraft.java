@@ -62,9 +62,12 @@ public class HarvestCraft extends IntegratorBase
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqSauce), "toolSaucepan", "foodKetchup", "foodVinegar", Items.sugar, "foodMustard", "listAllwater", "foodSalt", "foodBlackpepper"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqTofu), "toolBakeware", "foodFirmtofu", ContentHelper.bbqSauceOreDict));
 
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(getItem("doughItem"), FluidRegistry.WATER, "foodFlour", "foodSalt"));
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(getItem("batterItem"), "foodFlour", ContentHelper.eggBakingOreDict));
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(getItem("mashedpotatoesItem"), "foodButteredpotato", "foodSalt"));
+		if (getItem("doughItem") != null)
+			PistonCraftingRegistry.register(new PistonCraftingRecipe(getItem("doughItem"), FluidRegistry.WATER, "foodFlour", "foodSalt"));
+		if (getItem("batterItem") != null)
+			PistonCraftingRegistry.register(new PistonCraftingRecipe(getItem("batterItem"), "foodFlour", ContentHelper.eggBakingOreDict));
+		if (getItem("mashedpotatoesItem") != null)
+			PistonCraftingRegistry.register(new PistonCraftingRecipe(getItem("mashedpotatoesItem"), "foodButteredpotato", "foodSalt"));
 
 		// exclude non-baked goods from egg replacer conversion
 		final String[] foodNamesToExclude = new String[]
