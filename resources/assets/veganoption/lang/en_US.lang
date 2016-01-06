@@ -199,6 +199,7 @@ item.VeganOption.dollsEye.nei.crafting={item.VeganOption.dollsEye.nei.common}\n\
 
 # Basin
 tile.VeganOption.basin.name=Basin
+tile.VeganOption.basin.nei.usage=%1$s is a simple fluid tank that holds up to 1 buckets worth of fluid. By default, it has a lid, but when a redstone signal is applied, the lid is removed and it acts as a fluid hopper (fluid blocks will flow into it).\n\nWhen container items (buckets, bottles, etc) are dropped inside an open %1$s, they will be filled with the fluid inside the %1$s if possible.
 VeganOption.waila.basin.empty=Empty
 VeganOption.waila.basin.open=Open
 VeganOption.waila.basin.closed=Closed
