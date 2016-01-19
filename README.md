@@ -19,7 +19,7 @@ A Minecraft mod that seeks to add vegan alternatives to all Minecraft mob/animal
 Item | Alternative
 -----|------------
 Bone | [Fossils](#fossils)
-Bone Meal (as a fertilizer) | [Fertilizer](#fertilizer)
+Bone Meal (as a fertilizer) | [Fertilizer](#composting)
 Bone Meal (as a white dye) | [White Vegetable Oil Ink](#vegetable-oil-ink)
 Milk (as a food) | [Plant Milk](#plant-milk)
 Milk (as a status effect curative) | [Soap](#soap)
