@@ -160,16 +160,18 @@ processResources {
 }
 
 ext.curseApiKey = project.hasProperty('curseApiKey') ? curseApiKey : System.getenv("CURSE_API_KEY")
-if (curseApiKey && !getHeadCommitMessage().contains(":skip:")) {
+if (curseApiKey) {
 	apply plugin: "com.matthewprenger.cursegradle"
 	curseforge {
 		apiKey = curseApiKey
-		project {
-			id = '227309'
-			changelog = new File(project.buildDir.getPath() + '/changelog.md')
-			changelogType = 'markdown'
-			releaseType = project.version.contains("+") ? 'alpha' : (project.version.startsWith('0') ? 'beta' : 'release')
-			addGameVersion project.minecraft.version
+		if (!getHeadCommitMessage().contains(":skip:")) {
+			project {
+				id = '227309'
+				changelog = new File(project.buildDir.getPath() + '/changelog.md')
+				changelogType = 'markdown'
+				releaseType = project.version.contains("+") ? 'alpha' : (project.version.startsWith('0') ? 'beta' : 'release')
+				addGameVersion project.minecraft.version
+			}
 		}
 	}
 }
