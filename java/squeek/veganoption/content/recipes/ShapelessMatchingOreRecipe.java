@@ -1,14 +1,17 @@
 package squeek.veganoption.content.recipes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import squeek.veganoption.ModInfo;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Like ShapelessOreRecipe, but all OreDict inputs need to match with eachother
@@ -20,6 +23,11 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 public class ShapelessMatchingOreRecipe extends ShapelessOreRecipe
 {
 	public Map<ArrayList<ItemStack>, Integer> requiredMatchingStacksByOreDictStacks = new HashMap<ArrayList<ItemStack>, Integer>();
+
+	static
+	{
+		RecipeSorter.register(ModInfo.MODID_LOWER + ":shapelessmatchingore", ShapelessMatchingOreRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+	}
 
 	@SuppressWarnings("unchecked")
 	public ShapelessMatchingOreRecipe(ItemStack result, Object... recipe)
