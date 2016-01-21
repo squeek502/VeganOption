@@ -23,6 +23,11 @@ vendor/
 .project
 .settings
 .pydevproject
+.idea
+*.iml
+*.ipr
+*.iws
+out
 
 # MCP Files
 docs/
@@ -37,6 +42,7 @@ CHANGELOG
 LICENSE.txt
 *.bat
 *.sh
+run
 
 # Misc
 *.rej
