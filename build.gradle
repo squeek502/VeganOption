@@ -62,6 +62,13 @@ jar {
 	}
 }
 
+def getHeadCommitMessage() {
+	def headProc = "git log -1 --format=%B".execute()
+	headProc.waitForOrKill(1000)
+	assert headProc.exitValue() == 0, headProc.err.text
+	return headProc.in.text.trim()
+}
+
 def getLastTaggedCommit() {
 	return getLastTaggedCommit(0)
 }
@@ -153,7 +160,7 @@ processResources {
 }
 
 ext.curseApiKey = project.hasProperty('curseApiKey') ? curseApiKey : System.getenv("CURSE_API_KEY")
-if (curseApiKey) {
+if (curseApiKey && !getHeadCommitMessage().contains(":skip:")) {
 	apply plugin: "com.matthewprenger.cursegradle"
 	curseforge {
 		apiKey = curseApiKey
