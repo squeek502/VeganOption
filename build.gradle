@@ -85,10 +85,10 @@ def getHeadCommit() {
 	return headProc.in.text.trim()
 }
 
-def getChangelogSince(String commitSHA) {
+def getChangelogSince(String commitSHA, String format="- %B") {
 	def changelog = ""
 	def range = commitSHA.isEmpty() ? "HEAD" : "$commitSHA..HEAD"
-	def cmd = ["git", "log", "--no-merges", "--format=- %B", "$range"]
+	def cmd = ["git", "log", "--no-merges", "--format=$format", "$range"]
 	def changelogProc = cmd.execute()
 	changelogProc.in.eachLine { line ->
 		if (!line.isEmpty()) {
@@ -99,6 +99,18 @@ def getChangelogSince(String commitSHA) {
 	return changelog
 }
 
+def sanitizeChangelog(String changelog) {
+	def splitChangelog = changelog.split(/(^|\n)\- /)
+	def sanitizedChangelog = ""
+	splitChangelog.each { change ->
+		if (!change.isEmpty() && !change.contains(":skip:"))
+		sanitizedChangelog += "\n- " + change.replaceAll(/\n\n/) { match ->
+			return "\n"
+		}
+	}
+	return sanitizedChangelog
+}
+
 task changelog() << {
 	def changelogFile = new File(project.buildDir.getPath() + '/changelog.md')
 	if (!changelogFile.getParentFile().exists())
@@ -107,8 +119,9 @@ task changelog() << {
 
 	def lastTag = getLastTaggedCommit()
 	def changelog = getChangelogSince(lastTag)
-	println changelog
-	changelogFile << changelog
+	def sanitizedChangelog = sanitizeChangelog(changelog)
+	println sanitizedChangelog
+	changelogFile << sanitizedChangelog
 }
 
 // variable substitution in java files
