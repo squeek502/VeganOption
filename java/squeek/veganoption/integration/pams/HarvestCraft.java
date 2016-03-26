@@ -18,6 +18,7 @@ import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
+import squeek.veganoption.content.modules.PlantMilk;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
@@ -59,6 +60,13 @@ public class HarvestCraft extends IntegratorBase
 	@Override
 	public void recipes()
 	{
+		// exclude fresh milk so that fresh milk -> fresh milk doesn't get inadvertently created
+		Item freshMilkItem = getItem("freshmilkItem");
+		if (freshMilkItem != null)
+			Modifiers.recipes.excludeOutput(new ItemStack(freshMilkItem));
+		// add plant milk -> fresh milk specifically
+		GameRegistry.addShapelessRecipe(new ItemStack(freshMilkItem, 4), PlantMilk.bucketPlantMilk);
+
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqSauce), "toolSaucepan", "foodKetchup", "foodVinegar", Items.sugar, "foodMustard", "listAllwater", "foodSalt", "foodBlackpepper"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqTofu), "toolBakeware", "foodFirmtofu", ContentHelper.bbqSauceOreDict));
 
