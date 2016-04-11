@@ -120,8 +120,13 @@ public class ContentHelper
 	{
 		for (ItemStack ore : OreDictionary.getOres(inputOreName))
 		{
-			GameRegistry.addSmelting(ore.copy(), output, 0.2f);
+			GameRegistry.addSmelting(ore.copy(), output, xp);
 		}
+	}
+	
+	public static void addOreSmelting(String inputOreName, ItemStack output)
+	{
+		addOreSmelting(inputOreName, output, 0.2F);
 	}
 
 	public static void remapOre(String from, String to)
