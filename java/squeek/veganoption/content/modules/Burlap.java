@@ -60,6 +60,14 @@ public class Burlap implements IContentModule
 	{
 		OreDictionary.registerOre(ContentHelper.leatherOreDict, new ItemStack(Items.leather));
 		OreDictionary.registerOre(ContentHelper.leatherOreDict, new ItemStack(burlap));
+		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(Items.leather_boots));
+		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(burlapBoots));
+		OreDictionary.registerOre(ContentHelper.leatherLeggingsOreDict, new ItemStack(Items.leather_leggings));
+		OreDictionary.registerOre(ContentHelper.leatherLeggingsOreDict, new ItemStack(burlapLeggings));
+		OreDictionary.registerOre(ContentHelper.leatherChestplateOreDict, new ItemStack(Items.leather_chestplate));
+		OreDictionary.registerOre(ContentHelper.leatherChestplateOreDict, new ItemStack(burlapChestplate));
+		OreDictionary.registerOre(ContentHelper.leatherHelmetOreDict, new ItemStack(Items.leather_helmet));
+		OreDictionary.registerOre(ContentHelper.leatherHelmetOreDict, new ItemStack(burlapHelmet));
 	}
 
 	@Override
@@ -70,6 +78,10 @@ public class Burlap implements IContentModule
 		Modifiers.recipes.excludeOutput(new ItemStack(Items.leather_leggings));
 		Modifiers.recipes.excludeOutput(new ItemStack(Items.leather_boots));
 		Modifiers.recipes.convertInput(new ItemStack(Items.leather), ContentHelper.leatherOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.leather_boots), ContentHelper.leatherBootsOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.leather_leggings), ContentHelper.leatherLeggingsOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.leather_chestplate), ContentHelper.leatherChestplateOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.leather_helmet), ContentHelper.leatherHelmetOreDict);
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(burlap), "~~", "~~", '~', ContentHelper.bastFibreOreDict));
 
