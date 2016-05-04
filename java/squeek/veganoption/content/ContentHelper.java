@@ -70,6 +70,10 @@ public class ContentHelper
 	public static final String wheatFlourOreDict = "flourWheat";
 	public static final String wheatDoughOreDict = "doughWheat";
 	public static final String rawSeitanOreDict = "seitanRaw";
+	public static final String leatherBootsOreDict = "bootsLeather";
+	public static final String leatherLeggingsOreDict = "leggingsLeather";
+	public static final String leatherChestplateOreDict = "chestplateLeather";
+	public static final String leatherHelmetOreDict = "helmetLeather";
 
 	// raw and cooked meats from HarvestCraft
 	public static final String rawMeatOreDict = "listAllmeatraw";
