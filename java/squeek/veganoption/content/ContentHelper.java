@@ -97,6 +97,7 @@ public class ContentHelper
 	public static final String rawCalamariOreDict = "foodCalamariraw";
 	public static final String cookedCalamariOreDict = "foodCalamaricooked";
 	public static final String rawStomachOreDict = "materialStomach";
+	public static final String offalOreDict = "foodOffal";
 
 	public static final String[] harvestCraftRawMeatOreDicts = new String[]{
 	rawMeatOreDict, rawBeefOreDict, rawChickenOreDict, rawFishOreDict, rawMuttonOreDict,
