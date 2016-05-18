@@ -32,7 +32,7 @@ group = project.projectDir.name.toLowerCase()
 archivesBaseName = project.projectDir.name + "-mc" + project.minecraft.version
 
 if (version == "unspecified")
-	version = "0.1.2"
+	version = "0.2.0"
 if (System.getenv("BUILD_NUMBER") != null)
 	version += (version ? "+" : "") + "${System.getenv("BUILD_NUMBER")}"
 if (System.getenv("GIT_COMMIT") != null)
