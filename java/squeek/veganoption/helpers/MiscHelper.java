@@ -4,6 +4,7 @@ import java.util.Collection;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -50,12 +51,12 @@ public class MiscHelper
 
 	public static Item getItemByName(String name)
 	{
-		return GameData.getItemRegistry().getObject(name);
+		return Item.REGISTRY.getObject(new ResourceLocation(name));
 	}
 
 	public static Block getBlockByName(String name)
 	{
-		return GameData.getBlockRegistry().getObject(name);
+		return Block.REGISTRY.getObject(new ResourceLocation(name));
 	}
 
 	public static ItemStack getItemStackByObjectName(String name)

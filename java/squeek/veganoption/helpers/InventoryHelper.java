@@ -6,9 +6,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class InventoryHelper
 {
@@ -16,54 +16,12 @@ public class InventoryHelper
 
 	public static IInventory getInventoryAtLocation(World world, int x, int y, int z)
 	{
-		return TileEntityHopper.func_145893_b(world, x, y, z);
+		return TileEntityHopper.getInventoryAtPosition(world, x, y, z);
 	}
 
 	public static ItemStack insertStackIntoInventory(ItemStack itemStack, IInventory inventory)
 	{
-		return TileEntityHopper.func_145889_a(inventory, itemStack, ForgeDirection.DOWN.ordinal());
-	}
-
-	public static void dropAllInventoryItemsInWorld(World world, int x, int y, int z, IInventory inventory)
-	{
-		if (inventory == null)
-			return;
-
-		for (int slotNum = 0; slotNum < inventory.getSizeInventory(); ++slotNum)
-		{
-			ItemStack itemstack = inventory.getStackInSlot(slotNum);
-
-			if (itemstack != null)
-			{
-				float xOffset = RandomHelper.random.nextFloat() * 0.8F + 0.1F;
-				float yOffset = RandomHelper.random.nextFloat() * 0.8F + 0.1F;
-				float zOffset = RandomHelper.random.nextFloat() * 0.8F + 0.1F;
-
-				while (itemstack.stackSize > 0)
-				{
-					int stackSizeToDrop = RandomHelper.random.nextInt(21) + 10;
-
-					if (stackSizeToDrop > itemstack.stackSize)
-					{
-						stackSizeToDrop = itemstack.stackSize;
-					}
-
-					itemstack.stackSize -= stackSizeToDrop;
-					EntityItem entityitem = new EntityItem(world, x + xOffset, y + yOffset, z + zOffset, new ItemStack(itemstack.getItem(), stackSizeToDrop, itemstack.getItemDamage()));
-					float velocityScale = 0.05F;
-					entityitem.motionX = (float) RandomHelper.random.nextGaussian() * velocityScale;
-					entityitem.motionY = (float) RandomHelper.random.nextGaussian() * velocityScale + 0.2F;
-					entityitem.motionZ = (float) RandomHelper.random.nextGaussian() * velocityScale;
-
-					if (itemstack.hasTagCompound())
-					{
-						entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
-					}
-
-					world.spawnEntityInWorld(entityitem);
-				}
-			}
-		}
+		return TileEntityHopper.putStackInInventoryAllSlots(inventory, itemStack, EnumFacing.DOWN);
 	}
 
 	public static float getPercentInventoryFilled(IInventory inventory)

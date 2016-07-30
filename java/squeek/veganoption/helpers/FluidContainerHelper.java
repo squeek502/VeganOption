@@ -1,6 +1,14 @@
 package squeek.veganoption.helpers;
 
 import java.lang.reflect.Method;
+
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.modules.Ender;
 import net.minecraft.block.Block;
@@ -8,17 +16,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class FluidContainerHelper
 {
@@ -27,7 +30,7 @@ public class FluidContainerHelper
 		MinecraftForge.EVENT_BUS.register(new FluidContainerHelper());
 	}
 
-	protected static Method getMovingObjectPositionFromPlayer = ReflectionHelper.findMethod(Item.class, null, new String[]{"getMovingObjectPositionFromPlayer", "func_77621_a", "a"}, World.class, EntityPlayer.class, boolean.class);
+	protected static Method rayTraceMethod = ReflectionHelper.findMethod(Item.class, null, new String[]{"rayTrace", "func_77621_a", "a"}, World.class, EntityPlayer.class, boolean.class);
 
 	// fix non-water fluids being able to create water buckets
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -36,7 +39,7 @@ public class FluidContainerHelper
 		if (event.isCanceled() || event.getResult() != Event.Result.DEFAULT)
 			return;
 
-		Block block = event.world.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ);
+		Block block = event.getWorld().getBlockState(event.getTarget().getBlockPos()).getBlock();
 
 		// if we've gotten this far, then it shouldn't be able to be picked up by a bucket
 		// ItemBucketGeneric would have handled it if it was possible to pick it up
@@ -55,26 +58,26 @@ public class FluidContainerHelper
 	// but that is likely to cause unwanted behaviour due to containers being registered
 	// that are only intended to be filled via specific non-right-click methods (ex: TE florbs)
 	@SubscribeEvent
-	public void onPlayerInteract(PlayerInteractEvent event)
+	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event)
 	{
-		if (event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && event.action != PlayerInteractEvent.Action.RIGHT_CLICK_AIR)
+		if (event.isCanceled() || event.getResult() != Event.Result.DEFAULT)
 			return;
 
-		if (event.isCanceled() || event.useItem != Event.Result.DEFAULT)
+		// TODO: Support for the OFF_HAND?
+		EntityPlayer player = event.getEntityPlayer();
+		if (player.getHeldItem(EnumHand.MAIN_HAND) == null)
 			return;
 
-		if (event.entityPlayer.getHeldItem() == null)
+		if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() != Items.GLASS_BOTTLE)
 			return;
 
-		if (event.entityPlayer.getHeldItem().getItem() != Items.glass_bottle)
-			return;
+		ItemStack emptyContainer = player.getHeldItem(EnumHand.MAIN_HAND);
+		World world = event.getWorld();
 
-		ItemStack emptyContainer = event.entityPlayer.getHeldItem();
-
-		MovingObjectPosition movingObjectPosition = null;
+		RayTraceResult rayTraceResult = null;
 		try
 		{
-			movingObjectPosition = (MovingObjectPosition) getMovingObjectPositionFromPlayer.invoke(emptyContainer.getItem(), event.world, event.entityPlayer, true);
+			rayTraceResult = (RayTraceResult) rayTraceMethod.invoke(emptyContainer.getItem(), world, player, true);
 		}
 		catch (RuntimeException e)
 		{
@@ -85,36 +88,34 @@ public class FluidContainerHelper
 			throw new RuntimeException(e);
 		}
 
-		if (movingObjectPosition == null)
+		if (rayTraceResult == null)
 			return;
 
-		if (movingObjectPosition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK)
+		if (rayTraceResult.typeOfHit != RayTraceResult.Type.BLOCK)
 			return;
 
-		int x = movingObjectPosition.blockX;
-		int y = movingObjectPosition.blockY;
-		int z = movingObjectPosition.blockZ;
-		Block block = event.world.getBlock(x, y, z);
+		BlockPos pos = rayTraceResult.getBlockPos();
+		Block block = world.getBlockState(pos).getBlock();
 
 		// raw ender is not bottle fillable
 		if (block == Ender.rawEnder)
 		{
 			event.setCanceled(true);
-			event.useItem = Event.Result.DENY;
+			event.setResult(Event.Result.DENY);
 			return;
 		}
 
 		if (!(block instanceof BlockFluidGeneric))
 			return;
 
-		if (!event.world.canMineBlock(event.entityPlayer, x, y, z))
+		if (!world.canMineBlockBody(event.getEntityPlayer(), pos))
 			return;
 
-		if (!event.entityPlayer.canPlayerEdit(x, y, z, movingObjectPosition.sideHit, emptyContainer))
+		if (!event.getEntityPlayer().canPlayerEdit(pos, rayTraceResult.sideHit, emptyContainer))
 			return;
 
 		FluidStack fluidStack = new FluidStack(((BlockFluidGeneric) block).getFluid(), FluidContainerRegistry.BUCKET_VOLUME);
-		boolean didFill = tryFillContainer(event.entityPlayer, emptyContainer, fluidStack) != null;
+		boolean didFill = tryFillContainer(event.getEntityPlayer(), emptyContainer, fluidStack) != null;
 
 		// this cancels the interaction if the bottle is unable to be filled with the fluid,
 		// which stops mod fluid blocks from creating water bottles, because all fluids *have* to use
@@ -122,11 +123,11 @@ public class FluidContainerHelper
 		if (!didFill)
 		{
 			event.setCanceled(true);
-			event.useItem = Event.Result.DENY;
+			event.setResult(Event.Result.DENY);
 		}
 		else
 		{
-			event.world.setBlockToAir(x, y, z);
+			world.setBlockToAir(pos);
 		}
 	}
 
@@ -149,7 +150,7 @@ public class FluidContainerHelper
 			}
 			else if (!player.inventory.addItemStackToInventory(filledContainer))
 			{
-				player.dropPlayerItemWithRandomChoice(filledContainer, false);
+				player.dropItem(filledContainer, false);
 			}
 		}
 
@@ -175,7 +176,7 @@ public class FluidContainerHelper
 			}
 			else if (!player.inventory.addItemStackToInventory(emptyContainer))
 			{
-				player.dropPlayerItemWithRandomChoice(emptyContainer, false);
+				player.dropItem(emptyContainer, false);
 			}
 		}
 

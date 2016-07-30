@@ -2,13 +2,14 @@ package squeek.veganoption.helpers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.gui.GuiComposter;
 import squeek.veganoption.inventory.ContainerComposter;
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
 
 public class GuiHelper implements IGuiHandler
 {
@@ -32,7 +33,7 @@ public class GuiHelper implements IGuiHandler
 		{
 			if (tile instanceof TileEntityComposter)
 			{
-				player.openGui(VeganOption.instance, GuiIds.COMPOSTER.ordinal(), tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
+				player.openGui(VeganOption.instance, GuiIds.COMPOSTER.ordinal(), tile.getWorld(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
 				return true;
 			}
 			return false;
@@ -57,7 +58,7 @@ public class GuiHelper implements IGuiHandler
 		switch (GuiIds.values()[guiId])
 		{
 			case COMPOSTER:
-				TileEntity tile = world.getTileEntity(x, y, z);
+				TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 				if (tile != null && tile instanceof TileEntityComposter)
 				{
 					TileEntityComposter composter = (TileEntityComposter) tile;

@@ -1,22 +1,18 @@
 package squeek.veganoption.helpers;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.BlockFluidFinite;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fluids.IFluidHandler;
-import squeek.veganoption.helpers.BlockHelper.BlockPos;
+import net.minecraftforge.fluids.*;
 
 public class FluidHelper
 {
-	public static final int FINITE_FLUID_MB_PER_META = (int) (0.125f * FluidContainerRegistry.BUCKET_VOLUME);
+	public static final int FINITE_FLUID_MB_PER_META = (int) (0.125f * Fluid.BUCKET_VOLUME);
 
 	public static ItemStack toItemStack(FluidStack fluidStack)
 	{
@@ -32,105 +28,125 @@ public class FluidHelper
 			return null;
 
 		Block block = Block.getBlockFromItem(itemStack.getItem());
-		Fluid fluid = getFluidTypeOfBlock(block);
+		Fluid fluid = getFluidTypeOfBlock(block.getDefaultState());
 
-		return fluid != null ? new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME) : null;
+		return fluid != null ? new FluidStack(fluid, Fluid.BUCKET_VOLUME) : null;
 	}
 
-	public static boolean isBlockMaterialWater(Block block)
+	public static boolean isBlockMaterialWater(IBlockState state)
 	{
-		return block != null && block.getMaterial() == Material.water;
+		return state.getBlock() != null && state.getMaterial() == Material.WATER;
 	}
 
-	public static boolean isBlockMaterialLava(Block block)
+	public static boolean isBlockMaterialLava(IBlockState state)
 	{
-		return block != null && block.getMaterial() == Material.lava;
+		return state.getBlock() != null && state.getMaterial() == Material.LAVA;
 	}
 
-	public static Fluid getFluidTypeOfBlock(Block block)
+	public static Fluid getFluidTypeOfBlock(IBlockState state)
 	{
-		Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
+		Fluid fluid = FluidRegistry.lookupFluidForBlock(state.getBlock());
 
 		if (fluid != null)
 			return fluid;
-		else if (isBlockMaterialWater(block))
+		else if (isBlockMaterialWater(state))
 			return FluidRegistry.WATER;
-		else if (isBlockMaterialLava(block))
+		else if (isBlockMaterialLava(state))
 			return FluidRegistry.LAVA;
 
 		return null;
 	}
 
-	public static int getStillMetadata(Fluid fluid)
+	public static int getStillFluidLevel(Fluid fluid)
 	{
-		if (fluid != null && fluid.getBlock() instanceof BlockFluidFinite)
-			return 7;
+		if (fluid != null)
+			return getStillFluidLevel(fluid.getBlock());
 		else
 			return 0;
 	}
 
-	public static FluidStack getFluidStackFromBlock(World world, int x, int y, int z)
+	public static int getStillFluidLevel(Block block)
 	{
-		Block block = world.getBlock(x, y, z);
-		if (block instanceof IFluidBlock)
-		{
-			return ((IFluidBlock) block).drain(world, x, y, z, false);
-		}
-		return getFluidStackFromBlock(block, world.getBlockMetadata(x, y, z));
+		return block instanceof BlockFluidBase ? ((BlockFluidBase) block).getMaxRenderHeightMeta() : 0;
 	}
 
-	public static FluidStack getFluidStackFromBlock(Block block, int metadata)
+	public static int getFluidLevel(World world, BlockPos pos)
 	{
-		Fluid fluid = getFluidTypeOfBlock(block);
-		if (fluid != null && metadata == getStillMetadata(fluid))
+		return getFluidLevel(world.getBlockState(pos));
+	}
+
+	public static int getFluidLevel(IBlockState state)
+	{
+		if (state.getBlock() instanceof BlockFluidBase)
+			return state.getValue(BlockFluidBase.LEVEL);
+		else if (state.getBlock() instanceof BlockLiquid)
+			return state.getValue(BlockLiquid.LEVEL);
+		else
+			return 0;
+	}
+
+	public static FluidStack getFluidStackFromBlock(World world, BlockPos pos)
+	{
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() instanceof IFluidBlock)
 		{
-			return new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME);
+			return ((IFluidBlock) state.getBlock()).drain(world, pos, false);
+		}
+		return getFluidStackFromBlock(state);
+	}
+
+	public static FluidStack getFluidStackFromBlock(IBlockState state)
+	{
+		Fluid fluid = getFluidTypeOfBlock(state);
+		if (fluid != null && getFluidLevel(state) == getStillFluidLevel(fluid))
+		{
+			return new FluidStack(fluid, Fluid.BUCKET_VOLUME);
 		}
 		return null;
 	}
 
-	public static FluidStack consumeExactFluid(BlockPos blockPos, Fluid fluid, int amount)
+	public static FluidStack consumeExactFluid(World world, BlockPos blockPos, Fluid fluid, int amount)
 	{
-		return consumeFluid(blockPos, fluid, amount, amount);
+		return consumeFluid(world, blockPos, fluid, amount, amount);
 	}
 
-	public static FluidStack consumeFluid(BlockPos blockPos, Fluid fluid, int maxAmount)
+	public static FluidStack consumeFluid(World world, BlockPos blockPos, Fluid fluid, int maxAmount)
 	{
-		FluidStack consumed = consumeFluid(blockPos, fluid, 0, maxAmount);
+		FluidStack consumed = consumeFluid(world, blockPos, fluid, 0, maxAmount);
 		return consumed != null && consumed.amount > 0 ? consumed : null;
 	}
 
-	public static FluidStack consumeFluid(BlockPos blockPos, Fluid fluid, int minAmount, int maxAmount)
+	public static FluidStack consumeFluid(World world, BlockPos blockPos, Fluid fluid, int minAmount, int maxAmount)
 	{
-		if (blockPos.world.isRemote)
+		if (world.isRemote)
 			return null;
 
 		if (maxAmount < minAmount)
 			return null;
 
-		if (blockPos.getTile() instanceof IFluidHandler)
+		if (world.getTileEntity(blockPos) instanceof IFluidHandler)
 		{
-			IFluidHandler fluidHandler = (IFluidHandler) blockPos.getTile();
-			FluidStack stackDrained = fluidHandler.drain(ForgeDirection.UP, new FluidStack(fluid, maxAmount), false);
+			IFluidHandler fluidHandler = (IFluidHandler) world.getTileEntity(blockPos);
+			FluidStack stackDrained = fluidHandler.drain(EnumFacing.UP, new FluidStack(fluid, maxAmount), false);
 			if (stackDrained != null && stackDrained.amount >= minAmount)
-				return fluidHandler.drain(ForgeDirection.UP, stackDrained, true);
+				return fluidHandler.drain(EnumFacing.UP, stackDrained, true);
 		}
 
-		BlockHelper.BlockPos sourcePos = BlockHelper.followFluidStreamToSourceBlock(blockPos, fluid);
+		BlockPos sourcePos = BlockHelper.followFluidStreamToSourceBlock(world, blockPos, fluid);
 
 		if (sourcePos == null)
 			return null;
 
-		FluidStack fluidToAdd = FluidHelper.getFluidStackFromBlock(sourcePos.world, sourcePos.x, sourcePos.y, sourcePos.z);
+		FluidStack fluidToAdd = FluidHelper.getFluidStackFromBlock(world, sourcePos);
 
 		if (fluidToAdd == null)
 			return null;
 
 		if (fluidToAdd.amount > maxAmount)
 		{
-			if (sourcePos.getBlock() instanceof BlockFluidFinite)
+			if (world.getBlockState(sourcePos).getBlock() instanceof BlockFluidFinite)
 			{
-				fluidToAdd = consumePartialFiniteFluidBlock(sourcePos, fluidToAdd, maxAmount);
+				fluidToAdd = consumePartialFiniteFluidBlock(world, sourcePos, fluidToAdd, maxAmount);
 			}
 			else
 				return null;
@@ -138,25 +154,25 @@ public class FluidHelper
 
 		if (fluidToAdd.amount >= minAmount && fluidToAdd.amount <= maxAmount)
 		{
-			sourcePos.world.setBlockToAir(sourcePos.x, sourcePos.y, sourcePos.z);
+			world.setBlockToAir(sourcePos);
 			return fluidToAdd;
 		}
 
 		return null;
 	}
 
-	public static FluidStack consumePartialFiniteFluidBlock(BlockPos fluidBlockPos, int maxAmount)
+	public static FluidStack consumePartialFiniteFluidBlock(World world, BlockPos fluidBlockPos, int maxAmount)
 	{
-		return consumePartialFiniteFluidBlock(fluidBlockPos, FluidHelper.getFluidStackFromBlock(fluidBlockPos.world, fluidBlockPos.x, fluidBlockPos.y, fluidBlockPos.z), maxAmount);
+		return consumePartialFiniteFluidBlock(world, fluidBlockPos, FluidHelper.getFluidStackFromBlock(world, fluidBlockPos), maxAmount);
 	}
 
-	public static FluidStack consumePartialFiniteFluidBlock(BlockPos fluidBlockPos, FluidStack fullFluidStack, int maxAmount)
+	public static FluidStack consumePartialFiniteFluidBlock(World world, BlockPos fluidBlockPos, FluidStack fullFluidStack, int maxAmount)
 	{
-		if (fluidBlockPos.world.isRemote)
+		if (world.isRemote)
 			return null;
 
 		int deltaMeta = -(maxAmount / FINITE_FLUID_MB_PER_META);
-		int newMeta = fluidBlockPos.getMeta() + deltaMeta;
+		int newMeta = getFluidLevel(world, fluidBlockPos) + deltaMeta;
 
 		if (deltaMeta == 0)
 			return null;
@@ -165,9 +181,9 @@ public class FluidHelper
 		fluidConsumed.amount = Math.abs(deltaMeta) * FINITE_FLUID_MB_PER_META;
 
 		if (newMeta >= 0)
-			fluidBlockPos.world.setBlockMetadataWithNotify(fluidBlockPos.x, fluidBlockPos.y, fluidBlockPos.z, newMeta, 2);
+			world.setBlockState(fluidBlockPos, world.getBlockState(fluidBlockPos).withProperty(BlockFluidBase.LEVEL, newMeta), 2);
 		else
-			fluidBlockPos.world.setBlockToAir(fluidBlockPos.x, fluidBlockPos.y, fluidBlockPos.z);
+			world.setBlockToAir(fluidBlockPos);
 
 		return fluidConsumed;
 	}

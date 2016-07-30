@@ -6,8 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
@@ -17,93 +20,16 @@ public class BlockHelper
 {
 	public static final float BLOCK_HARDNESS_UNBREAKABLE = -1.0f;
 
-	public static class BlockPos
+	public static boolean isMaterial(World world, BlockPos blockPos, Material material)
 	{
-		public final World world;
-		public final int x, y, z;
-
-		public BlockPos(World world, int x, int y, int z)
-		{
-			this.world = world;
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-
-		public Block getBlock()
-		{
-			return world.getBlock(x, y, z);
-		}
-
-		public int getMeta()
-		{
-			return world.getBlockMetadata(x, y, z);
-		}
-
-		public TileEntity getTile()
-		{
-			return world.getTileEntity(x, y, z);
-		}
-
-		public BlockPos getOffset(int x, int y, int z)
-		{
-			return new BlockPos(this.world, this.x + x, this.y + y, this.z + z);
-		}
-
-		@Override
-		public int hashCode()
-		{
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((world == null) ? 0 : world.hashCode());
-			result = prime * result + x;
-			result = prime * result + y;
-			result = prime * result + z;
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			BlockPos other = (BlockPos) obj;
-			if (world == null)
-			{
-				if (other.world != null)
-					return false;
-			}
-			else if (!world.equals(other.world))
-				return false;
-			if (x != other.x)
-				return false;
-			if (y != other.y)
-				return false;
-			if (z != other.z)
-				return false;
-			return true;
-		}
+		return world.getBlockState(blockPos).getMaterial() == material;
 	}
 
-	public static BlockPos blockPos(World world, int x, int y, int z)
-	{
-		return new BlockPos(world, x, y, z);
-	}
-
-	public static boolean isMaterial(BlockPos blockPos, Material material)
-	{
-		return blockPos.getBlock().getMaterial() == material;
-	}
-
-	public static boolean isAdjacentToMaterial(BlockPos blockPos, Material material)
+	public static boolean isAdjacentToMaterial(World world, BlockPos blockPos, Material material)
 	{
 		for (BlockPos blockToCheck : getBlocksAdjacentTo(blockPos))
 		{
-			if (isMaterial(blockToCheck, material))
+			if (isMaterial(world, blockToCheck, material))
 				return true;
 		}
 		return false;
@@ -112,55 +38,55 @@ public class BlockHelper
 	public static BlockPos[] getBlocksAdjacentTo(BlockPos blockPos)
 	{
 		return new BlockPos[]{
-		blockPos.getOffset(-1, 0, 0), blockPos.getOffset(1, 0, 0),
-		blockPos.getOffset(0, 0, -1), blockPos.getOffset(0, 0, 1)
+		blockPos.offset(EnumFacing.NORTH), blockPos.offset(EnumFacing.SOUTH),
+		blockPos.offset(EnumFacing.EAST), blockPos.offset(EnumFacing.WEST)
 		};
 	}
 
-	public static boolean isWater(BlockPos blockPos)
+	public static boolean isWater(World world, BlockPos blockPos)
 	{
-		return isMaterial(blockPos, Material.water);
+		return isMaterial(world, blockPos, Material.WATER);
 	}
 
-	public static boolean isAdjacentToOrCoveredInWater(BlockPos blockPos)
+	public static boolean isAdjacentToOrCoveredInWater(World world, BlockPos blockPos)
 	{
-		return isWater(blockPos.getOffset(0, 1, 0)) || isAdjacentToWater(blockPos);
+		return isWater(world, blockPos.up()) || isAdjacentToWater(world, blockPos);
 	}
 
-	public static boolean isAdjacentToWater(BlockPos blockPos)
+	public static boolean isAdjacentToWater(World world, BlockPos blockPos)
 	{
-		return isAdjacentToMaterial(blockPos, Material.water);
+		return isAdjacentToMaterial(world, blockPos, Material.WATER);
 	}
 
-	public static BlockPos followWaterStreamToSourceBlock(BlockPos blockPos)
+	public static BlockPos followWaterStreamToSourceBlock(World world, BlockPos blockPos)
 	{
-		return followFluidStreamToSourceBlock(blockPos, FluidRegistry.WATER);
+		return followFluidStreamToSourceBlock(world, blockPos, FluidRegistry.WATER);
 	}
 
-	public static BlockPos followFluidStreamToSourceBlock(BlockPos blockPos, Fluid fluid)
+	public static BlockPos followFluidStreamToSourceBlock(World world, BlockPos blockPos, Fluid fluid)
 	{
-		return followFluidStreamToSourceBlock(blockPos, fluid, new HashSet<BlockPos>());
+		return followFluidStreamToSourceBlock(world, blockPos, fluid, new HashSet<BlockPos>());
 	}
 
-	public static BlockPos followFluidStreamToSourceBlock(BlockPos blockPos, Fluid fluid, Set<BlockPos> blocksChecked)
+	public static BlockPos followFluidStreamToSourceBlock(World world, BlockPos blockPos, Fluid fluid, Set<BlockPos> blocksChecked)
 	{
-		if (fluid.getBlock() instanceof BlockFluidFinite || blockPos.getMeta() == FluidHelper.getStillMetadata(fluid))
+		if (fluid.getBlock() instanceof BlockFluidFinite || world.getBlockState(blockPos).getValue(BlockLiquid.LEVEL) == FluidHelper.getStillFluidLevel(fluid))
 			return blockPos;
 
 		List<BlockPos> blocksToCheck = new ArrayList<BlockPos>();
-		blocksToCheck.add(blockPos.getOffset(0, 1, 0));
+		blocksToCheck.add(blockPos.up());
 		blocksToCheck.addAll(Arrays.asList(getBlocksAdjacentTo(blockPos)));
 
 		for (BlockPos blockToCheck : blocksToCheck)
 		{
-			if (FluidHelper.getFluidTypeOfBlock(blockToCheck.getBlock()) == fluid && !blocksChecked.contains(blockToCheck))
+			if (FluidHelper.getFluidTypeOfBlock(world.getBlockState(blockToCheck)) == fluid && !blocksChecked.contains(blockToCheck))
 			{
-				if (blockToCheck.getMeta() == 0)
+				if (FluidHelper.getFluidLevel(world, blockToCheck) == FluidHelper.getStillFluidLevel(fluid))
 					return blockToCheck;
 				else
 				{
 					blocksChecked.add(blockToCheck);
-					BlockPos foundSourceBlock = followFluidStreamToSourceBlock(blockToCheck, fluid, blocksChecked);
+					BlockPos foundSourceBlock = followFluidStreamToSourceBlock(world, blockToCheck, fluid, blocksChecked);
 
 					if (foundSourceBlock != null)
 						return foundSourceBlock;
@@ -180,21 +106,21 @@ public class BlockHelper
 			{
 				for (int zOffset = 0; zOffset <= radius; zOffset++)
 				{
-					BlockPos block = centerBlock.getOffset(xOffset, yOffset, zOffset);
-					int xDelta = block.x - centerBlock.x;
-					int yDelta = block.y - centerBlock.y;
-					int zDelta = block.z - centerBlock.z;
+					BlockPos block = centerBlock.add(xOffset, yOffset, zOffset);
+					int xDelta = block.getX() - centerBlock.getX();
+					int yDelta = block.getY() - centerBlock.getY();
+					int zDelta = block.getZ() - centerBlock.getZ();
 					int deltaLengthSq = xDelta * xDelta + yDelta * yDelta + zDelta * zDelta;
 					if (deltaLengthSq <= radiusSq)
 					{
 						blocks.add(block);
-						blocks.add(centerBlock.getOffset(-xOffset, yOffset, zOffset));
-						blocks.add(centerBlock.getOffset(xOffset, yOffset, -zOffset));
-						blocks.add(centerBlock.getOffset(-xOffset, yOffset, -zOffset));
-						blocks.add(centerBlock.getOffset(xOffset, -yOffset, zOffset));
-						blocks.add(centerBlock.getOffset(xOffset, -yOffset, -zOffset));
-						blocks.add(centerBlock.getOffset(-xOffset, -yOffset, zOffset));
-						blocks.add(centerBlock.getOffset(-xOffset, -yOffset, -zOffset));
+						blocks.add(centerBlock.add(-xOffset, yOffset, zOffset));
+						blocks.add(centerBlock.add(xOffset, yOffset, -zOffset));
+						blocks.add(centerBlock.add(-xOffset, yOffset, -zOffset));
+						blocks.add(centerBlock.add(xOffset, -yOffset, zOffset));
+						blocks.add(centerBlock.add(xOffset, -yOffset, -zOffset));
+						blocks.add(centerBlock.add(-xOffset, -yOffset, zOffset));
+						blocks.add(centerBlock.add(-xOffset, -yOffset, -zOffset));
 					}
 				}
 			}
@@ -202,23 +128,24 @@ public class BlockHelper
 		return blocks.toArray(new BlockPos[0]);
 	}
 
-	public static BlockPos[] filterBlockListToBreakableBlocks(BlockPos... blocks)
+	public static BlockPos[] filterBlockListToBreakableBlocks(World world, BlockPos... blocks)
 	{
 		List<BlockPos> filteredBlocks = new ArrayList<BlockPos>();
 		for (BlockPos blockPos : blocks)
 		{
-			Block block = blockPos.getBlock();
+			IBlockState state = world.getBlockState(blockPos);
+			Block block = state.getBlock();
 
 			if (block == null)
 				continue;
 
-			if (block.isAir(blockPos.world, blockPos.x, blockPos.y, blockPos.z))
+			if (block.isAir(state, world, blockPos))
 				continue;
 
-			if (isBlockUnbreakable(block, blockPos.world, blockPos.x, blockPos.y, blockPos.z))
+			if (isBlockUnbreakable(world, blockPos))
 				continue;
 
-			if (block.getMaterial().isLiquid())
+			if (state.getMaterial().isLiquid())
 				continue;
 
 			filteredBlocks.add(blockPos);
@@ -226,8 +153,8 @@ public class BlockHelper
 		return filteredBlocks.toArray(new BlockPos[0]);
 	}
 
-	public static boolean isBlockUnbreakable(Block block, World world, int x, int y, int z)
+	public static boolean isBlockUnbreakable(World world, BlockPos pos)
 	{
-		return block.getBlockHardness(world, x, y, z) == BLOCK_HARDNESS_UNBREAKABLE;
+		return world.getBlockState(pos).getBlockHardness(world, pos) == BLOCK_HARDNESS_UNBREAKABLE;
 	}
 }

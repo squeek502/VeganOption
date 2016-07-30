@@ -5,7 +5,7 @@ import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TooltipHelper
 {
@@ -24,17 +24,17 @@ public class TooltipHelper
 	@SubscribeEvent
 	public void getItemTooltip(ItemTooltipEvent event)
 	{
-		if (event.itemStack == null || event.itemStack.getItem() == null)
+		if (event.getItemStack() == null || event.getItemStack().getItem() == null)
 			return;
 
-		if (!itemsThatHaveTooltips.contains(event.itemStack.getItem()))
+		if (!itemsThatHaveTooltips.contains(event.getItemStack().getItem()))
 			return;
 
-		String unlocalizedTooltip = event.itemStack.getItem().getUnlocalizedName() + ".tooltip";
+		String unlocalizedTooltip = event.getItemStack().getItem().getUnlocalizedName() + ".tooltip";
 
 		if (!LangHelper.existsRaw(unlocalizedTooltip))
 			return;
 
-		event.toolTip.add(LangHelper.translateRaw(unlocalizedTooltip));
+		event.getToolTip().add(LangHelper.translateRaw(unlocalizedTooltip));
 	}
 }

@@ -1,6 +1,6 @@
 package squeek.veganoption.helpers;
 
-import net.minecraft.util.StatCollector;
+import net.minecraft.client.resources.I18n;
 import squeek.veganoption.ModInfo;
 
 public class LangHelper
@@ -27,16 +27,16 @@ public class LangHelper
 
 	public static String translateRaw(String key)
 	{
-		return StatCollector.translateToLocal(key);
+		return I18n.format(key);
 	}
 
 	public static String translateRaw(String key, Object... args)
 	{
-		return StatCollector.translateToLocalFormatted(key, args);
+		return I18n.format(key, args);
 	}
 
 	public static boolean existsRaw(String key)
 	{
-		return StatCollector.canTranslate(key);
+		return I18n.hasKey(key);
 	}
 }
