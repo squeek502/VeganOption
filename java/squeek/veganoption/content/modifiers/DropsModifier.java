@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
@@ -140,7 +141,7 @@ public class DropsModifier
 			return blockMatches(block) && metaMatches(block, meta);
 		}
 
-		public boolean matches(IBlockAccess world, int x, int y, int z, Block block, int meta)
+		public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta)
 		{
 			return matches(block, meta);
 		}
@@ -228,7 +229,7 @@ public class DropsModifier
 		}
 
 		@Override
-		public boolean matches(IBlockAccess world, int x, int y, int z, Block block, int meta)
+		public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta)
 		{
 			return false;
 		}
@@ -263,11 +264,12 @@ public class DropsModifier
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onGetHarvestDrops(BlockEvent.HarvestDropsEvent event)
 	{
+		Block block = event.getState().getBlock();
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
-			if (blockDropSpecifier.getKey().matches(event.world, event.x, event.y, event.z, event.block, event.blockMetadata))
+			if (blockDropSpecifier.getKey().matches(event.getWorld(), event.getPos(), block, block.getMetaFromState(event.getState())))
 			{
-				blockDropSpecifier.getValue().modifyDrops(event.drops, event.harvester, event.fortuneLevel, event.isSilkTouching);
+				blockDropSpecifier.getValue().modifyDrops(event.getDrops(), event.getHarvester(), event.getFortuneLevel(), event.isSilkTouching());
 			}
 		}
 	}

@@ -12,9 +12,9 @@ public class ContentHelper
 	public static final int ENTITYID_PLASTIC_EGG = 1;
 
 	// helper itemstacks for vanilla stuff
-	public static final ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
-	public static final ItemStack inkSac = new ItemStack(Items.dye, 1, 0);
-	public static final ItemStack boneMeal = new ItemStack(Items.dye, 1, 15);
+	public static final ItemStack charcoal = new ItemStack(Items.COAL, 1, 1);
+	public static final ItemStack inkSac = new ItemStack(Items.DYE, 1, 0);
+	public static final ItemStack boneMeal = new ItemStack(Items.DYE, 1, 15);
 
 	// oredict
 	public static final String leatherOreDict = "materialLeather";

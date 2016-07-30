@@ -2,6 +2,7 @@ package squeek.veganoption.content.modules;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
@@ -27,32 +28,33 @@ public class ProofOfSuffering implements IContentModule
 		fragmentOfSuffering = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".sufferingFragment")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":fragment_of_suffering");
-		GameRegistry.registerItem(fragmentOfSuffering, "sufferingFragment");
+				.setRegistryName(ModInfo.MODID_LOWER, "fragment_of_suffering");
+		GameRegistry.register(fragmentOfSuffering);
 
 		proofOfSuffering = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".sufferingProof")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":proof_of_suffering")
-				.setPotionEffect(PotionHelper.ghastTearEffect);
-		GameRegistry.registerItem(proofOfSuffering, "sufferingProof");
+				.setRegistryName(ModInfo.MODID_LOWER, "proof_of_suffering");
+		GameRegistry.register(proofOfSuffering);
 	}
 
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.tearOreDict, new ItemStack(Items.ghast_tear));
+		OreDictionary.registerOre(ContentHelper.tearOreDict, new ItemStack(Items.GHAST_TEAR));
 		OreDictionary.registerOre(ContentHelper.tearOreDict, new ItemStack(proofOfSuffering));
 	}
 
 	@Override
 	public void recipes()
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.ghast_tear), ContentHelper.tearOreDict);
+		PotionHelper.registerPotionTypeConversion(PotionTypes.AWKWARD, new PotionHelper.ItemPredicateInstance(proofOfSuffering), PotionTypes.REGENERATION);
 
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.soul_sand), new DropSpecifier(new ItemStack(fragmentOfSuffering), 0.05f, 1, 3));
+		Modifiers.recipes.convertInput(new ItemStack(Items.GHAST_TEAR), ContentHelper.tearOreDict);
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(proofOfSuffering), "xxx", "x*x", "xxx", 'x', fragmentOfSuffering, '*', Items.gold_nugget));
+		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.SOUL_SAND), new DropSpecifier(new ItemStack(fragmentOfSuffering), 0.05f, 1, 3));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(proofOfSuffering), "xxx", "x*x", "xxx", 'x', fragmentOfSuffering, '*', Items.GOLD_NUGGET));
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -69,20 +70,20 @@ public class PistonCraftingRecipe
 	// TODO: This probably doesn't work right for multiple overlapping OreDict inputs.
 	// It will likely think that the recipe works but it might use the same EntityItem
 	// for multiple  different OreDict inputs, and bug out when it starts consuming stuff
-	public boolean tryCraft(World world, int x, int y, int z)
+	public boolean tryCraft(World world, BlockPos pos)
 	{
-		IFluidHandler fluidHandler = getOutputFluidHandler(world, x, y, z);
+		IFluidHandler fluidHandler = getOutputFluidHandler(world, pos);
 
 		if (!canOutputFluid(fluidHandler))
 			return false;
 
-		PistonCraftingHandler.WorldPosition fluidPos = new PistonCraftingHandler.WorldPosition(world, x, y, z);
+		PistonCraftingHandler.WorldPosition fluidPos = new PistonCraftingHandler.WorldPosition(world, pos);
 		FluidStack displacedFluid = PistonCraftingHandler.displacedLiquids.get(fluidPos);
 
 		if (!fluidInputMatches(displacedFluid))
 			return false;
 
-		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(world, x, y, z);
+		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(world, pos);
 		Map<InputItemStack, List<EntityItem>> entityItemsByInput = getEntityItemsByInput(itemInputs, entityItemsWithin);
 
 		if (!itemInputMatches(entityItemsByInput))
@@ -164,12 +165,12 @@ public class PistonCraftingRecipe
 		return true;
 	}
 
-	public boolean canOutputFluid(World world, int x, int y, int z)
+	public boolean canOutputFluid(World world, BlockPos pos)
 	{
 		if (fluidOutput == null)
 			return true;
 
-		return canOutputFluid(getOutputFluidHandler(world, x, y, z));
+		return canOutputFluid(getOutputFluidHandler(world, pos));
 	}
 
 	public boolean canOutputFluid(IFluidHandler fluidHandler)
@@ -183,12 +184,12 @@ public class PistonCraftingRecipe
 		return fluidHandler.fill(EnumFacing.UP, fluidOutput, false) == fluidOutput.amount;
 	}
 
-	public IFluidHandler getOutputFluidHandler(World world, int x, int y, int z)
+	public IFluidHandler getOutputFluidHandler(World world, BlockPos pos)
 	{
 		if (fluidOutput == null)
 			return null;
 
-		TileEntity tileUnderneath = world.getTileEntity(x, y - 1, z);
+		TileEntity tileUnderneath = world.getTileEntity(pos.down());
 
 		if (!(tileUnderneath instanceof IFluidHandler))
 			return null;
@@ -196,12 +197,12 @@ public class PistonCraftingRecipe
 		return (IFluidHandler) tileUnderneath;
 	}
 
-	public boolean itemInputMatches(World world, int x, int y, int z)
+	public boolean itemInputMatches(World world, BlockPos pos)
 	{
 		if (itemInputs.isEmpty())
 			return true;
 
-		return itemInputMatches(WorldHelper.getItemEntitiesWithin(world, x, y, z));
+		return itemInputMatches(WorldHelper.getItemEntitiesWithin(world, pos));
 	}
 
 	public boolean itemInputMatches(List<EntityItem> entityItems)
@@ -281,9 +282,9 @@ public class PistonCraftingRecipe
 		return stackSize;
 	}
 
-	public boolean fluidInputMatches(World world, int x, int y, int z)
+	public boolean fluidInputMatches(World world, BlockPos pos)
 	{
-		return fluidInputMatches(PistonCraftingHandler.displacedLiquids.get(new PistonCraftingHandler.WorldPosition(world, x, y, z)));
+		return fluidInputMatches(PistonCraftingHandler.displacedLiquids.get(new PistonCraftingHandler.WorldPosition(world, pos)));
 	}
 
 	public boolean fluidInputMatches(FluidStack fluidStack)

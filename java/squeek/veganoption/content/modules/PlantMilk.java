@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -35,31 +36,31 @@ public class PlantMilk implements IContentModule
 	@Override
 	public void create()
 	{
-		fluidPlantMilk = new Fluid(ModInfo.MODID + ".plantMilk");
+		fluidPlantMilk = new Fluid(ModInfo.MODID + ".plantMilk", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_flow"));
 		FluidRegistry.registerFluid(fluidPlantMilk);
-		plantMilk = new BlockFluidGeneric(fluidPlantMilk, Material.water, "plant_milk")
-				.setBlockName(ModInfo.MODID + ".plantMilk");
+		plantMilk = new BlockFluidGeneric(fluidPlantMilk, Material.WATER, "plant_milk")
+				.setUnlocalizedName(ModInfo.MODID + ".plantMilk");
 		fluidPlantMilk.setBlock(plantMilk);
 		fluidPlantMilk.setUnlocalizedName(plantMilk.getUnlocalizedName());
-		GameRegistry.registerBlock(plantMilk, "plantMilk");
+		GameRegistry.register(plantMilk);
 
 		bucketPlantMilk = new ItemBucketGeneric(plantMilk)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketPlantMilk")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName("bucket_milk")
-				.setContainerItem(Items.bucket);
-		GameRegistry.registerItem(bucketPlantMilk, "bucketPlantMilk");
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPlantMilk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketPlantMilk), new ItemStack(Items.bucket));
+				.setRegistryName(ModInfo.MODID_LOWER, "bucketPlantMilk")
+				.setContainerItem(Items.BUCKET);
+		GameRegistry.register(bucketPlantMilk);
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPlantMilk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketPlantMilk), new ItemStack(Items.BUCKET));
 	}
 
 	@Override
 	public void oredict()
 	{
 		if (!IntegrationHandler.modExists(IntegrationBase.MODID_MINEFACTORY_RELOADED))
-			OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(Items.milk_bucket));
+			OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(Items.MILK_BUCKET));
 		OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(bucketPlantMilk));
 
-		OreDictionary.registerOre(ContentHelper.plantMilkSourceOreDict, new ItemStack(Items.pumpkin_seeds));
+		OreDictionary.registerOre(ContentHelper.plantMilkSourceOreDict, new ItemStack(Items.PUMPKIN_SEEDS));
 	}
 
 	@Override
@@ -71,17 +72,17 @@ public class PlantMilk implements IContentModule
 		ContentHelper.remapOre(ContentHelper.riceOreDict, ContentHelper.plantMilkSourceOreDict);
 		ContentHelper.remapOre(ContentHelper.oatOreDict, ContentHelper.plantMilkSourceOreDict);
 
-		Modifiers.recipes.convertInput(new ItemStack(Items.milk_bucket), ContentHelper.milkOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.MILK_BUCKET), ContentHelper.milkOreDict);
 
 		GameRegistry.addRecipe(new ShapelessMatchingOreRecipe(new ItemStack(bucketPlantMilk),
-				new ItemStack(Items.water_bucket),
+				new ItemStack(Items.WATER_BUCKET),
 				ContentHelper.plantMilkSourceOreDict,
 				ContentHelper.plantMilkSourceOreDict,
-				new ItemStack(Items.sugar)));
+				new ItemStack(Items.SUGAR)));
 		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketPlantMilk), // output
-														new ItemStack(Items.water_bucket));
+														new ItemStack(Items.WATER_BUCKET));
 
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidPlantMilk, FluidRegistry.WATER, Items.sugar, new InputItemStack(ContentHelper.plantMilkSourceOreDict, 2)));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidPlantMilk, FluidRegistry.WATER, Items.SUGAR, new InputItemStack(ContentHelper.plantMilkSourceOreDict, 2)));
 	}
 
 	@Override

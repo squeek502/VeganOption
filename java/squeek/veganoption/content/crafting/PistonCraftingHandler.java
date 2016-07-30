@@ -2,17 +2,18 @@ package squeek.veganoption.content.crafting;
 
 import java.util.HashMap;
 import net.minecraft.block.Block;
-import net.minecraft.world.ChunkPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.veganoption.api.event.PistonEvent;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.helpers.FluidHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class PistonCraftingHandler
 {
@@ -29,7 +30,7 @@ public class PistonCraftingHandler
 	{
 		for (PistonCraftingRecipe pistonRecipe : PistonCraftingRegistry.getRecipes())
 		{
-			if (pistonRecipe.tryCraft(event.world, event.headX, event.headY, event.headZ))
+			if (pistonRecipe.tryCraft(event.world, new BlockPos(event.headX, event.headY, event.headZ)))
 				return;
 		}
 	}
@@ -40,12 +41,13 @@ public class PistonCraftingHandler
 		if (event.world.isRemote)
 			return;
 
-		WorldPosition pos = new WorldPosition(event.world, event.headX, event.headY, event.headZ);
+		BlockPos blockPos = new BlockPos(event.headX, event.headY, event.headZ);
+		WorldPosition pos = new WorldPosition(event.world, blockPos);
 		displacedLiquids.remove(pos);
 
-		Block displacedBlock = event.world.getBlock(event.headX, event.headY, event.headZ);
+		Block displacedBlock = event.world.getBlockState(blockPos).getBlock();
 
-		if (displacedBlock == null || displacedBlock.isAir(event.world, event.headX, event.headY, event.headZ))
+		if (displacedBlock == null || event.world.isAirBlock(blockPos))
 			return;
 
 		Fluid displacedFluid = FluidHelper.getFluidTypeOfBlock(displacedBlock);
@@ -62,16 +64,16 @@ public class PistonCraftingHandler
 		if (event.world.isRemote)
 			return;
 
-		displacedLiquids.remove(new WorldPosition(event.world, event.headX, event.headY, event.headZ));
+		displacedLiquids.remove(new WorldPosition(event.world, new BlockPos(event.headX, event.headY, event.headZ)));
 	}
 
-	public static class WorldPosition extends ChunkPosition
+	public static class WorldPosition extends ChunkPos
 	{
 		public final World world;
 
-		public WorldPosition(World world, int x, int y, int z)
+		public WorldPosition(World world, BlockPos pos)
 		{
-			super(x, y, z);
+			super(pos);
 			this.world = world;
 		}
 

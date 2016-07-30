@@ -24,14 +24,14 @@ public class Bioplastic implements IContentModule
 		bioplastic = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".bioplastic")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":bioplastic");
-		GameRegistry.registerItem(bioplastic, "bioplastic");
+				.setRegistryName(ModInfo.MODID_LOWER, "bioplastic");
+		GameRegistry.register(bioplastic);
 
 		plasticRod = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".plasticRod")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":plastic_rod");
-		GameRegistry.registerItem(plasticRod, "plasticRod");
+				.setRegistryName(ModInfo.MODID_LOWER, "plastic_rod");
+		GameRegistry.register(plasticRod);
 	}
 
 	@Override
@@ -48,8 +48,8 @@ public class Bioplastic implements IContentModule
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(plasticRod, 4), "p", "p", 'p', ContentHelper.plasticOreDict));
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.blaze_rod), ContentHelper.plasticRodOreDict, ContentHelper.rosinOreDict, ContentHelper.waxOreDict, new ItemStack(Items.flint_and_steel, 1, OreDictionary.WILDCARD_VALUE)));
-		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(Items.blaze_rod), new ItemStack(Items.flint_and_steel, 1, OreDictionary.WILDCARD_VALUE));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.BLAZE_ROD), ContentHelper.plasticRodOreDict, ContentHelper.rosinOreDict, ContentHelper.waxOreDict, new ItemStack(Items.FLINT_AND_STEEL, 1, OreDictionary.WILDCARD_VALUE)));
+		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.FLINT_AND_STEEL, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	@Override
