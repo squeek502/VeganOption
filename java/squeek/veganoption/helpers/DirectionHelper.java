@@ -1,25 +1,26 @@
 package squeek.veganoption.helpers;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
 public class DirectionHelper
 {
-	public static ForgeDirection getDirectionFromYaw(EntityLivingBase entity)
+	public static EnumFacing getDirectionFromYaw(EntityLivingBase entity)
 	{
 		int l = MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		switch (l)
 		{
 			case 0:
-				return ForgeDirection.SOUTH;
+				return EnumFacing.SOUTH;
 			case 1:
-				return ForgeDirection.WEST;
+				return EnumFacing.WEST;
 			case 2:
-				return ForgeDirection.NORTH;
+				return EnumFacing.NORTH;
 			case 3:
-				return ForgeDirection.EAST;
+				return EnumFacing.EAST;
 			default:
-				return ForgeDirection.UNKNOWN;
+				return EnumFacing.NORTH;
 		}
 	}
 }

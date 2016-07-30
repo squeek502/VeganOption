@@ -53,7 +53,7 @@ public class BlockComposter extends BlockContainer
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack itemStack)
 	{
-		int rotationMeta = DirectionHelper.getDirectionFromYaw(placer).ordinal();
+		int rotationMeta = DirectionHelper.getDirectionFromYaw(placer).getHorizontalIndex();
 		world.setBlockMetadataWithNotify(x, y, z, rotationMeta, 3);
 
 		super.onBlockPlacedBy(world, x, y, z, placer, itemStack);

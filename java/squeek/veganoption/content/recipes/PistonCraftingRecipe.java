@@ -12,8 +12,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -131,7 +131,7 @@ public class PistonCraftingRecipe
 				}
 				if (fluidOutput != null && fluidHandler != null)
 				{
-					fluidHandler.fill(ForgeDirection.UP, fluidOutput, true);
+					fluidHandler.fill(EnumFacing.UP, fluidOutput, true);
 				}
 				for (Entry<InputItemStack, List<EntityItem>> inputEntry : entityItemsByInput.entrySet())
 				{
@@ -180,7 +180,7 @@ public class PistonCraftingRecipe
 		if (fluidHandler == null)
 			return false;
 
-		return fluidHandler.fill(ForgeDirection.UP, fluidOutput, false) == fluidOutput.amount;
+		return fluidHandler.fill(EnumFacing.UP, fluidOutput, false) == fluidOutput.amount;
 	}
 
 	public IFluidHandler getOutputFluidHandler(World world, int x, int y, int z)
