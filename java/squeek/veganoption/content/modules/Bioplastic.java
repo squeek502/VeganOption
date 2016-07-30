@@ -3,6 +3,7 @@ package squeek.veganoption.content.modules;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -11,7 +12,6 @@ import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Bioplastic implements IContentModule
 {

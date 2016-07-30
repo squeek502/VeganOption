@@ -2,8 +2,8 @@ package squeek.veganoption.integration;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import squeek.veganoption.content.IContentModule;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public abstract class IntegratorBase extends IntegrationBase implements IContentModule
 {

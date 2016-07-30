@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -24,7 +25,6 @@ import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.integration.IntegrationBase;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.items.ItemBucketGeneric;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class PlantMilk implements IContentModule
 {

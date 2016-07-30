@@ -1,7 +1,7 @@
 package squeek.veganoption.integration.versionchecker;
 
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import squeek.veganoption.integration.IntegratorBase;
-import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class VersionChecker extends IntegratorBase
 {

@@ -1,10 +1,10 @@
 package squeek.veganoption.helpers;
 
 import java.util.Collection;
-import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class MiscHelper

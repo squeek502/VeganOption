@@ -1,8 +1,7 @@
 package squeek.veganoption.helpers;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.math.MathHelper;
 
 public class DirectionHelper
 {
