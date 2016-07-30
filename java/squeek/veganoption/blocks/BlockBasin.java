@@ -31,6 +31,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	public BlockBasin(Material material)
 	{
 		super(material);
+		setSoundType(SoundType.METAL);
 	}
 
 	@Override

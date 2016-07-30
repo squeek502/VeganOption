@@ -4,10 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -22,7 +24,6 @@ import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.items.ItemBucketGeneric;
 import squeek.veganoption.items.ItemSoap;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Soap implements IContentModule
 {
@@ -34,27 +35,27 @@ public class Soap implements IContentModule
 	@Override
 	public void create()
 	{
-		fluidLyeWater = new Fluid(ModInfo.MODID + ".lyeWater");
+		fluidLyeWater = new Fluid(ModInfo.MODID + ".lyeWater", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_flow"));
 		FluidRegistry.registerFluid(fluidLyeWater);
 		lyeWater = new BlockLyeWater(fluidLyeWater)
-				.setBlockName(ModInfo.MODID + ".lyeWater");
+				.setUnlocalizedName(ModInfo.MODID + ".lyeWater");
 		fluidLyeWater.setBlock(lyeWater);
 		fluidLyeWater.setUnlocalizedName(lyeWater.getUnlocalizedName());
-		GameRegistry.registerBlock(lyeWater, "lyeWater");
+		GameRegistry.register(lyeWater);
 
 		bucketLyeWater = new ItemBucketGeneric(lyeWater)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketLyeWater")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":lye_water_bucket")
-				.setContainerItem(Items.bucket);
-		GameRegistry.registerItem(bucketLyeWater, "bucketLyeWater");
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidLyeWater, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketLyeWater), new ItemStack(Items.bucket));
+				.setRegistryName(ModInfo.MODID_LOWER, "bucketLyeWater")
+				.setContainerItem(Items.BUCKET);
+		GameRegistry.register(bucketLyeWater);
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidLyeWater, Fluid.BUCKET_VOLUME), new ItemStack(bucketLyeWater), new ItemStack(Items.BUCKET));
 
 		soap = new ItemSoap()
 				.setUnlocalizedName(ModInfo.MODID + ".soap")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":soap");
-		GameRegistry.registerItem(soap, "soap");
+				.setRegistryName(ModInfo.MODID_LOWER + ":soap");
+		GameRegistry.register(soap);
 	}
 
 	@Override
@@ -67,8 +68,8 @@ public class Soap implements IContentModule
 	@Override
 	public void recipes()
 	{
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket), ContentHelper.woodAshOreDict, ContentHelper.woodAshOreDict, ContentHelper.woodAshOreDict));
-		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketLyeWater), new ItemStack(Items.water_bucket));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bucketLyeWater), new ItemStack(Items.WATER_BUCKET), ContentHelper.woodAshOreDict, ContentHelper.woodAshOreDict, ContentHelper.woodAshOreDict));
+		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketLyeWater), new ItemStack(Items.WATER_BUCKET));
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soap),
 				new ItemStack(bucketLyeWater),

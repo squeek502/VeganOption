@@ -28,13 +28,13 @@ public class ProofOfSuffering implements IContentModule
 		fragmentOfSuffering = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".sufferingFragment")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "fragment_of_suffering");
+				.setRegistryName(ModInfo.MODID_LOWER, "sufferingFragment");
 		GameRegistry.register(fragmentOfSuffering);
 
 		proofOfSuffering = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".sufferingProof")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "proof_of_suffering");
+				.setRegistryName(ModInfo.MODID_LOWER, "sufferingProof");
 		GameRegistry.register(proofOfSuffering);
 	}
 

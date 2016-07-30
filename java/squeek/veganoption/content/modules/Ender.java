@@ -4,11 +4,18 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockEncrustedObsidian;
@@ -19,11 +26,6 @@ import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.items.ItemBucketGeneric;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Ender implements IContentModule
 {
@@ -40,42 +42,45 @@ public class Ender implements IContentModule
 		encrustedObsidian = new BlockEncrustedObsidian()
 				.setHardness(50.0F)
 				.setResistance(2000.0F)
-				.setStepSound(Block.soundTypePiston)
-				.setBlockName(ModInfo.MODID + ".encrustedObsidian")
+				.setUnlocalizedName(ModInfo.MODID + ".encrustedObsidian")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setBlockTextureName(ModInfo.MODID_LOWER + ":encrusted_obsidian");
-		GameRegistry.registerBlock(encrustedObsidian, "encrustedObsidian");
+				.setRegistryName(ModInfo.MODID_LOWER, "encrustedObsidian");
+		GameRegistry.register(encrustedObsidian);
+		GameRegistry.register(new ItemBlock(encrustedObsidian).setRegistryName(encrustedObsidian.getRegistryName()));
 		encrustedObsidian.setHarvestLevel("pickaxe", 3);
 
 		enderRift = new BlockEnderRift()
 				.setHardness(-1.0F)
 				.setResistance(6000000.0F)
-				.setBlockName(ModInfo.MODID + ".enderRift");
-		GameRegistry.registerBlock(enderRift, "enderRift");
+				.setUnlocalizedName(ModInfo.MODID + ".enderRift")
+				.setRegistryName(ModInfo.MODID_LOWER, "enderRift");
+		GameRegistry.register(enderRift);
+		GameRegistry.register(new ItemBlock(enderRift).setRegistryName(enderRift.getRegistryName()));
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
 			createEnderRiftRenderer();
 		}
 		GameRegistry.registerTileEntity(TileEntityEnderRift.class, ModInfo.MODID + ".enderRift");
 
-		fluidRawEnder = new Fluid(ModInfo.MODID + ".rawEnder")
+		fluidRawEnder = new Fluid(ModInfo.MODID + ".rawEnder", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_flow"))
 				.setLuminosity(3)
 				.setViscosity(3000)
 				.setDensity(4000);
 		FluidRegistry.registerFluid(fluidRawEnder);
 		rawEnder = new BlockRawEnder(fluidRawEnder)
-				.setBlockName(ModInfo.MODID + ".rawEnder");
+				.setUnlocalizedName(ModInfo.MODID + ".rawEnder")
+				.setRegistryName(ModInfo.MODID_LOWER, "rawEnder");
 		fluidRawEnder.setBlock(rawEnder);
 		fluidRawEnder.setUnlocalizedName(rawEnder.getUnlocalizedName());
-		GameRegistry.registerBlock(rawEnder, "rawEnder");
+		GameRegistry.register(rawEnder);
 
 		bucketRawEnder = new ItemBucketGeneric(rawEnder)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketRawEnder")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":raw_ender_bucket")
-				.setContainerItem(Items.bucket);
-		GameRegistry.registerItem(bucketRawEnder, "bucketRawEnder");
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.bucket));
+				.setRegistryName(ModInfo.MODID_LOWER, "bucketRawEnder")
+				.setContainerItem(Items.BUCKET);
+		GameRegistry.register(bucketRawEnder);
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.BUCKET));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -92,7 +97,7 @@ public class Ender implements IContentModule
 	@Override
 	public void recipes()
 	{
-		GameRegistry.addShapelessRecipe(new ItemStack(encrustedObsidian, 2), Items.diamond, Blocks.obsidian, Blocks.obsidian, Items.emerald);
+		GameRegistry.addShapelessRecipe(new ItemStack(encrustedObsidian, 2), Items.DIAMOND, Blocks.OBSIDIAN, Blocks.OBSIDIAN, Items.EMERALD);
 	}
 
 	@Override

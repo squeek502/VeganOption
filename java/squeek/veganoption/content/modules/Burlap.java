@@ -1,9 +1,11 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -11,7 +13,6 @@ import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Burlap implements IContentModule
 {
@@ -27,61 +28,61 @@ public class Burlap implements IContentModule
 		burlap = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".burlap")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":burlap");
-		GameRegistry.registerItem(burlap, "burlap");
+				.setRegistryName(ModInfo.MODID_LOWER, "burlap");
+		GameRegistry.register(burlap);
 
-		burlapHelmet = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 0)
+		burlapHelmet = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.HEAD)
 				.setUnlocalizedName(ModInfo.MODID + ".helmetBurlap")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName("leather_helmet");
-		GameRegistry.registerItem(burlapHelmet, "helmetBurlap");
+				.setRegistryName(ModInfo.MODID_LOWER, "helmetBurlap");
+		GameRegistry.register(burlapHelmet);
 
-		burlapChestplate = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 1)
+		burlapChestplate = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.CHEST)
 				.setUnlocalizedName(ModInfo.MODID + ".chestplateBurlap")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName("leather_chestplate");
-		GameRegistry.registerItem(burlapChestplate, "chestplateBurlap");
+				.setRegistryName(ModInfo.MODID_LOWER, "chestplateBurlap");
+		GameRegistry.register(burlapChestplate);
 
-		burlapLeggings = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 2)
+		burlapLeggings = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.LEGS)
 				.setUnlocalizedName(ModInfo.MODID + ".leggingsBurlap")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName("leather_leggings");
-		GameRegistry.registerItem(burlapLeggings, "leggingsBurlap");
+				.setRegistryName(ModInfo.MODID_LOWER, "leggingsBurlap");
+		GameRegistry.register(burlapLeggings);
 
-		burlapBoots = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.CLOTH, 0, 3)
+		burlapBoots = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.FEET)
 				.setUnlocalizedName(ModInfo.MODID + ".bootsBurlap")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName("leather_boots");
-		GameRegistry.registerItem(burlapBoots, "bootsBurlap");
+				.setRegistryName(ModInfo.MODID_LOWER, "bootsBurlap");
+		GameRegistry.register(burlapBoots);
 	}
 
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.leatherOreDict, new ItemStack(Items.leather));
+		OreDictionary.registerOre(ContentHelper.leatherOreDict, new ItemStack(Items.LEATHER));
 		OreDictionary.registerOre(ContentHelper.leatherOreDict, new ItemStack(burlap));
-		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(Items.leather_boots));
+		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(Items.LEATHER_BOOTS));
 		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(burlapBoots));
-		OreDictionary.registerOre(ContentHelper.leatherLeggingsOreDict, new ItemStack(Items.leather_leggings));
+		OreDictionary.registerOre(ContentHelper.leatherLeggingsOreDict, new ItemStack(Items.LEATHER_LEGGINGS));
 		OreDictionary.registerOre(ContentHelper.leatherLeggingsOreDict, new ItemStack(burlapLeggings));
-		OreDictionary.registerOre(ContentHelper.leatherChestplateOreDict, new ItemStack(Items.leather_chestplate));
+		OreDictionary.registerOre(ContentHelper.leatherChestplateOreDict, new ItemStack(Items.LEATHER_CHESTPLATE));
 		OreDictionary.registerOre(ContentHelper.leatherChestplateOreDict, new ItemStack(burlapChestplate));
-		OreDictionary.registerOre(ContentHelper.leatherHelmetOreDict, new ItemStack(Items.leather_helmet));
+		OreDictionary.registerOre(ContentHelper.leatherHelmetOreDict, new ItemStack(Items.LEATHER_HELMET));
 		OreDictionary.registerOre(ContentHelper.leatherHelmetOreDict, new ItemStack(burlapHelmet));
 	}
 
 	@Override
 	public void recipes()
 	{
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.leather_helmet));
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.leather_chestplate));
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.leather_leggings));
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.leather_boots));
-		Modifiers.recipes.convertInput(new ItemStack(Items.leather), ContentHelper.leatherOreDict);
-		Modifiers.recipes.convertInput(new ItemStack(Items.leather_boots), ContentHelper.leatherBootsOreDict);
-		Modifiers.recipes.convertInput(new ItemStack(Items.leather_leggings), ContentHelper.leatherLeggingsOreDict);
-		Modifiers.recipes.convertInput(new ItemStack(Items.leather_chestplate), ContentHelper.leatherChestplateOreDict);
-		Modifiers.recipes.convertInput(new ItemStack(Items.leather_helmet), ContentHelper.leatherHelmetOreDict);
+		Modifiers.recipes.excludeOutput(new ItemStack(Items.LEATHER_HELMET));
+		Modifiers.recipes.excludeOutput(new ItemStack(Items.LEATHER_CHESTPLATE));
+		Modifiers.recipes.excludeOutput(new ItemStack(Items.LEATHER_LEGGINGS));
+		Modifiers.recipes.excludeOutput(new ItemStack(Items.LEATHER_BOOTS));
+		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER), ContentHelper.leatherOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_BOOTS), ContentHelper.leatherBootsOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_LEGGINGS), ContentHelper.leatherLeggingsOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_CHESTPLATE), ContentHelper.leatherChestplateOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_HELMET), ContentHelper.leatherHelmetOreDict);
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(burlap), "~~", "~~", '~', ContentHelper.bastFibreOreDict));
 
@@ -90,7 +91,7 @@ public class Burlap implements IContentModule
 		GameRegistry.addRecipe(new ItemStack(burlapLeggings), "XXX", "X X", "X X", 'X', new ItemStack(burlap));
 		GameRegistry.addRecipe(new ItemStack(burlapBoots), "X X", "X X", 'X', new ItemStack(burlap));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.string), "~~", '~', ContentHelper.bastFibreOreDict));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.STRING), "~~", '~', ContentHelper.bastFibreOreDict));
 	}
 
 	@Override

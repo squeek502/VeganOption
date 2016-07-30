@@ -3,6 +3,7 @@ package squeek.veganoption.blocks;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockObsidian;
+import net.minecraft.block.SoundType;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import squeek.veganoption.content.modules.Ender;
@@ -13,6 +14,7 @@ public class BlockEncrustedObsidian extends BlockObsidian
 	public BlockEncrustedObsidian()
 	{
 		super();
+		setSoundType(SoundType.STONE);
 	}
 
 	@Override

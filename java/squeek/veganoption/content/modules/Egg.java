@@ -1,10 +1,20 @@
 package squeek.veganoption.content.modules;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -17,12 +27,6 @@ import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.entities.EntityPlasticEgg;
 import squeek.veganoption.items.ItemFoodContainered;
 import squeek.veganoption.items.ItemThrowableGeneric;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Egg implements IContentModule
 {
@@ -30,7 +34,7 @@ public class Egg implements IContentModule
 	public static Item appleSauce;
 	public static Item plasticEgg;
 
-	public static final ItemStack potatoCrusher = new ItemStack(Blocks.piston);
+	public static final ItemStack potatoCrusher = new ItemStack(Blocks.PISTON);
 
 	@Override
 	public void create()
@@ -38,21 +42,21 @@ public class Egg implements IContentModule
 		appleSauce = new ItemFoodContainered(3, 1f, false)
 				.setUnlocalizedName(ModInfo.MODID + ".appleSauce")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":apple_sauce")
-				.setContainerItem(Items.bowl);
-		GameRegistry.registerItem(appleSauce, "appleSauce");
+				.setRegistryName(ModInfo.MODID_LOWER, "apple_sauce")
+				.setContainerItem(Items.BOWL);
+		GameRegistry.register(appleSauce);
 
 		potatoStarch = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".potatoStarch")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":potato_starch");
-		GameRegistry.registerItem(potatoStarch, "potatoStarch");
+				.setRegistryName(ModInfo.MODID_LOWER, "potato_starch");
+		GameRegistry.register(potatoStarch);
 
 		plasticEgg = new ItemThrowableGeneric(EntityPlasticEgg.class)
 				.setUnlocalizedName(ModInfo.MODID + ".plasticEgg")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":plastic_egg");
-		GameRegistry.registerItem(plasticEgg, "plasticEgg");
+				.setRegistryName(ModInfo.MODID_LOWER, "plastic_egg");
+		GameRegistry.register(plasticEgg);
 
 		EntityRegistry.registerModEntity(EntityPlasticEgg.class, "plasticEgg", ContentHelper.ENTITYID_PLASTIC_EGG, ModInfo.MODID, 80, 1, true);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
@@ -64,16 +68,21 @@ public class Egg implements IContentModule
 	@SideOnly(Side.CLIENT)
 	public void createPlasticEggRenderer()
 	{
-		RenderingRegistry.registerEntityRenderingHandler(EntityPlasticEgg.class, new RenderSnowball(plasticEgg));
+		RenderingRegistry.registerEntityRenderingHandler(EntityPlasticEgg.class, new IRenderFactory<EntityPlasticEgg>() {
+			@Override
+			public Render<? super EntityPlasticEgg> createRenderFor(RenderManager manager) {
+				return new RenderSnowball<EntityPlasticEgg>(manager, plasticEgg, Minecraft.getMinecraft().getRenderItem());
+			}
+		});
 	}
 
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.eggObjectOreDict, new ItemStack(Items.egg));
+		OreDictionary.registerOre(ContentHelper.eggObjectOreDict, new ItemStack(Items.EGG));
 		OreDictionary.registerOre(ContentHelper.eggObjectOreDict, new ItemStack(plasticEgg));
 
-		OreDictionary.registerOre(ContentHelper.eggBakingOreDict, new ItemStack(Items.egg));
+		OreDictionary.registerOre(ContentHelper.eggBakingOreDict, new ItemStack(Items.EGG));
 		OreDictionary.registerOre(ContentHelper.eggBakingOreDict, new ItemStack(appleSauce));
 		OreDictionary.registerOre(ContentHelper.eggBakingOreDict, new ItemStack(potatoStarch));
 
@@ -84,15 +93,15 @@ public class Egg implements IContentModule
 	public void recipes()
 	{
 		Modifiers.recipes.convertOreDict(ContentHelper.eggFoodOreDict, ContentHelper.eggBakingOreDict);
-		Modifiers.recipes.convertInputForFoodOutput(new ItemStack(Items.egg), ContentHelper.eggBakingOreDict);
-		Modifiers.recipes.convertInputForNonFoodOutput(new ItemStack(Items.egg), ContentHelper.eggObjectOreDict);
+		Modifiers.recipes.convertInputForFoodOutput(new ItemStack(Items.EGG), ContentHelper.eggBakingOreDict);
+		Modifiers.recipes.convertInputForNonFoodOutput(new ItemStack(Items.EGG), ContentHelper.eggObjectOreDict);
 
-		GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.apple), new ItemStack(Items.bowl));
+		GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.APPLE), new ItemStack(Items.BOWL));
 
-		GameRegistry.addShapelessRecipe(new ItemStack(potatoStarch), potatoCrusher, new ItemStack(Items.potato));
+		GameRegistry.addShapelessRecipe(new ItemStack(potatoStarch), potatoCrusher, new ItemStack(Items.POTATO));
 		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(potatoStarch), potatoCrusher);
 
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(new ItemStack(potatoStarch), Items.potato));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new ItemStack(potatoStarch), Items.POTATO));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(plasticEgg), " o ", "o o", " o ", 'o', ContentHelper.plasticOreDict));
 	}

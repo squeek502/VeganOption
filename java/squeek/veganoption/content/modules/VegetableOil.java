@@ -12,11 +12,14 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -30,7 +33,6 @@ import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class VegetableOil implements IContentModule
 {
@@ -44,30 +46,30 @@ public class VegetableOil implements IContentModule
 	@Override
 	public void create()
 	{
-		oilPresser = new ItemStack(Blocks.heavy_weighted_pressure_plate);
+		oilPresser = new ItemStack(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
 
 		seedSunflower = new ItemFood(1, 0.05f, false)
 				.setUnlocalizedName(ModInfo.MODID + ".seedSunflower")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":sunflower_seeds");
-		GameRegistry.registerItem(seedSunflower, "seedSunflower");
+				.setRegistryName(ModInfo.MODID_LOWER, "seedsSunflower");
+		GameRegistry.register(seedSunflower);
 
-		fluidVegetableOil = new Fluid(ModInfo.MODID + ".fluidOilVegetable");
+		fluidVegetableOil = new Fluid(ModInfo.MODID + ".fluidOilVegetable", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_flow"));
 		FluidRegistry.registerFluid(fluidVegetableOil);
-		fluidBlockVegetableOil = new BlockFluidGeneric(fluidVegetableOil, Material.water, "vegetable_oil")
-				.setBlockName(ModInfo.MODID + ".fluidOilVegetable");
+		fluidBlockVegetableOil = new BlockFluidGeneric(fluidVegetableOil, Material.WATER, "vegetable_oil")
+				.setUnlocalizedName(ModInfo.MODID + ".fluidOilVegetable");
 		fluidVegetableOil.setBlock(fluidBlockVegetableOil);
 		fluidVegetableOil.setUnlocalizedName(fluidBlockVegetableOil.getUnlocalizedName());
-		GameRegistry.registerBlock(fluidBlockVegetableOil, "fluidOilVegetable");
+		GameRegistry.register(fluidBlockVegetableOil);
 
 		oilVegetable = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".oilVegetable")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":vegetable_oil")
-				.setContainerItem(Items.glass_bottle);
+				.setRegistryName(ModInfo.MODID_LOWER, "oilVegetable")
+				.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.registerItem(oilVegetable, "oilVegetable");
 
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidVegetableOil, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(oilVegetable), new ItemStack(oilVegetable.getContainerItem()));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidVegetableOil, Fluid.BUCKET_VOLUME), new ItemStack(oilVegetable), new ItemStack(oilVegetable.getContainerItem()));
 	}
 
 	@Override
@@ -92,13 +94,13 @@ public class VegetableOil implements IContentModule
 		ContentHelper.remapOre(ContentHelper.teaSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
 		ContentHelper.remapOre(ContentHelper.avocadoOreDict, ContentHelper.vegetableOilSourceOreDict);
 
-		BlockSpecifier sunflowerTopSpecifier = new BlockSpecifier(Blocks.double_plant, 0)
+		BlockSpecifier sunflowerTopSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT, 0)
 		{
 			@Override
-			public boolean matches(IBlockAccess world, int x, int y, int z, Block block, int meta)
+			public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta)
 			{
 				boolean isRightBlock = this.block == block;
-				boolean isRightMeta = this.meta == BlockDoublePlant.func_149890_d(meta);
+				boolean isRightMeta = this.meta == BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta();
 				return isRightBlock && isRightMeta;
 			}
 		};
@@ -114,7 +116,7 @@ public class VegetableOil implements IContentModule
 					List<ItemStack> dropsToRemove = new ArrayList<ItemStack>();
 					for (ItemStack drop : drops)
 					{
-						if (drop.getItem() == Item.getItemFromBlock(Blocks.double_plant) && drop.getItemDamage() == 0)
+						if (drop.getItem() == Item.getItemFromBlock(Blocks.DOUBLE_PLANT) && drop.getItemDamage() == 0)
 							dropsToRemove.add(drop);
 					}
 					drops.removeAll(dropsToRemove);

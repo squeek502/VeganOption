@@ -24,7 +24,7 @@ public class Fossils implements IContentModule
 	public void recipes()
 	{
 		// bones as a rare drop from stone
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.stone), new DropSpecifier(new ItemStack(Items.bone), 0.01f, 1, 2));
+		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.STONE), new DropSpecifier(new ItemStack(Items.BONE), 0.01f, 1, 2));
 	}
 
 	@Override

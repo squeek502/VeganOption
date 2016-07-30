@@ -5,6 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -15,7 +16,6 @@ import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.items.ItemWashableWheat;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 // TODO: Tooltips, usage, and recipe text
 public class Seitan implements IContentModule
@@ -27,7 +27,7 @@ public class Seitan implements IContentModule
 	public static ItemStack wheatFlourStack;
 	public static ItemStack wheatDoughStack;
 
-	public static final ItemStack wheatCrusher = new ItemStack(Blocks.piston);
+	public static final ItemStack wheatCrusher = new ItemStack(Blocks.PISTON);
 
 	@Override
 	public void create()
@@ -35,7 +35,7 @@ public class Seitan implements IContentModule
 		washableWheat = new ItemWashableWheat()
 				.setUnlocalizedName(ModInfo.MODID)
 				.setCreativeTab(VeganOption.creativeTab);
-		GameRegistry.registerItem(washableWheat, "washableWheat");
+		GameRegistry.register(washableWheat);
 		wheatFlourStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_FLOUR);
 		wheatDoughStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_DOUGH);
 		seitanUnwashedStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_UNWASHED_START);
@@ -44,8 +44,8 @@ public class Seitan implements IContentModule
 		seitanCooked = new ItemFood(8, 0.8f, false)
 				.setUnlocalizedName(ModInfo.MODID + ".seitanCooked")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":seitan_cooked");
-		GameRegistry.registerItem(seitanCooked, "seitanCooked");
+				.setRegistryName(ModInfo.MODID_LOWER, "seitanCooked");
+		GameRegistry.register(seitanCooked);
 	}
 
 	@Override
@@ -67,18 +67,18 @@ public class Seitan implements IContentModule
 	{
 		ContentHelper.addOreSmelting(ContentHelper.rawSeitanOreDict, new ItemStack(seitanCooked), 0.35f);
 
-		GameRegistry.addShapelessRecipe(wheatFlourStack.copy(), wheatCrusher, new ItemStack(Items.wheat));
+		GameRegistry.addShapelessRecipe(wheatFlourStack.copy(), wheatCrusher, new ItemStack(Items.WHEAT));
 		Modifiers.crafting.addInputsToKeepForOutput(wheatFlourStack.copy(), wheatCrusher);
 
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(wheatFlourStack.copy(), Items.wheat));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(wheatFlourStack.copy(), Items.WHEAT));
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(wheatDoughStack.copy(), new ItemStack(Items.water_bucket), ContentHelper.wheatFlourOreDict));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanUnwashedStack.copy(), new ItemStack(Items.water_bucket), ContentHelper.wheatDoughOreDict));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(wheatDoughStack.copy(), new ItemStack(Items.WATER_BUCKET), ContentHelper.wheatFlourOreDict));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanUnwashedStack.copy(), new ItemStack(Items.WATER_BUCKET), ContentHelper.wheatDoughOreDict));
 		for (int outputMeta = ItemWashableWheat.META_UNWASHED_START + 1; outputMeta < ItemWashableWheat.META_UNWASHED_END; outputMeta++)
 		{
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(washableWheat, 1, outputMeta), new ItemStack(Items.water_bucket), new ItemStack(washableWheat, 1, outputMeta - 1)));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(washableWheat, 1, outputMeta), new ItemStack(Items.WATER_BUCKET), new ItemStack(washableWheat, 1, outputMeta - 1)));
 		}
-		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanRawStack.copy(), new ItemStack(Items.water_bucket), new ItemStack(washableWheat, 1, ItemWashableWheat.META_RAW - 1)));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanRawStack.copy(), new ItemStack(Items.WATER_BUCKET), new ItemStack(washableWheat, 1, ItemWashableWheat.META_RAW - 1)));
 	}
 
 	@Override

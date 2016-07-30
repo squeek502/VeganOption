@@ -2,15 +2,19 @@ package squeek.veganoption.content.modules;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -19,7 +23,6 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class DollsEye implements IContentModule
 {
@@ -29,12 +32,11 @@ public class DollsEye implements IContentModule
 	public void create()
 	{
 		dollsEye = new ItemFood(2, 0.8F, false)
-				.setPotionEffect(Potion.poison.id, 5, 0, 1.0F)
-				.setPotionEffect(PotionHelper.spiderEyeEffect)
+				.setPotionEffect(new PotionEffect(MobEffects.POISON, 5, 0), 1F)
 				.setUnlocalizedName(ModInfo.MODID + ".dollsEye")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":dolls_eye");
-		GameRegistry.registerItem(dollsEye, "dollsEye");
+				.setRegistryName(ModInfo.MODID_LOWER, "dollsEye");
+		GameRegistry.register(dollsEye);
 	}
 
 	@Override
@@ -46,17 +48,19 @@ public class DollsEye implements IContentModule
 	@Override
 	public void recipes()
 	{
-		BlockSpecifier forestGrass = new BlockSpecifier(Blocks.tallgrass, 1)
+		PotionHelper.registerPotionTypeConversion(PotionTypes.AWKWARD, new PotionHelper.ItemPredicateInstance(dollsEye), PotionTypes.POISON);
+
+		BlockSpecifier forestGrass = new BlockSpecifier(Blocks.TALLGRASS, 1)
 		{
 			@Override
-			public boolean matches(IBlockAccess world, int x, int y, int z, Block block, int meta)
+			public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta)
 			{
-				boolean blockMatches = super.matches(world, x, y, z, block, meta);
+				boolean blockMatches = super.matches(world, pos, block, meta);
 
 				if (!blockMatches || !(world instanceof World))
 					return false;
 
-				BiomeGenBase biome = ((World) world).provider.getBiomeGenForCoords(x, z);
+				Biome biome = ((World) world).provider.getBiomeForCoords(pos);
 
 				boolean isForest = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.FOREST);
 

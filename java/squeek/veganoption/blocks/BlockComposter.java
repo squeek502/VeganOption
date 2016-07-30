@@ -2,6 +2,7 @@ package squeek.veganoption.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,6 +21,7 @@ public class BlockComposter extends BlockContainer
 	{
 		super(Material.wood);
 		this.setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
+		setSoundType(SoundType.WOOD);
 	}
 
 	@Override

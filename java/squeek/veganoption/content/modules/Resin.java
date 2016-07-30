@@ -1,10 +1,11 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -13,7 +14,6 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Resin implements IContentModule
 {
@@ -26,21 +26,21 @@ public class Resin implements IContentModule
 		resin = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".resin")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":resin");
-		GameRegistry.registerItem(resin, "resin");
+				.setRegistryName(ModInfo.MODID_LOWER, "resin");
+		GameRegistry.register(resin);
 
 
 		rosin = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".rosin")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":rosin");
+				.setRegistryName(ModInfo.MODID_LOWER, "rosin");
 		GameRegistry.registerItem(rosin, "rosin");
 	}
 
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.slimeballOreDict, new ItemStack(Items.slime_ball));
+		OreDictionary.registerOre(ContentHelper.slimeballOreDict, new ItemStack(Items.SLIME_BALL));
 		OreDictionary.registerOre(ContentHelper.slimeballOreDict, new ItemStack(resin));
 		OreDictionary.registerOre(ContentHelper.resinOreDict, new ItemStack(resin));
 		OreDictionary.registerOre(ContentHelper.resinMaterialOreDict, new ItemStack(resin));
@@ -51,14 +51,14 @@ public class Resin implements IContentModule
 	@Override
 	public void recipes()
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.slime_ball), ContentHelper.slimeballOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.SLIME_BALL), ContentHelper.slimeballOreDict);
 
-		BlockSpecifier spruceLogSpecifier = new BlockSpecifier(Blocks.log, 1)
+		BlockSpecifier spruceLogSpecifier = new BlockSpecifier(Blocks.LOG, 1)
 		{
 			@Override
 			public boolean metaMatches(int meta)
 			{
-				return this.meta == BlockLog.func_150165_c(meta);
+				return this.meta == BlockPlanks.EnumType.byMetadata(meta).getMetadata();
 			}
 		};
 		Modifiers.drops.addDropsToBlock(spruceLogSpecifier, new DropSpecifier(new ItemStack(resin), 0.1f));

@@ -3,11 +3,15 @@ package squeek.veganoption.content.modules;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -16,7 +20,6 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ToxicMushroom implements IContentModule
 {
@@ -27,37 +30,35 @@ public class ToxicMushroom implements IContentModule
 	public void create()
 	{
 		falseMorel = new ItemFood(2, 0.8F, false)
-				.setPotionEffect(Potion.poison.id, 5, 0, 1.0F)
-				.setPotionEffect(PotionHelper.spiderEyeEffect)
+				.setPotionEffect(new PotionEffect(MobEffects.POISON, 5, 0), 1.0F)
 				.setUnlocalizedName(ModInfo.MODID + ".falseMorel")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":false_morel");
-		GameRegistry.registerItem(falseMorel, "falseMorel");
+				.setRegistryName(ModInfo.MODID_LOWER, "falseMorel");
+		GameRegistry.register(falseMorel);
 
 		falseMorelFermented = new Item()
-				.setPotionEffect(PotionHelper.fermentedSpiderEyeEffect)
 				.setUnlocalizedName(ModInfo.MODID + ".falseMorelFermented")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":false_morel_fermented");
-		GameRegistry.registerItem(falseMorelFermented, "falseMorelFermented");
+				.setRegistryName(ModInfo.MODID_LOWER, "falseMorelFermented");
+		GameRegistry.register(falseMorelFermented);
 	}
 
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.poisonousOreDict, Items.spider_eye);
+		OreDictionary.registerOre(ContentHelper.poisonousOreDict, Items.SPIDER_EYE);
 		OreDictionary.registerOre(ContentHelper.poisonousOreDict, falseMorel);
-		OreDictionary.registerOre(ContentHelper.fermentedOreDict, Items.fermented_spider_eye);
+		OreDictionary.registerOre(ContentHelper.fermentedOreDict, Items.FERMENTED_SPIDER_EYE);
 		OreDictionary.registerOre(ContentHelper.fermentedOreDict, falseMorelFermented);
 	}
 
 	@Override
 	public void recipes()
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.spider_eye), ContentHelper.poisonousOreDict);
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.fermented_spider_eye));
+		Modifiers.recipes.convertInput(new ItemStack(Items.SPIDER_EYE), ContentHelper.poisonousOreDict);
+		Modifiers.recipes.excludeOutput(new ItemStack(Items.FERMENTED_SPIDER_EYE));
 
-		Modifiers.recipes.convertInput(new ItemStack(Items.fermented_spider_eye), ContentHelper.fermentedOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.FERMENTED_SPIDER_EYE), ContentHelper.fermentedOreDict);
 
 		DropSpecifier dontDropWhenSilkTouching = new DropSpecifier(new ItemStack(falseMorel), 0.15f)
 		{
@@ -67,9 +68,9 @@ public class ToxicMushroom implements IContentModule
 				return !isSilkTouching && super.shouldDrop(harvester, fortuneLevel, isSilkTouching);
 			}
 		};
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.mycelium), dontDropWhenSilkTouching);
+		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.MYCELIUM), dontDropWhenSilkTouching);
 
-		GameRegistry.addShapelessRecipe(new ItemStack(falseMorelFermented), new ItemStack(falseMorel), new ItemStack(Blocks.brown_mushroom), new ItemStack(Items.sugar));
+		GameRegistry.addShapelessRecipe(new ItemStack(falseMorelFermented), new ItemStack(falseMorel), new ItemStack(Blocks.BROWN_MUSHROOM_BLOCK), new ItemStack(Items.SUGAR));
 	}
 
 	@Override

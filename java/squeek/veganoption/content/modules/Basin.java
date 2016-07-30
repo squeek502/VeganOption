@@ -3,9 +3,12 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -13,11 +16,6 @@ import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.blocks.renderers.RenderBasin;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
 import squeek.veganoption.content.IContentModule;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Basin implements IContentModule
 {
@@ -26,13 +24,12 @@ public class Basin implements IContentModule
 	@Override
 	public void create()
 	{
-		basin = new BlockBasin(Material.iron)
+		basin = new BlockBasin(Material.IRON)
 				.setHardness(2.5F)
-				.setStepSound(Block.soundTypeMetal)
-				.setBlockName(ModInfo.MODID + ".basin")
+				.setUnlocalizedName(ModInfo.MODID + ".basin")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setBlockTextureName(ModInfo.MODID_LOWER + ":basin");
-		GameRegistry.registerBlock(basin, "basin");
+				.setRegistryName(ModInfo.MODID_LOWER, "basin");
+		GameRegistry.register(basin);
 		GameRegistry.registerTileEntity(TileEntityBasin.class, ModInfo.MODID + ".basin");
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
@@ -45,7 +42,6 @@ public class Basin implements IContentModule
 	{
 		RenderBasin basinRenderer = new RenderBasin();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasin.class, basinRenderer);
-		MinecraftForgeClient.registerItemRenderer(ItemBlock.getItemFromBlock(basin), basinRenderer);
 	}
 
 	@Override
@@ -56,7 +52,7 @@ public class Basin implements IContentModule
 	@Override
 	public void recipes()
 	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(basin), " g ", "gcg", " g ", 'g', "blockGlassColorless", 'c', Items.cauldron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(basin), " g ", "gcg", " g ", 'g', "blockGlassColorless", 'c', Items.CAULDRON));
 	}
 
 	@Override

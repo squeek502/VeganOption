@@ -2,6 +2,7 @@ package squeek.veganoption.content.modules;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -11,7 +12,6 @@ import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.items.ItemBedGeneric;
 import squeek.veganoption.items.ItemBedStraw;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class StrawBed implements IContentModule
 {
@@ -24,16 +24,16 @@ public class StrawBed implements IContentModule
 		bedStrawBlock = (BlockBedGeneric) new BlockBedStraw()
 				.setHardness(0.2F)
 				.setCreativeTab(VeganOption.creativeTab)
-				.setBlockName(ModInfo.MODID + ".bedStraw")
-				.setBlockTextureName(ModInfo.MODID_LOWER + ":straw_bed");
+				.setUnlocalizedName(ModInfo.MODID + ".bedStraw")
+				.setRegistryName(ModInfo.MODID_LOWER, "bedStraw");
 		bedStrawItem = (ItemBedGeneric) new ItemBedStraw(bedStrawBlock)
 				.setMaxStackSize(1)
 				.setCreativeTab(VeganOption.creativeTab)
 				.setUnlocalizedName(ModInfo.MODID + ".bedStraw")
-				.setTextureName(ModInfo.MODID_LOWER + ":straw_bed");
+				.setRegistryName(ModInfo.MODID_LOWER, "bedStraw");
 		bedStrawBlock.setBedItem(bedStrawItem);
-		GameRegistry.registerBlock(bedStrawBlock, null, "bedStraw");
-		GameRegistry.registerItem(bedStrawItem, "bedStraw");
+		GameRegistry.register(bedStrawBlock);
+		GameRegistry.register(bedStrawItem);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class StrawBed implements IContentModule
 	@Override
 	public void recipes()
 	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bedStrawItem), "~~~", "===", '~', new ItemStack(Blocks.hay_block), '=', ContentHelper.woodPlankOreDict));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bedStrawItem), "~~~", "===", '~', new ItemStack(Blocks.HAY_BLOCK), '=', ContentHelper.woodPlankOreDict));
 	}
 
 	@Override

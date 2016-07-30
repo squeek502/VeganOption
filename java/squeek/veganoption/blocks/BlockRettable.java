@@ -2,6 +2,7 @@ package squeek.veganoption.blocks;
 
 import java.util.Random;
 import net.minecraft.block.BlockHay;
+import net.minecraft.block.SoundType;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -30,6 +31,7 @@ public class BlockRettable extends BlockHay
 		this.rettedItem = rettedItem;
 		this.minRettedItemDrops = minRettedItemDrops;
 		this.maxRettedItemDrops = maxRettedItemDrops;
+		setSoundType(SoundType.GROUND);
 	}
 
 	public BlockRettable(Item rettedItem, int minRettedItemDrops, int maxRettedItemDrops, int baseColor, int rettedColor)

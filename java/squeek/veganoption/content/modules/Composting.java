@@ -3,13 +3,14 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemFishFood;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.init.MobEffects;
+import net.minecraft.item.*;
+import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -26,11 +27,6 @@ import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.items.ItemFertilizer;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Composting implements IContentModule
 {
@@ -44,11 +40,11 @@ public class Composting implements IContentModule
 	{
 		composter = new BlockComposter()
 				.setHardness(2.5F)
-				.setStepSound(Block.soundTypeWood)
-				.setBlockName(ModInfo.MODID + ".composter")
+				.setUnlocalizedName(ModInfo.MODID + ".composter")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setBlockTextureName(ModInfo.MODID_LOWER + ":composter");
-		GameRegistry.registerBlock(composter, "composter");
+				.setRegistryName(ModInfo.MODID_LOWER, "composter");
+		GameRegistry.register(composter);
+		GameRegistry.register(new ItemBlock(composter).setRegistryName(composter.getRegistryName()));
 		GameRegistry.registerTileEntity(TileEntityComposter.class, ModInfo.MODID + ".composter");
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
@@ -56,32 +52,31 @@ public class Composting implements IContentModule
 		}
 
 		rottenPlants = new ItemFood(4, 0.1F, true)
-				.setPotionEffect(Potion.hunger.id, 30, 0, 0.8F)
+				.setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F)
 				.setUnlocalizedName(ModInfo.MODID + ".rottenPlants")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":rotten_plants");
-		GameRegistry.registerItem(rottenPlants, "rottenPlants");
+				.setRegistryName(ModInfo.MODID_LOWER, "rottenPlants");
+		GameRegistry.register(rottenPlants);
 
 		fertilizer = new ItemFertilizer()
 				.setUnlocalizedName(ModInfo.MODID + ".fertilizer")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":fertilizer");
-		GameRegistry.registerItem(fertilizer, "fertilizer");
+				.setRegistryName(ModInfo.MODID_LOWER, "fertilizer");
+		GameRegistry.register(fertilizer);
 
 		compost = new BlockCompost()
 				.setHardness(0.5F)
-				.setStepSound(Block.soundTypeGravel)
-				.setBlockName(ModInfo.MODID + ".compost")
+				.setUnlocalizedName(ModInfo.MODID + ".compost")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setBlockTextureName(ModInfo.MODID_LOWER + ":compost");
-		GameRegistry.registerBlock(compost, "compost");
-
+				.setRegistryName(ModInfo.MODID_LOWER, "compost");
+		GameRegistry.register(compost);
+		GameRegistry.register(new ItemBlock(compost).setRegistryName(compost.getRegistryName()));
 	}
 
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.rottenOreDict, new ItemStack(Items.rotten_flesh));
+		OreDictionary.registerOre(ContentHelper.rottenOreDict, new ItemStack(Items.ROTTEN_FLESH));
 		OreDictionary.registerOre(ContentHelper.rottenOreDict, rottenPlants);
 		OreDictionary.registerOre(ContentHelper.fertilizerOreDict, fertilizer);
 		OreDictionary.registerOre(ContentHelper.brownDyeOreDict, fertilizer);
@@ -90,9 +85,9 @@ public class Composting implements IContentModule
 	@Override
 	public void recipes()
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.rotten_flesh), ContentHelper.rottenOreDict);
+		Modifiers.recipes.convertInput(new ItemStack(Items.ROTTEN_FLESH), ContentHelper.rottenOreDict);
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(composter), "/c/", "/ /", '/', ContentHelper.stickOreDict, 'c', new ItemStack(Blocks.chest)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(composter), "/c/", "/ /", '/', ContentHelper.stickOreDict, 'c', new ItemStack(Blocks.CHEST)));
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(fertilizer, 8), new ItemStack(compost), ContentHelper.saltpeterOreDict));
 	}
@@ -104,25 +99,25 @@ public class Composting implements IContentModule
 		RelationshipRegistry.addRelationship(new ItemStack(rottenPlants), new ItemStack(composter));
 
 		CompostRegistry.addBrown(ContentHelper.stickOreDict);
-		CompostRegistry.addBrown(Items.paper);
+		CompostRegistry.addBrown(Items.PAPER);
 		CompostRegistry.addBrown(ContentHelper.bastFibreOreDict);
 		CompostRegistry.addBrown(ContentHelper.woodAshOreDict);
-		CompostRegistry.addBrown(Blocks.deadbush);
+		CompostRegistry.addBrown(Blocks.DEADBUSH);
 		CompostRegistry.addBrown(ContentHelper.sawDustOreDict);
 		CompostRegistry.addBrown(ContentHelper.sawDustAltOreDict);
 
 		CompostRegistry.addGreen(ContentHelper.saplingOreDict);
 		CompostRegistry.addGreen(rottenPlants);
-		CompostRegistry.addGreen(Blocks.tallgrass);
-		CompostRegistry.addGreen(Blocks.double_plant);
+		CompostRegistry.addGreen(Blocks.TALLGRASS);
+		CompostRegistry.addGreen(Blocks.DOUBLE_PLANT);
 		CompostRegistry.addGreen(ContentHelper.leavesOreDict);
-		CompostRegistry.addGreen(Blocks.pumpkin);
-		CompostRegistry.addGreen(Blocks.melon_block);
-		CompostRegistry.addGreen(Blocks.vine);
-		CompostRegistry.addGreen(Blocks.yellow_flower);
-		CompostRegistry.addGreen(Blocks.red_flower);
-		CompostRegistry.addGreen(Blocks.brown_mushroom);
-		CompostRegistry.addGreen(Blocks.red_mushroom);
+		CompostRegistry.addGreen(Blocks.PUMPKIN);
+		CompostRegistry.addGreen(Blocks.MELON_BLOCK);
+		CompostRegistry.addGreen(Blocks.VINE);
+		CompostRegistry.addGreen(Blocks.YELLOW_FLOWER);
+		CompostRegistry.addGreen(Blocks.RED_FLOWER);
+		CompostRegistry.addGreen(Blocks.BROWN_MUSHROOM);
+		CompostRegistry.addGreen(Blocks.RED_MUSHROOM);
 
 		CompostRegistry.blacklist(new FoodSpecifier()
 		{
@@ -155,6 +150,5 @@ public class Composting implements IContentModule
 	{
 		RenderComposter composterRenderer = new RenderComposter();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityComposter.class, composterRenderer);
-		MinecraftForgeClient.registerItemRenderer(ItemBlock.getItemFromBlock(composter), composterRenderer);
 	}
 }

@@ -62,7 +62,7 @@ public class FrozenBubble implements IContentModule
 		soapSolution = new ItemSoapSolution()
 				.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "soap_solution")
+				.setRegistryName(ModInfo.MODID_LOWER, "soapSolution")
 				.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.register(soapSolution);
 
@@ -71,7 +71,7 @@ public class FrozenBubble implements IContentModule
 		frozenBubble = new ItemFrozenBubble()
 				.setUnlocalizedName(ModInfo.MODID + ".frozenBubble")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "frozen_bubble");
+				.setRegistryName(ModInfo.MODID_LOWER, "frozenBubble");
 		GameRegistry.register(frozenBubble);
 
 		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", ContentHelper.ENTITYID_BUBBLE, ModInfo.MODID, 80, 1, true);

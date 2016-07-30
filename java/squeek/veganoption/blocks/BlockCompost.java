@@ -3,6 +3,7 @@ package squeek.veganoption.blocks;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
@@ -15,6 +16,7 @@ public class BlockCompost extends Block
 		super(Material.ground);
 		setHarvestLevel("shovel", 0);
 		setTickRandomly(true);
+		setSoundType(SoundType.GROUND);
 	}
 
 	@Override

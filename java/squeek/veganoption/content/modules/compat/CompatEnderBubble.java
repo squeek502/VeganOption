@@ -4,11 +4,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.content.modules.FrozenBubble;
 import squeek.veganoption.content.registry.RelationshipRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CompatEnderBubble implements IContentModule
 {
@@ -16,7 +16,7 @@ public class CompatEnderBubble implements IContentModule
 	@Override
 	public void create()
 	{
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(Ender.fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.ender_pearl), new ItemStack(FrozenBubble.frozenBubble));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(Ender.fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.ENDER_PEARL), new ItemStack(FrozenBubble.frozenBubble));
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class CompatEnderBubble implements IContentModule
 	@Override
 	public void recipes()
 	{
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.ender_pearl), new ItemStack(FrozenBubble.frozenBubble), new ItemStack(Ender.bucketRawEnder));
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.ENDER_PEARL), new ItemStack(FrozenBubble.frozenBubble), new ItemStack(Ender.bucketRawEnder));
 	}
 
 	@Override

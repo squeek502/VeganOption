@@ -3,15 +3,22 @@ package squeek.veganoption.content.modules;
 import java.lang.reflect.Method;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -27,10 +34,6 @@ import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.items.ItemBlockJutePlant;
 import squeek.veganoption.items.ItemSeedsGeneric;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class Jute implements IContentModule
 {
@@ -48,34 +51,35 @@ public class Jute implements IContentModule
 		juteFibre = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".juteFibre")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":jute_fibre");
-		GameRegistry.registerItem(juteFibre, "juteFibre");
+				.setRegistryName(ModInfo.MODID_LOWER, "juteFibre");
+		GameRegistry.register(juteFibre);
 
 		juteStalk = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".juteStalk")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":jute_stalk");
-		GameRegistry.registerItem(juteStalk, "juteStalk");
+				.setRegistryName(ModInfo.MODID_LOWER, "juteStalk");
+		GameRegistry.register(juteStalk);
 
 		juteBundled = (BlockRettable) new BlockRettable(juteFibre, 8, 15)
 				.setHardness(0.5F)
-				.setStepSound(Block.soundTypeGrass)
-				.setBlockName(ModInfo.MODID + ".juteBundled")
+				.setUnlocalizedName(ModInfo.MODID + ".juteBundled")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setBlockTextureName(ModInfo.MODID_LOWER + ":jute_block");
+				.setRegistryName(ModInfo.MODID_LOWER, "juteBundled");
 		juteBundled.setHarvestLevel("axe", 0);
-		GameRegistry.registerBlock(juteBundled, "juteBundled");
+		GameRegistry.register(juteBundled);
+		GameRegistry.register(new ItemBlock(juteBundled).setRegistryName(juteBundled.getRegistryName()));
 
 		jutePlant = new BlockJutePlant()
-				.setBlockName(ModInfo.MODID + ".jutePlant")
-				.setBlockTextureName(ModInfo.MODID_LOWER + ":jute_plant");
-		GameRegistry.registerBlock(jutePlant, ItemBlockJutePlant.class, "jutePlant");
+				.setUnlocalizedName(ModInfo.MODID + ".jutePlant")
+				.setRegistryName(ModInfo.MODID_LOWER, "jutePlant");
+		GameRegistry.register(jutePlant);
+		GameRegistry.register(new ItemBlockJutePlant(jutePlant).setRegistryName(jutePlant.getRegistryName()));
 
 		juteSeeds = new ItemSeedsGeneric(jutePlant, EnumPlantType.Plains)
 				.setUnlocalizedName(ModInfo.MODID + ".juteSeeds")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":jute_seeds");
-		GameRegistry.registerItem(juteSeeds, "juteSeeds");
+				.setRegistryName(ModInfo.MODID_LOWER, "juteSeeds");
+		GameRegistry.register(juteSeeds);
 	}
 
 	@Override
@@ -93,12 +97,12 @@ public class Jute implements IContentModule
 		DropsModifier.NEIDropSpecifier juteDropSpecifier = new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops);
 		Modifiers.drops.addDropsToBlock(juteBundledBlockSpecifier, juteDropSpecifier);
 
-		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.double_plant, FERN_METADATA)
+		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT, FERN_METADATA)
 		{
 			@Override
 			public boolean metaMatches(int meta)
 			{
-				return this.meta == BlockDoublePlant.func_149890_d(meta);
+				return this.meta == BlockDoublePlant.EnumPlantType.FERN.getMeta();
 			}
 		};
 		juteDrops = new DropSpecifier(new ItemStack(juteStalk), 1, 3);
@@ -119,7 +123,8 @@ public class Jute implements IContentModule
 		RelationshipRegistry.addRelationship(new ItemStack(jutePlant), new ItemStack(juteSeeds));
 	}
 
-	public static final Method doublePlantDropBlockAsItem = ReflectionHelper.findMethod(Block.class, Blocks.double_plant, new String[]{"dropBlockAsItem", "func_149642_a", "a"}, World.class, int.class, int.class, int.class, ItemStack.class);
+	// FIXME
+	public static final Method doublePlantDropBlockAsItem = ReflectionHelper.findMethod(Block.class, Blocks.DOUBLE_PLANT, new String[]{"dropBlockAsItem", "func_149642_a", "a"}, World.class, BlockPos.class, ItemStack.class);
 
 	/**
 	 * Catch the top of a fern being broken and do the drops manually
@@ -133,26 +138,34 @@ public class Jute implements IContentModule
 		if (event.isCanceled())
 			return;
 
-		if (event.block != Blocks.double_plant)
+		IBlockState state = event.getState();
+		Block block = state.getBlock();
+		if (block != Blocks.DOUBLE_PLANT)
 			return;
 
-		if (!BlockDoublePlant.func_149887_c(event.blockMetadata))
+		if (state.getValue(BlockDoublePlant.HALF) == BlockDoublePlant.EnumBlockHalf.LOWER)
 			return;
 
-		if (event.world.getBlock(event.x, event.y - 1, event.z) != event.block)
+		World world = event.getWorld();
+		BlockPos posBelow = event.getPos().down();
+		IBlockState stateBelow = world.getBlockState(event.getPos().down());
+		Block blockBelow = stateBelow.getBlock();
+		if (blockBelow != block)
 			return;
 
-		if (BlockDoublePlant.func_149890_d(event.world.getBlockMetadata(event.x, event.y - 1, event.z)) != FERN_METADATA)
+		// TODO: Proper block state check.
+		if (blockBelow.getMetaFromState(stateBelow) != FERN_METADATA)
 			return;
 
-		if (event.getPlayer().getCurrentEquippedItem() != null && event.getPlayer().getCurrentEquippedItem().getItem() instanceof ItemShears)
+		if (event.getPlayer().getHeldItemMainhand() != null && event.getPlayer().getHeldItemMainhand().getItem() instanceof ItemShears)
 			return;
 
-		for (ItemStack drop : juteDrops.getDrops(event.getPlayer(), EnchantmentHelper.getFortuneModifier(event.getPlayer()), EnchantmentHelper.getSilkTouchModifier(event.getPlayer())))
+		for (ItemStack drop : juteDrops.getDrops(event.getPlayer(), squeek.veganoption.helpers.EnchantmentHelper.getFortuneModifier(event.getPlayer()), squeek.veganoption.helpers.EnchantmentHelper.getSilkTouchModifier(event.getPlayer())))
 		{
 			try
 			{
-				doublePlantDropBlockAsItem.invoke(event.block, event.world, event.x, event.y - 1, event.z, drop);
+//				FIXME
+//				doublePlantDropBlockAsItem.invoke(event.block, event.world, event.x, event.y - 1, event.z, drop);
 			}
 			catch (RuntimeException e)
 			{
