@@ -9,7 +9,9 @@ import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.modules.Bioplastic;
@@ -18,7 +20,6 @@ import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.integration.IntegratorBase;
-import cpw.mods.fml.common.event.FMLInterModComms;
 
 // TODO: Faux feather as a valid fletching material
 public class TConstruct extends IntegratorBase
@@ -69,7 +70,13 @@ public class TConstruct extends IntegratorBase
 			public boolean matches(ItemStack itemStack)
 			{
 				// meat and diamonds are bad for composting
-				String itemName = Item.itemRegistry.getNameForObject(itemStack.getItem());
+				ResourceLocation itemRL = Item.REGISTRY.getNameForObject(itemStack.getItem());
+
+				if (itemRL == null)
+					return false;
+
+				String itemName = itemRL.toString();
+
 				return itemNameBlacklist.contains(itemName);
 			}
 		});
@@ -94,7 +101,7 @@ public class TConstruct extends IntegratorBase
 			tag.setInteger("Bow_DrawSpeed", 20);
 			tag.setFloat("Projectile_Mass", 0.25f);
 			tag.setFloat("Projectile_Fragility", 0.5f);
-			tag.setString("Style", EnumChatFormatting.GRAY.toString());
+			tag.setString("Style", TextFormatting.GRAY.toString());
 			tag.setInteger("Color", 0xFFADADAD);
 			FMLInterModComms.sendMessage(modID, "addMaterial", tag);
 
@@ -136,7 +143,7 @@ public class TConstruct extends IntegratorBase
 		{
 			if (OreDictionary.itemMatches(item, itemStack, false))
 			{
-				Item toolRodItem = (Item) Item.itemRegistry.getObject(IntegrationHandler.MODID_TINKERS_CONSTRUCT + ":" + ITEMNAME_TOOLROD);
+				Item toolRodItem = Item.REGISTRY.getObject(new ResourceLocation(IntegrationHandler.MODID_TINKERS_CONSTRUCT, ITEMNAME_TOOLROD));
 				if (toolRodItem != null)
 				{
 					return new ItemStack(toolRodItem, 1, MATID_PLASTIC);

@@ -1,8 +1,9 @@
 package squeek.veganoption.integration;
 
+import net.minecraftforge.fml.common.Loader;
+
 import java.util.HashMap;
 import java.util.Map;
-import cpw.mods.fml.common.Loader;
 
 public class IntegrationHandler extends IntegrationBase
 {
@@ -10,23 +11,13 @@ public class IntegrationHandler extends IntegrationBase
 
 	static
 	{
-		tryIntegration(MODID_THERMAL_EXPANSION, "cofh");
 		tryIntegration(MODID_HARVESTCRAFT, "pams", "HarvestCraft");
-		tryIntegration(MODID_MINEFACTORY_RELOADED, "mfr");
 		tryIntegration(MODID_TINKERS_CONSTRUCT, "tic");
 		tryIntegration(MODID_IGUANAS_TINKER_TWEAKS, "tic");
-		tryIntegration(MODID_WITCHERY, "witchery", "Witchery");
 		tryIntegration(MODID_WAILA, "waila");
-		tryIntegration(MODID_VERSION_CHECKER, "versionchecker");
 		tryIntegration(MODID_THAUMCRAFT, "thaumcraft");
-		tryIntegration(MODID_TWILIGHT_FOREST, "twilightforest");
-		tryIntegration(MODID_NATURA, "natura");
-		tryIntegration(MODID_EXTRA_TREES, "forestry");
 		tryIntegration(MODID_BIOMES_O_PLENTY, "bop");
-		tryIntegration(MODID_FOOD_PLUS, "foodplus");
 		tryIntegration(MODID_STILL_HUNGRY, "stillhungry", "StillHungry");
-		tryIntegration(MODID_MAGICAL_CROPS, "magicalcrops", "MagicalCrops");
-		tryIntegration(MODID_MYSTCRAFT, "mystcraft");
 	}
 
 	public static void preInit()

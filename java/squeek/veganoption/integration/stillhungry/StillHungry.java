@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.registry.CompostRegistry;
@@ -42,10 +43,15 @@ public class StillHungry extends IntegratorBase
 			@Override
 			public boolean matches(ItemStack itemStack)
 			{
-				String itemName = Item.itemRegistry.getNameForObject(itemStack.getItem());
+				ResourceLocation itemRL = Item.REGISTRY.getNameForObject(itemStack.getItem());
 
-				if (!itemName.startsWith(modID))
+				if (itemRL == null)
 					return false;
+
+				if (!itemRL.getResourceDomain().equals(modID))
+					return false;
+
+				String itemName = itemRL.toString();
 
 				return !itemNameWhitelist.contains(itemName);
 			}

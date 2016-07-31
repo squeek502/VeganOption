@@ -10,6 +10,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -24,7 +25,6 @@ import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.helpers.TooltipHelper;
 import squeek.veganoption.integration.IntegratorBase;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class HarvestCraft extends IntegratorBase
 {
@@ -38,14 +38,14 @@ public class HarvestCraft extends IntegratorBase
 		bbqSauce = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".bbqSauce")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":bbq_sauce");
-		GameRegistry.registerItem(bbqSauce, "bbqSauce");
+				.setRegistryName(ModInfo.MODID_LOWER, "bbqSauce");
+		GameRegistry.register(bbqSauce);
 
 		bbqTofu = new ItemFood(14, 1.0F, false)
 				.setUnlocalizedName(ModInfo.MODID + ".bbqTofu")
 				.setCreativeTab(VeganOption.creativeTab)
-				.setTextureName(ModInfo.MODID_LOWER + ":bbq_tofu");
-		GameRegistry.registerItem(bbqTofu, "bbqTofu");
+				.setRegistryName(ModInfo.MODID_LOWER, "bbqTofu");
+		GameRegistry.register(bbqTofu);
 		TooltipHelper.registerItem(bbqTofu);
 	}
 
@@ -67,7 +67,7 @@ public class HarvestCraft extends IntegratorBase
 		// add plant milk -> fresh milk specifically
 		GameRegistry.addShapelessRecipe(new ItemStack(freshMilkItem, 4), PlantMilk.bucketPlantMilk);
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqSauce), "toolSaucepan", "foodKetchup", "foodVinegar", Items.sugar, "foodMustard", "listAllwater", "foodSalt", "foodBlackpepper"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqSauce), "toolSaucepan", "foodKetchup", "foodVinegar", Items.SUGAR, "foodMustard", "listAllwater", "foodSalt", "foodBlackpepper"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqTofu), "toolBakeware", "foodFirmtofu", ContentHelper.bbqSauceOreDict));
 
 		if (getItem("doughItem") != null)

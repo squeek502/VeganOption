@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.integration.IntegratorBase;
@@ -30,7 +31,12 @@ public class Thaumcraft extends IntegratorBase
 			@Override
 			public boolean matches(ItemStack itemStack)
 			{
-				String itemName = Item.itemRegistry.getNameForObject(itemStack.getItem());
+				ResourceLocation itemRL = Item.REGISTRY.getNameForObject(itemStack.getItem());
+
+				if (itemRL == null)
+					return false;
+
+				String itemName = itemRL.toString();
 				return itemNameBlacklist.contains(itemName);
 			}
 		});

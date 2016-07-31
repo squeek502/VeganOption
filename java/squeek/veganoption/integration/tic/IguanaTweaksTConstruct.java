@@ -2,10 +2,10 @@ package squeek.veganoption.integration.tic;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import squeek.veganoption.content.modules.MobHeads;
 import squeek.veganoption.integration.IntegratorBase;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 // TODO: Clay bucket support for VO fluids?
 public class IguanaTweaksTConstruct extends IntegratorBase
