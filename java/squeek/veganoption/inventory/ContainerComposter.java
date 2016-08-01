@@ -3,10 +3,10 @@ package squeek.veganoption.inventory;
 import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @ChestContainer
 public class ContainerComposter extends ContainerGeneric
@@ -24,7 +24,7 @@ public class ContainerComposter extends ContainerGeneric
 
 	public ContainerComposter(InventoryPlayer playerInventory, TileEntityComposter composter)
 	{
-		super(composter);
+		super(composter, playerInventory.player);
 		this.composter = composter;
 
 		allowShiftClickToMultipleSlots = true;
@@ -46,7 +46,7 @@ public class ContainerComposter extends ContainerGeneric
 			lastAeration = composter.lastAeration;
 		else if (lastAeration != composter.lastAeration)
 		{
-			for (Object crafter : crafters)
+			for (IContainerListener crafter : listeners)
 			{
 				if (crafter instanceof EntityPlayerMP)
 					((EntityPlayerMP) crafter).isChangingQuantityOnly = false;
@@ -58,18 +58,18 @@ public class ContainerComposter extends ContainerGeneric
 
 		if ((byte) (composter.getCompostingPercent() * 100) != lastPercentComposted || initialUpdate)
 		{
-			for (Object crafter : crafters)
+			for (IContainerListener crafter : listeners)
 			{
-				((ICrafting) crafter).sendProgressBarUpdate(this, PROGRESS_ID_PERCENT_COMPOSTED, (byte) (composter.getCompostingPercent() * 100));
+				crafter.sendProgressBarUpdate(this, PROGRESS_ID_PERCENT_COMPOSTED, (byte) (composter.getCompostingPercent() * 100));
 			}
 			lastPercentComposted = (byte) (composter.getCompostingPercent() * 100);
 		}
 
 		if (Math.round(composter.getBiomeTemperature()) != lastBiomeTemperature || initialUpdate)
 		{
-			for (Object crafter : crafters)
+			for (IContainerListener crafter : listeners)
 			{
-				((ICrafting) crafter).sendProgressBarUpdate(this, PROGRESS_ID_BIOME_TEMPERATURE, Math.round(composter.getBiomeTemperature()));
+				crafter.sendProgressBarUpdate(this, PROGRESS_ID_BIOME_TEMPERATURE, Math.round(composter.getBiomeTemperature()));
 			}
 			lastBiomeTemperature = (byte) Math.round(composter.getBiomeTemperature());
 		}

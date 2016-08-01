@@ -2,6 +2,7 @@ package squeek.veganoption.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -10,13 +11,15 @@ import net.minecraft.item.ItemStack;
 public abstract class ContainerGeneric extends Container
 {
 	protected IInventory inventory;
+	protected EntityPlayer player;
 	protected int nextSlotIndex = 0;
 	protected boolean allowShiftClickToMultipleSlots = false;
 
-	public ContainerGeneric(IInventory inventory)
+	public ContainerGeneric(IInventory inventory, EntityPlayer player)
 	{
 		this.inventory = inventory;
-		onContainerOpened();
+		this.player = player;
+		onContainerOpened(player);
 	}
 
 	protected void addSlot(IInventory inventory, int xStart, int yStart)
@@ -112,7 +115,7 @@ public abstract class ContainerGeneric extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotNum)
 	{
-		Slot slot = (Slot) this.inventorySlots.get(slotNum);
+		Slot slot = this.inventorySlots.get(slotNum);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -180,7 +183,7 @@ public abstract class ContainerGeneric extends Container
 		{
 			while (itemStack.stackSize > 0 && (!checkBackwards && k < endSlotNum || checkBackwards && k >= startSlotNum))
 			{
-				slot = (Slot) this.inventorySlots.get(k);
+				slot = this.inventorySlots.get(k);
 				itemstack1 = slot.getStack();
 
 				if (itemstack1 != null && itemstack1.getItem() == itemStack.getItem() && (!itemStack.getHasSubtypes() || itemStack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(itemStack, itemstack1) && slot.isItemValid(itemStack))
@@ -230,7 +233,7 @@ public abstract class ContainerGeneric extends Container
 
 			while (!checkBackwards && k < endSlotNum || checkBackwards && k >= startSlotNum)
 			{
-				slot = (Slot) this.inventorySlots.get(k);
+				slot = this.inventorySlots.get(k);
 				itemstack1 = slot.getStack();
 
 				if (itemstack1 == null && slot.isItemValid(itemStack))
@@ -261,7 +264,7 @@ public abstract class ContainerGeneric extends Container
 	}
 
 	@Override
-	public ItemStack slotClick(int slotNum, int mouseButton, int modifier, EntityPlayer player)
+	public ItemStack slotClick(int slotNum, int mouseButton, ClickType modifier, EntityPlayer player)
 	{
 		return super.slotClick(slotNum, mouseButton, modifier, player);
 	}
@@ -272,15 +275,15 @@ public abstract class ContainerGeneric extends Container
 		return inventory.isUseableByPlayer(player);
 	}
 
-	public void onContainerOpened()
+	public void onContainerOpened(EntityPlayer player)
 	{
-		inventory.openInventory();
+		inventory.openInventory(player);
 	}
 
 	@Override
 	public void onContainerClosed(EntityPlayer player)
 	{
-		inventory.closeInventory();
+		inventory.closeInventory(player);
 		super.onContainerClosed(player);
 	}
 }
