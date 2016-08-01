@@ -321,7 +321,7 @@ public class RecipeModifier
 		if (itemStack == null || itemStack.getItem() == null)
 			return false;
 
-		return itemStack.getItem() instanceof ItemFood || itemStack.getItem() == Items.cake;
+		return itemStack.getItem() instanceof ItemFood || itemStack.getItem() == Items.CAKE;
 	}
 
 	// reflection

@@ -21,10 +21,8 @@ public class CompostRegistry
 		long millisecondsStart = System.currentTimeMillis();
 		int numRegistered = 0;
 
-		for (Object obj : Item.itemRegistry)
+		for (Item item : Item.REGISTRY)
 		{
-			Item item = ((Item) obj);
-
 			if (item == null)
 				continue;
 
