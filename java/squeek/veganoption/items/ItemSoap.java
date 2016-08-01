@@ -12,28 +12,30 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import squeek.veganoption.helpers.RandomHelper;
 
 public class ItemSoap extends Item
 {
-	public static ItemStack milkBucket = new ItemStack(Items.milk_bucket);
+	public static ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
 
 	public ItemSoap()
 	{
 		super();
 		setMaxStackSize(1);
 		setMaxDamage(3); // 4 uses
-		BlockDispenser.dispenseBehaviorRegistry.putObject(this, new ItemSoap.DispenserBehavior());
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemSoap.DispenserBehavior());
 		setNoRepair();
 	}
 
 	@Override
 	public EnumAction getItemUseAction(ItemStack itemStack)
 	{
-		return EnumAction.eat;
+		return EnumAction.EAT;
 	}
 
 	@Override
@@ -63,28 +65,28 @@ public class ItemSoap extends Item
 			if (potionEffect.getCurativeItems().size() <= 0)
 				continue;
 
-			player.removePotionEffect(potionEffect.getPotionID());
+			player.removePotionEffect(potionEffect.getPotion());
 		}
 	}
 
 	@Override
-	public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
+	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entityLiving)
 	{
 		if (!world.isRemote)
 		{
-			curePotionEffectsAsItem(player, milkBucket);
+			curePotionEffectsAsItem(entityLiving, milkBucket);
 		}
 
-		itemStack.damageItem(1, player);
+		stack.damageItem(1, entityLiving);
 
-		return super.onEaten(itemStack, world, player);
+		return super.onItemUseFinish(stack, world, entityLiving);
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
 	{
-		player.setItemInUse(itemStack, getMaxItemUseDuration(itemStack));
-		return super.onItemRightClick(itemStack, world, player);
+		player.setActiveHand(hand);
+		return super.onItemRightClick(itemStack, world, player, hand);
 	}
 
 	public static class DispenserBehavior extends BehaviorDefaultDispenseItem
@@ -92,13 +94,12 @@ public class ItemSoap extends Item
 		@Override
 		public ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
 		{
-			EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockMetadata());
-			int x = blockSource.getXInt() + enumfacing.getFrontOffsetX();
-			int y = blockSource.getYInt() + enumfacing.getFrontOffsetY();
-			int z = blockSource.getZInt() + enumfacing.getFrontOffsetZ();
-			AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
+			EnumFacing enumfacing = blockSource.getWorld().getBlockState(blockSource.getBlockPos()).getValue(BlockDispenser.FACING);
+			int x = (int) blockSource.getX() + enumfacing.getFrontOffsetX();
+			int y = (int) blockSource.getY() + enumfacing.getFrontOffsetY();
+			int z = (int) blockSource.getZ() + enumfacing.getFrontOffsetZ();
+			AxisAlignedBB axisalignedbb = new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1);
 
-			@SuppressWarnings("unchecked")
 			List<EntityLivingBase> entitiesInFront = blockSource.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
 			EntityLivingBase mostDirtyEntity = null;

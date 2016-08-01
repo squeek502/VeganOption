@@ -1,10 +1,18 @@
 package squeek.veganoption.items;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBed;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 /**
@@ -23,65 +31,60 @@ public class ItemBedGeneric extends ItemBed
 	// gross duplication
 	// required because Blocks.bed is hardcoded in ItemBed.onItemUse
 	@Override
-	public boolean onItemUse(ItemStack p_77648_1_, EntityPlayer p_77648_2_, World p_77648_3_, int p_77648_4_, int p_77648_5_, int p_77648_6_, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if (p_77648_3_.isRemote)
+		if (worldIn.isRemote)
 		{
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
-		else if (p_77648_7_ != 1)
+		else if (facing != EnumFacing.UP)
 		{
-			return false;
+			return EnumActionResult.FAIL;
 		}
 		else
 		{
-			++p_77648_5_;
-			int i1 = MathHelper.floor_double(p_77648_2_.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-			byte b0 = 0;
-			byte b1 = 0;
+			IBlockState iblockstate = worldIn.getBlockState(pos);
+			Block block = iblockstate.getBlock();
+			boolean flag = block.isReplaceable(worldIn, pos);
 
-			if (i1 == 0)
+			if (!flag)
 			{
-				b1 = 1;
+				pos = pos.up();
 			}
 
-			if (i1 == 1)
-			{
-				b0 = -1;
-			}
+			int i = MathHelper.floor_double((double)(playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			EnumFacing enumfacing = EnumFacing.getHorizontal(i);
+			BlockPos blockpos = pos.offset(enumfacing);
 
-			if (i1 == 2)
+			if (playerIn.canPlayerEdit(pos, facing, stack) && playerIn.canPlayerEdit(blockpos, facing, stack))
 			{
-				b1 = -1;
-			}
+				boolean flag1 = worldIn.getBlockState(blockpos).getBlock().isReplaceable(worldIn, blockpos);
+				boolean flag2 = flag || worldIn.isAirBlock(pos);
+				boolean flag3 = flag1 || worldIn.isAirBlock(blockpos);
 
-			if (i1 == 3)
-			{
-				b0 = 1;
-			}
-
-			if (p_77648_2_.canPlayerEdit(p_77648_4_, p_77648_5_, p_77648_6_, p_77648_7_, p_77648_1_) && p_77648_2_.canPlayerEdit(p_77648_4_ + b0, p_77648_5_, p_77648_6_ + b1, p_77648_7_, p_77648_1_))
-			{
-				if (p_77648_3_.isAirBlock(p_77648_4_, p_77648_5_, p_77648_6_) && p_77648_3_.isAirBlock(p_77648_4_ + b0, p_77648_5_, p_77648_6_ + b1) && World.doesBlockHaveSolidTopSurface(p_77648_3_, p_77648_4_, p_77648_5_ - 1, p_77648_6_) && World.doesBlockHaveSolidTopSurface(p_77648_3_, p_77648_4_ + b0, p_77648_5_ - 1, p_77648_6_ + b1))
+				if (flag2 && flag3 && worldIn.getBlockState(pos.down()).isFullyOpaque() && worldIn.getBlockState(blockpos.down()).isFullyOpaque())
 				{
-					p_77648_3_.setBlock(p_77648_4_, p_77648_5_, p_77648_6_, bed, i1, 3);
+					IBlockState iblockstate1 = bed.getDefaultState().withProperty(BlockBed.OCCUPIED, false).withProperty(BlockBed.FACING, enumfacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 
-					if (p_77648_3_.getBlock(p_77648_4_, p_77648_5_, p_77648_6_) == bed)
+					if (worldIn.setBlockState(pos, iblockstate1, 11))
 					{
-						p_77648_3_.setBlock(p_77648_4_ + b0, p_77648_5_, p_77648_6_ + b1, bed, i1 + 8, 3);
+						IBlockState iblockstate2 = iblockstate1.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
+						worldIn.setBlockState(blockpos, iblockstate2, 11);
 					}
 
-					--p_77648_1_.stackSize;
-					return true;
+					SoundType soundtype = iblockstate1.getBlock().getSoundType(iblockstate1, worldIn, pos, playerIn);
+					worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+					--stack.stackSize;
+					return EnumActionResult.SUCCESS;
 				}
 				else
 				{
-					return false;
+					return EnumActionResult.FAIL;
 				}
 			}
 			else
 			{
-				return false;
+				return EnumActionResult.FAIL;
 			}
 		}
 	}

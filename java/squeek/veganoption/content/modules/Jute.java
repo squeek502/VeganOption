@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -74,6 +75,7 @@ public class Jute implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "jutePlant");
 		GameRegistry.register(jutePlant);
 		GameRegistry.register(new ItemBlockJutePlant(jutePlant).setRegistryName(jutePlant.getRegistryName()));
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemBlockJutePlant.ColorHandler(), jutePlant);
 
 		juteSeeds = new ItemSeedsGeneric(jutePlant, EnumPlantType.Plains)
 				.setUnlocalizedName(ModInfo.MODID + ".juteSeeds")

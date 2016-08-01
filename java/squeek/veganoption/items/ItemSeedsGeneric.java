@@ -2,6 +2,7 @@ package squeek.veganoption.items;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemSeeds;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.EnumPlantType;
 
@@ -16,7 +17,7 @@ public class ItemSeedsGeneric extends ItemSeeds
 	}
 
 	@Override
-	public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z)
+	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
 		return plantType;
 	}

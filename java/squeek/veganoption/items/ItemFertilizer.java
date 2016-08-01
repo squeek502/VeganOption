@@ -7,7 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemFertilizer extends Item
@@ -15,21 +18,22 @@ public class ItemFertilizer extends Item
 	public ItemFertilizer()
 	{
 		super();
-		BlockDispenser.dispenseBehaviorRegistry.putObject(this, new ItemFertilizer.DispenserBehavior());
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemFertilizer.DispenserBehavior());
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-		if (ItemDye.applyBonemeal(itemStack, world, x, y, z, player))
+		if (ItemDye.applyBonemeal(stack, world, pos, player))
 		{
 			if (!world.isRemote)
 			{
-				world.playAuxSFX(2005, x, y, z, 0);
+				// Bone meal effect
+				world.playEvent(2005, pos, 0);
 			}
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
-		return false;
+		return EnumActionResult.PASS;
 	}
 
 	// copied from bonemeal's dispenser behavior in net.minecraft.init.Bootstrap
@@ -40,17 +44,18 @@ public class ItemFertilizer extends Item
 		@Override
 		protected ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
 		{
-			EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockMetadata());
+			EnumFacing enumfacing = blockSource.getWorld().getBlockState(blockSource.getBlockPos()).getValue(BlockDispenser.FACING);
 			World world = blockSource.getWorld();
-			int x = blockSource.getXInt() + enumfacing.getFrontOffsetX();
-			int y = blockSource.getYInt() + enumfacing.getFrontOffsetY();
-			int z = blockSource.getZInt() + enumfacing.getFrontOffsetZ();
+			int x = (int) blockSource.getX() + enumfacing.getFrontOffsetX();
+			int y = (int) blockSource.getY() + enumfacing.getFrontOffsetY();
+			int z = (int) blockSource.getZ() + enumfacing.getFrontOffsetZ();
+			BlockPos pos = new BlockPos(x, y, z);
 
-			if (ItemDye.func_150919_a(itemStack, world, x, y, z))
+			if (ItemDye.applyBonemeal(itemStack, world, pos))
 			{
 				if (!world.isRemote)
 				{
-					world.playAuxSFX(2005, x, y, z, 0);
+					world.playEvent(2005, pos, 0);
 				}
 				this.didFertilize = true;
 			}
@@ -67,11 +72,11 @@ public class ItemFertilizer extends Item
 		{
 			if (this.didFertilize)
 			{
-				blockSource.getWorld().playAuxSFX(1000, blockSource.getXInt(), blockSource.getYInt(), blockSource.getZInt(), 0);
+				blockSource.getWorld().playEvent(1000, blockSource.getBlockPos(), 0);
 			}
 			else
 			{
-				blockSource.getWorld().playAuxSFX(1001, blockSource.getXInt(), blockSource.getYInt(), blockSource.getZInt(), 0);
+				blockSource.getWorld().playEvent(1001, blockSource.getBlockPos(), 0);
 			}
 		}
 	}

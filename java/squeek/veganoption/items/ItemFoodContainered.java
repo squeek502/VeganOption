@@ -19,20 +19,18 @@ public class ItemFoodContainered extends ItemFood
 	}
 
 	@Override
-	public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
+	public void onFoodEaten(ItemStack itemStack, World world, EntityPlayer player)
 	{
-		ItemStack itemStackRemaining = super.onEaten(itemStack, world, player);
+		super.onFoodEaten(itemStack, world, player);
 
 		if (getContainerItem() != null)
 		{
 			ItemStack container = getContainerItem(itemStack);
-			if (itemStackRemaining == null || itemStackRemaining.stackSize <= 0)
-				return container;
+			if (itemStack == null || itemStack.stackSize <= 0)
+				return;
 			else if (!player.inventory.addItemStackToInventory(container))
-				player.dropPlayerItemWithRandomChoice(container, false);
+				player.dropItem(container, false);
 		}
-
-		return itemStackRemaining;
 	}
 
 }

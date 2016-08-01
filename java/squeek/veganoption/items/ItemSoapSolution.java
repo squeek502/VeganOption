@@ -4,11 +4,14 @@ import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.helpers.RandomHelper;
@@ -20,14 +23,14 @@ public class ItemSoapSolution extends Item
 		super();
 		setMaxStackSize(1);
 		setMaxDamage(15); // 16 uses
-		BlockDispenser.dispenseBehaviorRegistry.putObject(this, new ItemSoapSolution.DispenserBehavior());
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemSoapSolution.DispenserBehavior());
 		setNoRepair();
 	}
 
 	@Override
 	public EnumAction getItemUseAction(ItemStack itemStack)
 	{
-		return EnumAction.drink;
+		return EnumAction.DRINK;
 	}
 
 	@Override
@@ -37,7 +40,7 @@ public class ItemSoapSolution extends Item
 	}
 
 	@Override
-	public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player)
+	public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityLivingBase player)
 	{
 		if (!world.isRemote)
 		{
@@ -51,20 +54,20 @@ public class ItemSoapSolution extends Item
 			return new ItemStack(getContainerItem());
 		}
 
-		return super.onEaten(itemStack, world, player);
+		return super.onItemUseFinish(itemStack, world, player);
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
 	{
-		player.setItemInUse(itemStack, getMaxItemUseDuration(itemStack));
-		return super.onItemRightClick(itemStack, world, player);
+		player.setActiveHand(hand);
+		return super.onItemRightClick(itemStack, world, player, hand);
 	}
 
 	public static class DispenserBehavior extends BehaviorProjectileDispense
 	{
 		@Override
-		protected IProjectile getProjectileEntity(World world, IPosition iPosition)
+		protected IProjectile getProjectileEntity(World world, IPosition iPosition, ItemStack stack)
 		{
 			return new EntityBubble(world, iPosition.getX(), iPosition.getY(), iPosition.getZ());
 		}
@@ -90,7 +93,7 @@ public class ItemSoapSolution extends Item
 
 		// projectile velocity
 		@Override
-		protected float func_82500_b()
+		protected float getProjectileVelocity()
 		{
 			return 0.5f;
 		}

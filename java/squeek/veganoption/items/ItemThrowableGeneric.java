@@ -8,8 +8,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import squeek.veganoption.helpers.RandomHelper;
 
@@ -18,14 +23,14 @@ public class ItemThrowableGeneric extends Item
 	public Constructor<? extends EntityThrowable> thrownEntityThrowerConstructor = null;
 	public Constructor<? extends EntityThrowable> thrownEntityCoordinatesConstructor = null;
 	public Class<? extends EntityThrowable> thrownEntityClass;
-	public String throwSound;
+	public SoundEvent throwSound;
 
 	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass)
 	{
-		this(thrownEntityClass, "random.bow");
+		this(thrownEntityClass, SoundEvents.ENTITY_ARROW_SHOOT);
 	}
 
-	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass, String throwSound)
+	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass, SoundEvent throwSound)
 	{
 		super();
 		this.thrownEntityClass = thrownEntityClass;
@@ -45,25 +50,25 @@ public class ItemThrowableGeneric extends Item
 			throw new RuntimeException(e);
 		}
 
-		BlockDispenser.dispenseBehaviorRegistry.putObject(this, new ItemThrowableGeneric.DispenserBehavior(this));
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemThrowableGeneric.DispenserBehavior(this));
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
 	{
 		if (!player.capabilities.isCreativeMode)
 		{
 			--itemStack.stackSize;
 		}
 
-		world.playSoundAtEntity(player, throwSound, 0.5F, 0.4F / (RandomHelper.random.nextFloat() * 0.4F + 0.8F));
+		player.playSound(throwSound, 0.5F, 0.4F / (RandomHelper.random.nextFloat() * 0.4F + 0.8F));
 
 		if (!world.isRemote)
 		{
 			world.spawnEntityInWorld(getNewThrownEntity(world, player));
 		}
 
-		return itemStack;
+		return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
 	}
 
 	public EntityThrowable getNewThrownEntity(World world, EntityLivingBase thrower)
@@ -107,7 +112,7 @@ public class ItemThrowableGeneric extends Item
 		}
 
 		@Override
-		protected IProjectile getProjectileEntity(World world, IPosition position)
+		protected IProjectile getProjectileEntity(World world, IPosition position, ItemStack stack)
 		{
 			return itemThrowableGeneric.getNewThrownEntity(world, position.getX(), position.getY(), position.getZ());
 		}

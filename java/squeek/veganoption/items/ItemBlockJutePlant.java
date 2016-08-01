@@ -1,6 +1,7 @@
 package squeek.veganoption.items;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.ColorizerGrass;
@@ -16,17 +17,9 @@ public class ItemBlockJutePlant extends ItemBlock
 		super(block);
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int meta)
-	{
-		return Jute.jutePlant.getIcon(0, BlockJutePlant.BOTTOM_META_GROWTH_MAX);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack itemStack, int pass)
-	{
-		return ColorizerGrass.getGrassColor(0.5D, 1.0D);
+	public static class ColorHandler implements IItemColor {
+		public int getColorFromItemstack(ItemStack itemStack, int tintIndex) {
+			return ColorizerGrass.getGrassColor(0.5D, 1D);
+		}
 	}
 }
