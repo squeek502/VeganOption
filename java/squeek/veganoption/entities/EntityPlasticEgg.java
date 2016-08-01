@@ -1,12 +1,12 @@
 package squeek.veganoption.entities;
 
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class EntityPlasticEgg extends EntityThrowable
@@ -27,16 +27,16 @@ public class EntityPlasticEgg extends EntityThrowable
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition movingObjectPosition)
+	protected void onImpact(RayTraceResult rayTraceResult)
 	{
-		if (movingObjectPosition.entityHit != null)
+		if (rayTraceResult.entityHit != null)
 		{
-			movingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), 0.0F);
+			rayTraceResult.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), 0.0F);
 		}
 
 		if (!worldObj.isRemote)
 		{
-			TargetPoint target = new TargetPoint(dimension, posX, posY, posZ, 80);
+			NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, 80);
 			NetworkHandler.channel.sendToAllAround(new MessageFX(posX, posY, posZ, MessageFX.FX.PLASTIC_EGG_BREAK), target);
 			setDead();
 		}

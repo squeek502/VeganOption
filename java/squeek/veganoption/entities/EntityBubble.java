@@ -8,16 +8,16 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import squeek.veganoption.content.modules.FrozenBubble;
 import squeek.veganoption.helpers.BlockHelper;
-import squeek.veganoption.helpers.BlockHelper.BlockPos;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.helpers.TemperatureHelper;
 import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class EntityBubble extends EntityThrowable
 {
@@ -48,14 +48,14 @@ public class EntityBubble extends EntityThrowable
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.temperature = TemperatureHelper.getBiomeTemperature(worldObj, (int) posX, (int) posY, (int) posZ);
+		this.temperature = TemperatureHelper.getBiomeTemperature(worldObj, new BlockPos((int) posX, (int) posY, (int) posZ));
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)
+	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
 		pop();
-		return super.attackEntityFrom(p_70097_1_, p_70097_2_);
+		return super.attackEntityFrom(source, amount);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class EntityBubble extends EntityThrowable
 			return;
 		}
 
-		float surroundingTemp = getSurroundingAirTemperature(worldObj, posX, posY, posZ);
+		float surroundingTemp = getSurroundingAirTemperature(worldObj, new BlockPos(posX, posY, posZ));
 		temperature += (surroundingTemp - temperature) * 0.05f;
 
 		if (!this.worldObj.isRemote && temperature <= FREEZING_TEMPERATURE)
@@ -101,13 +101,6 @@ public class EntityBubble extends EntityThrowable
 		}
 	}
 
-	// initial speed
-	@Override
-	protected float func_70182_d()
-	{
-		return 0.3f;
-	}
-
 	@Override
 	protected float getGravityVelocity()
 	{
@@ -118,7 +111,7 @@ public class EntityBubble extends EntityThrowable
 	{
 		if (!this.worldObj.isRemote)
 		{
-			TargetPoint target = new TargetPoint(dimension, posX, posY, posZ, 80);
+			NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, 80);
 			NetworkHandler.channel.sendToAllAround(new MessageFX(posX, posY, posZ, MessageFX.FX.BUBBLE_POP), target);
 			this.setDead();
 		}
@@ -135,31 +128,31 @@ public class EntityBubble extends EntityThrowable
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition movingObjectPosition)
+	protected void onImpact(RayTraceResult rayTraceResult)
 	{
 		pop();
 	}
 
-	public static float getSurroundingAirTemperature(World world, double x, double y, double z)
+	public static float getSurroundingAirTemperature(World world, BlockPos pos)
 	{
-		float airTemperature = TemperatureHelper.getBiomeTemperature(world, (int) x, (int) y, (int) z);
+		float airTemperature = TemperatureHelper.getBiomeTemperature(world, pos);
 
-		BlockPos[] surroundingBlocks = BlockHelper.getBlocksInRadiusAround(new BlockPos(world, (int) x, (int) y, (int) z), TEMPERATURE_CHECK_RADIUS);
+		BlockPos[] surroundingBlocks = BlockHelper.getBlocksInRadiusAround(pos, TEMPERATURE_CHECK_RADIUS);
 
 		for (BlockPos blockPos : surroundingBlocks)
 		{
-			Block block = blockPos.getBlock();
-			if (block == Blocks.air)
+			Block block = world.getBlockState(blockPos).getBlock();
+			if (block == Blocks.AIR)
 				airTemperature -= 0.01f;
-			else if (block == Blocks.snow)
+			else if (block == Blocks.SNOW)
 				airTemperature -= 0.1f;
-			else if (block == Blocks.ice)
+			else if (block == Blocks.ICE)
 				airTemperature -= 0.5f;
-			else if (block == Blocks.packed_ice)
+			else if (block == Blocks.PACKED_ICE)
 				airTemperature -= 1.0f;
-			else if (block == Blocks.lava)
+			else if (block == Blocks.LAVA)
 				airTemperature += 3.0f;
-			else if (block == Blocks.torch)
+			else if (block == Blocks.TORCH)
 				airTemperature += 0.5f;
 		}
 
