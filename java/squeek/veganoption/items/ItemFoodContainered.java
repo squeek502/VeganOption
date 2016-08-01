@@ -1,9 +1,12 @@
 package squeek.veganoption.items;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import static sun.audio.AudioPlayer.player;
 
 public class ItemFoodContainered extends ItemFood
 {
@@ -19,18 +22,20 @@ public class ItemFoodContainered extends ItemFood
 	}
 
 	@Override
-	public void onFoodEaten(ItemStack itemStack, World world, EntityPlayer player)
+	public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityLivingBase entity)
 	{
-		super.onFoodEaten(itemStack, world, player);
+		ItemStack itemStackRemaining = super.onItemUseFinish(itemStack, world, entity);
 
 		if (getContainerItem() != null)
 		{
 			ItemStack container = getContainerItem(itemStack);
-			if (itemStack == null || itemStack.stackSize <= 0)
-				return;
-			else if (!player.inventory.addItemStackToInventory(container))
-				player.dropItem(container, false);
+			if (itemStackRemaining == null || itemStackRemaining.stackSize <= 0)
+				return container;
+			else if (!(entity instanceof EntityPlayer) || !((EntityPlayer) entity).inventory.addItemStackToInventory(container))
+				entity.entityDropItem(container, 0);
 		}
+
+		return itemStackRemaining;
 	}
 
 }
