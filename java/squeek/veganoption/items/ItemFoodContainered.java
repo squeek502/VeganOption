@@ -6,8 +6,6 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import static sun.audio.AudioPlayer.player;
-
 public class ItemFoodContainered extends ItemFood
 {
 

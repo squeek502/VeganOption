@@ -3,13 +3,13 @@ package squeek.veganoption.blocks;
 import java.lang.reflect.Field;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import squeek.veganoption.ModInfo;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class BlockBedStraw extends BlockBedGeneric
 {
@@ -28,16 +28,16 @@ public class BlockBedStraw extends BlockBedGeneric
 	{
 		// this flag combination should only be set when the sleep was successful
 		// and the server is waking all sleeping players
-		boolean wokenByWakeAllPlayers = event.setSpawn && !event.updateWorld;
+		boolean wokenByWakeAllPlayers = event.shouldSetSpawn() && !event.updateWorld();
 		if (!wokenByWakeAllPlayers)
 			return;
 
-		ChunkCoordinates chunkcoordinates = event.entityPlayer.playerLocation;
+		BlockPos pos = event.getEntityPlayer().playerLocation;
 
-		if (chunkcoordinates == null)
+		if (pos == null)
 			return;
 
-		Block block = event.entityPlayer.worldObj.getBlock(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ);
+		Block block = event.getEntityPlayer().worldObj.getBlockState(pos).getBlock();
 
 		if (block != this)
 			return;
@@ -47,8 +47,8 @@ public class BlockBedStraw extends BlockBedGeneric
 		// the wakeUpPlayer call in attackEntityFrom
 		try
 		{
-			playerSleepingField.setBoolean(event.entityPlayer, false);
-			event.entityPlayer.attackEntityFrom(itchyDamageSource, ITCH_DAMAGE);
+			playerSleepingField.setBoolean(event.getEntityPlayer(), false);
+			event.getEntityPlayer().attackEntityFrom(itchyDamageSource, ITCH_DAMAGE);
 		}
 		catch (Exception e)
 		{

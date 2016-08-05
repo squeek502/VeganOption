@@ -2,9 +2,12 @@ package squeek.veganoption.blocks;
 
 import java.util.Random;
 import net.minecraft.block.BlockBed;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 /**
@@ -17,7 +20,7 @@ public class BlockBedGeneric extends BlockBed
 	public BlockBedGeneric()
 	{
 		super();
-		this.bedItem = Items.bed;
+		this.bedItem = Items.BED;
 	}
 
 	public BlockBed setBedItem(Item item)
@@ -27,13 +30,13 @@ public class BlockBedGeneric extends BlockBed
 	}
 
 	@Override
-	public Item getItemDropped(int meta, Random random, int unknownParam)
+	public Item getItemDropped(IBlockState state, Random random, int fortune)
 	{
-		return isBlockHeadOfBed(meta) ? Item.getItemById(0) : bedItem;
+		return state.getValue(PART) == EnumPartType.HEAD ? null : bedItem;
 	}
 
 	@Override
-	public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player)
+	public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player)
 	{
 		return true;
 	}

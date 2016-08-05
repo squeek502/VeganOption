@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
@@ -73,7 +74,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	/*
 	 * BlockComposter delegated methods
 	 */
-	public boolean onActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public boolean onActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (!player.isSneaking())
 			return GuiHelper.openGuiOfTile(player, this);
@@ -92,7 +93,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		InventoryHelper.dropAllInventoryItemsInWorld(worldObj, xCoord, yCoord, zCoord, this);
 	}
 
-	public int getComparatorSignalStrength(int side)
+	public int getComparatorSignalStrength()
 	{
 		if (isComposting())
 			return Math.max(0, MathHelper.floor_float(getCompostTemperature() / MAX_COMPOST_TEMPERATURE * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH));

@@ -16,10 +16,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -69,6 +71,10 @@ public class Jute implements IContentModule
 		juteBundled.setHarvestLevel("axe", 0);
 		GameRegistry.register(juteBundled);
 		GameRegistry.register(new ItemBlock(juteBundled).setRegistryName(juteBundled.getRegistryName()));
+
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockRettable.BlockRettableColorHandler(), juteBundled);
+		}
 
 		jutePlant = new BlockJutePlant()
 				.setUnlocalizedName(ModInfo.MODID + ".jutePlant")

@@ -5,25 +5,32 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockEndPortal;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLogic;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.PotionTypes;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.BlockFluidBase;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
-import squeek.veganoption.helpers.BlockHelper.BlockPos;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 {
@@ -34,7 +41,7 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 	{
 		public MaterialEnderRift()
 		{
-			super(MapColor.airColor);
+			super(MapColor.AIR);
 			this.setImmovableMobility();
 		}
 	}
@@ -48,21 +55,21 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	public boolean hasTileEntity(IBlockState state)
+	{
+		return true;
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileEntityEnderRift();
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		this.setBlockBounds(0.0F, 0.25F, 0.0F, 1.0F, 0.75F, 1.0F);
-	}
-
-	@Override
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
-	{
-		return side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal();
+		return side == EnumFacing.UP || side == EnumFacing.DOWN;
 	}
 
 	@Override
@@ -73,38 +80,38 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random random)
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random random)
 	{
-		super.updateTick(world, x, y, z, random);
+		super.updateTick(world, pos, state, random);
 
-		BlockHelper.BlockPos riftBlockPos = BlockHelper.blockPos(world, x, y, z);
-		BlockHelper.BlockPos aboveBlockPos = riftBlockPos.getOffset(0, 1, 0);
-		if (BlockHelper.isWater(aboveBlockPos) && world.getBlock(x, y - 1, z).isReplaceable(world, x, y - 1, z))
+		BlockPos aboveBlockPos = pos.up();
+		BlockPos belowBlockPos = pos.down();
+		if (BlockHelper.isWater(world, aboveBlockPos) && world.getBlockState(belowBlockPos).getBlock().isReplaceable(world, belowBlockPos))
 		{
-			BlockHelper.BlockPos sourceBlockToConsume = BlockHelper.followWaterStreamToSourceBlock(aboveBlockPos);
+			BlockPos sourceBlockToConsume = BlockHelper.followWaterStreamToSourceBlock(world, aboveBlockPos);
 			if (sourceBlockToConsume != null)
 			{
-				world.setBlockToAir(sourceBlockToConsume.x, sourceBlockToConsume.y, sourceBlockToConsume.z);
+				world.setBlockToAir(sourceBlockToConsume);
 
 				if (!world.isDaytime())
 				{
-					world.setBlock(x, y - 1, z, Ender.rawEnder, 7, 3);
+					world.setBlockState(belowBlockPos, Ender.rawEnder.getDefaultState().withProperty(BlockFluidBase.LEVEL, 7));
 				}
 				else
 				{
-					BlockPos[] blocksInRadius = BlockHelper.getBlocksInRadiusAround(new BlockPos(world, x, y, z), BLOCK_TELEPORT_RADIUS);
-					blocksInRadius = BlockHelper.filterBlockListToBreakableBlocks(blocksInRadius);
+					BlockPos[] blocksInRadius = BlockHelper.getBlocksInRadiusAround(pos, BLOCK_TELEPORT_RADIUS);
+					blocksInRadius = BlockHelper.filterBlockListToBreakableBlocks(world, blocksInRadius);
 					if (blocksInRadius.length > 0)
 					{
 						// TODO: teleport block to the end?
 						BlockPos blockPosToSwallow = blocksInRadius[RandomHelper.random.nextInt(blocksInRadius.length)];
-						blockPosToSwallow.world.setBlockToAir(blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z);
-						blockPosToSwallow.world.playSoundEffect(blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z, "mob.endermen.portal", 1.0F, 1.0F);
+						world.setBlockToAir(blockPosToSwallow);
+						world.playSound(blockPosToSwallow.getX(), blockPosToSwallow.getY(), blockPosToSwallow.getZ(), SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1.0F, 1.0F, true);
 
 						if (!world.isRemote)
 						{
-							TargetPoint target = new TargetPoint(world.provider.dimensionId, blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z, 80);
-							NetworkHandler.channel.sendToAllAround(new MessageFX(blockPosToSwallow.x, blockPosToSwallow.y, blockPosToSwallow.z, MessageFX.FX.BLOCK_TELEPORT), target);
+							NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimension(), blockPosToSwallow.getX(), blockPosToSwallow.getY(), blockPosToSwallow.getZ(), 80);
+							NetworkHandler.channel.sendToAllAround(new MessageFX(blockPosToSwallow.getX(), blockPosToSwallow.getY(), blockPosToSwallow.getZ(), MessageFX.FX.BLOCK_TELEPORT), target);
 						}
 					}
 				}
@@ -124,31 +131,30 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 			double velY = rand.nextDouble() - 0.5D;
 			double velZ = rand.nextDouble() - 0.5D;
 
-			world.spawnParticle("portal", posX, posY, posZ, velX, velY, velZ);
+			world.spawnParticle(EnumParticleTypes.PORTAL, posX, posY, posZ, velX, velY, velZ);
 		}
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block changedBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block changedBlock)
 	{
-		super.onNeighborBlockChange(world, x, y, z, changedBlock);
+		super.neighborChanged(state, world, pos, changedBlock);
 
-		if (!canBlockStay(world, x, y, z))
-			world.setBlockToAir(x, y, z);
+		if (!canPlaceBlockAt(world, pos))
+			world.setBlockToAir(pos);
 	}
 
 	@Override
-	public boolean canBlockStay(World world, int x, int y, int z)
+	public boolean canPlaceBlockAt(World world, BlockPos pos)
 	{
-		return isValidPortalLocation(world, x, y, z) && super.canBlockStay(world, x, y, z);
+		return isValidPortalLocation(world, pos) && super.canPlaceBlockAt(world, pos);
 	}
 
-	public static boolean isValidPortalLocation(World world, int x, int y, int z)
+	public static boolean isValidPortalLocation(World world, BlockPos blockPos)
 	{
-		BlockHelper.BlockPos blockPos = BlockHelper.blockPos(world, x, y, z);
-		for (BlockHelper.BlockPos blockToCheck : BlockHelper.getBlocksAdjacentTo(blockPos))
+		for (BlockPos blockToCheck : BlockHelper.getBlocksAdjacentTo(blockPos))
 		{
-			if (!(blockToCheck.getBlock() instanceof BlockEncrustedObsidian))
+			if (!(world.getBlockState(blockToCheck).getBlock() instanceof BlockEncrustedObsidian))
 				return false;
 		}
 		return true;
@@ -156,19 +162,18 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 
 	// by not calling the super's method, this also stops colliding entities from teleporting to the end
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
 		if (entity instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer) entity;
-			player.addPotionEffect(new PotionEffect(Potion.confusion.id, MiscHelper.TICKS_PER_SEC * NAUSEA_LENGTH_IN_SECONDS));
+			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, MiscHelper.TICKS_PER_SEC * NAUSEA_LENGTH_IN_SECONDS));
 		}
-		return;
 	}
 
 	// by not calling the super's method, this stops the portal removing itself immediately in certain dimensions
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{
 	}
 }

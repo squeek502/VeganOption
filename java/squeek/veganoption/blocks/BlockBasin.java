@@ -1,32 +1,28 @@
 package squeek.veganoption.blocks;
 
-import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockBasin extends BlockContainer implements IHollowBlock
 {
 	public static final double SIDE_WIDTH = 0.125D;
-
-	public IIcon blockIconTopOpen;
-	public IIcon blockIconTopClosed;
-	public IIcon blockIconBottom;
-	public IIcon blockIconSide;
-	public static IIcon blockIconInner;
 
 	public BlockBasin(Material material)
 	{
@@ -44,12 +40,12 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	 * Misc properties
 	 */
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		if (side != ForgeDirection.UP)
+		if (side != EnumFacing.UP)
 			return true;
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBasin)
 		{
 			return ((TileEntityBasin) tile).isClosed();
@@ -62,60 +58,60 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	 * Events
 	 */
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block changedBlock)
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
-		super.onNeighborBlockChange(world, x, y, z, changedBlock);
+		super.onNeighborChange(world, pos, neighbor);
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBasin)
 		{
-			((TileEntityBasin) tile).setPowered(world.isBlockIndirectlyGettingPowered(x, y, z));
+			((TileEntityBasin) tile).setPowered(tile.getWorld().isBlockIndirectlyGettingPowered(pos) > 0);
 			((TileEntityBasin) tile).scheduleFluidConsume();
 		}
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{
-		super.onBlockAdded(world, x, y, z);
+		super.onBlockAdded(world, pos, state);
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBasin)
 		{
-			((TileEntityBasin) tile).setPowered(world.isBlockIndirectlyGettingPowered(x, y, z));
+			((TileEntityBasin) tile).setPowered(world.isBlockIndirectlyGettingPowered(pos) > 0);
 			((TileEntityBasin) tile).scheduleFluidConsume();
 		}
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ))
+		if (super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ))
 			return true;
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		return tile instanceof TileEntityBasin && ((TileEntityBasin) tile).onBlockActivated(player, side, hitX, hitY, hitZ);
 	}
 
 	/*
 	 * Bounding box/collisions
 	 */
-	public AxisAlignedBB getSideBoundingBox(ForgeDirection side)
+	public AxisAlignedBB getSideBoundingBox(EnumFacing side)
 	{
 		return getSideBoundingBox(side, 0, 0, 0);
 	}
 
-	public AxisAlignedBB getSideBoundingBox(ForgeDirection side, double offsetX, double offsetY, double offsetZ)
+	public AxisAlignedBB getSideBoundingBox(EnumFacing side, double offsetX, double offsetY, double offsetZ)
 	{
 		return getSideBoundingBox(side, offsetX, offsetY, offsetZ, 1f);
 	}
 
-	public AxisAlignedBB getSideBoundingBox(ForgeDirection side, double offsetX, double offsetY, double offsetZ, float depthScale)
+	public AxisAlignedBB getSideBoundingBox(EnumFacing side, double offsetX, double offsetY, double offsetZ, float depthScale)
 	{
 		return getSideBoundingBox(side, offsetX, offsetY, offsetZ, depthScale, 1f, 1f);
 	}
 
-	public AxisAlignedBB getSideBoundingBox(ForgeDirection side, double offsetX, double offsetY, double offsetZ, float depthScale, float widthScale, float heightScale)
+	public AxisAlignedBB getSideBoundingBox(EnumFacing side, double offsetX, double offsetY, double offsetZ, float depthScale, float widthScale, float heightScale)
 	{
 		double minX = this.minX, minY = this.minY, minZ = this.minZ;
 		double maxX = this.maxX, maxY = this.maxY, maxZ = this.maxZ;
@@ -259,7 +255,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	@Override
 	public boolean isBlockFullCube(World world, int x, int y, int z)
 	{
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 		if (tile instanceof TileEntityBasin)
 		{
 			return ((TileEntityBasin) tile).isClosed();
@@ -270,80 +266,26 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	/*
 	 * Rendering
 	 */
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return true;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getRenderType()
+	public EnumBlockRenderType getRenderType()
 	{
-		return super.getRenderType();
+		return EnumBlockRenderType.MODEL;
 	}
 
-	@Override
-	public void registerBlockIcons(IIconRegister iconRegister)
-	{
-		blockIconTopOpen = iconRegister.registerIcon(this.getTextureName() + "_top_open");
-		blockIconTopClosed = iconRegister.registerIcon(this.getTextureName() + "_top_closed");
-		blockIconBottom = iconRegister.registerIcon(this.getTextureName() + "_bottom");
-		blockIconInner = iconRegister.registerIcon(this.getTextureName() + "_inner");
-		blockIconSide = iconRegister.registerIcon(this.getTextureName() + "_side");
-	}
-
-	@Override
-	public IIcon getIcon(int side, int metadata)
-	{
-		switch (ForgeDirection.getOrientation(side))
-		{
-			case DOWN:
-				return blockIconBottom;
-			case UP:
-				return blockIconTopClosed;
-			case EAST:
-			case WEST:
-			case NORTH:
-			case SOUTH:
-				return blockIconSide;
-			default:
-				break;
-		}
-		return super.getIcon(side, metadata);
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
-	{
-		if (ForgeDirection.getOrientation(side) == ForgeDirection.UP)
-		{
-			TileEntity tile = world.getTileEntity(x, y, z);
-			if (tile instanceof TileEntityBasin && ((TileEntityBasin) tile).isOpen())
-			{
-				return blockIconTopOpen;
-			}
-		}
-
-		return super.getIcon(world, x, y, z, side);
-	}
-
-	public static IIcon getInnerIcon()
-	{
-		return blockIconInner;
-	}
 
 }

@@ -3,23 +3,31 @@ package squeek.veganoption.blocks;
 import java.util.Random;
 import net.minecraft.block.BlockHay;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.Item;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.ColorHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class BlockRettable extends BlockHay
 {
 	// this cannot be any higher than 3 due to BlockRotatablePillar using the 3rd/4th bits
-	public int numRettingStages = 3;
-	public int baseColor = 0x67ce0c;
-	public int rettedColor = 0xbfb57e;
+	public static final int numRettingStages = 3;
+	public static final PropertyInteger STAGE = PropertyInteger.create("retting_stage", 0, numRettingStages);
+
 	public Item rettedItem;
 	public int minRettedItemDrops;
 	public int maxRettedItemDrops;
@@ -34,65 +42,59 @@ public class BlockRettable extends BlockHay
 		setSoundType(SoundType.GROUND);
 	}
 
-	public BlockRettable(Item rettedItem, int minRettedItemDrops, int maxRettedItemDrops, int baseColor, int rettedColor)
-	{
-		this(rettedItem, minRettedItemDrops, maxRettedItemDrops);
-		this.baseColor = baseColor;
-		this.rettedColor = rettedColor;
-	}
-
-	@SideOnly(Side.CLIENT)
 	@Override
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
+	public BlockStateContainer createBlockState()
 	{
-		if (isRetted(world, x, y, z))
-			return rettedColor;
-		else
-			return ColorHelper.blendBetweenColors(getRettingPercent(world, x, y, z), baseColor, rettedColor, 0d, 1d);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getBlockColor()
-	{
-		return baseColor;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderColor(int p_149741_1_)
-	{
-		return baseColor;
+		return new BlockStateContainer(this, STAGE, AXIS);
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random random)
+	public IBlockState getStateFromMeta(int meta)
 	{
-		super.updateTick(world, x, y, z, random);
+		int stage = meta & 3;
+		return getDefaultState().withProperty(STAGE, meta & 3).withProperty(AXIS, EnumFacing.Axis.values()[(meta - stage) & 12]);
+	}
 
-		if (canRet(world, x, y, z) && !isRetted(world, x, y, z))
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		int stage = state.getValue(STAGE);
+		return (super.getMetaFromState(state) & 12) + stage;
+	}
+
+	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random random)
+	{
+		super.updateTick(world, pos, state, random);
+
+		if (canRet(world, pos) && !isRetted(world, pos))
 		{
-			deltaRettingStage(world, x, y, z, 1);
+			deltaRettingStage(world, pos, 1);
 		}
 	}
 
-	public void finishRetting(World world, int x, int y, int z)
+	public void finishRetting(World world, BlockPos pos)
 	{
 	}
 
-	public boolean canRet(World world, int x, int y, int z)
+	public boolean canRet(World world, BlockPos pos)
 	{
-		return BlockHelper.isAdjacentToOrCoveredInWater(BlockHelper.blockPos(world, x, y, z));
+		return BlockHelper.isAdjacentToOrCoveredInWater(world, pos);
 	}
 
-	public boolean isRetted(int meta)
+	public static boolean isRetted(int stage)
 	{
-		return getRettingStageFromMeta(meta) >= numRettingStages;
+		return stage >= numRettingStages;
 	}
 
-	public boolean isRetted(IBlockAccess world, int x, int y, int z)
+	public static boolean isRetted(IBlockState state)
 	{
-		return isRetted(world.getBlockMetadata(x, y, z));
+		return isRetted(state.getValue(STAGE));
+	}
+
+	public static boolean isRetted(IBlockAccess world, BlockPos pos)
+	{
+		return isRetted(world.getBlockState(pos));
 	}
 
 	@Override
@@ -102,98 +104,92 @@ public class BlockRettable extends BlockHay
 	}
 
 	@Override
-	public Item getItemDropped(int meta, Random random, int fortune)
+	public Item getItemDropped(IBlockState state, Random random, int fortune)
 	{
-		if (isRetted(meta))
+		if (isRetted(state))
 			return rettedItem;
 		else
-			return super.getItemDropped(meta, random, fortune);
+			return super.getItemDropped(state, random, fortune);
 	}
 
 	@Override
-	public int quantityDropped(int meta, int fortune, Random random)
+	public int quantityDropped(IBlockState state, int fortune, Random random)
 	{
-		if (isRetted(meta))
+		if (isRetted(state))
 			return RandomHelper.getRandomIntFromRange(random, minRettedItemDrops, maxRettedItemDrops);
 		else
-			return super.quantityDropped(meta, fortune, random);
+			return super.quantityDropped(state, fortune, random);
 	}
 
 	@Override
-	public boolean isToolEffective(String type, int metadata)
+	public boolean isToolEffective(String type, IBlockState state)
 	{
-		if (isRetted(metadata))
+		if (isRetted(state))
 			return false;
 		else
-			return super.isToolEffective(type, metadata);
+			return super.isToolEffective(type, state);
 	}
 
 	@Override
-	public void setHarvestLevel(String toolClass, int level, int metadata)
+	public void setHarvestLevel(String toolClass, int level, IBlockState state)
 	{
-		if (isRetted(metadata))
+		if (isRetted(state))
 			return;
 
-		super.setHarvestLevel(toolClass, level, metadata);
+		super.setHarvestLevel(toolClass, level, state);
 	}
 
 	@Override
-	public int damageDropped(int p_149692_1_)
+	public int damageDropped(IBlockState state)
 	{
 		return 0;
 	}
 
-	public void deltaRettingStage(World world, int x, int y, int z, int deltaRetting)
+	public void deltaRettingStage(World world, BlockPos pos, int deltaRetting)
 	{
-		setRettingStage(world, x, y, z, getRettingStage(world, x, y, z) + deltaRetting);
+		setRettingStage(world, pos, world.getBlockState(pos).getValue(STAGE) + deltaRetting);
 	}
 
-	public void setRettingStage(World world, int x, int y, int z, int rettingStage)
+	public void setRettingStage(World world, BlockPos pos, int rettingStage)
 	{
 		rettingStage = Math.max(0, Math.min(numRettingStages, rettingStage));
-		int metadata = getMetaFromRettingStage(world, x, y, z, rettingStage);
-		world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
+		world.setBlockState(pos, world.getBlockState(pos).withProperty(STAGE, rettingStage));
 
-		if (isRetted(metadata))
+		if (isRetted(rettingStage))
 		{
-			finishRetting(world, x, y, z);
+			finishRetting(world, pos);
 		}
 	}
 
-	public float getRettingPercent(IBlockAccess world, int x, int y, int z)
+	public static float getRettingPercent(IBlockAccess world, BlockPos pos)
 	{
-		return getRettingPercentFromMeta(world.getBlockMetadata(x, y, z));
-	}
-
-	public float getRettingPercentFromMeta(int meta)
-	{
-		return (float) getRettingStageFromMeta(meta) / numRettingStages;
-	}
-
-	public int getRettingStage(IBlockAccess world, int x, int y, int z)
-	{
-		return getRettingStageFromMeta(world.getBlockMetadata(x, y, z));
-	}
-
-	public int getRettingStageFromMeta(int meta)
-	{
-		return meta & 3;
-	}
-
-	public int getMetaFromRettingStage(IBlockAccess world, int x, int y, int z, int rettingStage)
-	{
-		return (world.getBlockMetadata(x, y, z) & 12) + rettingStage;
+		return world.getBlockState(pos).getValue(STAGE) / numRettingStages;
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride()
+	public boolean hasComparatorInputOverride(IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
+	public int getComparatorInputOverride(IBlockState blockState, World world, BlockPos pos)
 	{
-		return MathHelper.floor_float(getRettingPercent(world, x, y, z) * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH);
+		return MathHelper.floor_float(getRettingPercent(world, pos) * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH);
+	}
+
+	public static class BlockRettableColorHandler implements IBlockColor {
+		public static final int baseColor = 0x67ce0c;
+		public static final int rettedColor = 0xbfb57e;
+
+		@SideOnly(Side.CLIENT)
+		@Override
+		public int colorMultiplier(IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
+		{
+			if (isRetted(world, pos))
+				return rettedColor;
+			else
+				return ColorHelper.blendBetweenColors(getRettingPercent(world, pos), baseColor, rettedColor, 0d, 1d);
+		}
 	}
 }

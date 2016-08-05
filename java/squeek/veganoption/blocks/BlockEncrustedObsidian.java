@@ -4,7 +4,11 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
@@ -18,38 +22,36 @@ public class BlockEncrustedObsidian extends BlockObsidian
 	}
 
 	@Override
-	public Item getItemDropped(int meta, Random random, int fortune)
+	public Item getItemDropped(IBlockState state, Random random, int fortune)
 	{
 		return Item.getItemFromBlock(this);
 	}
 
-	public static void tryPlacePortalAdjacentTo(World world, int x, int y, int z)
+	public static void tryPlacePortalAdjacentTo(World world, BlockPos pos)
 	{
-		BlockHelper.BlockPos blockPos = BlockHelper.blockPos(world, x, y, z);
-		for (BlockHelper.BlockPos blockToCheck : BlockHelper.getBlocksAdjacentTo(blockPos))
+		for (BlockPos blockPosToCheck : BlockHelper.getBlocksAdjacentTo(pos))
 		{
-			if (blockToCheck.getBlock() != Ender.enderRift
-					&& BlockEnderRift.isValidPortalLocation(blockToCheck.world, blockToCheck.x, blockToCheck.y, blockToCheck.z)
-					&& blockToCheck.getBlock().isReplaceable(blockToCheck.world, blockToCheck.x, blockToCheck.y, blockToCheck.z))
+			Block blockToCheck = world.getBlockState(blockPosToCheck).getBlock();
+			if (blockToCheck != Ender.enderRift && BlockEnderRift.isValidPortalLocation(world, blockPosToCheck) && blockToCheck.isReplaceable(world, blockPosToCheck))
 			{
-				world.setBlock(blockToCheck.x, blockToCheck.y, blockToCheck.z, Ender.enderRift);
+				world.setBlockState(blockPosToCheck, Ender.enderRift.getDefaultState());
 			}
 		}
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block changedBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
 	{
-		super.onNeighborBlockChange(world, x, y, z, changedBlock);
+		super.neighborChanged(state, world, pos, blockIn);
 
-		tryPlacePortalAdjacentTo(world, x, y, z);
+		tryPlacePortalAdjacentTo(world, pos);
 	}
 
 	@Override
-	public void onPostBlockPlaced(World world, int x, int y, int z, int meta)
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		super.onPostBlockPlaced(world, x, y, z, meta);
+		super.onBlockPlacedBy(world, pos, state, placer, stack);
 
-		tryPlacePortalAdjacentTo(world, x, y, z);
+		tryPlacePortalAdjacentTo(world, pos);
 	}
 }

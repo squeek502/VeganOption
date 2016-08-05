@@ -5,15 +5,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
+
+import static squeek.veganoption.helpers.RandomHelper.random;
 
 public class BlockCompost extends Block
 {
 	public BlockCompost()
 	{
-		super(Material.ground);
+		super(Material.GROUND);
 		setHarvestLevel("shovel", 0);
 		setTickRandomly(true);
 		setSoundType(SoundType.GROUND);
@@ -21,36 +25,36 @@ public class BlockCompost extends Block
 
 	@Override
 	// passive and very subtle soil building
-	public void updateTick(World world, int x, int y, int z, Random random)
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
-		super.updateTick(world, x, y, z, random);
+		super.updateTick(world, pos, state, rand);
 
 		// skip ForgeDirection.DOWN
-		ForgeDirection randomDirection = ForgeDirection.getOrientation(random.nextInt(ForgeDirection.VALID_DIRECTIONS.length - 1) + 1);
+		EnumFacing randomDirection = EnumFacing.DOWN;
+		while (randomDirection == EnumFacing.DOWN) {
+			randomDirection = EnumFacing.random(rand);
+		}
 
-		x += randomDirection.offsetX;
-		y += randomDirection.offsetY;
-		z += randomDirection.offsetZ;
-
-		attemptSoilBuilding(world, x, y, z, random, randomDirection == ForgeDirection.UP);
+		attemptSoilBuilding(world, pos.offset(randomDirection), random, randomDirection == EnumFacing.UP);
 	}
 
-	public static boolean tryGrowthTickAt(World world, int x, int y, int z, Random random)
+	public static boolean tryGrowthTickAt(World world, BlockPos pos, Random random)
 	{
-		Block block = world.getBlock(x, y, z);
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
 		if ((block instanceof IPlantable || block instanceof IGrowable) && block.getTickRandomly())
 		{
-			block.updateTick(world, x, y, z, random);
+			block.updateTick(world, pos, state, random);
 			return true;
 		}
 		return false;
 	}
 
-	public void attemptSoilBuilding(World world, int x, int y, int z, Random random, boolean growPlantDirectly)
+	public void attemptSoilBuilding(World world, BlockPos pos, Random random, boolean growPlantDirectly)
 	{
-		tryGrowthTickAt(world, x, y, z, random);
+		tryGrowthTickAt(world, pos, random);
 
 		if (growPlantDirectly)
-			tryGrowthTickAt(world, x, y + 1, z, random);
+			tryGrowthTickAt(world, pos.up(), random);
 	}
 }

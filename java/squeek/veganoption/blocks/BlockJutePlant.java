@@ -3,8 +3,10 @@ package squeek.veganoption.blocks;
 import java.util.Random;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -14,7 +16,6 @@ import squeek.veganoption.content.modules.Jute;
 
 public class BlockJutePlant extends BlockBush implements IGrowable
 {
-	IIcon[] blockIcons = new IIcon[NUM_ICONS];
 	public static final int NUM_BOTTOM_STAGES = 6;
 	public static final int NUM_TOP_STAGES = 5;
 	public static final int NUM_GROWTH_STAGES = NUM_BOTTOM_STAGES + NUM_TOP_STAGES;
@@ -50,9 +51,9 @@ public class BlockJutePlant extends BlockBush implements IGrowable
 		return Jute.juteSeeds;
 	}
 
-	public void deltaGrowth(World world, int x, int y, int z, int delta)
+	public void deltaGrowth(World world, BlockPos pos, IBlockState state, int delta)
 	{
-		if (world.getBlock(x, y, z) != this)
+		if (state.getBlock() != this)
 			return;
 
 		int oldMeta = world.getBlockMetadata(x, y, z);
@@ -112,9 +113,9 @@ public class BlockJutePlant extends BlockBush implements IGrowable
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random random)
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random random)
 	{
-		super.updateTick(world, x, y, z, random);
+		super.updateTick(world, pos, state, random);
 
 		boolean shouldGrow = random.nextFloat() < GROWTH_CHANCE_PER_UPDATETICK;
 		if (shouldGrow && world.getBlockMetadata(x, y, z) != BOTTOM_META_FULL)
@@ -144,49 +145,21 @@ public class BlockJutePlant extends BlockBush implements IGrowable
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		int iconIndex = isTop(meta) ? meta - TOP_META_START : meta;
-		if (iconIndex < blockIcons.length)
-			return blockIcons[iconIndex];
-		else
-			return super.getIcon(side, meta);
-	}
-
-	@Override
-	public void registerBlockIcons(IIconRegister register)
-	{
-		for (int i = 0; i < NUM_ICONS; i++)
-		{
-			blockIcons[i] = register.registerIcon(getTextureName() + "_" + i);
-		}
-	}
-
-	/**
-	 * isNotFullyGrown
-	 */
-	@Override
-	public boolean func_149851_a(World world, int x, int y, int z, boolean isRemote)
+	public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient)
 	{
 		return true;
 	}
 
-	/**
-	 * canBonemeal
-	 */
 	@Override
-	public boolean func_149852_a(World world, Random random, int x, int y, int z)
+	public boolean canUseBonemeal(World world, Random random, BlockPos pos, IBlockState state)
 	{
 		return true;
 	}
 
-	/**
-	 * onBonemeal
-	 */
 	@Override
-	public void func_149853_b(World world, Random random, int x, int y, int z)
+	public void grow(World world, Random random, BlockPos pos, IBlockState state)
 	{
 		int deltaGrowth = MathHelper.getRandomIntegerInRange(random, 2, 5);
-		deltaGrowth(world, x, y, z, deltaGrowth);
+		deltaGrowth(world, pos, state, deltaGrowth);
 	}
 }
