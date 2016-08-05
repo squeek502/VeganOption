@@ -4,5 +4,4 @@
 @API(apiVersion = "0.1.0", owner = "VeganOptionAPI", provides = "VeganOptionAPI")
 package squeek.veganoption.api;
 
-import cpw.mods.fml.common.API;
-
+import net.minecraftforge.fml.common.API;

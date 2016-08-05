@@ -2,10 +2,12 @@ package squeek.veganoption.content.crafting;
 
 import java.util.HashMap;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,16 +47,16 @@ public class PistonCraftingHandler
 		WorldPosition pos = new WorldPosition(event.world, blockPos);
 		displacedLiquids.remove(pos);
 
-		Block displacedBlock = event.world.getBlockState(blockPos).getBlock();
+		IBlockState displacedState = event.world.getBlockState(blockPos);
+		Block displacedBlock = displacedState.getBlock();
 
 		if (displacedBlock == null || event.world.isAirBlock(blockPos))
 			return;
 
-		Fluid displacedFluid = FluidHelper.getFluidTypeOfBlock(displacedBlock);
-		int meta = event.world.getBlockMetadata(event.headX, event.headY, event.headZ);
-		if (displacedFluid != null && meta == FluidHelper.getStillMetadata(displacedFluid))
+		Fluid displacedFluid = FluidHelper.getFluidTypeOfBlock(displacedState);
+		if (displacedFluid != null && FluidHelper.getStillFluidLevel(displacedFluid) == displacedState.getValue(BlockFluidBase.LEVEL))
 		{
-			displacedLiquids.put(pos, new FluidStack(displacedFluid, FluidContainerRegistry.BUCKET_VOLUME));
+			displacedLiquids.put(pos, new FluidStack(displacedFluid, Fluid.BUCKET_VOLUME));
 		}
 	}
 

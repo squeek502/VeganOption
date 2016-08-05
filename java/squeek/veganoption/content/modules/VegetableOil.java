@@ -56,7 +56,7 @@ public class VegetableOil implements IContentModule
 
 		fluidVegetableOil = new Fluid(ModInfo.MODID + ".fluidOilVegetable", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_flow"));
 		FluidRegistry.registerFluid(fluidVegetableOil);
-		fluidBlockVegetableOil = new BlockFluidGeneric(fluidVegetableOil, Material.WATER, "vegetable_oil")
+		fluidBlockVegetableOil = new BlockFluidGeneric(fluidVegetableOil, Material.WATER)
 				.setUnlocalizedName(ModInfo.MODID + ".fluidOilVegetable");
 		fluidVegetableOil.setBlock(fluidBlockVegetableOil);
 		fluidVegetableOil.setUnlocalizedName(fluidBlockVegetableOil.getUnlocalizedName());
