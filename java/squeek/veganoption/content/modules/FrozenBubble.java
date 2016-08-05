@@ -12,10 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFishFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -27,7 +24,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
-import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -52,7 +48,7 @@ public class FrozenBubble implements IContentModule
 	{
 		fluidSoapSolution = new Fluid(ModInfo.MODID + ".fluidSoapSolution", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_flow"));
 		FluidRegistry.registerFluid(fluidSoapSolution);
-		blockFluidSoapSolution = new BlockFluidGeneric(fluidSoapSolution, Material.WATER, "soap_solution")
+		blockFluidSoapSolution = new BlockFluidClassic(fluidSoapSolution, Material.WATER)
 				.setUnlocalizedName(ModInfo.MODID + ".fluidSoapSolution")
 				.setRegistryName(ModInfo.MODID_LOWER, "fluidSoapSolution");
 		fluidSoapSolution.setBlock(blockFluidSoapSolution);

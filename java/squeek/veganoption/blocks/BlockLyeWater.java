@@ -7,10 +7,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import squeek.veganoption.ModInfo;
 
-public class BlockLyeWater extends BlockFluidGeneric
+public class BlockLyeWater extends BlockFluidClassic
 {
 	public static final DamageSource lyeDamage = new DamageSource(ModInfo.MODID + ".lyeWater");
 	public static Material lyeMaterial = Material.WATER;

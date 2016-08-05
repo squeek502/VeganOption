@@ -5,11 +5,12 @@ import java.lang.reflect.Method;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fluids.BlockFluidClassic;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.modules.Ender;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,7 +45,7 @@ public class FluidContainerHelper
 		// if we've gotten this far, then it shouldn't be able to be picked up by a bucket
 		// ItemBucketGeneric would have handled it if it was possible to pick it up
 		// this stops BlockFluidGenerics creating water buckets if they don't have a bucket item
-		if (block instanceof BlockFluidGeneric)
+		if (block instanceof BlockFluidClassic)
 		{
 			event.setCanceled(true);
 			event.setResult(Event.Result.DENY);
@@ -105,7 +106,7 @@ public class FluidContainerHelper
 			return;
 		}
 
-		if (!(block instanceof BlockFluidGeneric))
+		if (!(block instanceof BlockFluidClassic))
 			return;
 
 		if (!world.canMineBlockBody(event.getEntityPlayer(), pos))
@@ -114,7 +115,7 @@ public class FluidContainerHelper
 		if (!event.getEntityPlayer().canPlayerEdit(pos, rayTraceResult.sideHit, emptyContainer))
 			return;
 
-		FluidStack fluidStack = new FluidStack(((BlockFluidGeneric) block).getFluid(), FluidContainerRegistry.BUCKET_VOLUME);
+		FluidStack fluidStack = new FluidStack(((BlockFluidClassic) block).getFluid(), Fluid.BUCKET_VOLUME);
 		boolean didFill = tryFillContainer(event.getEntityPlayer(), emptyContainer, fluidStack) != null;
 
 		// this cancels the interaction if the bottle is unable to be filled with the fluid,

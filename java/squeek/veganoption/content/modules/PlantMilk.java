@@ -6,15 +6,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
-import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -38,7 +34,7 @@ public class PlantMilk implements IContentModule
 	{
 		fluidPlantMilk = new Fluid(ModInfo.MODID + ".plantMilk", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_flow"));
 		FluidRegistry.registerFluid(fluidPlantMilk);
-		plantMilk = new BlockFluidGeneric(fluidPlantMilk, Material.WATER, "plant_milk")
+		plantMilk = new BlockFluidClassic(fluidPlantMilk, Material.WATER)
 				.setUnlocalizedName(ModInfo.MODID + ".plantMilk");
 		fluidPlantMilk.setBlock(plantMilk);
 		fluidPlantMilk.setUnlocalizedName(plantMilk.getUnlocalizedName());

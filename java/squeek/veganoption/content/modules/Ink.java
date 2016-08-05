@@ -6,16 +6,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
-import squeek.veganoption.blocks.BlockFluidGeneric;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -51,7 +47,7 @@ public class Ink implements IContentModule
 
 		blackInkFluid = new Fluid(ModInfo.MODID + ".inkBlack", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_flow"));
 		FluidRegistry.registerFluid(blackInkFluid);
-		blackInk = new BlockFluidGeneric(blackInkFluid, Material.WATER, "black_ink")
+		blackInk = new BlockFluidClassic(blackInkFluid, Material.WATER)
 				.setRegistryName(ModInfo.MODID_LOWER, "inkBlack");
 		blackInkFluid.setBlock(blackInk);
 		blackInkFluid.setUnlocalizedName(blackInk.getUnlocalizedName());
@@ -68,7 +64,7 @@ public class Ink implements IContentModule
 
 		whiteInkFluid = new Fluid(ModInfo.MODID + ".inkWhite", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_flow"));
 		FluidRegistry.registerFluid(whiteInkFluid);
-		whiteInk = new BlockFluidGeneric(whiteInkFluid, Material.WATER, "white_ink")
+		whiteInk = new BlockFluidClassic(whiteInkFluid, Material.WATER)
 				.setUnlocalizedName(ModInfo.MODID + ".inkWhite")
 				.setRegistryName(ModInfo.MODID_LOWER, "inkWhite");
 		whiteInkFluid.setBlock(whiteInk);
