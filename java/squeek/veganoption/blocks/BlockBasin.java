@@ -1,5 +1,6 @@
 package squeek.veganoption.blocks;
 
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -19,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
+
+import javax.annotation.Nonnull;
 
 public class BlockBasin extends BlockContainer implements IHollowBlock
 {
@@ -113,12 +116,12 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 
 	public AxisAlignedBB getSideBoundingBox(EnumFacing side, double offsetX, double offsetY, double offsetZ, float depthScale, float widthScale, float heightScale)
 	{
-		double minX = this.minX, minY = this.minY, minZ = this.minZ;
-		double maxX = this.maxX, maxY = this.maxY, maxZ = this.maxZ;
+		double minX = FULL_BLOCK_AABB.minX, minY = FULL_BLOCK_AABB.minY, minZ = FULL_BLOCK_AABB.minZ;
+		double maxX = FULL_BLOCK_AABB.maxX, maxY = FULL_BLOCK_AABB.maxY, maxZ = FULL_BLOCK_AABB.maxZ;
 
-		if (side.offsetX != 0)
+		if (side.getFrontOffsetX() != 0)
 		{
-			if (side.offsetX > 0)
+			if (side.getFrontOffsetX() > 0)
 				minX = maxX - SIDE_WIDTH * depthScale;
 			else
 				maxX = minX + SIDE_WIDTH * depthScale;
@@ -139,9 +142,9 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 					minY = maxY + height * heightScale;
 			}
 		}
-		if (side.offsetY != 0)
+		if (side.getFrontOffsetY() != 0)
 		{
-			if (side.offsetY > 0)
+			if (side.getFrontOffsetY() > 0)
 				minY = maxY - SIDE_WIDTH * depthScale;
 			else
 				maxY = minY + SIDE_WIDTH * depthScale;
@@ -162,9 +165,9 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 					minX = maxX + height * heightScale;
 			}
 		}
-		if (side.offsetZ != 0)
+		if (side.getFrontOffsetZ() != 0)
 		{
-			if (side.offsetZ > 0)
+			if (side.getFrontOffsetZ() > 0)
 				minZ = maxZ - SIDE_WIDTH * depthScale;
 			else
 				maxZ = minZ + SIDE_WIDTH * depthScale;
@@ -186,29 +189,29 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 			}
 		}
 
-		return AxisAlignedBB.getBoundingBox(offsetX + minX, offsetY + minY, offsetZ + minZ, offsetX + maxX, offsetY + maxY, offsetZ + maxZ);
+		return new AxisAlignedBB(offsetX + minX, offsetY + minY, offsetZ + minZ, offsetX + maxX, offsetY + maxY, offsetZ + maxZ);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
+//	@SuppressWarnings("rawtypes")
 	@Override
-	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB collidingAABB, List collidingBoundingBoxes, Entity collidingEntity)
+	public void addCollisionBoxToList(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB collidingAABB, @Nonnull List<AxisAlignedBB> collidingBoundingBoxes, Entity collidingEntity)
 	{
 		// hack...
 		// this function is called with a null entity in World.isBlockFullCube
 		if (collidingEntity == null)
 			return;
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile != null && tile instanceof TileEntityBasin && ((TileEntityBasin) tile).isPowered())
 		{
-			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			for (EnumFacing side : EnumFacing.VALUES)
 			{
-				if (side == ForgeDirection.UP)
+				if (side == EnumFacing.UP)
 					continue;
 
 				List<AxisAlignedBB> AABBs = new ArrayList<AxisAlignedBB>(4);
 
-				AABBs.add(getSideBoundingBox(side, x, y, z));
+				AABBs.add(getSideBoundingBox(side, pos.getX(), pos.getY(), pos.getZ()));
 
 				for (AxisAlignedBB AABB : AABBs)
 				{
@@ -221,7 +224,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 		}
 		else
 		{
-			AxisAlignedBB AABB = getOuterBoundingBox(world, x, y, z);
+			AxisAlignedBB AABB = getOuterBoundingBox(world, pos.getX(), pos.getY(), pos.getZ());
 
 			if (AABB != null && collidingAABB.intersectsWith(AABB))
 			{
@@ -230,23 +233,16 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 		}
 	}
 
-	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		return getOuterBoundingBox(world, x, y, z);
-	}
-
 	public AxisAlignedBB getOuterBoundingBox(World world, int x, int y, int z)
 	{
-		return AxisAlignedBB.getBoundingBox(x + minX, y + minY, z + minZ,
-											x + maxX, y + maxY, z + maxZ);
+		return new AxisAlignedBB(x + FULL_BLOCK_AABB.minX, y + FULL_BLOCK_AABB.minY, z + FULL_BLOCK_AABB.minZ,
+								 x + FULL_BLOCK_AABB.maxX, y + FULL_BLOCK_AABB.maxY, z + FULL_BLOCK_AABB.maxZ);
 	}
 
 	public AxisAlignedBB getInnerBoundingBox(World world, int x, int y, int z)
 	{
-		AxisAlignedBB AABB = AxisAlignedBB.getBoundingBox(x + minX + SIDE_WIDTH, y + minY + SIDE_WIDTH, z + minZ + SIDE_WIDTH,
-															x + maxX - SIDE_WIDTH, y + maxY - SIDE_WIDTH, z + maxZ - SIDE_WIDTH);
-		return AABB;
+		return new AxisAlignedBB(x + FULL_BLOCK_AABB.minX + SIDE_WIDTH, y + FULL_BLOCK_AABB.minY + SIDE_WIDTH, z + FULL_BLOCK_AABB.minZ + SIDE_WIDTH,
+								 x + FULL_BLOCK_AABB.maxX - SIDE_WIDTH, y + FULL_BLOCK_AABB.maxY - SIDE_WIDTH, z + FULL_BLOCK_AABB.maxZ - SIDE_WIDTH);
 	}
 
 	/*
@@ -282,7 +278,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumBlockRenderType getRenderType()
+	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
 		return EnumBlockRenderType.MODEL;
 	}
