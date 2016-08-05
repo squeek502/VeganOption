@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
@@ -14,9 +15,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
@@ -28,7 +31,7 @@ import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.helpers.TemperatureHelper;
 
-public class TileEntityComposter extends TileEntity implements IInventory
+public class TileEntityComposter extends TileEntity implements IInventory, ITickable
 {
 	public static final float IDEAL_GREEN_TO_BROWN_RATIO = 0.666666667f; // 2 to 1
 	public static final int TICKS_BETWEEN_COMPOST_ATTEMPTS = MiscHelper.TICKS_PER_DAY / 2;
@@ -90,7 +93,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 	public void onBlockBroken()
 	{
-		InventoryHelper.dropAllInventoryItemsInWorld(worldObj, xCoord, yCoord, zCoord, this);
+		net.minecraft.inventory.InventoryHelper.dropInventoryItems(worldObj, pos, this);
 	}
 
 	public int getComparatorSignalStrength()
@@ -105,7 +108,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	 * Composting
 	 */
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if (!worldObj.isRemote)
 		{
@@ -144,8 +147,6 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 		updateLidAngle();
 
-		super.updateEntity();
-
 		initialUpdate = false;
 	}
 
@@ -167,7 +168,8 @@ public class TileEntityComposter extends TileEntity implements IInventory
 			List<Integer> rottenPlantSlots = new ArrayList<Integer>();
 			for (Integer slotNum : greenSlots)
 			{
-				if (getStackInSlot(slotNum).getItem() == Composting.rottenPlants)
+				ItemStack stack = getStackInSlot(slotNum);
+				if (stack != null && stack.getItem() == Composting.rottenPlants)
 				{
 					rottenPlantSlots.add(slotNum);
 				}
@@ -213,7 +215,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 			setInventorySlotContents(slotNum, itemList.get(slotNum));
 		}
 		lastAeration = worldObj.getWorldTime();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
 	}
 
 	public boolean isAerating()
@@ -239,7 +241,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		
 		if (Math.round(compostTemperature) != Math.round(oldTemp))
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
 		}
 	}
 
@@ -250,7 +252,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 	public void clampTemperature()
 	{
-		float airTemperature = TemperatureHelper.getBiomeTemperature(worldObj, xCoord, yCoord, zCoord);
+		float airTemperature = TemperatureHelper.getBiomeTemperature(worldObj, pos);
 		compostTemperature = Math.min(MAX_COMPOST_TEMPERATURE, Math.max(compostTemperature, airTemperature));
 	}
 
@@ -266,7 +268,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 	public void updateBiomeTemperature()
 	{
-		biomeTemperature = TemperatureHelper.getBiomeTemperature(worldObj, xCoord, yCoord, zCoord);
+		biomeTemperature = TemperatureHelper.getBiomeTemperature(worldObj, pos);
 	}
 
 	/**
@@ -492,7 +494,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slotNum)
+	public ItemStack removeStackFromSlot(int slotNum)
 	{
 		ItemStack item = getStackInSlot(slotNum);
 		setInventorySlotContents(slotNum, null);
@@ -520,13 +522,13 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	}
 
 	@Override
-	public String getInventoryName()
+	public String getName()
 	{
 		return new ItemStack(Composting.composter).getDisplayName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName()
+	public boolean hasCustomName()
 	{
 		return false;
 	}
@@ -546,7 +548,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
-		return worldObj.getTileEntity(xCoord, yCoord, zCoord) != this ? false : player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64.0D;
+		return worldObj.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0D;
 	}
 
 	@Override
@@ -573,7 +575,7 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	}
 
 	@Override
-	public void openInventory()
+	public void openInventory(EntityPlayer player)
 	{
 		if (this.numPlayersUsing < 0)
 		{
@@ -581,13 +583,13 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		}
 		++this.numPlayersUsing;
 
-		this.worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, this.getBlockType(), CLIENT_EVENT_NUM_USING_PLAYERS, this.numPlayersUsing);
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.getBlockType());
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord - 1, this.zCoord, this.getBlockType());
+		this.worldObj.addBlockEvent(pos, this.getBlockType(), CLIENT_EVENT_NUM_USING_PLAYERS, this.numPlayersUsing);
+		this.worldObj.notifyNeighborsOfStateChange(pos, this.getBlockType());
+		this.worldObj.notifyNeighborsOfStateChange(pos, this.getBlockType());
 	}
 
 	@Override
-	public void closeInventory()
+	public void closeInventory(EntityPlayer player)
 	{
 		--this.numPlayersUsing;
 		if (this.numPlayersUsing < 0)
@@ -595,9 +597,9 @@ public class TileEntityComposter extends TileEntity implements IInventory
 			this.numPlayersUsing = 0;
 		}
 
-		this.worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, this.getBlockType(), CLIENT_EVENT_NUM_USING_PLAYERS, this.numPlayersUsing);
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.getBlockType());
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord - 1, this.zCoord, this.getBlockType());
+		this.worldObj.addBlockEvent(pos, this.getBlockType(), CLIENT_EVENT_NUM_USING_PLAYERS, this.numPlayersUsing);
+		this.worldObj.notifyNeighborsOfStateChange(pos, this.getBlockType());
+		this.worldObj.notifyNeighborsOfStateChange(pos.down(), this.getBlockType());
 	}
 
 	public void updateLidAngle()
@@ -605,12 +607,12 @@ public class TileEntityComposter extends TileEntity implements IInventory
 		++this.ticksSinceSync;
 		float f;
 
-		if (!this.worldObj.isRemote && this.numPlayersUsing != 0 && (this.ticksSinceSync + this.xCoord + this.yCoord + this.zCoord) % 200 == 0)
+		if (!this.worldObj.isRemote && this.numPlayersUsing != 0 && (this.ticksSinceSync + pos.getX() + pos.getY() + pos.getZ()) % 200 == 0)
 		{
 			this.numPlayersUsing = 0;
 			f = 5.0F;
 			@SuppressWarnings("rawtypes")
-			List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - f, this.yCoord - f, this.zCoord - f, this.xCoord + 1 + f, this.yCoord + 1 + f, this.zCoord + 1 + f));
+			List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - f, pos.getY() - f, pos.getZ() - f, pos.getX() + 1 + f, pos.getY() + 1 + f, pos.getZ() + 1 + f));
 			@SuppressWarnings("rawtypes")
 			Iterator iterator = list.iterator();
 
@@ -636,10 +638,10 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 		if (this.numPlayersUsing > 0 && this.lidAngle == 0.0F)
 		{
-			double d1 = this.xCoord + 0.5D;
-			d2 = this.zCoord + 0.5D;
+			double d1 = pos.getX() + 0.5D;
+			d2 = pos.getZ() + 0.5D;
 
-			this.worldObj.playSoundEffect(d1, this.yCoord + 0.5D, d2, "random.chestopen", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			worldObj.playSound(d1, pos.getY() + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F, true);
 		}
 
 		if (this.numPlayersUsing <= 0 && this.lidAngle > 0.0F || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
@@ -664,10 +666,10 @@ public class TileEntityComposter extends TileEntity implements IInventory
 
 			if (this.lidAngle < f2 && f1 >= f2)
 			{
-				d2 = this.xCoord + 0.5D;
-				double d0 = this.zCoord + 0.5D;
+				d2 = pos.getX() + 0.5D;
+				double d0 = pos.getZ() + 0.5D;
 
-				this.worldObj.playSoundEffect(d2, this.yCoord + 0.5D, d0, "random.chestclosed", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+				worldObj.playSound(d2, pos.getY() + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F, true);
 			}
 
 			if (this.lidAngle < 0.0F)
@@ -681,28 +683,28 @@ public class TileEntityComposter extends TileEntity implements IInventory
 	 * Synced data
 	 */
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
-		NBTTagCompound compound = pkt.func_148857_g();
+		NBTTagCompound compound = pkt.getNbtCompound();
 		lastAeration = compound.getLong("LastAeration");
 		compostTemperature = compound.getFloat("Temp");
 		super.onDataPacket(net, pkt);
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setLong("LastAeration", lastAeration);
 		compound.setFloat("Temp", compostTemperature);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, compound);
+		return new SPacketUpdateTileEntity(pos, 1, compound);
 	}
 
 	/*
 	 * Save data
 	 */
 	@Override
-	public void writeToNBT(NBTTagCompound data)
+	public NBTTagCompound writeToNBT(NBTTagCompound data)
 	{
 		super.writeToNBT(data);
 
@@ -725,6 +727,8 @@ public class TileEntityComposter extends TileEntity implements IInventory
 			}
 		}
 		data.setTag("Items", items);
+
+		return data;
 	}
 
 	@Override
@@ -748,5 +752,35 @@ public class TileEntityComposter extends TileEntity implements IInventory
 				setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
 			}
 		}
+	}
+
+	@Override
+	public void clear()
+	{
+		for (int i = 0; i < inventoryItems.length; i++)
+		{
+			inventoryItems[i] = null;
+		}
+	}
+
+	/*
+	These are horrible, and I don't think they actually get used.
+	 */
+
+	@Override
+	public int getField(int id)
+	{
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int val)
+	{
+	}
+
+	@Override
+	public int getFieldCount()
+	{
+		return 0;
 	}
 }

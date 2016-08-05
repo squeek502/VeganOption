@@ -1,14 +1,18 @@
 package squeek.veganoption.blocks.tiles;
 
 import java.util.List;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,15 +22,14 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.content.modules.Basin;
-import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.FluidContainerHelper;
 import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.WorldHelper;
 
-public class TileEntityBasin extends TileEntity implements IFluidHandler
+public class TileEntityBasin extends TileEntity implements IFluidHandler, ITickable
 {
-	protected FluidTank fluid = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+	protected FluidTank fluid = new FluidTank(Fluid.BUCKET_VOLUME);
 	protected boolean isPowered = false;
 	protected boolean fluidConsumeStopped = true;
 	protected int ticksUntilNextFluidConsume = FLUID_CONSUME_TICK_PERIOD;
@@ -40,16 +43,14 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	 * Updating
 	 */
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
-
 		if (worldObj.isRemote)
 			return;
 
 		if (needsInit)
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
 			needsInit = false;
 		}
 
@@ -91,7 +92,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 		if (worldObj == null || worldObj.isRemote || !couldFillContainers())
 			return false;
 
-		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(worldObj, ((BlockBasin) Basin.basin).getInnerBoundingBox(worldObj, xCoord, yCoord, zCoord));
+		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(worldObj, ((BlockBasin) Basin.basin).getInnerBoundingBox(worldObj, pos.getX(), pos.getY(), pos.getZ()));
 
 		for (EntityItem entityItemWithin : entityItemsWithin)
 		{
@@ -109,14 +110,14 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 			{
 				containerToFill.splitStack(1);
 				entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, filledContainer);
-				entityItemToFill.delayBeforeCanPickup = 10;
+				entityItemToFill.setPickupDelay(10);
 				entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);
 			}
 
 			entityItemToFill.setEntityItemStack(filledContainer);
 
 			FluidStack filledWith = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
-			drain(ForgeDirection.UNKNOWN, filledWith.amount, true);
+			drain(EnumFacing.NORTH, filledWith.amount, true);
 			return true;
 		}
 
@@ -154,19 +155,19 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 		if (worldObj == null || worldObj.isRemote || !couldConsumeFluid())
 			return false;
 
-		BlockHelper.BlockPos blockPosAbove = new BlockHelper.BlockPos(worldObj, xCoord, yCoord + 1, zCoord);
-		Block blockAbove = blockPosAbove.getBlock();
-		Fluid fluidAbove = FluidHelper.getFluidTypeOfBlock(blockAbove);
+		BlockPos blockPosAbove = pos.up();
+		IBlockState stateAbove = worldObj.getBlockState(blockPosAbove);
+		Fluid fluidAbove = FluidHelper.getFluidTypeOfBlock(stateAbove);
 
-		if (fluidAbove == null || !canFill(ForgeDirection.UP, fluidAbove))
+		if (fluidAbove == null || !canFill(EnumFacing.UP, fluidAbove))
 			return false;
 
-		FluidStack fluidToAdd = FluidHelper.consumeFluid(blockPosAbove, fluidAbove, fluid.getCapacity() - fluid.getFluidAmount());
+		FluidStack fluidToAdd = FluidHelper.consumeFluid(worldObj, blockPosAbove, fluidAbove, fluid.getCapacity() - fluid.getFluidAmount());
 
 		if (fluidToAdd == null)
 			return false;
 
-		fill(ForgeDirection.UP, fluidToAdd, true);
+		fill(EnumFacing.UP, fluidToAdd, true);
 		return true;
 	}
 
@@ -218,21 +219,21 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	/*
 	 * Right Click Handling
 	 */
-	public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		ItemStack heldItem = player.getHeldItem();
+		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
 		if (heldItem != null && FluidContainerRegistry.isContainer(heldItem))
 		{
 			FluidStack containerFluid = FluidContainerRegistry.getFluidForFilledItem(heldItem);
 
-			if (containerFluid != null && fill(ForgeDirection.UNKNOWN, containerFluid, false) == containerFluid.amount)
+			if (containerFluid != null && fill(EnumFacing.NORTH, containerFluid, false) == containerFluid.amount)
 			{
 				ItemStack emptyContainer = FluidContainerHelper.tryEmptyContainer(player, heldItem);
 
 				if (emptyContainer == null)
 					return false;
 
-				fill(ForgeDirection.UNKNOWN, containerFluid, true);
+				fill(EnumFacing.NORTH, containerFluid, true);
 			}
 			else if (fluid.getFluidAmount() > 0)
 			{
@@ -241,7 +242,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 				if (filledContainer == null)
 					return false;
 
-				drain(ForgeDirection.UNKNOWN, FluidContainerRegistry.getFluidForFilledItem(filledContainer).amount, true);
+				drain(EnumFacing.NORTH, FluidContainerRegistry.getFluidForFilledItem(filledContainer).amount, true);
 			}
 
 			return true;
@@ -264,7 +265,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 				onUnpowered();
 
 			if (worldObj != null)
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
 		}
 	}
 
@@ -276,7 +277,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	public void onPowered()
 	{
 		if (worldObj != null)
-			worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, Basin.basin);
+			worldObj.notifyNeighborsOfStateChange(pos, Basin.basin);
 
 		onOpen();
 	}
@@ -284,7 +285,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	public void onUnpowered()
 	{
 		if (worldObj != null)
-			worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, Basin.basin);
+			worldObj.notifyNeighborsOfStateChange(pos, Basin.basin);
 
 		onClose();
 	}
@@ -296,14 +297,14 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	{
 		if (worldObj != null)
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, Basin.basin);
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
+			worldObj.notifyNeighborsOfStateChange(pos, Basin.basin);
 			scheduleFluidConsume();
 		}
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
 	{
 		if (resource == null || !canFill(from, resource.getFluid()))
 			return 0;
@@ -317,7 +318,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		if (resource == null || !canDrain(from, resource.getFluid()))
 			return null;
@@ -326,7 +327,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		FluidStack drainedStack = fluid.drain(maxDrain, doDrain);
 
@@ -337,19 +338,19 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
+	public boolean canFill(EnumFacing from, Fluid fluid)
 	{
 		return this.fluid.getFluid() == null || this.fluid.getFluid().getFluid() == fluid;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	public boolean canDrain(EnumFacing from, Fluid fluid)
 	{
 		return this.fluid.getFluid() != null && this.fluid.getFluid().getFluid() == fluid;
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	public FluidTankInfo[] getTankInfo(EnumFacing from)
 	{
 		return new FluidTankInfo[]{fluid.getInfo()};
 	}
@@ -383,17 +384,17 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
-		readSyncedNBT(pkt.func_148857_g());
+		readSyncedNBT(pkt.getNbtCompound());
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound compound = new NBTTagCompound();
 		writeSyncedNBT(compound);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, compound);
+		return new SPacketUpdateTileEntity(pos, 1, compound);
 	}
 
 	/*
@@ -417,7 +418,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound compound)
+	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		super.writeToNBT(compound);
 
@@ -427,5 +428,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler
 		{
 			compound.setInteger("NextConsume", ticksUntilNextFluidConsume);
 		}
+
+		return compound;
 	}
 }
