@@ -3,117 +3,105 @@ package squeek.veganoption.blocks.renderers;
 import java.nio.FloatBuffer;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityEndPortal;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 
 // modified version of RenderEndPortal
 // draws the bottom face, uses much fewer passes
 @SideOnly(Side.CLIENT)
-public class RenderEnderRift extends TileEntitySpecialRenderer
+public class RenderEnderRift extends TileEntitySpecialRenderer<TileEntityEnderRift>
 {
-	private static final ResourceLocation field_147529_c = new ResourceLocation("textures/environment/end_sky.png");
-	private static final ResourceLocation field_147526_d = new ResourceLocation("textures/entity/end_portal.png");
-	private static final Random field_147527_e = new Random(31100L);
-	FloatBuffer field_147528_b = GLAllocation.createDirectFloatBuffer(16);
+	private static final ResourceLocation END_SKY_TEXTURE = new ResourceLocation("textures/environment/end_sky.png");
+	private static final ResourceLocation END_PORTAL_TEXTURE = new ResourceLocation("textures/entity/end_portal.png");
+	private static final Random RANDOM = new Random(31100L);
+	private FloatBuffer buffer = GLAllocation.createDirectFloatBuffer(16);
 
-	public void renderTileEntityAt(TileEntityEndPortal p_147500_1_, double p_147500_2_, double p_147500_4_, double p_147500_6_, float p_147500_8_)
+	@Override
+	public void renderTileEntityAt(TileEntityEnderRift tile, double x, double y, double z, float partialTicks, int destroyStage)
 	{
-		float f1 = (float) this.field_147501_a.field_147560_j;
-		float f2 = (float) this.field_147501_a.field_147561_k;
-		float f3 = (float) this.field_147501_a.field_147558_l;
-		GL11.glDisable(GL11.GL_LIGHTING);
-		field_147527_e.setSeed(31100L);
+		float entityX = (float) this.rendererDispatcher.entityX;
+		float entityY = (float) this.rendererDispatcher.entityY;
+		float entityZ = (float) this.rendererDispatcher.entityZ;
+		GlStateManager.disableLighting();
+		RANDOM.setSeed(31100L);
 		float topOffset = 0.75F;
 		float bottomOffset = 0.25F;
 
 		// Top face
 		for (int i = 0; i < 2; ++i)
 		{
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			float f5 = i == 0 ? 16 : 1;
 			float f6 = 0.0625F;
-			float f7 = 1.0F / (f5 + 1.0F);
 
 			if (i == 0)
 			{
-				this.bindTexture(field_147529_c);
-				f7 = 0.1F;
+				bindTexture(END_SKY_TEXTURE);
 				f5 = 65.0F;
 				f6 = 0.125F;
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			}
 
 			if (i == 1)
 			{
-				this.bindTexture(field_147526_d);
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+				bindTexture(END_PORTAL_TEXTURE);
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 				f6 = 0.5F;
 			}
 
-			float f8 = (float) (-(p_147500_4_ + topOffset));
-			float f9 = f8 + ActiveRenderInfo.objectY;
-			float f10 = f8 + f5 + ActiveRenderInfo.objectY;
+			float f8 = (float) (-(y + topOffset));
+			float f9 = f8 + (float) ActiveRenderInfo.getPosition().yCoord;
+			float f10 = f8 + f5 + (float) ActiveRenderInfo.getPosition().yCoord;
 			float f11 = f9 / f10;
-			f11 += (float) (p_147500_4_ + topOffset);
-			GL11.glTranslatef(f1, f11, f3);
-			GL11.glTexGeni(GL11.GL_S, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
-			GL11.glTexGeni(GL11.GL_T, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
-			GL11.glTexGeni(GL11.GL_R, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
-			GL11.glTexGeni(GL11.GL_Q, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_EYE_LINEAR);
-			GL11.glTexGen(GL11.GL_S, GL11.GL_OBJECT_PLANE, this.func_147525_a(1.0F, 0.0F, 0.0F, 0.0F));
-			GL11.glTexGen(GL11.GL_T, GL11.GL_OBJECT_PLANE, this.func_147525_a(0.0F, 0.0F, 1.0F, 0.0F));
-			GL11.glTexGen(GL11.GL_R, GL11.GL_OBJECT_PLANE, this.func_147525_a(0.0F, 0.0F, 0.0F, 1.0F));
-			GL11.glTexGen(GL11.GL_Q, GL11.GL_EYE_PLANE, this.func_147525_a(0.0F, 1.0F, 0.0F, 0.0F));
-			GL11.glEnable(GL11.GL_TEXTURE_GEN_S);
-			GL11.glEnable(GL11.GL_TEXTURE_GEN_T);
-			GL11.glEnable(GL11.GL_TEXTURE_GEN_R);
-			GL11.glEnable(GL11.GL_TEXTURE_GEN_Q);
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_TEXTURE);
-			GL11.glPushMatrix();
-			GL11.glLoadIdentity();
-			GL11.glTranslatef(0.0F, Minecraft.getSystemTime() % 700000L / 700000.0F, 0.0F);
-			GL11.glScalef(f6, f6, f6);
-			GL11.glTranslatef(0.5F, 0.5F, 0.0F);
-			GL11.glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
-			GL11.glTranslatef(-0.5F, -0.5F, 0.0F);
-			GL11.glTranslatef(-f1, -f3, -f2);
-			f9 = f8 + ActiveRenderInfo.objectY;
-			GL11.glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectZ * f5 / f9, -f2);
-			Tessellator tessellator = Tessellator.instance;
-			tessellator.startDrawingQuads();
-			f11 = field_147527_e.nextFloat() * 0.5F + 0.1F;
-			float f12 = field_147527_e.nextFloat() * 0.5F + 0.4F;
-			float f13 = field_147527_e.nextFloat() * 0.5F + 0.5F;
-
-			if (i == 0)
-			{
-				f13 = 1.0F;
-				f12 = 1.0F;
-				f11 = 1.0F;
-			}
-
-			tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
-
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + topOffset, p_147500_6_);
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + topOffset, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + topOffset, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + topOffset, p_147500_6_);
+			f11 += (float) (y + topOffset);
+			GlStateManager.translate(entityX, f11, entityZ);
+			GlStateManager.texGen(GlStateManager.TexGen.S, GL11.GL_OBJECT_LINEAR);
+			GlStateManager.texGen(GlStateManager.TexGen.T, GL11.GL_OBJECT_LINEAR);
+			GlStateManager.texGen(GlStateManager.TexGen.R, GL11.GL_OBJECT_LINEAR);
+			GlStateManager.texGen(GlStateManager.TexGen.Q, GL11.GL_EYE_LINEAR);
+			GlStateManager.texGen(GlStateManager.TexGen.S, GL11.GL_OBJECT_PLANE, getBuffer(1F, 0F, 0F, 0F));
+			GlStateManager.texGen(GlStateManager.TexGen.S, GL11.GL_OBJECT_PLANE, getBuffer(1.0F, 0.0F, 0.0F, 0.0F));
+			GlStateManager.texGen(GlStateManager.TexGen.T, GL11.GL_OBJECT_PLANE, getBuffer(0.0F, 0.0F, 1.0F, 0.0F));
+			GlStateManager.texGen(GlStateManager.TexGen.R, GL11.GL_OBJECT_PLANE, getBuffer(0.0F, 0.0F, 0.0F, 1.0F));
+			GlStateManager.texGen(GlStateManager.TexGen.Q, GL11.GL_EYE_PLANE, getBuffer(0.0F, 1.0F, 0.0F, 0.0F));
+			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.S);
+			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.T);
+			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.R);
+			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.Q);
+			GlStateManager.popMatrix();
+			GlStateManager.matrixMode(GL11.GL_TEXTURE);
+			GlStateManager.pushMatrix();
+			GlStateManager.loadIdentity();
+			GlStateManager.translate(0.0F, Minecraft.getSystemTime() % 700000L / 700000.0F, 0.0F);
+			GlStateManager.scale(f6, f6, f6);
+			GlStateManager.translate(0.5F, 0.5F, 0.0F);
+			GlStateManager.rotate((i * i * 4321 + i * 9) * 2F, 0, 0, 1);
+			GlStateManager.translate(-0.5F, -0.5F, 0.0F);
+			GlStateManager.translate(-entityX, -entityZ, -entityY);
+			f9 = f8 + (float) ActiveRenderInfo.getPosition().yCoord;
+			GlStateManager.translate(ActiveRenderInfo.getPosition().xCoord * f5 / f9, ActiveRenderInfo.getPosition().zCoord * f5 / f9, -entityY);
+			Tessellator tessellator = Tessellator.getInstance();
+			VertexBuffer vertexbuffer = tessellator.getBuffer();
+			vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+			f11 = (RANDOM.nextFloat() * 0.5F + 0.1F) * f6;
+			float f12 = (RANDOM.nextFloat() * 0.5F + 0.4F) * f6;
+			float f13 = (RANDOM.nextFloat() * 0.5F + 0.5F) * f6;
+			vertexbuffer.pos(x, y + 0.75D, z).color(f11, f12, f13, 1.0F).endVertex();
+			vertexbuffer.pos(x, y + 0.75D, z + 1.0D).color(f11, f12, f13, 1.0F).endVertex();
+			vertexbuffer.pos(x + 1.0D, y + 0.75D, z + 1.0D).color(f11, f12, f13, 1.0F).endVertex();
+			vertexbuffer.pos(x + 1.0D, y + 0.75D, z).color(f11, f12, f13, 1.0F).endVertex();
 			tessellator.draw();
-			
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-
+			GlStateManager.popMatrix();
+			GlStateManager.matrixMode(5888);
+			bindTexture(END_SKY_TEXTURE);
 		}
 
 		// Bottom face
@@ -123,12 +111,10 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 			GL11.glPushMatrix();
 			float f5 = i == 0 ? 16 : 1;
 			float f6 = 1 - 0.0625F;
-			float f7 = 1.0F / (f5 + 1.0F);
 
 			if (i == 0)
 			{
-				this.bindTexture(field_147529_c);
-				f7 = 0.1F;
+				bindTexture(END_SKY_TEXTURE);
 				f5 = -65.0F;
 				f6 = 0.125F;
 				GL11.glEnable(GL11.GL_BLEND);
@@ -137,87 +123,71 @@ public class RenderEnderRift extends TileEntitySpecialRenderer
 
 			if (i == 1)
 			{
-				this.bindTexture(field_147526_d);
+				bindTexture(END_PORTAL_TEXTURE);
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 				f6 = 0.5F;
 			}
 
-			float f8 = (float) (p_147500_4_ + bottomOffset);
-			float f9 = f8 + ActiveRenderInfo.objectY;
-			float f10 = f8 + f5 + ActiveRenderInfo.objectY;
+			float f8 = (float) (y + bottomOffset);
+			float f9 = f8 + (float) ActiveRenderInfo.getPosition().yCoord;
+			float f10 = f8 + f5 + (float) ActiveRenderInfo.getPosition().yCoord;
 			float f11 = f9 / f10;
-			f11 += (float) (p_147500_4_ + bottomOffset);
-			GL11.glTranslatef(f1, f11, f3);
-			GL11.glTexGeni(GL11.GL_S, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
-			GL11.glTexGeni(GL11.GL_T, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
-			GL11.glTexGeni(GL11.GL_R, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
-			GL11.glTexGeni(GL11.GL_Q, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_EYE_LINEAR);
-			GL11.glTexGen(GL11.GL_S, GL11.GL_OBJECT_PLANE, this.func_147525_a(1.0F, 0.0F, 0.0F, 0.0F));
-			GL11.glTexGen(GL11.GL_T, GL11.GL_OBJECT_PLANE, this.func_147525_a(0.0F, 0.0F, 1.0F, 0.0F));
-			GL11.glTexGen(GL11.GL_R, GL11.GL_OBJECT_PLANE, this.func_147525_a(0.0F, 0.0F, 0.0F, 1.0F));
-			GL11.glTexGen(GL11.GL_Q, GL11.GL_EYE_PLANE, this.func_147525_a(0.0F, 1.0F, 0.0F, 0.0F));
-			GL11.glEnable(GL11.GL_TEXTURE_GEN_S);
-			GL11.glEnable(GL11.GL_TEXTURE_GEN_T);
-			GL11.glEnable(GL11.GL_TEXTURE_GEN_R);
-			GL11.glEnable(GL11.GL_TEXTURE_GEN_Q);
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_TEXTURE);
-			GL11.glPushMatrix();
-			GL11.glLoadIdentity();
-			GL11.glTranslatef(0.0F, Minecraft.getSystemTime() % 700000L / 700000.0F, 0.0F);
-			GL11.glScalef(f6, f6, f6);
-			GL11.glTranslatef(0.5F, 0.5F, 0.0F);
-			GL11.glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
-			GL11.glTranslatef(-0.5F, -0.5F, 0.0F);
-			GL11.glTranslatef(-f1, -f3, -f2);
-			f9 = f8 + ActiveRenderInfo.objectY;
-			GL11.glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectZ * f5 / f9, -f2);
-			Tessellator tessellator = Tessellator.instance;
-			tessellator.startDrawingQuads();
-			f11 = field_147527_e.nextFloat() * 0.5F + 0.1F;
-			float f12 = field_147527_e.nextFloat() * 0.5F + 0.4F;
-			float f13 = field_147527_e.nextFloat() * 0.5F + 0.5F;
-
-			if (i == 0)
-			{
-				f13 = 1.0F;
-				f12 = 1.0F;
-				f11 = 1.0F;
-			}
-
-			tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
-			
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + bottomOffset, p_147500_6_);
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + bottomOffset, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + bottomOffset, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + bottomOffset, p_147500_6_);
+			f11 += (float) (y + bottomOffset);
+			GlStateManager.translate(entityX, f11, entityZ);
+			GlStateManager.texGen(GlStateManager.TexGen.S, GL11.GL_OBJECT_LINEAR);
+			GlStateManager.texGen(GlStateManager.TexGen.T, GL11.GL_OBJECT_LINEAR);
+			GlStateManager.texGen(GlStateManager.TexGen.R, GL11.GL_OBJECT_LINEAR);
+			GlStateManager.texGen(GlStateManager.TexGen.Q, GL11.GL_EYE_LINEAR);
+			GlStateManager.texGen(GlStateManager.TexGen.S, GL11.GL_OBJECT_PLANE, getBuffer(1.0F, 0.0F, 0.0F, 0.0F));
+			GlStateManager.texGen(GlStateManager.TexGen.T, GL11.GL_OBJECT_PLANE, getBuffer(0.0F, 0.0F, 1.0F, 0.0F));
+			GlStateManager.texGen(GlStateManager.TexGen.R, GL11.GL_OBJECT_PLANE, getBuffer(0.0F, 0.0F, 0.0F, 1.0F));
+			GlStateManager.texGen(GlStateManager.TexGen.Q, GL11.GL_EYE_PLANE, getBuffer(0.0F, 1.0F, 0.0F, 0.0F));
+			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.S);
+			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.T);
+			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.R);
+			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.Q);
+			GlStateManager.popMatrix();
+			GlStateManager.matrixMode(GL11.GL_TEXTURE);
+			GlStateManager.pushMatrix();
+			GlStateManager.loadIdentity();
+			GlStateManager.translate(0.0F, Minecraft.getSystemTime() % 700000L / 700000.0F, 0.0F);
+			GlStateManager.scale(f6, f6, f6);
+			GlStateManager.translate(0.5F, 0.5F, 0.0F);
+			GlStateManager.rotate((i * i * 4321 + i * 9) * 2f, 0, 0, 1);
+			GlStateManager.translate(-0.5F, -0.5F, 0.0F);
+			GlStateManager.translate(-entityX, -entityZ, -entityY);
+			f9 = f8 + (float) ActiveRenderInfo.getPosition().yCoord;
+			GlStateManager.translate(ActiveRenderInfo.getPosition().xCoord * f5 / f9, ActiveRenderInfo.getPosition().zCoord * f5 / f9, -entityY);
+			Tessellator tessellator = Tessellator.getInstance();
+			VertexBuffer vertexbuffer = tessellator.getBuffer();
+			vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+			f11 = (RANDOM.nextFloat() * 0.5F + 0.1F) * f6;
+			float f12 = (RANDOM.nextFloat() * 0.5F + 0.4F) * f6;
+			float f13 = (RANDOM.nextFloat() * 0.5F + 0.5F) * f6;
+			vertexbuffer.pos(x, y + 0.75D, z).color(f11, f12, f13, 1.0F).endVertex();
+			vertexbuffer.pos(x, y + 0.75D, z + 1.0D).color(f11, f12, f13, 1.0F).endVertex();
+			vertexbuffer.pos(x + 1.0D, y + 0.75D, z + 1.0D).color(f11, f12, f13, 1.0F).endVertex();
+			vertexbuffer.pos(x + 1.0D, y + 0.75D, z).color(f11, f12, f13, 1.0F).endVertex();
 			tessellator.draw();
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GlStateManager.popMatrix();
+			GlStateManager.matrixMode(5888);
+			bindTexture(END_SKY_TEXTURE);
 
 		}
-		GL11.glCullFace(GL11.GL_BACK);
-
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_TEXTURE_GEN_S);
-		GL11.glDisable(GL11.GL_TEXTURE_GEN_T);
-		GL11.glDisable(GL11.GL_TEXTURE_GEN_R);
-		GL11.glDisable(GL11.GL_TEXTURE_GEN_Q);
-		GL11.glEnable(GL11.GL_LIGHTING);
+		GlStateManager.disableBlend();
+		GlStateManager.disableTexGenCoord(GlStateManager.TexGen.S);
+		GlStateManager.disableTexGenCoord(GlStateManager.TexGen.T);
+		GlStateManager.disableTexGenCoord(GlStateManager.TexGen.R);
+		GlStateManager.disableTexGenCoord(GlStateManager.TexGen.Q);
+		GlStateManager.enableLighting();
 	}
 
-	private FloatBuffer func_147525_a(float p_147525_1_, float p_147525_2_, float p_147525_3_, float p_147525_4_)
+	private FloatBuffer getBuffer(float p_147525_1_, float p_147525_2_, float p_147525_3_, float p_147525_4_)
 	{
-		this.field_147528_b.clear();
-		this.field_147528_b.put(p_147525_1_).put(p_147525_2_).put(p_147525_3_).put(p_147525_4_);
-		this.field_147528_b.flip();
-		return this.field_147528_b;
-	}
-
-	@Override
-	public void renderTileEntityAt(TileEntity p_147500_1_, double p_147500_2_, double p_147500_4_, double p_147500_6_, float p_147500_8_)
-	{
-		this.renderTileEntityAt((TileEntityEndPortal) p_147500_1_, p_147500_2_, p_147500_4_, p_147500_6_, p_147500_8_);
+		buffer.clear();
+		buffer.put(p_147525_1_).put(p_147525_2_).put(p_147525_3_).put(p_147525_4_);
+		buffer.flip();
+		return buffer;
 	}
 }
