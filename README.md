@@ -105,7 +105,7 @@ Dragon Egg | No alternative yet
 #### Saltpeter
 - ![](resources/assets/veganoption/textures/items/saltpeter.png) Saltpeter occasionally drops when mining Sandstone
 
-> *References: [Sodium nitrate (Chile saltpeter)](http://en.wikipedia.org/wiki/Sodium_nitrate), [Chilean caliche](http://en.wikipedia.org/wiki/Caliche#Chilean_caliche)*
+> *References: [Potassium nitrate](http://en.wikipedia.org/wiki/Potassium_nitrate), [Chilean caliche](http://en.wikipedia.org/wiki/Caliche#Chilean_caliche)*
 
 #### Sulfur
 - ![](resources/assets/veganoption/textures/items/sulfur.png) Sulfur occasionally drops when mining Netherrack
