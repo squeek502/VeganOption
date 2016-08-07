@@ -75,7 +75,7 @@ public class ContentHelper
 	public static final String leatherChestplateOreDict = "chestplateLeather";
 	public static final String leatherHelmetOreDict = "helmetLeather";
 
-	// raw and cooked meats from HarvestCraft
+	// raw and cooked meats from HarvestCraft, plus stomachs from GC
 	public static final String rawMeatOreDict = "listAllmeatraw";
 	public static final String cookedMeatOreDict = "listAllmeatcooked";
 	public static final String rawBeefOreDict = "listAllbeefraw";
@@ -94,6 +94,10 @@ public class ContentHelper
 	public static final String cookedTurkeyOreDict = "listAllturkeycooked";
 	public static final String rawVenisonOreDict = "listAllvenisonraw";
 	public static final String cookedVenisonOreDict = "listAllvenisoncooked";
+	public static final String rawCalamariOreDict = "foodCalamariraw";
+	public static final String cookedCalamariOreDict = "foodCalamaricooked";
+	public static final String rawStomachOreDict = "materialStomach";
+	public static final String offalOreDict = "foodOffal";
 
 	public static final String[] harvestCraftRawMeatOreDicts = new String[]{
 	rawMeatOreDict, rawBeefOreDict, rawChickenOreDict, rawFishOreDict, rawMuttonOreDict,
