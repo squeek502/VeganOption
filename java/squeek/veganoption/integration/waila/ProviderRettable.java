@@ -4,7 +4,12 @@ import java.util.List;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.helpers.LangHelper;
 
@@ -26,12 +31,12 @@ public class ProviderRettable implements IWailaDataProvider
 	public List<String> getWailaBody(ItemStack itemStack, List<String> toolTip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
 		BlockRettable blockRettable = (BlockRettable) accessor.getBlock();
-		float rettingPercent = blockRettable.getRettingPercentFromMeta(accessor.getMetadata());
+		float rettingPercent = blockRettable.getRettingPercent(accessor.getWorld(), accessor.getPosition());
 		if (rettingPercent >= 1)
 			toolTip.add(LangHelper.translate("waila.retted"));
 		else
 		{
-			if (blockRettable.canRet(accessor.getWorld(), accessor.getPosition().blockX, accessor.getPosition().blockY, accessor.getPosition().blockZ))
+			if (blockRettable.canRet(accessor.getWorld(), accessor.getPosition()))
 				toolTip.add(LangHelper.translate("waila.retting") + " : " + (int) (rettingPercent * 100f) + "%");
 			else
 				toolTip.add(LangHelper.translate("waila.retting.not.submerged"));
@@ -43,5 +48,11 @@ public class ProviderRettable implements IWailaDataProvider
 	public List<String> getWailaTail(ItemStack itemStack, List<String> toolTip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
 		return toolTip;
+	}
+
+	@Override
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos)
+	{
+		return null;
 	}
 }

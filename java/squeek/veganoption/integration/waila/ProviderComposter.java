@@ -4,8 +4,12 @@ import java.util.List;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.LangHelper;
 
@@ -46,5 +50,15 @@ public class ProviderComposter implements IWailaDataProvider
 	public List<String> getWailaTail(ItemStack itemStack, List<String> toolTip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
 		return toolTip;
+	}
+
+	@Override
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos)
+	{
+		TileEntityComposter tile = (TileEntityComposter) te;
+		tag.setLong("Start", tile.compostStart);
+		tag.setFloat("Temperature", tile.getCompostTemperature());
+		tag.setFloat("Start", tile.getCompostingPercent());
+		return tag;
 	}
 }

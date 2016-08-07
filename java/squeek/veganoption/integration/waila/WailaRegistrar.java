@@ -16,14 +16,7 @@ public class WailaRegistrar
 
 		// composter
 		registrar.registerBodyProvider(new ProviderComposter(), TileEntityComposter.class);
-		// x,y,z are necessary to allow specifying specific keys to sync for tileentities
-		// see: https://bitbucket.org/ProfMobius/waila/issue/85/always-synchronize-x-y-and-z-for-tile
-		registrar.registerSyncedNBTKey("x", TileEntityComposter.class);
-		registrar.registerSyncedNBTKey("y", TileEntityComposter.class);
-		registrar.registerSyncedNBTKey("z", TileEntityComposter.class);
-		registrar.registerSyncedNBTKey("Compost", TileEntityComposter.class);
-		registrar.registerSyncedNBTKey("Temperature", TileEntityComposter.class);
-		registrar.registerSyncedNBTKey("Start", TileEntityComposter.class);
+		registrar.registerNBTProvider(new ProviderComposter(), TileEntityComposter.class);
 
 		registrar.registerStackProvider(new ProviderBed(), BlockBedGeneric.class);
 
