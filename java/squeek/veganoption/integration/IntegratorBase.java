@@ -2,8 +2,8 @@ package squeek.veganoption.integration;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.content.IContentModule;
@@ -68,7 +68,7 @@ public abstract class IntegratorBase extends IntegrationBase implements IContent
 
 	public String fullItemName(String itemName)
 	{
-		if (itemName.indexOf(":") != -1)
+		if (itemName.contains(":"))
 			return itemName;
 		else
 			return modID + ":" + itemName;
@@ -76,11 +76,11 @@ public abstract class IntegratorBase extends IntegrationBase implements IContent
 
 	public Item getItem(String itemName)
 	{
-		return GameRegistry.findItem(modID, itemName);
+		return Item.REGISTRY.getObject(new ResourceLocation(modID, itemName));
 	}
 
 	public Block getBlock(String blockName)
 	{
-		return GameRegistry.findBlock(modID, blockName);
+		return Block.REGISTRY.getObject(new ResourceLocation(modID, blockName));
 	}
 }

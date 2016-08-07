@@ -33,7 +33,7 @@ public class Ender implements IContentModule
 	public static Fluid fluidRawEnder;
 	public static Block rawEnder;
 	public static Item bucketRawEnder;
-	public static int RAW_ENDER_PER_PEARL = FluidContainerRegistry.BUCKET_VOLUME;
+	public static int RAW_ENDER_PER_PEARL = Fluid.BUCKET_VOLUME;
 
 	@Override
 	public void create()
@@ -67,7 +67,8 @@ public class Ender implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "rawEnder");
 		fluidRawEnder.setBlock(rawEnder);
 		fluidRawEnder.setUnlocalizedName(rawEnder.getUnlocalizedName());
-		GameRegistry.registerWithItem(rawEnder);
+		GameRegistry.register(rawEnder);
+		GameRegistry.register(new ItemBlock(rawEnder).setRegistryName(rawEnder.getRegistryName()));
 
 		bucketRawEnder = new ItemBucketGeneric(rawEnder)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketRawEnder")
@@ -75,7 +76,7 @@ public class Ender implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "bucketRawEnder")
 				.setContainerItem(Items.BUCKET);
 		GameRegistry.register(bucketRawEnder);
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.BUCKET));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, Fluid.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.BUCKET));
 	}
 
 	@SideOnly(Side.CLIENT)

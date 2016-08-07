@@ -29,9 +29,9 @@ public class RenderComposter extends TileEntitySpecialRenderer<TileEntityCompost
 	private ModelComposterLegs modelLegs = new ModelComposterLegs();
 	private boolean isChristmas;
 
-	protected static enum Axis
+	protected enum Axis
 	{
-		X, Y;
+		X, Y
 	}
 
 	public RenderComposter()

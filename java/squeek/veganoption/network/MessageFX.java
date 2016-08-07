@@ -3,7 +3,6 @@ package squeek.veganoption.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleBreaking;
-import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -19,7 +18,7 @@ import squeek.veganoption.helpers.RandomHelper;
 
 public class MessageFX implements IMessage, IMessageHandler<MessageFX, IMessage>
 {
-	public static enum FX
+	public enum FX
 	{
 		BUBBLE_POP,
 		BLOCK_TELEPORT,

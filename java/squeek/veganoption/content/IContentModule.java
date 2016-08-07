@@ -8,26 +8,26 @@ public interface IContentModule
 	/**
 	 * Instantiate and register blocks and items
 	 */
-	public void create();
+	void create();
 
 	/**
 	 * Register things with the OreDictionary
 	 */
-	public void oredict();
+	void oredict();
 
 	/**
 	 * Add recipes
 	 */
-	public void recipes();
+	void recipes();
 
 	/**
 	 * Handle anything else (called from postInit)
 	 */
-	public void finish();
+	void finish();
 
 	/**
 	 * Handle client-side registration (called from postInit)
 	 */
 	@SideOnly(Side.CLIENT)
-	public void clientSide();
+	void clientSide();
 }

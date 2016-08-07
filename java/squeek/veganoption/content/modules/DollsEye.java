@@ -55,26 +55,19 @@ public class DollsEye implements IContentModule
 		BlockSpecifier forestGrass = new BlockSpecifier(Blocks.TALLGRASS, 1)
 		{
 			@Override
-			public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta)
-			{
+			public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta) {
 				boolean blockMatches = super.matches(world, pos, block, meta);
 
-				if (!blockMatches || !(world instanceof World))
+				if (!blockMatches || !(world instanceof World)) {
 					return false;
+				}
 
 				Biome biome = ((World) world).provider.getBiomeForCoords(pos);
 
 				boolean isForest = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.FOREST);
 
-				if (!isForest)
-					return false;
+				return isForest && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.CONIFEROUS) && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.JUNGLE);
 
-				boolean isTemperate = !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.CONIFEROUS) && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.JUNGLE);
-
-				if (!isTemperate)
-					return false;
-
-				return true;
 			}
 		};
 		Modifiers.drops.addDropsToBlock(forestGrass, new DropSpecifier(new ItemStack(dollsEye), 0.01f, 1, 2));

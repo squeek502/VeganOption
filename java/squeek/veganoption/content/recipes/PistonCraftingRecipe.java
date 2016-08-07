@@ -16,7 +16,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import squeek.veganoption.content.crafting.PistonCraftingHandler;
@@ -44,7 +43,7 @@ public class PistonCraftingRecipe
 			else if (input instanceof String || input instanceof Item || input instanceof Block || input instanceof ItemStack)
 				itemInputs.add(new InputItemStack(input));
 			else if (input instanceof Fluid)
-				fluidInput = new FluidStack((Fluid) input, FluidContainerRegistry.BUCKET_VOLUME);
+				fluidInput = new FluidStack((Fluid) input, Fluid.BUCKET_VOLUME);
 			else if (input instanceof FluidStack)
 				fluidInput = (FluidStack) input;
 			else
@@ -59,7 +58,7 @@ public class PistonCraftingRecipe
 			else if (output instanceof ItemStack)
 				itemOutputs.add((ItemStack) output);
 			else if (output instanceof Fluid)
-				fluidOutput = new FluidStack((Fluid) output, FluidContainerRegistry.BUCKET_VOLUME);
+				fluidOutput = new FluidStack((Fluid) output, Fluid.BUCKET_VOLUME);
 			else if (output instanceof FluidStack)
 				fluidOutput = (FluidStack) output;
 			else

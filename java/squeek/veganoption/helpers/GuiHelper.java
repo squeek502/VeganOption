@@ -13,7 +13,7 @@ import squeek.veganoption.inventory.ContainerComposter;
 
 public class GuiHelper implements IGuiHandler
 {
-	public static enum GuiIds
+	public enum GuiIds
 	{
 		COMPOSTER
 	}

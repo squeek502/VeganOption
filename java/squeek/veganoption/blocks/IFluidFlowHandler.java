@@ -5,5 +5,5 @@ import net.minecraft.world.World;
 
 public interface IFluidFlowHandler
 {
-	public boolean onFluidFlowInto(World world, BlockPos pos, int flowDecay);
+	boolean onFluidFlowInto(World world, BlockPos pos, int flowDecay);
 }

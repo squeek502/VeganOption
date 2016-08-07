@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
@@ -53,9 +54,10 @@ public class Ink implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "inkBlack");
 		blackInkFluid.setBlock(blackInk);
 		blackInkFluid.setUnlocalizedName(blackInk.getUnlocalizedName());
-		GameRegistry.registerWithItem(blackInk);
+		GameRegistry.register(blackInk);
+		GameRegistry.register(new ItemBlock(blackInk).setRegistryName(blackInk.getRegistryName()));
 
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(blackInkFluid, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(blackVegetableOilInk), new ItemStack(blackVegetableOilInk.getContainerItem()));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(blackInkFluid, Fluid.BUCKET_VOLUME), new ItemStack(blackVegetableOilInk), new ItemStack(blackVegetableOilInk.getContainerItem()));
 
 		whiteVegetableOilInk = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".inkVegetableOilWhite")
@@ -71,9 +73,10 @@ public class Ink implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "inkWhite");
 		whiteInkFluid.setBlock(whiteInk);
 		whiteInkFluid.setUnlocalizedName(whiteInk.getUnlocalizedName());
-		GameRegistry.registerWithItem(whiteInk);
+		GameRegistry.register(whiteInk);
+		GameRegistry.register(new ItemBlock(whiteInk).setRegistryName(whiteInk.getRegistryName()));
 
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(whiteInkFluid, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(whiteVegetableOilInk), new ItemStack(whiteVegetableOilInk.getContainerItem()));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(whiteInkFluid, Fluid.BUCKET_VOLUME), new ItemStack(whiteVegetableOilInk), new ItemStack(whiteVegetableOilInk.getContainerItem()));
 	}
 
 	@Override

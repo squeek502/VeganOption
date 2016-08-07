@@ -77,7 +77,7 @@ public class RenderBasin extends TileEntitySpecialRenderer<TileEntityBasin>
 			}
 
 			brightness = block.getPackedLightmapCoords(state, world, pos);
-			int innerBrightness = (int) (basin.isClosed() ? brightness * 0.35F : brightness * 0.5F);;
+			int innerBrightness = (int) (basin.isClosed() ? brightness * 0.35F : brightness * 0.5F);
 //			tessellator.setBrightness(innerBrightness);
 			buffer.color(red, green, blue, 1);
 		}

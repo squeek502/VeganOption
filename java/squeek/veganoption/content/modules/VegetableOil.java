@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -60,7 +61,8 @@ public class VegetableOil implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "fluidVegetableOil");
 		fluidVegetableOil.setBlock(fluidBlockVegetableOil);
 		fluidVegetableOil.setUnlocalizedName(fluidBlockVegetableOil.getUnlocalizedName());
-		GameRegistry.registerWithItem(fluidBlockVegetableOil);
+		GameRegistry.register(fluidBlockVegetableOil);
+		GameRegistry.register(new ItemBlock(fluidBlockVegetableOil).setRegistryName(fluidBlockVegetableOil.getRegistryName()));
 
 		oilVegetable = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".oilVegetable")
