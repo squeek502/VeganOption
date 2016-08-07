@@ -3,7 +3,6 @@ package squeek.veganoption.blocks.tiles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -279,15 +278,9 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		return (float) (-2f / (1f + Math.exp(-percentCooled * 15f + 5f)) + 1f);
 	}
 
-	public boolean isRotting()
-	{
-		if (getGreenAmount() <= 0)
-			return false;
+	public boolean isRotting() {
+		return getGreenAmount() > 0 && getBrownAmount() <= 0;
 
-		if (getBrownAmount() <= 0)
-			return true;
-
-		return false;
 	}
 
 	public List<Integer> getBrownSlots()
@@ -611,21 +604,13 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		{
 			this.numPlayersUsing = 0;
 			f = 5.0F;
-			@SuppressWarnings("rawtypes")
-			List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - f, pos.getY() - f, pos.getZ() - f, pos.getX() + 1 + f, pos.getY() + 1 + f, pos.getZ() + 1 + f));
-			@SuppressWarnings("rawtypes")
-			Iterator iterator = list.iterator();
+			List<EntityPlayer> list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - f, pos.getY() - f, pos.getZ() - f, pos.getX() + 1 + f, pos.getY() + 1 + f, pos.getZ() + 1 + f));
 
-			while (iterator.hasNext())
-			{
-				EntityPlayer entityplayer = (EntityPlayer) iterator.next();
-
-				if (entityplayer.openContainer instanceof ContainerChest)
-				{
+			for (EntityPlayer entityplayer : list) {
+				if (entityplayer.openContainer instanceof ContainerChest) {
 					IInventory iinventory = ((ContainerChest) entityplayer.openContainer).getLowerChestInventory();
 
-					if (iinventory == this || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest) iinventory).isPartOfLargeChest(this))
-					{
+					if (iinventory == this || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest) iinventory).isPartOfLargeChest(this)) {
 						++this.numPlayersUsing;
 					}
 				}

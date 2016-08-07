@@ -49,7 +49,7 @@ public class PlantMilk implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "bucketPlantMilk")
 				.setContainerItem(Items.BUCKET);
 		GameRegistry.register(bucketPlantMilk);
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPlantMilk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketPlantMilk), new ItemStack(Items.BUCKET));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPlantMilk, Fluid.BUCKET_VOLUME), new ItemStack(bucketPlantMilk), new ItemStack(Items.BUCKET));
 	}
 
 	@Override

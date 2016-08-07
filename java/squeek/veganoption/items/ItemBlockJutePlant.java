@@ -5,10 +5,6 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.ColorizerGrass;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import squeek.veganoption.blocks.BlockJutePlant;
-import squeek.veganoption.content.modules.Jute;
 
 public class ItemBlockJutePlant extends ItemBlock
 {

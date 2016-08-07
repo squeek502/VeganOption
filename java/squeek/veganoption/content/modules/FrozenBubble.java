@@ -61,7 +61,7 @@ public class FrozenBubble implements IContentModule
 				.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.register(soapSolution);
 
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidSoapSolution, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(soapSolution), new ItemStack(soapSolution.getContainerItem()));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidSoapSolution, Fluid.BUCKET_VOLUME), new ItemStack(soapSolution), new ItemStack(soapSolution.getContainerItem()));
 
 		frozenBubble = new ItemFrozenBubble()
 				.setUnlocalizedName(ModInfo.MODID + ".frozenBubble")

@@ -183,8 +183,7 @@ public class RecipeModifier
 
 	public IRecipe convertShapelessRecipe(ShapelessRecipes recipe, Map<ItemStack, String> itemToOredictMap)
 	{
-		@SuppressWarnings("unchecked")
-		ItemStack[] recipeItems = (ItemStack[]) recipe.recipeItems.toArray(new ItemStack[recipe.recipeItems.size()]);
+		ItemStack[] recipeItems = recipe.recipeItems.toArray(new ItemStack[recipe.recipeItems.size()]);
 		if (containsMatch(itemToOredictMap.keySet(), recipeItems))
 		{
 			try

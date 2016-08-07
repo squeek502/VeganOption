@@ -8,8 +8,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import squeek.veganoption.content.modules.*;
 import squeek.veganoption.content.modules.compat.CompatEnderBubble;
 
-import static mcp.mobius.waila.addons.etb.ETBModule.module;
-
 /**
  * Modules should only depend on eachother through the OreDictionary. If modules are more intertwined,
  * then only the intertwined parts should be put in compatModules instead
