@@ -5,6 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.content.modules.FrozenBubble;
@@ -34,6 +36,12 @@ public class CompatEnderBubble implements IContentModule
 	public void finish()
 	{
 		RelationshipRegistry.addRelationship(new ItemStack(FrozenBubble.frozenBubble, 1, 1), new ItemStack(Ender.rawEnder));
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
+	{
 	}
 
 }

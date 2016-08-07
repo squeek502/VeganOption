@@ -3,6 +3,8 @@ package squeek.veganoption.content.modules;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -49,6 +51,12 @@ public class StrawBed implements IContentModule
 
 	@Override
 	public void finish()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
 	{
 	}
 }

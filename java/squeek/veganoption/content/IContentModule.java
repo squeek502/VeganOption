@@ -1,5 +1,7 @@
 package squeek.veganoption.content;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IContentModule
 {
@@ -22,4 +24,10 @@ public interface IContentModule
 	 * Handle anything else (called from postInit)
 	 */
 	public void finish();
+
+	/**
+	 * Handle client-side registration (called from postInit)
+	 */
+	@SideOnly(Side.CLIENT)
+	public void clientSide();
 }

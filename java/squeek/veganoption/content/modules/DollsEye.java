@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -80,6 +82,12 @@ public class DollsEye implements IContentModule
 
 	@Override
 	public void finish()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
 	{
 	}
 }

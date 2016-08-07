@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -9,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemCloth;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -90,6 +91,12 @@ public class Kapok implements IContentModule
 
 	@Override
 	public void finish()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
 	{
 	}
 }

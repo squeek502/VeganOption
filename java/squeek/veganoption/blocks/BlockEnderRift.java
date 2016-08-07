@@ -73,7 +73,7 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 	}
 
 	@Override
-	public boolean onFluidFlowInto(World world, int x, int y, int z, int flowDecay)
+	public boolean onFluidFlowInto(World world, BlockPos pos, int flowDecay)
 	{
 		// absorb fluid flow
 		return true;

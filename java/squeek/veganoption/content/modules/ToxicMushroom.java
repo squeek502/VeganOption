@@ -4,14 +4,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -75,6 +74,12 @@ public class ToxicMushroom implements IContentModule
 
 	@Override
 	public void finish()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
 	{
 	}
 }

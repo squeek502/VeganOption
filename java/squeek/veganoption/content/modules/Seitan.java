@@ -6,6 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -34,7 +36,8 @@ public class Seitan implements IContentModule
 	{
 		washableWheat = new ItemWashableWheat()
 				.setUnlocalizedName(ModInfo.MODID)
-				.setCreativeTab(VeganOption.creativeTab);
+				.setCreativeTab(VeganOption.creativeTab)
+				.setRegistryName(ModInfo.MODID_LOWER, "washableWheat");
 		GameRegistry.register(washableWheat);
 		wheatFlourStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_FLOUR);
 		wheatDoughStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_DOUGH);
@@ -83,6 +86,12 @@ public class Seitan implements IContentModule
 
 	@Override
 	public void finish()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
 	{
 	}
 }

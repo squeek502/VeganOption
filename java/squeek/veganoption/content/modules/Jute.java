@@ -1,11 +1,9 @@
 package squeek.veganoption.content.modules;
 
-import java.lang.reflect.Method;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -16,12 +14,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -42,10 +39,10 @@ public class Jute implements IContentModule
 {
 	public static BlockRettable juteBundled;
 	public static Block jutePlant;
+	public static Item jutePlantItemBlock;
 	public static Item juteStalk;
 	public static Item juteFibre;
 	public static Item juteSeeds;
-	public static final int FERN_METADATA = 3;
 	public static DropSpecifier juteDrops;
 
 	@Override
@@ -72,22 +69,27 @@ public class Jute implements IContentModule
 		GameRegistry.register(juteBundled);
 		GameRegistry.register(new ItemBlock(juteBundled).setRegistryName(juteBundled.getRegistryName()));
 
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockRettable.BlockRettableColorHandler(), juteBundled);
-		}
-
 		jutePlant = new BlockJutePlant()
 				.setUnlocalizedName(ModInfo.MODID + ".jutePlant")
 				.setRegistryName(ModInfo.MODID_LOWER, "jutePlant");
 		GameRegistry.register(jutePlant);
-		GameRegistry.register(new ItemBlockJutePlant(jutePlant).setRegistryName(jutePlant.getRegistryName()));
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemBlockJutePlant.ColorHandler(), jutePlant);
+		jutePlantItemBlock = new ItemBlockJutePlant(jutePlant).setRegistryName(jutePlant.getRegistryName());
+		GameRegistry.register(jutePlantItemBlock);
 
 		juteSeeds = new ItemSeedsGeneric(jutePlant, EnumPlantType.Plains)
 				.setUnlocalizedName(ModInfo.MODID + ".juteSeeds")
 				.setCreativeTab(VeganOption.creativeTab)
 				.setRegistryName(ModInfo.MODID_LOWER, "juteSeeds");
 		GameRegistry.register(juteSeeds);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
+	{
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockRettable.BlockRettableColorHandler(), juteBundled);
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemBlockJutePlant.ColorHandler(), jutePlantItemBlock);
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockJutePlant.BlockJutePlantColorHandler(), jutePlant);
 	}
 
 	@Override
@@ -105,12 +107,12 @@ public class Jute implements IContentModule
 		DropsModifier.NEIDropSpecifier juteDropSpecifier = new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops);
 		Modifiers.drops.addDropsToBlock(juteBundledBlockSpecifier, juteDropSpecifier);
 
-		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT, FERN_METADATA)
+		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT)
 		{
 			@Override
-			public boolean metaMatches(int meta)
+			public boolean stateMatches(IBlockState state)
 			{
-				return this.meta == BlockDoublePlant.EnumPlantType.FERN.getMeta();
+				return state.getValue(BlockDoublePlant.VARIANT) == BlockDoublePlant.EnumPlantType.FERN;
 			}
 		};
 		juteDrops = new DropSpecifier(new ItemStack(juteStalk), 1, 3);
@@ -130,9 +132,6 @@ public class Jute implements IContentModule
 		RelationshipRegistry.addRelationship(new ItemStack(juteFibre), new ItemStack(juteBundled));
 		RelationshipRegistry.addRelationship(new ItemStack(jutePlant), new ItemStack(juteSeeds));
 	}
-
-	// FIXME
-	public static final Method doublePlantDropBlockAsItem = ReflectionHelper.findMethod(Block.class, Blocks.DOUBLE_PLANT, new String[]{"dropBlockAsItem", "func_149642_a", "a"}, World.class, BlockPos.class, ItemStack.class);
 
 	/**
 	 * Catch the top of a fern being broken and do the drops manually
@@ -161,8 +160,7 @@ public class Jute implements IContentModule
 		if (blockBelow != block)
 			return;
 
-		// TODO: Proper block state check.
-		if (blockBelow.getMetaFromState(stateBelow) != FERN_METADATA)
+		if (stateBelow.getValue(BlockDoublePlant.VARIANT) != BlockDoublePlant.EnumPlantType.FERN)
 			return;
 
 		if (event.getPlayer().getHeldItemMainhand() != null && event.getPlayer().getHeldItemMainhand().getItem() instanceof ItemShears)
@@ -170,19 +168,7 @@ public class Jute implements IContentModule
 
 		for (ItemStack drop : juteDrops.getDrops(event.getPlayer(), squeek.veganoption.helpers.EnchantmentHelper.getFortuneModifier(event.getPlayer()), squeek.veganoption.helpers.EnchantmentHelper.getSilkTouchModifier(event.getPlayer())))
 		{
-			try
-			{
-//				FIXME
-//				doublePlantDropBlockAsItem.invoke(event.block, event.world, event.x, event.y - 1, event.z, drop);
-			}
-			catch (RuntimeException e)
-			{
-				throw e;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			Block.spawnAsEntity(event.getWorld(), event.getPos().down(), drop);
 		}
 	}
 }

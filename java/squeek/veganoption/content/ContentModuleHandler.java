@@ -2,8 +2,13 @@ package squeek.veganoption.content;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import squeek.veganoption.content.modules.*;
 import squeek.veganoption.content.modules.compat.CompatEnderBubble;
+
+import static mcp.mobius.waila.addons.etb.ETBModule.module;
 
 /**
  * Modules should only depend on eachother through the OreDictionary. If modules are more intertwined,
@@ -74,6 +79,17 @@ public class ContentModuleHandler
 
 	public static void postInit()
 	{
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
+			for (IContentModule module : modules.values())
+			{
+				module.clientSide();
+			}
+			for (IContentModule compatModule : compatModules.values())
+			{
+				compatModule.clientSide();
+			}
+		}
 		for (IContentModule module : modules.values())
 		{
 			module.finish();

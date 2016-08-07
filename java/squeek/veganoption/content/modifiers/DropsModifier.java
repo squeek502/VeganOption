@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -149,6 +150,11 @@ public class DropsModifier
 		public boolean blockMatches(Block block)
 		{
 			return this.block == block;
+		}
+
+		public boolean stateMatches(IBlockState state)
+		{
+			return metaMatches(state.getBlock(), state.getBlock().getMetaFromState(state));
 		}
 
 		public boolean metaMatches(int meta)

@@ -5,6 +5,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -65,5 +67,11 @@ public class MobHeads implements IContentModule
 	public void finish()
 	{
 		CompostRegistry.addBrown(papierMache);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
+	{
 	}
 }

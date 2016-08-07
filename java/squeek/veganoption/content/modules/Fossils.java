@@ -3,6 +3,8 @@ package squeek.veganoption.content.modules;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
@@ -29,6 +31,12 @@ public class Fossils implements IContentModule
 
 	@Override
 	public void finish()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
 	{
 	}
 }

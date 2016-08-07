@@ -15,7 +15,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -53,7 +52,7 @@ public class FrozenBubble implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "fluidSoapSolution");
 		fluidSoapSolution.setBlock(blockFluidSoapSolution);
 		fluidSoapSolution.setUnlocalizedName(blockFluidSoapSolution.getUnlocalizedName());
-		GameRegistry.register(blockFluidSoapSolution);
+		GameRegistry.registerWithItem(blockFluidSoapSolution);
 
 		soapSolution = new ItemSoapSolution()
 				.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
@@ -71,14 +70,11 @@ public class FrozenBubble implements IContentModule
 		GameRegistry.register(frozenBubble);
 
 		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", ContentHelper.ENTITYID_BUBBLE, ModInfo.MODID, 80, 1, true);
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			createBubbleRenderer();
-		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void createBubbleRenderer()
+	@Override
+	public void clientSide()
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, new IRenderFactory<EntityBubble>() {
 			@Override

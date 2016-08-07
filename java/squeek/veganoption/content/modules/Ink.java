@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -51,7 +53,7 @@ public class Ink implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "inkBlack");
 		blackInkFluid.setBlock(blackInk);
 		blackInkFluid.setUnlocalizedName(blackInk.getUnlocalizedName());
-		GameRegistry.register(blackInk);
+		GameRegistry.registerWithItem(blackInk);
 
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(blackInkFluid, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(blackVegetableOilInk), new ItemStack(blackVegetableOilInk.getContainerItem()));
 
@@ -69,7 +71,7 @@ public class Ink implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "inkWhite");
 		whiteInkFluid.setBlock(whiteInk);
 		whiteInkFluid.setUnlocalizedName(whiteInk.getUnlocalizedName());
-		GameRegistry.register(whiteInk);
+		GameRegistry.registerWithItem(whiteInk);
 
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(whiteInkFluid, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(whiteVegetableOilInk), new ItemStack(whiteVegetableOilInk.getContainerItem()));
 	}
@@ -115,6 +117,12 @@ public class Ink implements IContentModule
 		RelationshipRegistry.addRelationship(new ItemStack(whiteInk), new ItemStack(whiteVegetableOilInk));
 		RelationshipRegistry.addRelationship(new ItemStack(blackVegetableOilInk), new ItemStack(blackInk));
 		RelationshipRegistry.addRelationship(new ItemStack(blackInk), new ItemStack(blackVegetableOilInk));
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
+	{
 	}
 
 }

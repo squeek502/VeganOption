@@ -10,6 +10,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -38,7 +40,8 @@ public class Soap implements IContentModule
 		fluidLyeWater = new Fluid(ModInfo.MODID + ".lyeWater", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_flow"));
 		FluidRegistry.registerFluid(fluidLyeWater);
 		lyeWater = new BlockLyeWater(fluidLyeWater)
-				.setUnlocalizedName(ModInfo.MODID + ".lyeWater");
+				.setUnlocalizedName(ModInfo.MODID + ".lyeWater")
+				.setRegistryName(ModInfo.MODID_LOWER, "lyeWater");
 		fluidLyeWater.setBlock(lyeWater);
 		fluidLyeWater.setUnlocalizedName(lyeWater.getUnlocalizedName());
 		GameRegistry.register(lyeWater);
@@ -84,5 +87,11 @@ public class Soap implements IContentModule
 	{
 		RelationshipRegistry.addRelationship(new ItemStack(lyeWater), new ItemStack(bucketLyeWater));
 		RelationshipRegistry.addRelationship(new ItemStack(bucketLyeWater), new ItemStack(lyeWater));
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
+	{
 	}
 }

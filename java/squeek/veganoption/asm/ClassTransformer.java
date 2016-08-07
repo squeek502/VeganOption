@@ -22,20 +22,19 @@ public class ClassTransformer implements IClassTransformer
 
 			ClassNode classNode = readClassFromBytes(bytes);
 
-			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "h" : "func_149813_h", isObfuscated ? "(Lahb;IIII)V" : "(Lnet/minecraft/world/World;IIII)V");
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "a" : "tryFlowInto", isObfuscated ? "(Laid;Lcm;Lars;I)V" : "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)V");
 
 			/*
-			if (Hooks.onFlowIntoBlock(null, 0, 0, 0, 0))
-				return null;
+			if (Hooks.onFlowIntoBlock(world, pos, state, flowDecay))
+				return;
 			*/
 			InsnList toInject = new InsnList();
 			LabelNode ifNotCanceled = new LabelNode();
 			toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 2));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 3));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 3));
 			toInject.add(new VarInsnNode(Opcodes.ILOAD, 4));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 5));
-			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onFlowIntoBlock", "(Lnet/minecraft/world/World;IIII)Z", false));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onFlowIntoBlock", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)Z", false));
 			toInject.add(new JumpInsnNode(Opcodes.IFEQ, ifNotCanceled));
 			toInject.add(new InsnNode(Opcodes.RETURN));
 			toInject.add(ifNotCanceled);
@@ -50,7 +49,7 @@ public class ClassTransformer implements IClassTransformer
 
 			ClassNode classNode = readClassFromBytes(bytes);
 
-			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "h" : "onUpdate", "()V");
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "m" : "onUpdate", "()V");
 
 			/*
 			if (Hooks.onEntityItemUpdate(this))
@@ -74,34 +73,31 @@ public class ClassTransformer implements IClassTransformer
 
 			ClassNode classNode = readClassFromBytes(bytes);
 
-			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "i" : "tryExtend", isObfuscated ? "(Lahb;IIII)Z" : "(Lnet/minecraft/world/World;IIII)Z");
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "a" : "doMove", isObfuscated ? "(Laid;Lcm;Lct;Z)Z" : "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;Z)Z");
 
 			/*
-			Hooks.onPistonTryExtend(world, x, y, z, facing)
+			Hooks.onPistonTryExtend(world, pos)
 			*/
 			InsnList toInject = new InsnList();
 			toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 2));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 3));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 3));
 			toInject.add(new VarInsnNode(Opcodes.ILOAD, 4));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 5));
-			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonTryExtend", "(Lnet/minecraft/world/World;IIII)V", false));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonMove", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;Z)V", false));
 
 			method.instructions.insertBefore(findFirstInstruction(method), toInject);
 
-			method = findMethodNodeOfClass(classNode, isObfuscated ? "a" : "onBlockEventReceived", isObfuscated ? "(Lahb;IIIII)Z" : "(Lnet/minecraft/world/World;IIIII)Z");
+			method = findMethodNodeOfClass(classNode, isObfuscated ? "a" : "eventReceived", isObfuscated ? "(Lars;Laid;Lcm;II)Z" : "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;II)Z");
 
 			/*
-			Hooks.onPistonBlockEventReceived(world, x, y, z, event, data)
+			Hooks.onPistonBlockEventReceived(state, world, pos, event)
 			*/
 			toInject.clear();
 			toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 2));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 3));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 3));
 			toInject.add(new VarInsnNode(Opcodes.ILOAD, 4));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 5));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 6));
-			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonBlockEventReceived", "(Lnet/minecraft/world/World;IIIII)V", false));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonBlockEventReceived", "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;I)V", false));
 
 			method.instructions.insertBefore(getOrFindInstruction(method.instructions.getLast(), true).getPrevious(), toInject);
 
@@ -114,7 +110,7 @@ public class ClassTransformer implements IClassTransformer
 			ClassNode classNode = readClassFromBytes(bytes);
 
 			// isFullCube
-			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "q" : "func_147469_q", "(III)Z");
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "t" : "isBlockFullCube", isObfuscated ? "(Lcm;)Z" : "(Lnet/minecraft/util/math/BlockPos;)Z");
 
 			LabelNode end = findEndLabel(method);
 			AbstractInsnNode targetNode = findFirstInstruction(method);
@@ -132,10 +128,8 @@ public class ClassTransformer implements IClassTransformer
 			method.localVariables.add(localVar);
 
 			toInject.add(new VarInsnNode(ALOAD, 0)); 					// this
-			toInject.add(new VarInsnNode(ILOAD, 1)); 					// x
-			toInject.add(new VarInsnNode(ILOAD, 2)); 					// y
-			toInject.add(new VarInsnNode(ILOAD, 3)); 					// z
-			toInject.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(Hooks.class), "isBlockFullCube", "(Lnet/minecraft/world/World;III)I", false));
+			toInject.add(new VarInsnNode(ALOAD, 1)); 					// pos
+			toInject.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(Hooks.class), "isBlockFullCube", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)I", false));
 			toInject.add(new VarInsnNode(ISTORE, localVar.index));		// isBlockFullCube = Hooks.isBlockFullCube(...)
 			toInject.add(varStartLabel);								// variable scope start
 			LabelNode label = new LabelNode();							// label if condition is true
@@ -160,9 +154,9 @@ public class ClassTransformer implements IClassTransformer
 		{
 			ClassNode classNode = readClassFromBytes(bytes);
 
-			MethodNode method = findMethodNodeOfClass(classNode, isEnvObfuscated ? "a" : "updateTick", isEnvObfuscated ? "(Lahb;IIILjava/util/Random;)V" : "(Lnet/minecraft/world/World;IIILjava/util/Random;)V");
+			MethodNode method = findMethodNodeOfClass(classNode, isEnvObfuscated ? "b" : "updateTick", isEnvObfuscated ? "(Laid;Lcm;Lars;Ljava/util/Random;)V" : "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V");
 
-			final String setBlockMethodName = isEnvObfuscated ? "d" : "setBlock";
+			final String setBlockMethodName = isEnvObfuscated ? "a" : "setBlockState";
 			for (AbstractInsnNode insn = method.instructions.getFirst(); insn != null; insn = insn.getNext())
 			{
 				if (insn.getOpcode() == Opcodes.ICONST_2 && insn.getNext() != null && insn.getNext().getOpcode() == Opcodes.INVOKEVIRTUAL && ((MethodInsnNode) insn.getNext()).name.equals(setBlockMethodName))
@@ -176,129 +170,7 @@ public class ClassTransformer implements IClassTransformer
 
 			return writeClassToBytes(classNode, 0);
 		}
-		else if (transformedName.equals("tconstruct.tools.TinkerToolEvents"))
-		{
-			ClassNode classNode = readClassFromBytes(bytes);
 
-			MethodNode method = findMethodNodeOfClass(classNode, "buildTool", "(Ltconstruct/library/event/ToolBuildEvent;)V");
-
-			if (method != null)
-			{
-				/*
-				event.handleStack = Hooks.getRealHandle(event.handleStack);
-				*/
-				InsnList toInject = new InsnList();
-				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-				toInject.add(new FieldInsnNode(Opcodes.GETFIELD, "tconstruct/library/event/ToolBuildEvent", "handleStack", "Lnet/minecraft/item/ItemStack;"));
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "getRealHandle", "(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;", false));
-				toInject.add(new FieldInsnNode(Opcodes.PUTFIELD, "tconstruct/library/event/ToolBuildEvent", "handleStack", "Lnet/minecraft/item/ItemStack;"));
-
-				method.instructions.insertBefore(findFirstInstruction(method), toInject);
-				return writeClassToBytes(classNode);
-			}
-		}
-		/*
-		 * BEGIN Mystcraft descriptive book Burlap support
-		 */
-		else if (transformedName.equals("com.xcompwiz.mystcraft.data.RecipeLinkingbook"))
-		{
-			ClassNode classNode = readClassFromBytes(bytes);
-
-			MethodNode method = findMethodNodeOfClass(classNode, "isValidCover", "(Lnet/minecraft/item/ItemStack;)Z");
-
-			if (method != null)
-			{
-				/*
-				if (Hooks.isLeather(itemStack))
-					return true;
-				*/
-				InsnList toInject = new InsnList();
-				LabelNode afterIf = new LabelNode();
-				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "isLeather", "(Lnet/minecraft/item/ItemStack;)Z", false));
-				toInject.add(new JumpInsnNode(Opcodes.IFEQ, afterIf));
-				toInject.add(new InsnNode(Opcodes.ICONST_1));
-				toInject.add(new InsnNode(Opcodes.IRETURN));
-				toInject.add(afterIf);
-
-				method.instructions.insertBefore(findFirstInstruction(method), toInject);
-				return writeClassToBytes(classNode);
-			}
-		}
-		else if (transformedName.equals("com.xcompwiz.mystcraft.tileentity.TileEntityBookBinder"))
-		{
-			ClassNode classNode = readClassFromBytes(bytes);
-			boolean didTransform = false;
-
-			MethodNode method = findMethodNodeOfClass(classNode, "func_94041_b", "(ILnet/minecraft/item/ItemStack;)Z");
-
-			if (method == null)
-				method = findMethodNodeOfClass(classNode, "isItemValidForSlot", "(ILnet/minecraft/item/ItemStack;)Z");
-
-			if (method != null)
-			{
-				/*
-				if (slotIndex == 1 && Hooks.isLeather(itemStack))
-					return true;
-				*/
-
-				InsnList toInject = new InsnList();
-				LabelNode afterIf = new LabelNode();
-				toInject.add(new VarInsnNode(Opcodes.ILOAD, 1));
-				toInject.add(new InsnNode(Opcodes.ICONST_1));
-				toInject.add(new JumpInsnNode(Opcodes.IF_ICMPNE, afterIf));
-				toInject.add(new VarInsnNode(Opcodes.ALOAD, 2));
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "isLeather", "(Lnet/minecraft/item/ItemStack;)Z", false));
-				toInject.add(new JumpInsnNode(Opcodes.IFEQ, afterIf));
-				toInject.add(new InsnNode(Opcodes.ICONST_1));
-				toInject.add(new InsnNode(Opcodes.IRETURN));
-				toInject.add(afterIf);
-
-				method.instructions.insertBefore(findFirstInstruction(method), toInject);
-				didTransform = true;
-			}
-
-			method = findMethodNodeOfClass(classNode, "canBuildItem", "()Z");
-
-			if (method != null)
-			{
-				AbstractInsnNode knownInsn = method.instructions.getFirst();
-				while (knownInsn != null && (knownInsn.getOpcode() != Opcodes.GETSTATIC
-						|| !((FieldInsnNode) knownInsn).owner.equals("net/minecraft/init/Items")
-						|| !(((FieldInsnNode) knownInsn).name.equals("field_151116_aA") || ((FieldInsnNode) knownInsn).name.equals("leather"))))
-				{
-					knownInsn = knownInsn.getNext();
-				}
-
-				/*
-				 * Convert from:
-				 * 	    if (this.itemstacks[1].getItem() != Items.leather) return false;
-				 * to:
-				 * 		if (!Hooks.isLeather(this.itemstacks[1])) return false;
-				 */
-				if (knownInsn != null && knownInsn.getPrevious().getOpcode() == Opcodes.INVOKEVIRTUAL)
-				{
-					JumpInsnNode jumpInsn = (JumpInsnNode) knownInsn.getNext();
-					jumpInsn.setOpcode(Opcodes.IFNE);
-
-					InsnList replacementInsns = new InsnList();
-					replacementInsns.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "isLeather", "(Lnet/minecraft/item/ItemStack;)Z", false));
-					method.instructions.insert(knownInsn, replacementInsns);
-
-					method.instructions.remove(knownInsn.getPrevious()); // itemStack.getItem() INVOKEVIRTUAL
-					method.instructions.remove(knownInsn); // Items.leather GETSTATIC
-
-					didTransform = true;
-				}
-			}
-
-			if (didTransform)
-				return writeClassToBytes(classNode);
-		}
-		/*
-		 * END Mystcraft descriptive book Burlap support
-		 */
 		return bytes;
 	}
 

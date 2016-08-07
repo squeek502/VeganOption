@@ -2,7 +2,10 @@ package squeek.veganoption.integration;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.content.IContentModule;
 
 public abstract class IntegratorBase extends IntegrationBase implements IContentModule
@@ -32,6 +35,8 @@ public abstract class IntegratorBase extends IntegrationBase implements IContent
 
 	public void postInit()
 	{
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+			clientSide();
 		finish();
 	}
 
@@ -52,6 +57,12 @@ public abstract class IntegratorBase extends IntegrationBase implements IContent
 
 	@Override
 	public void finish()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
 	{
 	}
 

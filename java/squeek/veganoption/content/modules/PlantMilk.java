@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -35,10 +37,11 @@ public class PlantMilk implements IContentModule
 		fluidPlantMilk = new Fluid(ModInfo.MODID + ".plantMilk", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_flow"));
 		FluidRegistry.registerFluid(fluidPlantMilk);
 		plantMilk = new BlockFluidClassic(fluidPlantMilk, Material.WATER)
-				.setUnlocalizedName(ModInfo.MODID + ".plantMilk");
+				.setUnlocalizedName(ModInfo.MODID + ".plantMilk")
+				.setRegistryName(ModInfo.MODID_LOWER, "plantMilk");
 		fluidPlantMilk.setBlock(plantMilk);
 		fluidPlantMilk.setUnlocalizedName(plantMilk.getUnlocalizedName());
-		GameRegistry.register(plantMilk);
+		GameRegistry.registerWithItem(plantMilk);
 
 		bucketPlantMilk = new ItemBucketGeneric(plantMilk)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketPlantMilk")
@@ -86,5 +89,11 @@ public class PlantMilk implements IContentModule
 	{
 		RelationshipRegistry.addRelationship(new ItemStack(bucketPlantMilk), new ItemStack(plantMilk));
 		RelationshipRegistry.addRelationship(new ItemStack(plantMilk), new ItemStack(bucketPlantMilk));
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
+	{
 	}
 }

@@ -32,7 +32,7 @@ public class PistonCraftingHandler
 	{
 		for (PistonCraftingRecipe pistonRecipe : PistonCraftingRegistry.getRecipes())
 		{
-			if (pistonRecipe.tryCraft(event.world, new BlockPos(event.headX, event.headY, event.headZ)))
+			if (pistonRecipe.tryCraft(event.world, event.headPos))
 				return;
 		}
 	}
@@ -43,7 +43,7 @@ public class PistonCraftingHandler
 		if (event.world.isRemote)
 			return;
 
-		BlockPos blockPos = new BlockPos(event.headX, event.headY, event.headZ);
+		BlockPos blockPos = event.headPos;
 		WorldPosition pos = new WorldPosition(event.world, blockPos);
 		displacedLiquids.remove(pos);
 
@@ -66,7 +66,7 @@ public class PistonCraftingHandler
 		if (event.world.isRemote)
 			return;
 
-		displacedLiquids.remove(new WorldPosition(event.world, new BlockPos(event.headX, event.headY, event.headZ)));
+		displacedLiquids.remove(new WorldPosition(event.world, event.headPos));
 	}
 
 	public static class WorldPosition extends ChunkPos

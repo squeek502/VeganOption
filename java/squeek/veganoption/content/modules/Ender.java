@@ -12,7 +12,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,10 +55,6 @@ public class Ender implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "enderRift");
 		GameRegistry.register(enderRift);
 		GameRegistry.register(new ItemBlock(enderRift).setRegistryName(enderRift.getRegistryName()));
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			createEnderRiftRenderer();
-		}
 		GameRegistry.registerTileEntity(TileEntityEnderRift.class, ModInfo.MODID + ".enderRift");
 
 		fluidRawEnder = new Fluid(ModInfo.MODID + ".rawEnder", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_flow"))
@@ -72,7 +67,7 @@ public class Ender implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "rawEnder");
 		fluidRawEnder.setBlock(rawEnder);
 		fluidRawEnder.setUnlocalizedName(rawEnder.getUnlocalizedName());
-		GameRegistry.register(rawEnder);
+		GameRegistry.registerWithItem(rawEnder);
 
 		bucketRawEnder = new ItemBucketGeneric(rawEnder)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketRawEnder")
@@ -84,7 +79,8 @@ public class Ender implements IContentModule
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void createEnderRiftRenderer()
+	@Override
+	public void clientSide()
 	{
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnderRift.class, new RenderEnderRift());
 	}

@@ -6,6 +6,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
@@ -34,7 +36,7 @@ public class Resin implements IContentModule
 				.setUnlocalizedName(ModInfo.MODID + ".rosin")
 				.setCreativeTab(VeganOption.creativeTab)
 				.setRegistryName(ModInfo.MODID_LOWER, "rosin");
-		GameRegistry.registerItem(rosin, "rosin");
+		GameRegistry.register(rosin);
 	}
 
 	@Override
@@ -68,6 +70,12 @@ public class Resin implements IContentModule
 
 	@Override
 	public void finish()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
 	{
 	}
 

@@ -7,7 +7,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,8 +23,8 @@ import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.registry.CompostRegistry;
-import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
+import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.items.ItemFertilizer;
 
 public class Composting implements IContentModule
@@ -46,10 +45,6 @@ public class Composting implements IContentModule
 		GameRegistry.register(composter);
 		GameRegistry.register(new ItemBlock(composter).setRegistryName(composter.getRegistryName()));
 		GameRegistry.registerTileEntity(TileEntityComposter.class, ModInfo.MODID + ".composter");
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			createComposterRenderer();
-		}
 
 		rottenPlants = new ItemFood(4, 0.1F, true)
 				.setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F)
@@ -146,7 +141,8 @@ public class Composting implements IContentModule
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void createComposterRenderer()
+	@Override
+	public void clientSide()
 	{
 		RenderComposter composterRenderer = new RenderComposter();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityComposter.class, composterRenderer);

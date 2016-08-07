@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,14 +58,11 @@ public class Egg implements IContentModule
 		GameRegistry.register(plasticEgg);
 
 		EntityRegistry.registerModEntity(EntityPlasticEgg.class, "plasticEgg", ContentHelper.ENTITYID_PLASTIC_EGG, ModInfo.MODID, 80, 1, true);
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			createPlasticEggRenderer();
-		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void createPlasticEggRenderer()
+	@Override
+	public void clientSide()
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntityPlasticEgg.class, new IRenderFactory<EntityPlasticEgg>() {
 			@Override

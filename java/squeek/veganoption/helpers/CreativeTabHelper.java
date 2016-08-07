@@ -2,8 +2,13 @@ package squeek.veganoption.helpers;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -16,24 +21,17 @@ public class CreativeTabHelper
 
 	public static class ItemCreativeTabIconProxy extends Item
 	{
-		public ItemCreativeTabIconProxy()
+		protected ResourceLocation texture;
+		public ItemCreativeTabIconProxy(String textureName)
 		{
 			super();
-			MinecraftForge.EVENT_BUS.register(this);
-		}
-
-		@SubscribeEvent
-		@SideOnly(Side.CLIENT)
-		public void onTextureStichedPre(TextureStitchEvent.Pre event)
-		{
-			if (event.map.getTextureType() == getSpriteNumber())
-				itemIcon = event.map.registerIcon(getIconString());
+			this.texture = new ResourceLocation(textureName);
 		}
 	}
 
 	public static CreativeTabs createTab(final String name, String textureName)
 	{
-		creativeTabIconItemMap.put(name, new ItemCreativeTabIconProxy().setTextureName(textureName));
+		creativeTabIconItemMap.put(name, new ItemCreativeTabIconProxy(textureName));
 		return new CreativeTabs(name)
 		{
 			@Override

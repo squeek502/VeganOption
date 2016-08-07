@@ -1,8 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.material.Material;
@@ -17,6 +14,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -29,6 +28,10 @@ import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class VegetableOil implements IContentModule
 {
@@ -53,17 +56,18 @@ public class VegetableOil implements IContentModule
 		fluidVegetableOil = new Fluid(ModInfo.MODID + ".fluidOilVegetable", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_flow"));
 		FluidRegistry.registerFluid(fluidVegetableOil);
 		fluidBlockVegetableOil = new BlockFluidClassic(fluidVegetableOil, Material.WATER)
-				.setUnlocalizedName(ModInfo.MODID + ".fluidOilVegetable");
+				.setUnlocalizedName(ModInfo.MODID + ".fluidOilVegetable")
+				.setRegistryName(ModInfo.MODID_LOWER, "fluidVegetableOil");
 		fluidVegetableOil.setBlock(fluidBlockVegetableOil);
 		fluidVegetableOil.setUnlocalizedName(fluidBlockVegetableOil.getUnlocalizedName());
-		GameRegistry.register(fluidBlockVegetableOil);
+		GameRegistry.registerWithItem(fluidBlockVegetableOil);
 
 		oilVegetable = new Item()
 				.setUnlocalizedName(ModInfo.MODID + ".oilVegetable")
 				.setCreativeTab(VeganOption.creativeTab)
 				.setRegistryName(ModInfo.MODID_LOWER, "oilVegetable")
 				.setContainerItem(Items.GLASS_BOTTLE);
-		GameRegistry.registerItem(oilVegetable, "oilVegetable");
+		GameRegistry.register(oilVegetable);
 
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidVegetableOil, Fluid.BUCKET_VOLUME), new ItemStack(oilVegetable), new ItemStack(oilVegetable.getContainerItem()));
 	}
@@ -148,5 +152,11 @@ public class VegetableOil implements IContentModule
 		{
 			Modifiers.crafting.addInputsToKeepForOutput(output, oilPresser);
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSide()
+	{
 	}
 }

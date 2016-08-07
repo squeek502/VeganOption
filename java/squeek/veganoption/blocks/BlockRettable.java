@@ -7,6 +7,7 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +27,7 @@ public class BlockRettable extends BlockHay
 {
 	// this cannot be any higher than 3 due to BlockRotatablePillar using the 3rd/4th bits
 	public static final int numRettingStages = 3;
-	public static final PropertyInteger STAGE = PropertyInteger.create("retting_stage", 0, numRettingStages);
+	public static final PropertyInteger STAGE = PropertyInteger.create("retting_stage", 0, numRettingStages - 1);
 
 	public Item rettedItem;
 	public int minRettedItemDrops;
@@ -51,8 +52,10 @@ public class BlockRettable extends BlockHay
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
+		IBlockState axisState = super.getStateFromMeta(meta);
+		EnumFacing.Axis axis = axisState.getValue(AXIS);
 		int stage = meta & 3;
-		return getDefaultState().withProperty(STAGE, meta & 3).withProperty(AXIS, EnumFacing.Axis.values()[(meta - stage) & 12]);
+		return getDefaultState().withProperty(STAGE, stage).withProperty(AXIS, axis);
 	}
 
 	@Override
@@ -98,7 +101,7 @@ public class BlockRettable extends BlockHay
 	}
 
 	@Override
-	protected boolean canSilkHarvest()
+	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
 		return false;
 	}
@@ -161,9 +164,14 @@ public class BlockRettable extends BlockHay
 		}
 	}
 
+	public static float getRettingPercent(IBlockState state)
+	{
+		return state.getValue(STAGE) / numRettingStages;
+	}
+
 	public static float getRettingPercent(IBlockAccess world, BlockPos pos)
 	{
-		return world.getBlockState(pos).getValue(STAGE) / numRettingStages;
+		return getRettingPercent(world.getBlockState(pos));
 	}
 
 	@Override

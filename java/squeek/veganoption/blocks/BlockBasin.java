@@ -249,9 +249,9 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	 * IHollowBlock
 	 */
 	@Override
-	public boolean isBlockFullCube(World world, int x, int y, int z)
+	public boolean isBlockFullCube(World world, BlockPos pos)
 	{
-		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBasin)
 		{
 			return ((TileEntityBasin) tile).isClosed();

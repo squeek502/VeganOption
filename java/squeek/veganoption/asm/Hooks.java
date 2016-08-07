@@ -2,29 +2,26 @@ package squeek.veganoption.asm;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.api.event.PistonEvent;
 import squeek.veganoption.blocks.BlockEnderRift;
 import squeek.veganoption.blocks.IHollowBlock;
-import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.modules.Ender;
-import squeek.veganoption.integration.IntegrationHandler;
-import squeek.veganoption.integration.tic.TConstruct;
 
 public class Hooks
 {
 	// return true to stop the default code from being executed
-	public static boolean onFlowIntoBlock(World world, int x, int y, int z, int flowDecay)
+	public static boolean onFlowIntoBlock(World world, BlockPos pos, IBlockState state, int flowDecay)
 	{
-		Block block = world.getBlock(x, y, z);
+		Block block = world.getBlockState(pos).getBlock();
 		if (block == Ender.enderRift)
-			return ((BlockEnderRift) block).onFluidFlowInto(world, x, y, z, flowDecay);
+			return ((BlockEnderRift) block).onFluidFlowInto(world, pos, flowDecay);
 		else
 			return false;
 	}
@@ -34,7 +31,8 @@ public class Hooks
 	{
 		if (!entityItem.worldObj.isRemote && entityItem.isCollided)
 		{
-			if (entityItem.worldObj.getBlock(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ)) == Blocks.piston_head)
+			BlockPos pos = new BlockPos(entityItem.posX, entityItem.posY, entityItem.posZ);
+			if (entityItem.worldObj.getBlockState(pos).getBlock() == Blocks.PISTON_HEAD)
 			{
 				return MinecraftForge.EVENT_BUS.post(new PistonEvent.CrushItem(entityItem));
 			}
@@ -42,57 +40,36 @@ public class Hooks
 		return false;
 	}
 
-	// return true to stop the default code from being executed
-	public static void onPistonTryExtend(World world, int x, int y, int z, int facing)
+	public static void onPistonMove(World world, BlockPos pos, EnumFacing direction, boolean extending)
 	{
-		if (!BlockPistonBase.isExtended(world.getBlockMetadata(x, y, z)))
-			MinecraftForge.EVENT_BUS.post(new PistonEvent.TryExtend(world, x, y, z, facing));
+		if (extending)
+		{
+			IBlockState state = world.getBlockState(pos);
+			MinecraftForge.EVENT_BUS.post(new PistonEvent.TryExtend(world, pos, state.getValue(BlockPistonBase.FACING)));
+		}
 	}
 
 	public static final int PISTON_BLOCKEVENT_EXTEND = 0;
 	public static final int PISTON_BLOCKEVENT_RETRACT = 1;
 
-	// return true to stop the default code from being executed
-	public static void onPistonBlockEventReceived(World world, int x, int y, int z, int eventID, int facing)
+	public static void onPistonBlockEventReceived(IBlockState state, World world, BlockPos pos, int eventID)
 	{
 		if (eventID == PISTON_BLOCKEVENT_RETRACT)
 		{
-			MinecraftForge.EVENT_BUS.post(new PistonEvent.Retract(world, x, y, z, facing));
+			EnumFacing facing = state.getValue(BlockPistonBase.FACING);
+			MinecraftForge.EVENT_BUS.post(new PistonEvent.Retract(world, pos, facing));
 		}
 	}
 
 	// return -1 to use default code, otherwise return 1 or 0 (will be interpretted as a boolean)
 	public static int isBlockFullCube(World world, int x, int y, int z)
 	{
-		Block block = world.getBlock(x, y, z);
+		BlockPos pos = new BlockPos(x, y, z);
+		Block block = world.getBlockState(pos).getBlock();
 		if (block instanceof IHollowBlock)
 		{
-			return ((IHollowBlock) block).isBlockFullCube(world, x, y, z) ? 1 : 0;
+			return ((IHollowBlock) block).isBlockFullCube(world, pos) ? 1 : 0;
 		}
 		return -1;
-	}
-
-	// return the TiC ToolRod version of the given handle if it exists
-	public static ItemStack getRealHandle(ItemStack handle)
-	{
-		if (IntegrationHandler.integrationExists(IntegrationHandler.MODID_TINKERS_CONSTRUCT))
-			return TConstruct.getRealHandle(handle);
-
-		return handle;
-	}
-
-	// helper function for Mystcraft linking book recipe compatibility
-	public static boolean isLeather(ItemStack itemStack)
-	{
-		if (itemStack == null)
-			return false;
-
-		int[] oreIDs = OreDictionary.getOreIDs(itemStack);
-		for (int oreID : oreIDs)
-		{
-			if (OreDictionary.getOreName(oreID).equals(ContentHelper.leatherOreDict))
-				return true;
-		}
-		return false;
 	}
 }
