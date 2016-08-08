@@ -124,8 +124,17 @@ public class Ink implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(blackVegetableOilInk);
+		ContentHelper.registerTypicalItemModel(whiteVegetableOilInk);
+		ContentHelper.registerTypicalItemModel(waxVegetable);
 	}
 
 }

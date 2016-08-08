@@ -79,7 +79,15 @@ public class ToxicMushroom implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(falseMorel);
+		ContentHelper.registerTypicalItemModel(falseMorelFermented);
 	}
 }

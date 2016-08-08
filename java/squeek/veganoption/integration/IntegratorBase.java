@@ -36,7 +36,7 @@ public abstract class IntegratorBase extends IntegrationBase implements IContent
 	public void postInit()
 	{
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-			clientSide();
+			clientSidePost();
 		finish();
 	}
 
@@ -62,7 +62,13 @@ public abstract class IntegratorBase extends IntegrationBase implements IContent
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
+	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
 	{
 	}
 

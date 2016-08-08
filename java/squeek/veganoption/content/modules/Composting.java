@@ -142,9 +142,17 @@ public class Composting implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
 		RenderComposter composterRenderer = new RenderComposter();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityComposter.class, composterRenderer);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(rottenPlants);
+		ContentHelper.registerTypicalItemModel(fertilizer);
 	}
 }

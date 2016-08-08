@@ -91,7 +91,19 @@ public class Seitan implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(washableWheat);
+		ContentHelper.registerTypicalItemModel(seitanCooked);
+		ContentHelper.registerTypicalItemStackModel(seitanRawStack, ModInfo.MODID_LOWER + ":seitan_raw");
+		ContentHelper.registerTypicalItemStackModel(seitanUnwashedStack, ModInfo.MODID_LOWER + ":seitan_unwashed");
+		ContentHelper.registerTypicalItemStackModel(wheatFlourStack, ModInfo.MODID_LOWER + ":wheat_flour");
+		ContentHelper.registerTypicalItemStackModel(wheatDoughStack, ModInfo.MODID_LOWER + ":wheat_dough");
 	}
 }

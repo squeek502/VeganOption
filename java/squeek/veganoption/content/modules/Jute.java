@@ -85,11 +85,20 @@ public class Jute implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockRettable.BlockRettableColorHandler(), juteBundled);
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemBlockJutePlant.ColorHandler(), jutePlantItemBlock);
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockJutePlant.BlockJutePlantColorHandler(), jutePlant);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(juteStalk);
+		ContentHelper.registerTypicalItemModel(juteFibre);
+		ContentHelper.registerTypicalItemModel(juteSeeds);
 	}
 
 	@Override

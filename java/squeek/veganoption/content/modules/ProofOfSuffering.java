@@ -66,7 +66,15 @@ public class ProofOfSuffering implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(fragmentOfSuffering);
+		ContentHelper.registerTypicalItemModel(proofOfSuffering);
 	}
 }

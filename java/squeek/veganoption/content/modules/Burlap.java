@@ -1,5 +1,7 @@
 package squeek.veganoption.content.modules;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -15,6 +17,8 @@ import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+
+import javax.annotation.Nonnull;
 
 public class Burlap implements IContentModule
 {
@@ -103,7 +107,26 @@ public class Burlap implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
+		// Gross duplicate of the leather armor color handler
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor()
+		{
+			public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex)
+			{
+				return tintIndex > 0 ? -1 : ((ItemArmor)stack.getItem()).getColor(stack);
+			}
+		}, burlapHelmet, burlapChestplate, burlapLeggings, burlapBoots);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(burlap);
+		ContentHelper.registerTypicalItemModel(burlapHelmet);
+		ContentHelper.registerTypicalItemModel(burlapChestplate);
+		ContentHelper.registerTypicalItemModel(burlapLeggings);
+		ContentHelper.registerTypicalItemModel(burlapBoots);
 	}
 }

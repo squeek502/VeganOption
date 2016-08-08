@@ -22,6 +22,7 @@ import squeek.veganoption.blocks.BlockEnderRift;
 import squeek.veganoption.blocks.BlockRawEnder;
 import squeek.veganoption.blocks.renderers.RenderEnderRift;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
+import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.items.ItemBucketGeneric;
@@ -81,9 +82,16 @@ public class Ender implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnderRift.class, new RenderEnderRift());
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(bucketRawEnder);
 	}
 
 	@Override

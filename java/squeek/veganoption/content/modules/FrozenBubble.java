@@ -74,7 +74,7 @@ public class FrozenBubble implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, new IRenderFactory<EntityBubble>() {
 			@Override
@@ -82,6 +82,14 @@ public class FrozenBubble implements IContentModule
 				return new RenderSnowball<EntityBubble>(manager, frozenBubble, Minecraft.getMinecraft().getRenderItem());
 			}
 		});
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(soapSolution);
+		ContentHelper.registerTypicalItemModel(frozenBubble);
 	}
 
 	@Override

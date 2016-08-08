@@ -1,7 +1,10 @@
 package squeek.veganoption.content;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -139,5 +142,24 @@ public class ContentHelper
 		{
 			OreDictionary.registerOre(to, ore.copy());
 		}
+	}
+
+	/**
+	 * Registers a typical (no meta, no special inventory variant or anything) item model.
+	 * @param item The item
+	 */
+	public static void registerTypicalItemModel(Item item)
+	{
+		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+	}
+
+	/**
+	 * Registers a model with a specific name for the given ItemStack
+	 * @param stack The itemstack
+	 * @param name The specific name
+	 */
+	public static void registerTypicalItemStackModel(ItemStack stack, String name)
+	{
+		ModelLoader.setCustomModelResourceLocation(stack.getItem(), stack.getItemDamage(), new ModelResourceLocation(name, "inventory"));
 	}
 }

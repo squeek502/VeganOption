@@ -61,7 +61,15 @@ public class Bioplastic implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(bioplastic);
+		ContentHelper.registerTypicalItemModel(plasticRod);
 	}
 }

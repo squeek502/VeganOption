@@ -26,8 +26,14 @@ public interface IContentModule
 	void finish();
 
 	/**
-	 * Handle client-side registration (called from postInit)
+	 * Handle client-side postInit registration (called before finish()).
 	 */
 	@SideOnly(Side.CLIENT)
-	void clientSide();
+	void clientSidePost();
+
+	/**
+	 * Handle client-side preInit registration (called after create() and oredict()).
+	 */
+	@SideOnly(Side.CLIENT)
+	void clientSidePre();
 }

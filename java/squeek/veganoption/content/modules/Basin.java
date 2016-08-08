@@ -36,10 +36,16 @@ public class Basin implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
 		RenderBasin basinRenderer = new RenderBasin();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasin.class, basinRenderer);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
 	}
 
 	@Override

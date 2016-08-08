@@ -51,15 +51,24 @@ public class ContentModuleHandler
 
 	public static void preInit()
 	{
+		boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
 		for (IContentModule module : modules.values())
 		{
 			module.create();
 			module.oredict();
+			if (isClient)
+			{
+				module.clientSidePre();
+			}
 		}
 		for (IContentModule compatModule : compatModules.values())
 		{
 			compatModule.create();
 			compatModule.oredict();
+			if (isClient)
+			{
+				compatModule.clientSidePre();
+			}
 		}
 	}
 
@@ -77,23 +86,21 @@ public class ContentModuleHandler
 
 	public static void postInit()
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			for (IContentModule module : modules.values())
-			{
-				module.clientSide();
-			}
-			for (IContentModule compatModule : compatModules.values())
-			{
-				compatModule.clientSide();
-			}
-		}
+		boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
 		for (IContentModule module : modules.values())
 		{
+			if (isClient)
+			{
+				module.clientSidePost();
+			}
 			module.finish();
 		}
 		for (IContentModule compatModule : compatModules.values())
 		{
+			if (isClient)
+			{
+				compatModule.clientSidePost();
+			}
 			compatModule.finish();
 		}
 	}

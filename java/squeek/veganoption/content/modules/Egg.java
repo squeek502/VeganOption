@@ -62,7 +62,7 @@ public class Egg implements IContentModule
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSide()
+	public void clientSidePost()
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntityPlasticEgg.class, new IRenderFactory<EntityPlasticEgg>() {
 			@Override
@@ -70,6 +70,15 @@ public class Egg implements IContentModule
 				return new RenderSnowball<EntityPlasticEgg>(manager, plasticEgg, Minecraft.getMinecraft().getRenderItem());
 			}
 		});
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(appleSauce);
+		ContentHelper.registerTypicalItemModel(potatoStarch);
+		ContentHelper.registerTypicalItemModel(plasticEgg);
 	}
 
 	@Override
