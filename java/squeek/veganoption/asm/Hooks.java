@@ -62,9 +62,8 @@ public class Hooks
 	}
 
 	// return -1 to use default code, otherwise return 1 or 0 (will be interpretted as a boolean)
-	public static int isBlockFullCube(World world, int x, int y, int z)
+	public static int isBlockFullCube(World world, BlockPos pos)
 	{
-		BlockPos pos = new BlockPos(x, y, z);
 		Block block = world.getBlockState(pos).getBlock();
 		if (block instanceof IHollowBlock)
 		{
