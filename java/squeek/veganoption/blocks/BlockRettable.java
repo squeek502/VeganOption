@@ -196,7 +196,9 @@ public class BlockRettable extends BlockHay
 		@Override
 		public int colorMultiplier(@Nonnull IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
 		{
-			if (world == null || pos == null || isRetted(world, pos))
+			if (world == null || pos == null)
+				return BASE_COLOR;
+			else if (isRetted(world, pos))
 				return RETTED_COLOR;
 			else
 				return ColorHelper.blendBetweenColors(getRettingPercent(world, pos), BASE_COLOR, RETTED_COLOR, 0D, 1D);

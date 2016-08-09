@@ -39,7 +39,6 @@ public class Jute implements IContentModule
 {
 	public static BlockRettable juteBundled;
 	public static Block jutePlant;
-	public static Item jutePlantItemBlock;
 	public static Item juteStalk;
 	public static Item juteFibre;
 	public static Item juteSeeds;
@@ -73,8 +72,7 @@ public class Jute implements IContentModule
 				.setUnlocalizedName(ModInfo.MODID + ".jutePlant")
 				.setRegistryName(ModInfo.MODID_LOWER, "jutePlant");
 		GameRegistry.register(jutePlant);
-		jutePlantItemBlock = new ItemBlockJutePlant(jutePlant).setRegistryName(jutePlant.getRegistryName());
-		GameRegistry.register(jutePlantItemBlock);
+		GameRegistry.register(new ItemBlockJutePlant(jutePlant).setRegistryName(jutePlant.getRegistryName()));
 
 		juteSeeds = new ItemSeedsGeneric(jutePlant, EnumPlantType.Plains)
 				.setUnlocalizedName(ModInfo.MODID + ".juteSeeds")
@@ -88,7 +86,7 @@ public class Jute implements IContentModule
 	public void clientSidePost()
 	{
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockRettable.ColorHandler(), juteBundled);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemBlockJutePlant.ColorHandler(), jutePlantItemBlock);
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemBlockJutePlant.ColorHandler(), Item.getItemFromBlock(juteBundled));
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockJutePlant.ColorHandler(), jutePlant);
 	}
 
@@ -99,7 +97,12 @@ public class Jute implements IContentModule
 		ContentHelper.registerTypicalItemModel(juteStalk);
 		ContentHelper.registerTypicalItemModel(juteFibre);
 		ContentHelper.registerTypicalItemModel(juteSeeds);
-		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(juteBundled));
+
+		Item juteBundledItem = Item.getItemFromBlock(juteBundled);
+		for (int meta = 0; meta <= BlockRettable.NUM_RETTING_STAGES; meta++)
+		{
+			ContentHelper.registerTypicalItemStackModel(new ItemStack(juteBundledItem, 1, meta), juteBundled.getRegistryName().toString());
+		}
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "cube_column",
+		"model": "veganoption:tinted_cube_column",
 		"textures": {
 			"end": "veganoption:blocks/jute_block_top",
 			"side": "veganoption:blocks/jute_block_side"
