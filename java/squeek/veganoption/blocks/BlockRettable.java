@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.helpers.BlockHelper;
@@ -21,13 +22,14 @@ import squeek.veganoption.helpers.ColorHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BlockRettable extends BlockHay
 {
 	// this cannot be any higher than 3 due to BlockRotatablePillar using the 3rd/4th bits
-	public static final int numRettingStages = 3;
-	public static final PropertyInteger STAGE = PropertyInteger.create("retting_stage", 0, numRettingStages - 1);
+	public static final int NUM_RETTING_STAGES = 3;
+	public static final PropertyInteger STAGE = PropertyInteger.create("retting_stage", 0, NUM_RETTING_STAGES);
 
 	public Item rettedItem;
 	public int minRettedItemDrops;
@@ -87,7 +89,7 @@ public class BlockRettable extends BlockHay
 
 	public static boolean isRetted(int stage)
 	{
-		return stage >= numRettingStages;
+		return stage >= NUM_RETTING_STAGES;
 	}
 
 	public static boolean isRetted(IBlockState state)
@@ -155,7 +157,7 @@ public class BlockRettable extends BlockHay
 
 	public void setRettingStage(World world, BlockPos pos, int rettingStage)
 	{
-		rettingStage = Math.max(0, Math.min(numRettingStages, rettingStage));
+		rettingStage = Math.max(0, Math.min(NUM_RETTING_STAGES, rettingStage));
 		world.setBlockState(pos, world.getBlockState(pos).withProperty(STAGE, rettingStage));
 
 		if (isRetted(rettingStage))
@@ -166,7 +168,7 @@ public class BlockRettable extends BlockHay
 
 	public static float getRettingPercent(IBlockState state)
 	{
-		return state.getValue(STAGE) / numRettingStages;
+		return (float) state.getValue(STAGE) / NUM_RETTING_STAGES;
 	}
 
 	public static float getRettingPercent(IBlockAccess world, BlockPos pos)
@@ -186,18 +188,18 @@ public class BlockRettable extends BlockHay
 		return MathHelper.floor_float(getRettingPercent(world, pos) * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH);
 	}
 
-	public static class BlockRettableColorHandler implements IBlockColor {
-		public static final int baseColor = 0x67ce0c;
-		public static final int rettedColor = 0xbfb57e;
+	public static class ColorHandler implements IBlockColor {
+		public static final int BASE_COLOR = 0x67ce0c;
+		public static final int RETTED_COLOR = 0xbfb57e;
 
 		@SideOnly(Side.CLIENT)
 		@Override
-		public int colorMultiplier(IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
+		public int colorMultiplier(@Nonnull IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
 		{
-			if (isRetted(world, pos))
-				return rettedColor;
+			if (world == null || pos == null || isRetted(world, pos))
+				return RETTED_COLOR;
 			else
-				return ColorHelper.blendBetweenColors(getRettingPercent(world, pos), baseColor, rettedColor, 0d, 1d);
+				return ColorHelper.blendBetweenColors(getRettingPercent(world, pos), BASE_COLOR, RETTED_COLOR, 0D, 1D);
 		}
 	}
 }

@@ -92,6 +92,7 @@ public class Ender implements IContentModule
 	public void clientSidePre()
 	{
 		ContentHelper.registerTypicalItemModel(bucketRawEnder);
+		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(encrustedObsidian));
 	}
 
 	@Override

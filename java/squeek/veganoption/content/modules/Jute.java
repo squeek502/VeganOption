@@ -87,9 +87,9 @@ public class Jute implements IContentModule
 	@Override
 	public void clientSidePost()
 	{
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockRettable.BlockRettableColorHandler(), juteBundled);
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockRettable.ColorHandler(), juteBundled);
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemBlockJutePlant.ColorHandler(), jutePlantItemBlock);
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockJutePlant.BlockJutePlantColorHandler(), jutePlant);
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockJutePlant.ColorHandler(), jutePlant);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -99,6 +99,7 @@ public class Jute implements IContentModule
 		ContentHelper.registerTypicalItemModel(juteStalk);
 		ContentHelper.registerTypicalItemModel(juteFibre);
 		ContentHelper.registerTypicalItemModel(juteSeeds);
+		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(juteBundled));
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class Jute implements IContentModule
 	{
 		GameRegistry.addShapedRecipe(new ItemStack(juteBundled), "///", "///", "///", '/', new ItemStack(juteStalk));
 
-		DropsModifier.NEIBlockSpecifier juteBundledBlockSpecifier = new DropsModifier.NEIBlockSpecifier(juteBundled, OreDictionary.WILDCARD_VALUE, new ItemStack(juteBundled, 1, BlockRettable.numRettingStages));
+		DropsModifier.NEIBlockSpecifier juteBundledBlockSpecifier = new DropsModifier.NEIBlockSpecifier(juteBundled, OreDictionary.WILDCARD_VALUE, new ItemStack(juteBundled, 1, BlockRettable.NUM_RETTING_STAGES));
 		DropsModifier.NEIDropSpecifier juteDropSpecifier = new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops);
 		Modifiers.drops.addDropsToBlock(juteBundledBlockSpecifier, juteDropSpecifier);
 

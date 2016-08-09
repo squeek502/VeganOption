@@ -2,11 +2,14 @@ package squeek.veganoption.content.modules;
 
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemCloth;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,6 +24,8 @@ import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
 import squeek.veganoption.helpers.ConstantHelper;
+
+import javax.annotation.Nonnull;
 
 public class Kapok implements IContentModule
 {
@@ -105,5 +110,13 @@ public class Kapok implements IContentModule
 	public void clientSidePre()
 	{
 		ContentHelper.registerTypicalItemModel(kapokTuft);
+		Item kapokBlockItem = Item.getItemFromBlock(kapokBlock);
+		if (kapokBlockItem != null)
+		{
+			for (EnumDyeColor color : EnumDyeColor.values())
+			{
+				ModelLoader.setCustomModelResourceLocation(kapokBlockItem, color.getMetadata(), new ModelResourceLocation(kapokBlock.getRegistryName(), "color=" + color.getName()));
+			}
+		}
 	}
 }
