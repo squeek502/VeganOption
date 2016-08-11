@@ -7,8 +7,10 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -188,20 +190,34 @@ public class BlockRettable extends BlockHay
 		return MathHelper.floor_float(getRettingPercent(world, pos) * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH);
 	}
 
-	public static class ColorHandler implements IBlockColor {
-		public static final int BASE_COLOR = 0x67ce0c;
-		public static final int RETTED_COLOR = 0xbfb57e;
+	public static class ColorHandler implements IBlockColor, IItemColor
+	{
+		public final int baseColor;
+		public final int rettedColor;
+
+		public ColorHandler(int baseColor, int rettedColor)
+		{
+			this.baseColor = baseColor;
+			this.rettedColor = rettedColor;
+		}
 
 		@SideOnly(Side.CLIENT)
 		@Override
 		public int colorMultiplier(@Nonnull IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
 		{
 			if (world == null || pos == null)
-				return BASE_COLOR;
+				return baseColor;
 			else if (isRetted(world, pos))
-				return RETTED_COLOR;
+				return rettedColor;
 			else
-				return ColorHelper.blendBetweenColors(getRettingPercent(world, pos), BASE_COLOR, RETTED_COLOR, 0D, 1D);
+				return ColorHelper.blendBetweenColors(getRettingPercent(world, pos), baseColor, rettedColor, 0D, 1D);
+		}
+
+		@Override
+		public int getColorFromItemstack(ItemStack stack, int tintIndex)
+		{
+			// TODO: Handle retting stage based on ItemStack metadata
+			return baseColor;
 		}
 	}
 }

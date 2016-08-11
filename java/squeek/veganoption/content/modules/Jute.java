@@ -44,6 +44,9 @@ public class Jute implements IContentModule
 	public static Item juteSeeds;
 	public static DropSpecifier juteDrops;
 
+	public static final int JUTE_BASE_COLOR = 0x67ce0c;
+	public static final int JUTE_RETTED_COLOR = 0xbfb57e;
+
 	@Override
 	public void create()
 	{
@@ -85,8 +88,10 @@ public class Jute implements IContentModule
 	@Override
 	public void clientSidePost()
 	{
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockRettable.ColorHandler(), juteBundled);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemBlockJutePlant.ColorHandler(), Item.getItemFromBlock(juteBundled));
+		BlockRettable.ColorHandler juteBundledColorHandler = new BlockRettable.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR);
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(juteBundledColorHandler, juteBundled);
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(juteBundledColorHandler, Item.getItemFromBlock(juteBundled));
+
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockJutePlant.ColorHandler(), jutePlant);
 	}
 
