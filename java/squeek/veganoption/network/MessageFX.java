@@ -3,7 +3,9 @@ package squeek.veganoption.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleBreaking;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -97,8 +99,8 @@ public class MessageFX implements IMessage, IMessageHandler<MessageFX, IMessage>
 		Minecraft mc = Minecraft.getMinecraft();
 		for (int i = 0; i < iterations; ++i)
 		{
-			// The first argument of getEntityFX is the particle ID, and it is not used in the method at all. Also that getIdFromItem is terrible.
-			mc.effectRenderer.addEffect(new ParticleBreaking.Factory().getEntityFX(0, world, x, y, z, 1, 1, 1, Item.getIdFromItem(breakFXItem)));
+			// random velocity taken from EntityEgg
+			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, x, y, z, ((double)RandomHelper.random.nextFloat() - 0.5D) * 0.08D, ((double)RandomHelper.random.nextFloat() - 0.5D) * 0.08D, ((double)RandomHelper.random.nextFloat() - 0.5D) * 0.08D, Item.getIdFromItem(breakFXItem));
 		}
 	}
 }

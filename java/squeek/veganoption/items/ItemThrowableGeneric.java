@@ -20,21 +20,35 @@ import squeek.veganoption.helpers.RandomHelper;
 
 public class ItemThrowableGeneric extends Item
 {
+	public static final float DEFAULT_THROWSPEED = 1.5F;
+
 	public Constructor<? extends EntityThrowable> thrownEntityThrowerConstructor = null;
 	public Constructor<? extends EntityThrowable> thrownEntityCoordinatesConstructor = null;
 	public Class<? extends EntityThrowable> thrownEntityClass;
 	public SoundEvent throwSound;
+	public float throwSpeed;
 
 	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass)
 	{
-		this(thrownEntityClass, SoundEvents.ENTITY_ARROW_SHOOT);
+		this(thrownEntityClass, DEFAULT_THROWSPEED);
+	}
+
+	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass, float throwSpeed)
+	{
+		this(thrownEntityClass, SoundEvents.ENTITY_ARROW_SHOOT, throwSpeed);
 	}
 
 	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass, SoundEvent throwSound)
 	{
+		this(thrownEntityClass, throwSound, DEFAULT_THROWSPEED);
+	}
+
+	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass, SoundEvent throwSound, float throwSpeed)
+	{
 		super();
 		this.thrownEntityClass = thrownEntityClass;
 		this.throwSound = throwSound;
+		this.throwSpeed = throwSpeed;
 
 		try
 		{
@@ -65,7 +79,9 @@ public class ItemThrowableGeneric extends Item
 
 		if (!world.isRemote)
 		{
-			world.spawnEntityInWorld(getNewThrownEntity(world, player));
+			EntityThrowable entity = getNewThrownEntity(world, player);
+			entity.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, throwSpeed, 1.0F);
+			world.spawnEntityInWorld(entity);
 		}
 
 		return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);

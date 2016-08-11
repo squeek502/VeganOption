@@ -18,6 +18,8 @@ import squeek.veganoption.helpers.RandomHelper;
 
 public class ItemSoapSolution extends Item
 {
+	public static final float BUBBLE_INITIAL_VELOCITY = 0.3f;
+
 	public ItemSoapSolution()
 	{
 		super();
@@ -44,7 +46,9 @@ public class ItemSoapSolution extends Item
 	{
 		if (!world.isRemote)
 		{
-			world.spawnEntityInWorld(new EntityBubble(world, player));
+			EntityBubble bubble = new EntityBubble(world, player);
+			bubble.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, BUBBLE_INITIAL_VELOCITY, 1.0F);
+			world.spawnEntityInWorld(bubble);
 		}
 
 		itemStack.damageItem(1, player);
