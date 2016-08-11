@@ -1,0 +1,29 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"facing": {
+			"south": {},
+			"north": {
+				"y": 180
+			},
+			"east": {
+				"y": 270
+			},
+			"west": {
+				"y": 90
+			}
+		},
+		"part": {
+			"head": {
+				"model": "veganoption:straw_bed_head"
+			},
+			"foot": {
+				"model": "veganoption:straw_bed_foot"
+			}
+		},
+		"occupied": {
+			"true": {},
+			"false": {}
+		}
+	}
+}
