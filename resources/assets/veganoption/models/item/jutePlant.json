@@ -1,0 +1,6 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "veganoption:blocks/jute_plant_5"
+	}
+}

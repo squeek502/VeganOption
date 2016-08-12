@@ -88,11 +88,8 @@ public class Jute implements IContentModule
 	@Override
 	public void clientSidePost()
 	{
-		BlockRettable.ColorHandler juteBundledColorHandler = new BlockRettable.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR);
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(juteBundledColorHandler, juteBundled);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(juteBundledColorHandler, Item.getItemFromBlock(juteBundled));
-
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockJutePlant.ColorHandler(), jutePlant);
+		ContentHelper.registerSharedColorHandler(new BlockRettable.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR), juteBundled);
+		ContentHelper.registerSharedColorHandler(new BlockJutePlant.ColorHandler(), jutePlant);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -103,11 +100,14 @@ public class Jute implements IContentModule
 		ContentHelper.registerTypicalItemModel(juteFibre);
 		ContentHelper.registerTypicalItemModel(juteSeeds);
 
-		Item juteBundledItem = Item.getItemFromBlock(juteBundled);
-		for (int meta = 0; meta <= BlockRettable.NUM_RETTING_STAGES; meta++)
-		{
-			ContentHelper.registerTypicalItemStackModel(new ItemStack(juteBundledItem, 1, meta), juteBundled.getRegistryName().toString());
-		}
+		// TODO: this seems kinda wasteful, not familiar enough with the model system to know if a
+		// separate model needs to be registered for each meta of each item or if a single item
+		// could use a single model regardless of meta
+		//
+		// each blockstate variation being registered seems to allow waila to render
+		// each blockstate variation in the waila tooltip; otherwise it shows black/purple checkers
+		ContentHelper.registerTypicalBlockItemModels(juteBundled, juteBundled.getRegistryName().toString());
+		ContentHelper.registerTypicalBlockItemModels(jutePlant, jutePlant.getRegistryName().toString());
 	}
 
 	@Override

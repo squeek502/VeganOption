@@ -1,11 +1,18 @@
 package squeek.veganoption.content;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ContentHelper
@@ -161,5 +168,27 @@ public class ContentHelper
 	public static void registerTypicalItemStackModel(ItemStack stack, String name)
 	{
 		ModelLoader.setCustomModelResourceLocation(stack.getItem(), stack.getItemDamage(), new ModelResourceLocation(name, "inventory"));
+	}
+
+	/**
+	 * Registers an ItemStack for each valid state of the block
+	 */
+	public static void registerTypicalBlockItemModels(Block block, String name)
+	{
+		for (IBlockState state : block.getBlockState().getValidStates())
+		{
+			int meta = block.getMetaFromState(state);
+			registerTypicalItemStackModel(new ItemStack(block, 1, meta), name);
+		}
+	}
+
+	/**
+	 * Registers a ColorHandler for both the block and its item version
+	 */
+	@SideOnly(Side.CLIENT)
+	public static <T extends IBlockColor & IItemColor> void registerSharedColorHandler(T colorHandler, Block block)
+	{
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(colorHandler, block);
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(colorHandler, block);
 	}
 }

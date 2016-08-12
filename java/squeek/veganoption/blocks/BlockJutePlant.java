@@ -10,11 +10,14 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
@@ -209,13 +212,19 @@ public class BlockJutePlant extends BlockBush implements IGrowable
 		deltaGrowth(world, pos, state, deltaGrowth);
 	}
 
-	public static class ColorHandler implements IBlockColor
+	public static class ColorHandler implements IBlockColor, IItemColor
 	{
 		@SideOnly(Side.CLIENT)
 		@Override
 		public int colorMultiplier(IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
 		{
 			return BiomeColorHelper.getGrassColorAtPos(world, pos);
+		}
+
+		@Override
+		public int getColorFromItemstack(ItemStack stack, int tintIndex)
+		{
+			return ColorizerGrass.getGrassColor(0.5D, 1.0D);
 		}
 	}
 }
