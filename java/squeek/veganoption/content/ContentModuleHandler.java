@@ -1,6 +1,7 @@
 package squeek.veganoption.content;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -17,11 +18,13 @@ import squeek.veganoption.content.modules.compat.CompatEnderBubble;
  */
 public class ContentModuleHandler
 {
-	private static Map<String, IContentModule> modules = new HashMap<String, IContentModule>();
+	private static Map<String, IContentModule> modules = new LinkedHashMap<String, IContentModule>();
 	// TODO: resolve dependent modules for compat modules
 	private static Map<String, IContentModule> compatModules = new HashMap<String, IContentModule>();
 	static
 	{
+		// CreativeTabProxy must be first.
+		modules.put("CreativeTab", new CreativeTabProxy());
 		modules.put("Bioplastic", new Bioplastic());
 		modules.put("Burlap", new Burlap());
 		modules.put("Composting", new Composting());

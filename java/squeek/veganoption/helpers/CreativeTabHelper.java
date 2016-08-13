@@ -5,7 +5,6 @@ import java.util.Map;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -13,19 +12,9 @@ public class CreativeTabHelper
 {
 	public static final Map<String, Item> creativeTabIconItemMap = new HashMap<String, Item>();
 
-	public static class ItemCreativeTabIconProxy extends Item
+	public static CreativeTabs createTab(final String name, Item item)
 	{
-		protected ResourceLocation texture;
-		public ItemCreativeTabIconProxy(String textureName)
-		{
-			super();
-			this.texture = new ResourceLocation(textureName);
-		}
-	}
-
-	public static CreativeTabs createTab(final String name, String textureName)
-	{
-		creativeTabIconItemMap.put(name, new ItemCreativeTabIconProxy(textureName));
+		creativeTabIconItemMap.put(name, item);
 		return new CreativeTabs(name)
 		{
 			@Override
