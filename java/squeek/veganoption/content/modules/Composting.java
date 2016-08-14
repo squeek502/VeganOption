@@ -155,5 +155,6 @@ public class Composting implements IContentModule
 		ContentHelper.registerTypicalItemModel(rottenPlants);
 		ContentHelper.registerTypicalItemModel(fertilizer);
 		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(compost));
+		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(composter));
 	}
 }

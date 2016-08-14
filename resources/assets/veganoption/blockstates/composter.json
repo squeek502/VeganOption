@@ -1,0 +1,23 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "veganoption:composter_legs"
+	},
+	"variants": {
+		"facing": {
+			"north": {},
+			"south": {
+				"y": 180
+			},
+			"east": {
+				"y": 90
+			},
+			"west": {
+				"y": 270
+			}
+		},
+		"inventory": {
+			"submodel": "veganoption:dummy_chest"
+		}
+	}
+}

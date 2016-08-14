@@ -1,6 +1,6 @@
 package squeek.veganoption.blocks;
 
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.DirectionHelper;
 
-public class BlockComposter extends BlockContainer
+public class BlockComposter extends Block
 {
 	public static final AxisAlignedBB COMPOSTER_AABB = new AxisAlignedBB(0.0625F, 0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
@@ -37,7 +37,7 @@ public class BlockComposter extends BlockContainer
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
 		return new TileEntityComposter();
 	}
@@ -116,6 +116,12 @@ public class BlockComposter extends BlockContainer
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}

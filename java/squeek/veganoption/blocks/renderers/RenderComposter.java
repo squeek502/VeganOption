@@ -18,7 +18,6 @@ public class RenderComposter extends TileEntitySpecialRenderer<TileEntityCompost
 {
 	private static final ResourceLocation TEXTURE_CHRISTMAS = new ResourceLocation("textures/entity/chest/christmas.png");
 	private static final ResourceLocation TEXTURE_NORMAL = new ResourceLocation("textures/entity/chest/normal.png");
-	private static final ResourceLocation TEXTURE_LEGS = new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter_legs.png");
 	private static final ResourceLocation[] TEXTURE_TEMPERATURE_OVERLAYS = new ResourceLocation[]{
 	new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_blue.png"),
 	new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_yellow.png"),
@@ -26,7 +25,6 @@ public class RenderComposter extends TileEntitySpecialRenderer<TileEntityCompost
 	new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_red.png")
 	};
 	private ModelChest modelChest = new ModelChest();
-	private ModelComposterLegs modelLegs = new ModelComposterLegs();
 	private boolean isChristmas;
 
 	protected enum Axis
@@ -67,21 +65,6 @@ public class RenderComposter extends TileEntitySpecialRenderer<TileEntityCompost
 		}
 
 		Axis axis = Math.abs(rotation) == 90 ? Axis.X : Axis.Y;
-
-		if (MinecraftForgeClient.getRenderPass() <= 0)
-		{
-			bindTexture(TEXTURE_LEGS);
-
-			GlStateManager.pushMatrix();
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			GlStateManager.translate(x + 0.5F, y + 1.5F, z + 0.5F);
-			GlStateManager.scale(1F, -1F, -1F);
-			GlStateManager.rotate(rotation, 0F, 1F, 0F);
-
-			modelLegs.renderAll();
-
-			GlStateManager.popMatrix();
-		}
 
 		ModelChest modelchest = modelChest;
 
