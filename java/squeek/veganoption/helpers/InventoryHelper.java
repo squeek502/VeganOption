@@ -1,17 +1,13 @@
 package squeek.veganoption.helpers;
 
-import java.lang.reflect.Method;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class InventoryHelper
 {
-	public static final Method hopperInsertIntoInventory = ReflectionHelper.findMethod(TileEntityHopper.class, null, new String[]{"func_145899_c", "c"}, IInventory.class, ItemStack.class, int.class, int.class);
-
 	public static IInventory getInventoryAtLocation(World world, int x, int y, int z)
 	{
 		return TileEntityHopper.getInventoryAtPosition(world, x, y, z);
