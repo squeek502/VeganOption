@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemFishFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -45,14 +46,15 @@ public class FrozenBubble implements IContentModule
 	@Override
 	public void create()
 	{
-		fluidSoapSolution = new Fluid(ModInfo.MODID + ".fluidSoapSolution", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_flow"));
+		fluidSoapSolution = new Fluid("fluid_soap_solution", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_flow"));
 		FluidRegistry.registerFluid(fluidSoapSolution);
 		blockFluidSoapSolution = new BlockFluidClassic(fluidSoapSolution, Material.WATER)
 				.setUnlocalizedName(ModInfo.MODID + ".fluidSoapSolution")
 				.setRegistryName(ModInfo.MODID_LOWER, "fluidSoapSolution");
 		fluidSoapSolution.setBlock(blockFluidSoapSolution);
 		fluidSoapSolution.setUnlocalizedName(blockFluidSoapSolution.getUnlocalizedName());
-		GameRegistry.registerWithItem(blockFluidSoapSolution);
+		GameRegistry.register(blockFluidSoapSolution);
+		GameRegistry.register(new ItemBlock(blockFluidSoapSolution).setRegistryName(blockFluidSoapSolution.getRegistryName()));
 
 		soapSolution = new ItemSoapSolution()
 				.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
@@ -84,6 +86,7 @@ public class FrozenBubble implements IContentModule
 	{
 		ContentHelper.registerTypicalItemModel(soapSolution);
 		ContentHelper.registerTypicalItemModel(frozenBubble);
+		ContentHelper.registerFluidMapperAndMeshDef(blockFluidSoapSolution, "fluid_soap_solution");
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, new IRenderFactory<EntityBubble>() {
 			@Override

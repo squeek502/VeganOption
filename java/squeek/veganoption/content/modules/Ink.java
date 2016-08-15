@@ -48,7 +48,7 @@ public class Ink implements IContentModule
 				.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.register(blackVegetableOilInk);
 
-		blackInkFluid = new Fluid(ModInfo.MODID + ".inkBlack", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_flow"));
+		blackInkFluid = new Fluid("ink_black", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_flow"));
 		FluidRegistry.registerFluid(blackInkFluid);
 		blackInk = new BlockFluidClassic(blackInkFluid, Material.WATER)
 				.setRegistryName(ModInfo.MODID_LOWER, "inkBlack");
@@ -66,7 +66,7 @@ public class Ink implements IContentModule
 				.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.register(whiteVegetableOilInk);
 
-		whiteInkFluid = new Fluid(ModInfo.MODID + ".inkWhite", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_flow"));
+		whiteInkFluid = new Fluid("ink_white", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_flow"));
 		FluidRegistry.registerFluid(whiteInkFluid);
 		whiteInk = new BlockFluidClassic(whiteInkFluid, Material.WATER)
 				.setUnlocalizedName(ModInfo.MODID + ".inkWhite")
@@ -135,6 +135,8 @@ public class Ink implements IContentModule
 		ContentHelper.registerTypicalItemModel(blackVegetableOilInk);
 		ContentHelper.registerTypicalItemModel(whiteVegetableOilInk);
 		ContentHelper.registerTypicalItemModel(waxVegetable);
+		ContentHelper.registerFluidMapperAndMeshDef(blackInk, "ink_black");
+		ContentHelper.registerFluidMapperAndMeshDef(whiteInk, "ink_white");
 	}
 
 }

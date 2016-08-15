@@ -1,0 +1,43 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "forge:fluid"
+	},
+	"variants": {
+		"plant_milk": [{
+			"custom": {
+				"fluid": "plant_milk"
+			}
+		}],
+		"fluid_oil_oegetable": [{
+			"custom": {
+				"fluid": "fluid_oil_vegetable"
+			}
+		}],
+		"fluid_soap_solution": [{
+			"custom": {
+				"fluid": "fluid_soap_solution"
+			}
+		}],
+		"ink_black": [{
+			"custom": {
+				"fluid": "ink_black"
+			}
+		}],
+		"ink_white": [{
+			"custom": {
+				"fluid": "ink_white"
+			}
+		}],
+		"lye_water": [{
+			"custom": {
+				"fluid": "lye_water"
+			}
+		}],
+		"raw_ender": [{
+			"custom": {
+				"fluid": "raw_ender"
+			}
+		}]
+	}
+}

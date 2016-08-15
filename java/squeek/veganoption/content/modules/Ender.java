@@ -58,7 +58,7 @@ public class Ender implements IContentModule
 		GameRegistry.register(new ItemBlock(enderRift).setRegistryName(enderRift.getRegistryName()));
 		GameRegistry.registerTileEntity(TileEntityEnderRift.class, ModInfo.MODID + ".enderRift");
 
-		fluidRawEnder = new Fluid(ModInfo.MODID + ".rawEnder", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_flow"))
+		fluidRawEnder = new Fluid("raw_ender", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_flow"))
 				.setLuminosity(3)
 				.setViscosity(3000)
 				.setDensity(4000);
@@ -93,6 +93,7 @@ public class Ender implements IContentModule
 	{
 		ContentHelper.registerTypicalItemModel(bucketRawEnder);
 		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(encrustedObsidian));
+		ContentHelper.registerFluidMapperAndMeshDef(rawEnder, "raw_ender");
 	}
 
 	@Override

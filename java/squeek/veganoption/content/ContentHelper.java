@@ -3,17 +3,23 @@ package squeek.veganoption.content;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import squeek.veganoption.ModInfo;
 
 public class ContentHelper
 {
@@ -190,5 +196,31 @@ public class ContentHelper
 	{
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(colorHandler, block);
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(colorHandler, block);
+	}
+
+	/**
+	 * Maps the fluid to our custom blockstate for all fluids (fluids.json).
+	 * @param fluid The fluid
+	 * @param variantName The variant for the fluid
+	 */
+	public static void registerFluidMapperAndMeshDef(Block fluid, final String variantName)
+	{
+		final ModelResourceLocation loc = new ModelResourceLocation(ModInfo.MODID_LOWER + ":fluids", variantName);
+		Item itemblock = Item.getItemFromBlock(fluid);
+		ModelBakery.registerItemVariants(itemblock);
+		ModelLoader.setCustomMeshDefinition(itemblock, new ItemMeshDefinition() {
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return loc;
+			}
+		});
+		ModelLoader.setCustomStateMapper(fluid, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
+			{
+				return loc;
+			}
+		});
 	}
 }

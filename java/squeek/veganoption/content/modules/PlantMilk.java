@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
@@ -34,14 +35,15 @@ public class PlantMilk implements IContentModule
 	@Override
 	public void create()
 	{
-		fluidPlantMilk = new Fluid(ModInfo.MODID + ".plantMilk", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_flow"));
+		fluidPlantMilk = new Fluid("plant_milk", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_still"), new
+			ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_flow"));
 		FluidRegistry.registerFluid(fluidPlantMilk);
 		plantMilk = new BlockFluidClassic(fluidPlantMilk, Material.WATER)
 				.setUnlocalizedName(ModInfo.MODID + ".plantMilk")
 				.setRegistryName(ModInfo.MODID_LOWER, "plantMilk");
 		fluidPlantMilk.setBlock(plantMilk);
-		fluidPlantMilk.setUnlocalizedName(plantMilk.getUnlocalizedName());
-		GameRegistry.registerWithItem(plantMilk);
+		GameRegistry.register(plantMilk);
+		GameRegistry.register(new ItemBlock(plantMilk).setRegistryName(plantMilk.getRegistryName()));
 
 		bucketPlantMilk = new ItemBucketGeneric(plantMilk)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketPlantMilk")
@@ -102,5 +104,6 @@ public class PlantMilk implements IContentModule
 	public void clientSidePre()
 	{
 		ContentHelper.registerTypicalItemModel(bucketPlantMilk);
+		ContentHelper.registerFluidMapperAndMeshDef(plantMilk, "plant_milk");
 	}
 }

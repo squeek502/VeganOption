@@ -54,11 +54,11 @@ public class VegetableOil implements IContentModule
 				.setRegistryName(ModInfo.MODID_LOWER, "seedsSunflower");
 		GameRegistry.register(seedSunflower);
 
-		fluidVegetableOil = new Fluid(ModInfo.MODID + ".fluidOilVegetable", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_flow"));
+		fluidVegetableOil = new Fluid("fluid_oil_vegetable", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_flow"));
 		FluidRegistry.registerFluid(fluidVegetableOil);
 		fluidBlockVegetableOil = new BlockFluidClassic(fluidVegetableOil, Material.WATER)
 				.setUnlocalizedName(ModInfo.MODID + ".fluidOilVegetable")
-				.setRegistryName(ModInfo.MODID_LOWER, "fluidVegetableOil");
+				.setRegistryName(ModInfo.MODID_LOWER, "fluidOilVegetable");
 		fluidVegetableOil.setBlock(fluidBlockVegetableOil);
 		fluidVegetableOil.setUnlocalizedName(fluidBlockVegetableOil.getUnlocalizedName());
 		GameRegistry.register(fluidBlockVegetableOil);
@@ -168,5 +168,6 @@ public class VegetableOil implements IContentModule
 	{
 		ContentHelper.registerTypicalItemModel(seedSunflower);
 		ContentHelper.registerTypicalItemModel(oilVegetable);
+		ContentHelper.registerFluidMapperAndMeshDef(fluidBlockVegetableOil, "fluid_oil_vegetable");
 	}
 }

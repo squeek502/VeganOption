@@ -3,6 +3,7 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -37,7 +38,7 @@ public class Soap implements IContentModule
 	@Override
 	public void create()
 	{
-		fluidLyeWater = new Fluid(ModInfo.MODID + ".lyeWater", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_flow"));
+		fluidLyeWater = new Fluid("lye_water", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_flow"));
 		FluidRegistry.registerFluid(fluidLyeWater);
 		lyeWater = new BlockLyeWater(fluidLyeWater)
 				.setUnlocalizedName(ModInfo.MODID + ".lyeWater")
@@ -45,6 +46,7 @@ public class Soap implements IContentModule
 		fluidLyeWater.setBlock(lyeWater);
 		fluidLyeWater.setUnlocalizedName(lyeWater.getUnlocalizedName());
 		GameRegistry.register(lyeWater);
+		GameRegistry.register(new ItemBlock(lyeWater).setRegistryName(lyeWater.getRegistryName()));
 
 		bucketLyeWater = new ItemBucketGeneric(lyeWater)
 				.setUnlocalizedName(ModInfo.MODID + ".bucketLyeWater")
@@ -101,5 +103,6 @@ public class Soap implements IContentModule
 	{
 		ContentHelper.registerTypicalItemModel(bucketLyeWater);
 		ContentHelper.registerTypicalItemModel(soap);
+		ContentHelper.registerFluidMapperAndMeshDef(lyeWater, "lye_water");
 	}
 }
