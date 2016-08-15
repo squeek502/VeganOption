@@ -2,14 +2,19 @@ package squeek.veganoption.blocks;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -25,12 +30,43 @@ import javax.annotation.Nonnull;
 
 public class BlockBasin extends BlockContainer implements IHollowBlock
 {
+	public static final PropertyBool IS_OPEN = PropertyBool.create("is_open");
 	public static final double SIDE_WIDTH = 0.125D;
 
 	public BlockBasin(Material material)
 	{
 		super(material);
 		setSoundType(SoundType.METAL);
+	}
+
+	@Override
+	public BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, IS_OPEN);
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		boolean open = false;
+		if (tile != null && tile instanceof TileEntityBasin)
+		{
+			open = ((TileEntityBasin) tile).isOpen();
+		}
+		return state.withProperty(IS_OPEN, open);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getDefaultState();
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return 0;
 	}
 
 	@Override
@@ -61,14 +97,14 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	 * Events
 	 */
 	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
 	{
-		super.onNeighborChange(world, pos, neighbor);
+		super.neighborChanged(state, world, pos, block);
 
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBasin)
 		{
-			((TileEntityBasin) tile).setPowered(tile.getWorld().isBlockIndirectlyGettingPowered(pos) > 0);
+			((TileEntityBasin) tile).setPowered(world.isBlockPowered(pos));
 			((TileEntityBasin) tile).scheduleFluidConsume();
 		}
 	}
@@ -283,5 +319,10 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 		return EnumBlockRenderType.MODEL;
 	}
 
-
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT;
+	}
 }

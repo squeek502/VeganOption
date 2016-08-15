@@ -3,6 +3,7 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -15,6 +16,7 @@ import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.blocks.renderers.RenderBasin;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
+import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 
 public class Basin implements IContentModule
@@ -38,14 +40,14 @@ public class Basin implements IContentModule
 	@Override
 	public void clientSidePost()
 	{
-		RenderBasin basinRenderer = new RenderBasin();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasin.class, basinRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasin.class, new RenderBasin());
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void clientSidePre()
 	{
+		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(basin));
 	}
 
 	@Override
