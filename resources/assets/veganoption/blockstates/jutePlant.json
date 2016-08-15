@@ -61,7 +61,8 @@
 				"textures": {
 					"cross": "veganoption:blocks/jute_plant_4"
 				}
-			}
+			},
+			"11": {}
 		},
 		"has_top": {
 			"true": {
