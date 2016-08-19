@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.crafting.PistonCraftingHandler;
-import squeek.veganoption.helpers.CreativeTabHelper;
 import squeek.veganoption.helpers.FluidContainerHelper;
 import squeek.veganoption.helpers.GuiHelper;
 import squeek.veganoption.helpers.TooltipHelper;
@@ -26,8 +25,8 @@ public class VeganOption
 	@Mod.Instance(ModInfo.MODID)
 	public static VeganOption instance;
 
-	// creative tab
-	public static CreativeTabs creativeTab = CreativeTabHelper.createTab(ModInfo.MODID, ModInfo.MODID_LOWER + ":creative_tab");
+	// creative tab initialized in CreativeTabProxy#create
+	public static CreativeTabs creativeTab;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
