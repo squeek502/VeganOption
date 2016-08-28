@@ -39,17 +39,18 @@ public class PlantMilk implements IContentModule
 			ResourceLocation(ModInfo.MODID_LOWER, "blocks/plant_milk_flow"));
 		FluidRegistry.registerFluid(fluidPlantMilk);
 		plantMilk = new BlockFluidClassic(fluidPlantMilk, Material.WATER)
-				.setUnlocalizedName(ModInfo.MODID + ".plantMilk")
-				.setRegistryName(ModInfo.MODID_LOWER, "plantMilk");
+			.setUnlocalizedName(ModInfo.MODID + ".plantMilk")
+			.setRegistryName(ModInfo.MODID_LOWER, "plantMilk");
 		fluidPlantMilk.setBlock(plantMilk);
+		fluidPlantMilk.setUnlocalizedName(fluidPlantMilk.getUnlocalizedName());
 		GameRegistry.register(plantMilk);
 		GameRegistry.register(new ItemBlock(plantMilk).setRegistryName(plantMilk.getRegistryName()));
 
 		bucketPlantMilk = new ItemBucketGeneric(plantMilk)
-				.setUnlocalizedName(ModInfo.MODID + ".bucketPlantMilk")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "bucketPlantMilk")
-				.setContainerItem(Items.BUCKET);
+			.setUnlocalizedName(ModInfo.MODID + ".bucketPlantMilk")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "bucketPlantMilk")
+			.setContainerItem(Items.BUCKET);
 		GameRegistry.register(bucketPlantMilk);
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPlantMilk, Fluid.BUCKET_VOLUME), new ItemStack(bucketPlantMilk), new ItemStack(Items.BUCKET));
 	}
@@ -76,12 +77,12 @@ public class PlantMilk implements IContentModule
 		Modifiers.recipes.convertInput(new ItemStack(Items.MILK_BUCKET), ContentHelper.milkOreDict);
 
 		GameRegistry.addRecipe(new ShapelessMatchingOreRecipe(new ItemStack(bucketPlantMilk),
-				new ItemStack(Items.WATER_BUCKET),
-				ContentHelper.plantMilkSourceOreDict,
-				ContentHelper.plantMilkSourceOreDict,
-				new ItemStack(Items.SUGAR)));
+															  new ItemStack(Items.WATER_BUCKET),
+															  ContentHelper.plantMilkSourceOreDict,
+															  ContentHelper.plantMilkSourceOreDict,
+															  new ItemStack(Items.SUGAR)));
 		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketPlantMilk), // output
-														new ItemStack(Items.WATER_BUCKET));
+													  new ItemStack(Items.WATER_BUCKET));
 
 		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidPlantMilk, FluidRegistry.WATER, Items.SUGAR, new InputItemStack(ContentHelper.plantMilkSourceOreDict, 2)));
 	}
