@@ -1,0 +1,229 @@
+#####################################################################################################
+# About the NEI Crafting and Usage handler syntax
+# To define crafting or usage text for an item or block, create a string with the following name:
+#
+# 	<unlocalizedName>.nei.crafting
+# 	<unlocalizedName>.nei.usage
+#
+# where <unlocalizedName> is the unlocalized name of the item or block (usually item.VeganOption.itemName or tile.VeganOption.blockName)
+#
+# To insert the name of the corresponding item or block, use %1$s
+# To insert another localized string inside a usage/crafting string, use the format {unlocalized.string.name}
+# To reference another block or item use the syntax [[modid:item_name]] (when specifying metadata, use [[modid:item_name:meta]] instead)
+# To insert a line break, use \n
+#
+# Example:
+#
+#   example.string=Nested string example
+# 	item.VeganOption.exampleItem.name=Example
+# 	item.VeganOption.exampleItem.nei.usage=%1$s is nothing like [[minecraft:wheat]] or [[minecraft:golden_apple:1]], but it can do a {example.string}.\n\nLines broken.
+#
+# would give exampleItem a Usage tab in NEI that looks like:
+#
+# 	Example is nothing like Wheat or Golden Apple, but it can do a Nested string example.
+#	
+#	Lines broken.
+#
+#####################################################################################################
+
+# Creative Tab
+itemGroup.VeganOption=The Vegan Option
+
+# Jute
+tile.VeganOption.juteBundled.name=黄麻捆
+tile.VeganOption.juteBundled.nei.usage=为了提取[[VeganOption:juteFibre]],%1$s首先必须被浸渍(放入水中). [[minecraft:comparator]]的输出取决于当前%1$s的浸渍进度.
+item.VeganOption.juteStalk.name=黄麻秸秆
+item.VeganOption.juteFibre.name=黄麻纤维
+item.VeganOption.juteFibre.nei.crafting=%1$s是通过破坏完全浸渍的[[VeganOption:juteBundled]]来获得.
+item.VeganOption.juteSeeds.name=黄麻种子
+item.VeganOption.juteSeeds.nei.usage=另一种繁殖[[minecraft:double_plant:3]]的方法. 能够种在泥土,草方块或者耕地上.
+tile.VeganOption.jutePlant.name=黄麻
+VeganOption.waila.retting=浸渍
+VeganOption.waila.retting.not.submerged=需要被放入水中
+VeganOption.waila.retted=浸渍
+
+# Burlap
+item.VeganOption.burlap.name=粗麻布
+item.VeganOption.helmetBurlap.name=粗麻布帽
+item.VeganOption.helmetBurlap.nei.usage=%1$s是[[minecraft:leather_helmet]]的另一种选择.
+item.VeganOption.chestplateBurlap.name=粗麻布袍
+item.VeganOption.chestplateBurlap.nei.usage=%1$s是[[minecraft:leather_chestplate]]的另一种选择.
+item.VeganOption.leggingsBurlap.name=粗麻布裤
+item.VeganOption.leggingsBurlap.nei.usage=%1$s是[[minecraft:leather_leggings]]的另一种选择.
+item.VeganOption.bootsBurlap.name=粗麻布靴
+item.VeganOption.bootsBurlap.nei.usage=%1$s是[[minecraft:leather_boots]]的另一种选择.
+
+# Kapok
+tile.VeganOption.kapok.name=木棉块
+tile.VeganOption.kapok.nei.usage=%1$s是[[minecraft:wool]]的另一种选择.
+tile.VeganOption.kapok.white.name=白色木棉块
+tile.VeganOption.kapok.orange.name=橙色木棉块
+tile.VeganOption.kapok.magenta.name=品红色木棉块
+tile.VeganOption.kapok.lightBlue.name=浅蓝色木棉块
+tile.VeganOption.kapok.yellow.name=黄色木棉块
+tile.VeganOption.kapok.lime.name=浅绿色木棉块
+tile.VeganOption.kapok.pink.name=粉色木棉块
+tile.VeganOption.kapok.gray.name=灰色木棉块
+tile.VeganOption.kapok.silver.name=浅灰色木棉块
+tile.VeganOption.kapok.cyan.name=青色木棉块
+tile.VeganOption.kapok.purple.name=紫色木棉块
+tile.VeganOption.kapok.blue.name=蓝色木棉块
+tile.VeganOption.kapok.brown.name=棕色木棉块
+tile.VeganOption.kapok.green.name=绿色木棉块
+tile.VeganOption.kapok.red.name=红色木棉块
+tile.VeganOption.kapok.black.name=黑色木棉块
+item.VeganOption.kapokTuft.name=木棉丛
+
+# Faux Feather
+item.VeganOption.fauxFeather.name=人造羽毛
+
+# Straw Bed
+item.VeganOption.bedStraw.name=稻草床
+item.VeganOption.bedStraw.tooltip=有点痒
+item.VeganOption.bedStraw.nei.usage=%1$s是一张[[minecraft:bed]]. 然而, 它让人有点发痒: 使用时会受到半颗心的伤害.
+tile.VeganOption.bedStraw.name=稻草床
+death.attack.VeganOption.itchyBed=%1$s 在床上痒死了
+death.attack.VeganOption.itchyBed.player=%1$s 试着躲避 %2$s 而在床上痒死了
+
+# Plant Milk
+item.VeganOption.bucketPlantMilk.name=植物乳桶
+item.VeganOption.bucketPlantMilk.nei.crafting=注意: %1$s只能用两种相同的植物作为乳源来制造.
+item.VeganOption.bucketPlantMilk.nei.usage=如果你在找寻和[[minecraft:milk_bucket]]一样消除负面效果的物品, 用[[VeganOption:soap]]来代替.
+tile.VeganOption.plantMilk.name=植物乳
+fluid.tile.VeganOption.plantMilk=植物乳
+
+# Egg
+item.VeganOption.appleSauce.name=苹果酱
+item.VeganOption.potatoStarch.name=马铃薯淀粉
+item.VeganOption.plasticEgg.name=塑料蛋
+item.VeganOption.plasticEgg.nei.usage=%1$s是给反肉食主义者[[minecraft:egg]]的另一种选择.
+entity.VeganOption.plasticEgg.name=塑料蛋
+
+# Resin
+item.VeganOption.resin.name=树脂
+
+# Vegetable Oil
+item.VeganOption.seedSunflower.name=葵花籽
+item.VeganOption.oilVegetable.name=植物油
+fluid.tile.VeganOption.fluidOilVegetable=植物油
+tile.VeganOption.fluidOilVegetable.name=植物油
+
+# Vegetable Oil Ink
+item.VeganOption.inkVegetableOilBlack.name=黑色植物油墨
+item.VeganOption.inkVegetableOilBlack.nei.usage=%1$s是[[minecraft:dye:0]]的另一种选择.
+fluid.tile.VeganOption.inkBlack=黑色植物油墨
+tile.VeganOption.inkBlack.name=黑色植物油墨
+item.VeganOption.inkVegetableOilWhite.name=白色植物油墨
+item.VeganOption.inkVegetableOilWhite.nei.usage=%1$s是[[minecraft:dye:15]]的另一种选择.
+fluid.tile.VeganOption.inkWhite=白色植物油墨
+tile.VeganOption.inkWhite.name=白色植物油墨
+item.VeganOption.waxVegetable.name=植物蜡
+item.VeganOption.rosin.name=松香
+
+# Bioplastic
+item.VeganOption.bioplastic.name=生质塑胶
+item.VeganOption.plasticRod.name=塑料棒
+
+# Composting
+item.VeganOption.rottenPlants.name=腐烂的植物
+tile.VeganOption.composter.name=堆肥机
+tile.VeganOption.composter.nei.usage=%1$s能够将植物转变为[[VeganOption:compost]]或[[VeganOption:rottenPlants]].\n\n要制造[[VeganOption:compost]], 用"绿色"和"棕色"的物质来填充%1$s. 要制造[[VeganOption:rottenPlants]], 仅用"绿色"的物质. 查阅NEI中的"{VeganOption.nei.composting}"栏目来了解有哪些"绿色"和"棕色"的物质 .\n\n堆肥机内的温度越高, 材料分解得越快. 温度上升的速度取决于3个因素:\n\n1) 堆肥机最后一次被翻滚(空手潜行右击%1$s以翻滚)\n\n2) 堆肥机的饱满程度(里面越满, 分解越快)\n\n3) "绿色"和"棕色"物质的比例(2:1的比例能够达到最大速度)\n\n如果%1$s在一段时间内没有被翻滚,它将会流失热量. 每次%1$s被翻滚, 起初它会流失一些热量, 但是它会在长时间后获得更多热量. 在游戏中应该每2天翻滚一次%1$s.\n\n[[minecraft:comparator]]的输出取决于当前%1$s的分解进度.
+tile.VeganOption.compost.name=堆肥
+tile.VeganOption.compost.nei.usage=%1$s能够改善附近的[[minecraft:farmland]].
+item.VeganOption.fertilizer.name=化肥
+item.VeganOption.fertilizer.nei.usage=%1$s是[[minecraft:dye:15]]的另一种选择.
+VeganOption.waila.composter.empty=空置
+VeganOption.waila.composter.composting=堆肥中
+VeganOption.waila.composter.temperature=温度
+VeganOption.gui.composter.tumble=翻滚堆肥机
+VeganOption.gui.composter.tumble.desc=每次堆肥机被翻滚, 它将会流失热量, 但是它会在长时间后获得更多热量. 在游戏中应该每2天翻滚一次堆肥机.
+VeganOption.gui.composter.temperature=温度: %s
+VeganOption.gui.composter.temperature.desc=温度上升取决于以下因素:\n- 堆肥机最后一次被翻滚\n- 堆肥机的饱满程度\n- "绿色"和"棕色"物质的比例(2:1的比例是最完美的)
+VeganOption.gui.composter.composting=堆肥: %s
+VeganOption.gui.composter.composting.desc=堆肥机内的温度越高, 材料分解得越快.
+
+# Soap
+item.VeganOption.bucketLyeWater.name=木灰碱液桶
+tile.VeganOption.lyeWater.name=木灰碱液
+tile.VeganOption.lyeWater.nei.usage=警告: %1$s具有腐蚀性.
+fluid.tile.VeganOption.lyeWater=木灰碱液
+death.attack.VeganOption.lyeWater=%1$s在碱液中洗澡
+death.attack.VeganOption.lyeWater.player=%1$s 试着躲避 %2$s 而在碱液中死了
+item.VeganOption.soap.name=肥皂
+item.VeganOption.soap.nei.usage=使用%1$s能够消除所有负面效果.
+item.VeganOption.soapSolution.name=肥皂溶液
+item.VeganOption.soapSolution.nei.usage=%1$s能够用来制作{entity.VeganOption.bubble.name}. 它可以被玩家使用或者是用于[[minecraft:dispenser]].
+fluid.tile.VeganOption.fluidSoapSolution=肥皂溶液
+tile.VeganOption.fluidSoapSolution.name=肥皂溶液
+
+# Frozen Bubble
+entity.VeganOption.bubble.name=泡泡
+item.VeganOption.frozenBubble.name=冰冻泡泡
+item.VeganOption.frozenBubble.nei.crafting=%1$s能够通过在非常寒冷的环境下用[[VeganOption:soapSolution]]吹出泡泡{entity.VeganOption.bubble.name}来制作(周围有[[minecraft:ice]]/[[minecraft:snow]覆盖]).
+item.VeganOption.frozenBubbleFilled.name=冰冻泡泡 (部分填充)
+item.VeganOption.frozenBubbleFilled.nei.crafting=%1$s能够通过将[[VeganOption:frozenBubble]]放进[[VeganOption:rawEnder]]来制作.
+item.VeganOption.frozenBubbleFilled.nei.usage=%1$s被[[VeganOption:rawEnder]]完全填充后变成[[minecraft:ender_pearl]].
+
+# Raw Ender
+tile.VeganOption.encrustedObsidian.name=镶嵌黑曜石
+tile.VeganOption.encrustedObsidian.nei.usage=用4个%1$s包围一格空方块来制造[[VeganOption:enderRift]].
+item.VeganOption.bucketRawEnder.name=末影原料桶
+tile.VeganOption.rawEnder.name=末影原料
+tile.VeganOption.rawEnder.nei.crafting=水流在晚上通过[[VeganOption:enderRift]]有几率变成%1$s. 然而, 如果你在白天做的话, [[VeganOption:enderRift]]周围的一个方块将会永远消失.
+fluid.tile.VeganOption.rawEnder=末影原料
+tile.VeganOption.enderRift.name=末影裂痕
+
+# False Morel
+item.VeganOption.falseMorel.name=假羊肚菌
+item.VeganOption.falseMorel.nei.usage=%1$s一种有毒的蘑菇, 可以用来制作[[minecraft:spider_eye]].
+item.VeganOption.falseMorelFermented.name=发酵的假羊肚菌
+
+# Mob Heads
+item.VeganOption.papierMache.name=纸糊
+item.VeganOption.mobHeadBlank.name=空白的生物头
+
+# Gunpowder
+item.VeganOption.sulfur.name=硫黄
+item.VeganOption.saltpeter.name=硝石
+
+# Proof of Suffering
+item.VeganOption.sufferingFragment.name=苦难碎片
+item.VeganOption.sufferingProof.name=苦难之证
+item.VeganOption.sufferingProof.nei.usage=%1$s是[[minecraft:ghast_tear]]的另一种选择.
+
+# Dolls Eye
+item.VeganOption.dollsEye.name=娃娃眼
+item.VeganOption.dollsEye.nei.common=%1$s是一种有毒的浆果植物娃娃眼(又名白升麻).
+item.VeganOption.dollsEye.nei.usage={item.VeganOption.dollsEye.nei.common}\n\n%1$s是[[minecraft:spider_eye]]的另一种选择.
+item.VeganOption.dollsEye.nei.crafting={item.VeganOption.dollsEye.nei.common}\n\n%1$s只能在常温的森林生物群系打破[[minecraft:tallgrass:1]]来获得.
+
+# Basin
+tile.VeganOption.basin.name=水池
+tile.VeganOption.basin.nei.usage=%1$s是一个简易的能够容纳一桶液体的储罐. 默认情况下, 它有盖子盖着, 当收到红石信号的时候才打开, 在没有盖子的情况下它就像一个漏斗一样(液体会流进里面).\n\n当容器(桶,瓶等等)掉进装有液体的%1$s时, 如果能的话会自动将%1$s里的液体装入容器.
+VeganOption.waila.basin.empty=空
+VeganOption.waila.basin.open=打开
+VeganOption.waila.basin.closed=关闭
+
+# Seitan
+item.VeganOption.wheatFlour.name=小麦面粉
+item.VeganOption.wheatDough.name=小麦面团
+item.VeganOption.seitanRawUnwashed.name=生麸质(脏的)
+item.VeganOption.seitanRaw.name=生麸质
+item.VeganOption.seitanCooked.name=麸质
+
+# NEI Strings
+VeganOption.nei.byproduct.of=产物
+VeganOption.nei.byproducts=产物
+VeganOption.nei.usage=用途
+VeganOption.nei.crafting=合成
+VeganOption.nei.drops=掉落
+VeganOption.nei.composting=堆肥
+VeganOption.nei.references=参考
+VeganOption.nei.pistonCrafting=活塞合成
+VeganOption.nei.pistonCrafting.tooltip.fluidInput=液体输入必须放置在活塞旁边
+VeganOption.nei.pistonCrafting.tooltip.fluidOutput=液体输出需要容器(储罐,圆桶等等)在活塞臂下面
+
+# Additional HarvestCraft content
+item.VeganOption.bbqSauce.name=烤肉酱
+item.VeganOption.bbqTofu.name=烧烤豆腐
+item.VeganOption.bbqTofu.tooltip=Cut on a bias
