@@ -1,12 +1,6 @@
 package squeek.veganoption.helpers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +9,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+
+import java.util.*;
 
 public class BlockHelper
 {
@@ -70,7 +66,7 @@ public class BlockHelper
 
 	public static BlockPos followFluidStreamToSourceBlock(World world, BlockPos blockPos, Fluid fluid, Set<BlockPos> blocksChecked)
 	{
-		if (fluid.getBlock() instanceof BlockFluidFinite || world.getBlockState(blockPos).getValue(BlockLiquid.LEVEL) == FluidHelper.getStillFluidLevel(fluid))
+		if (fluid.getBlock() instanceof BlockFluidFinite || FluidHelper.getFluidLevel(world, blockPos) == FluidHelper.getStillFluidLevel(fluid))
 			return blockPos;
 
 		List<BlockPos> blocksToCheck = new ArrayList<BlockPos>();
