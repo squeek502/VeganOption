@@ -42,7 +42,7 @@ public class PlantMilk implements IContentModule
 			.setUnlocalizedName(ModInfo.MODID + ".plantMilk")
 			.setRegistryName(ModInfo.MODID_LOWER, "plantMilk");
 		fluidPlantMilk.setBlock(plantMilk);
-		fluidPlantMilk.setUnlocalizedName(fluidPlantMilk.getUnlocalizedName());
+		fluidPlantMilk.setUnlocalizedName(plantMilk.getUnlocalizedName());
 		GameRegistry.register(plantMilk);
 		GameRegistry.register(new ItemBlock(plantMilk).setRegistryName(plantMilk.getRegistryName()));
 
