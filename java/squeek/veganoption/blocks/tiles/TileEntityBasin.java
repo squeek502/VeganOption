@@ -34,7 +34,6 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 	protected boolean fluidConsumeStopped = true;
 	protected int ticksUntilNextFluidConsume = FLUID_CONSUME_TICK_PERIOD;
 	protected int ticksUntilNextContainerFill = CONTAINER_FILL_TICK_PERIOD;
-	protected boolean needsInit = true;
 
 	public static int FLUID_CONSUME_TICK_PERIOD = MiscHelper.TICKS_PER_SEC;
 	public static int CONTAINER_FILL_TICK_PERIOD = MiscHelper.TICKS_PER_SEC;
@@ -47,12 +46,6 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 	{
 		if (worldObj.isRemote)
 			return;
-
-		if (needsInit)
-		{
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
-			needsInit = false;
-		}
 
 		if (shouldConsumeFluid())
 		{
@@ -386,20 +379,32 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
-		readSyncedNBT(pkt.getNbtCompound());
+		handleUpdateTag(pkt.getNbtCompound());
 	}
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket()
 	{
-		NBTTagCompound compound = new NBTTagCompound();
-		writeSyncedNBT(compound);
-		return new SPacketUpdateTileEntity(pos, 1, compound);
+		return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		NBTTagCompound tag = super.getUpdateTag();
+		writeSyncedNBT(tag);
+		return tag;
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag)
+	{
+		readSyncedNBT(tag);
 	}
 
 	/*
-	 * Save data
-	 */
+			 * Save data
+			 */
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
@@ -420,7 +425,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-		super.writeToNBT(compound);
+		compound = super.writeToNBT(compound);
 
 		writeSyncedNBT(compound);
 
