@@ -50,7 +50,6 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	public long compostStart = NOT_COMPOSTING;
 	public float compostTemperature;
 	public float biomeTemperature;
-	protected boolean initialUpdate = true;
 
 	// lid stuff copied from TileEntityChest
 	public int numPlayersUsing = 0;
@@ -100,18 +99,20 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 			return 0;
 	}
 
+	@Override
+	public void onLoad()
+	{
+		updateBiomeTemperature();
+	}
+
 	/*
-	 * Composting
-	 */
+		 * Composting
+		 */
 	@Override
 	public void update()
 	{
 		if (!worldObj.isRemote)
 		{
-			if (initialUpdate)
-			{
-				updateBiomeTemperature();
-			}
 			if (isComposting() && !isAerating())
 			{
 				long ticksSinceCycleStart = worldObj.getWorldTime() - Math.max(compostStart, lastAeration);
@@ -142,8 +143,6 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		}
 
 		updateLidAngle();
-
-		initialUpdate = false;
 	}
 
 	public float getCompostingPercent()
