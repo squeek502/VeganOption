@@ -58,7 +58,7 @@ public class ProviderComposter implements IWailaDataProvider
 		TileEntityComposter tile = (TileEntityComposter) te;
 		tag.setLong("Start", tile.compostStart);
 		tag.setFloat("Temperature", tile.getCompostTemperature());
-		tag.setFloat("Start", tile.getCompostingPercent());
+		tag.setFloat("Compost", tile.getCompostingPercent());
 		return tag;
 	}
 }
