@@ -1,9 +1,5 @@
 package squeek.veganoption.blocks.tiles;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -24,11 +20,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.registry.CompostRegistry;
-import squeek.veganoption.helpers.GuiHelper;
-import squeek.veganoption.helpers.InventoryHelper;
-import squeek.veganoption.helpers.MiscHelper;
-import squeek.veganoption.helpers.RandomHelper;
-import squeek.veganoption.helpers.TemperatureHelper;
+import squeek.veganoption.helpers.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class TileEntityComposter extends TileEntity implements IInventory, ITickable
 {
@@ -153,7 +150,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	{
 		return compostPercent;
 	}
-	
+
 	public void setCompostingPercent(float compostPercent)
 	{
 		this.compostPercent = compostPercent;
@@ -237,7 +234,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		compostTemperature = temperature;
 		clampTemperature();
 		markDirty();
-		
+
 		if (Math.round(compostTemperature) != Math.round(oldTemp))
 		{
 			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
@@ -278,7 +275,8 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		return (float) (-2f / (1f + Math.exp(-percentCooled * 15f + 5f)) + 1f);
 	}
 
-	public boolean isRotting() {
+	public boolean isRotting()
+	{
 		return getGreenAmount() > 0 && getBrownAmount() <= 0;
 
 	}
@@ -606,11 +604,14 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 			f = 5.0F;
 			List<EntityPlayer> list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - f, pos.getY() - f, pos.getZ() - f, pos.getX() + 1 + f, pos.getY() + 1 + f, pos.getZ() + 1 + f));
 
-			for (EntityPlayer entityplayer : list) {
-				if (entityplayer.openContainer instanceof ContainerChest) {
+			for (EntityPlayer entityplayer : list)
+			{
+				if (entityplayer.openContainer instanceof ContainerChest)
+				{
 					IInventory iinventory = ((ContainerChest) entityplayer.openContainer).getLowerChestInventory();
 
-					if (iinventory == this || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest) iinventory).isPartOfLargeChest(this)) {
+					if (iinventory == this || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest) iinventory).isPartOfLargeChest(this))
+					{
 						++this.numPlayersUsing;
 					}
 				}
@@ -670,19 +671,29 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
-		NBTTagCompound compound = pkt.getNbtCompound();
-		lastAeration = compound.getLong("LastAeration");
-		compostTemperature = compound.getFloat("Temp");
-		super.onDataPacket(net, pkt);
+		handleUpdateTag(pkt.getNbtCompound());
 	}
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket()
 	{
-		NBTTagCompound compound = new NBTTagCompound();
-		compound.setLong("LastAeration", lastAeration);
-		compound.setFloat("Temp", compostTemperature);
-		return new SPacketUpdateTileEntity(pos, 1, compound);
+		return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		NBTTagCompound tag = super.getUpdateTag();
+		tag.setLong("LastAeration", lastAeration);
+		tag.setFloat("Temp", compostTemperature);
+		return tag;
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag)
+	{
+		lastAeration = tag.getLong("LastAeration");
+		compostTemperature = tag.getFloat("Temp");
 	}
 
 	/*
@@ -691,7 +702,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound data)
 	{
-		super.writeToNBT(data);
+		data = super.writeToNBT(data);
 
 		data.setFloat("Compost", compostPercent);
 		data.setLong("LastAeration", lastAeration);
