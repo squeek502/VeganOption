@@ -1,10 +1,12 @@
 package squeek.veganoption.content.modules;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -102,8 +104,11 @@ public class Seitan implements IContentModule
 		ContentHelper.registerTypicalItemModel(washableWheat);
 		ContentHelper.registerTypicalItemModel(seitanCooked);
 		ContentHelper.registerTypicalItemStackModel(seitanRawStack, ModInfo.MODID_LOWER + ":seitan_raw");
-		ContentHelper.registerTypicalItemStackModel(seitanUnwashedStack, ModInfo.MODID_LOWER + ":seitan_unwashed");
 		ContentHelper.registerTypicalItemStackModel(wheatFlourStack, ModInfo.MODID_LOWER + ":wheat_flour");
 		ContentHelper.registerTypicalItemStackModel(wheatDoughStack, ModInfo.MODID_LOWER + ":wheat_dough");
+
+		for (int meta = ItemWashableWheat.META_UNWASHED_START; meta < ItemWashableWheat.META_UNWASHED_END; meta++) {
+			ModelLoader.setCustomModelResourceLocation(washableWheat, meta, new ModelResourceLocation(ModInfo.MODID_LOWER + ":seitan_unwashed", "inventory"));
+		}
 	}
 }
