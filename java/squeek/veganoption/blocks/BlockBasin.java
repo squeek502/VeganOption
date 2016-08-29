@@ -1,8 +1,5 @@
 package squeek.veganoption.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -27,6 +24,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockBasin extends BlockContainer implements IHollowBlock
 {
@@ -52,7 +51,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 		boolean open = false;
 		if (tile != null && tile instanceof TileEntityBasin)
 		{
-			open = ((TileEntityBasin) tile).isOpen();
+			open = tile.getWorld().isBlockPowered(pos);
 		}
 		return state.withProperty(IS_OPEN, open);
 	}
@@ -104,7 +103,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBasin)
 		{
-			((TileEntityBasin) tile).setPowered(world.isBlockPowered(pos));
+			((TileEntityBasin) tile).onPowerChange(world.isBlockPowered(pos));
 			((TileEntityBasin) tile).scheduleFluidConsume();
 		}
 	}
@@ -117,7 +116,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBasin)
 		{
-			((TileEntityBasin) tile).setPowered(world.isBlockIndirectlyGettingPowered(pos) > 0);
+			((TileEntityBasin) tile).onPowerChange(world.isBlockPowered(pos));
 			((TileEntityBasin) tile).scheduleFluidConsume();
 		}
 	}
