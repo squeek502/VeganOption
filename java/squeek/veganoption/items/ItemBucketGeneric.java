@@ -42,6 +42,9 @@ public class ItemBucketGeneric extends ItemBucket
 		if (event.isCanceled() || event.getResult() != Event.Result.DEFAULT)
 			return;
 
+		if (event.getTarget() == null)
+			return;
+
 		IBlockState state = event.getWorld().getBlockState(event.getTarget().getBlockPos());
 		Block block = state.getBlock();
 

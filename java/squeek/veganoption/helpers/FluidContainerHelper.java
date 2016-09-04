@@ -40,6 +40,9 @@ public class FluidContainerHelper
 		if (event.isCanceled() || event.getResult() != Event.Result.DEFAULT)
 			return;
 
+		if (event.getTarget() == null)
+			return;
+
 		Block block = event.getWorld().getBlockState(event.getTarget().getBlockPos()).getBlock();
 
 		// if we've gotten this far, then it shouldn't be able to be picked up by a bucket
