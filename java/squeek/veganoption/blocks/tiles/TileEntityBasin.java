@@ -1,5 +1,6 @@
 package squeek.veganoption.blocks.tiles;
 
+import java.util.List;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +13,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.content.modules.Basin;
 import squeek.veganoption.helpers.FluidContainerHelper;
@@ -20,11 +27,10 @@ import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.WorldHelper;
 
-import java.util.List;
-
 public class TileEntityBasin extends TileEntity implements IFluidHandler, ITickable
 {
 	protected FluidTank fluid = new FluidTank(Fluid.BUCKET_VOLUME);
+	protected boolean isPowered = false;
 	protected boolean fluidConsumeStopped = true;
 	protected int ticksUntilNextFluidConsume = FLUID_CONSUME_TICK_PERIOD;
 	protected int ticksUntilNextContainerFill = CONTAINER_FILL_TICK_PERIOD;
@@ -240,10 +246,12 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 	/*
 	 * Redstone Power Handling
 	 */
-	public void onPowerChange(boolean isPowered)
+	public void setPowered(boolean isPowered)
 	{
 		if (isPowered != isPowered())
 		{
+			this.isPowered = isPowered;
+
 			if (isPowered)
 				onPowered();
 			else
@@ -256,7 +264,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 
 	public boolean isPowered()
 	{
-		return worldObj.getBlockState(pos).getValue(BlockBasin.IS_OPEN);
+		return isPowered;
 	}
 
 	public void onPowered()
@@ -349,6 +357,8 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 			fluid.setFluid(FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("Fluid")));
 		else
 			fluid.setFluid(null);
+
+		setPowered(compound.getBoolean("Powered"));
 	}
 
 	public void writeSyncedNBT(NBTTagCompound compound)
@@ -358,6 +368,11 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 			NBTTagCompound fluidTag = new NBTTagCompound();
 			fluid.getFluid().writeToNBT(fluidTag);
 			compound.setTag("Fluid", fluidTag);
+		}
+
+		if (isPowered())
+		{
+			compound.setBoolean("Powered", isPowered());
 		}
 	}
 
