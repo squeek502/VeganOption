@@ -26,20 +26,6 @@ public class Hooks
 			return false;
 	}
 
-	// return true to stop the default code from being executed
-	public static boolean onEntityItemUpdate(EntityItem entityItem)
-	{
-		if (!entityItem.worldObj.isRemote && entityItem.isCollided)
-		{
-			BlockPos pos = new BlockPos(entityItem.posX, entityItem.posY, entityItem.posZ);
-			if (entityItem.worldObj.getBlockState(pos).getBlock() == Blocks.PISTON_HEAD)
-			{
-				return MinecraftForge.EVENT_BUS.post(new PistonEvent.CrushItem(entityItem));
-			}
-		}
-		return false;
-	}
-
 	public static void onPistonMove(World world, BlockPos pos, EnumFacing direction, boolean extending)
 	{
 		if (extending)
@@ -49,16 +35,10 @@ public class Hooks
 		}
 	}
 
-	public static final int PISTON_BLOCKEVENT_EXTEND = 0;
-	public static final int PISTON_BLOCKEVENT_RETRACT = 1;
-
-	public static void onPistonBlockEventReceived(IBlockState state, World world, BlockPos pos, int eventID)
+	public static void onPistonTileUpdate(World world, BlockPos pos, float progress, boolean extending)
 	{
-		if (eventID == PISTON_BLOCKEVENT_RETRACT)
-		{
-			EnumFacing facing = state.getValue(BlockPistonBase.FACING);
-			MinecraftForge.EVENT_BUS.post(new PistonEvent.Retract(world, pos, facing));
-		}
+		if (extending)
+			MinecraftForge.EVENT_BUS.post(new PistonEvent.Extending(world, pos, progress));
 	}
 
 	// return -1 to use default code, otherwise return 1 or 0 (will be interpretted as a boolean)

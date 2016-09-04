@@ -76,13 +76,13 @@ public class PistonCraftingRecipe
 		if (!canOutputFluid(fluidHandler))
 			return false;
 
-		PistonCraftingHandler.WorldPosition fluidPos = new PistonCraftingHandler.WorldPosition(world, pos);
-		FluidStack displacedFluid = PistonCraftingHandler.displacedLiquids.get(fluidPos);
+		PistonCraftingHandler.WorldPosition displacedPos = new PistonCraftingHandler.WorldPosition(world, pos);
+		FluidStack displacedFluid = PistonCraftingHandler.displacedLiquids.get(displacedPos);
 
 		if (!fluidInputMatches(displacedFluid))
 			return false;
 
-		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(world, pos);
+		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(displacedPos.world, displacedPos.pos);
 		Map<InputItemStack, List<EntityItem>> entityItemsByInput = getEntityItemsByInput(itemInputs, entityItemsWithin);
 
 		if (!itemInputMatches(entityItemsByInput))
@@ -125,7 +125,7 @@ public class PistonCraftingRecipe
 					displacedFluid.amount -= fluidInput.amount;
 					if (displacedFluid.amount <= 0)
 					{
-						PistonCraftingHandler.displacedLiquids.remove(fluidPos);
+						PistonCraftingHandler.displacedLiquids.remove(displacedPos);
 						displacedFluid = null;
 					}
 				}

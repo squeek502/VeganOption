@@ -1,13 +1,14 @@
 package squeek.veganoption.content.crafting;
 
-import java.util.HashMap;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -15,6 +16,12 @@ import squeek.veganoption.api.event.PistonEvent;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.helpers.FluidHelper;
+import squeek.veganoption.helpers.WorldHelper;
+
+import java.util.HashMap;
+import java.util.List;
+
+import static squeek.veganoption.helpers.FluidHelper.getStillFluidLevel;
 
 public class PistonCraftingHandler
 {
@@ -26,95 +33,83 @@ public class PistonCraftingHandler
 		MinecraftForge.EVENT_BUS.register(new PistonCraftingHandler());
 	}
 
-	@SubscribeEvent
-	public void onCrushItem(PistonEvent.CrushItem event)
+	public void saveDisplacedLiquidAt(WorldPosition pos)
 	{
-		for (PistonCraftingRecipe pistonRecipe : PistonCraftingRegistry.getRecipes())
-		{
-			if (pistonRecipe.tryCraft(event.world, event.headPos))
-				return;
-		}
-	}
-
-	@SubscribeEvent
-	public void onPistonExtend(PistonEvent.TryExtend event)
-	{
-		if (event.world.isRemote)
-			return;
-
-		BlockPos blockPos = event.headPos;
-		WorldPosition pos = new WorldPosition(event.world, blockPos);
 		displacedLiquids.remove(pos);
 
-		IBlockState displacedState = event.world.getBlockState(blockPos);
-		Block displacedBlock = displacedState.getBlock();
+		IBlockState displacedState = pos.world.getBlockState(pos.pos);
 
-		if (displacedBlock == null || event.world.isAirBlock(blockPos))
+		if (pos.world.isAirBlock(pos.pos))
 			return;
 
 		Fluid displacedFluid = FluidHelper.getFluidTypeOfBlock(displacedState);
-		if (displacedFluid != null && FluidHelper.getStillFluidLevel(displacedFluid) == displacedState.getValue(BlockFluidBase.LEVEL))
+		if (displacedFluid != null && FluidHelper.getFluidLevel(displacedState) == getStillFluidLevel(displacedFluid))
 		{
 			displacedLiquids.put(pos, new FluidStack(displacedFluid, Fluid.BUCKET_VOLUME));
 		}
 	}
 
 	@SubscribeEvent
-	public void onPistonRetract(PistonEvent.Retract event)
+	public void onPistonTryExtend(PistonEvent.TryExtend event)
 	{
 		if (event.world.isRemote)
 			return;
 
+		if (event.world.getBlockState(event.basePos).getValue(BlockPistonBase.EXTENDED))
+			return;
+
+		BlockPos blockPos = event.headPos;
+		WorldPosition pos = new WorldPosition(event.world, blockPos);
+
+		saveDisplacedLiquidAt(pos);
+	}
+
+	@SubscribeEvent
+	public void onPistonExtending(PistonEvent.Extending event)
+	{
+		if (event.world.isRemote)
+			return;
+
+		if (event.progress != 0.5F)
+			return;
+
+		for (PistonCraftingRecipe pistonRecipe : PistonCraftingRegistry.getRecipes())
+		{
+			if (pistonRecipe.tryCraft(event.world, event.headPos))
+				break;
+		}
+
 		displacedLiquids.remove(new WorldPosition(event.world, event.headPos));
 	}
 
-	public static class WorldPosition extends ChunkPos
+	public static class WorldPosition
 	{
 		public final World world;
+		public final BlockPos pos;
 
 		public WorldPosition(World world, BlockPos pos)
 		{
-			super(pos);
+			this.pos = pos;
 			this.world = world;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o) return true;
+			if (!(o instanceof WorldPosition)) return false;
+
+			WorldPosition that = (WorldPosition) o;
+
+			return world.equals(that.world) && pos.equals(that.pos);
 		}
 
 		@Override
 		public int hashCode()
 		{
-			final int prime = 31;
-			int result = super.hashCode();
-			result = prime * result + ((world == null) ? 0 : world.hashCode());
+			int result = world.hashCode();
+			result = 31 * result + pos.hashCode();
 			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (this == obj)
-			{
-				return true;
-			}
-			if (!super.equals(obj))
-			{
-				return false;
-			}
-			if (!(obj instanceof WorldPosition))
-			{
-				return false;
-			}
-			WorldPosition other = (WorldPosition) obj;
-			if (world == null)
-			{
-				if (other.world != null)
-				{
-					return false;
-				}
-			}
-			else if (!world.equals(other.world))
-			{
-				return false;
-			}
-			return true;
 		}
 	}
 }

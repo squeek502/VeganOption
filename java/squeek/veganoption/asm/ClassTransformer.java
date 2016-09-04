@@ -43,28 +43,26 @@ public class ClassTransformer implements IClassTransformer
 
 			return writeClassToBytes(classNode);
 		}
-		else if (transformedName.equals("net.minecraft.entity.item.EntityItem"))
+		else if (transformedName.equals("net.minecraft.tileentity.TileEntityPiston"))
 		{
 			boolean isObfuscated = !name.equals(transformedName);
 
 			ClassNode classNode = readClassFromBytes(bytes);
 
-			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "m" : "onUpdate", "()V");
+			MethodNode method = findMethodNodeOfClass(classNode, isObfuscated ? "E_" : "update", "()V");
 
-			/*
-			if (Hooks.onEntityItemUpdate(this))
-				return;
-			*/
 			InsnList toInject = new InsnList();
-			LabelNode ifNotCanceled = new LabelNode();
 			toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onEntityItemUpdate", "(Lnet/minecraft/entity/item/EntityItem;)Z", false));
-			toInject.add(new JumpInsnNode(Opcodes.IFEQ, ifNotCanceled));
-			toInject.add(new InsnNode(Opcodes.RETURN));
-			toInject.add(ifNotCanceled);
+			toInject.add(new FieldInsnNode(Opcodes.GETFIELD, isObfuscated ? "aqk" : "net/minecraft/tileentity/TileEntity", isObfuscated ? "b" : "worldObj", isObfuscated ? "Laid;" : "Lnet/minecraft/world/World;"));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			toInject.add(new FieldInsnNode(Opcodes.GETFIELD, isObfuscated ? "aqk" : "net/minecraft/tileentity/TileEntity", isObfuscated ? "c" : "pos", isObfuscated ? "Lcm;" : "Lnet/minecraft/util/math/BlockPos;"));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			toInject.add(new FieldInsnNode(Opcodes.GETFIELD, isObfuscated ? "arm" : "net/minecraft/tileentity/TileEntityPiston", isObfuscated ? "i" : "progress", "F"));
+			toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			toInject.add(new FieldInsnNode(Opcodes.GETFIELD, isObfuscated ? "arm" : "net/minecraft/tileentity/TileEntityPiston", isObfuscated ? "g" : "extending", "Z"));
+			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonTileUpdate", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;FZ)V", false));
 
 			method.instructions.insertBefore(findFirstInstruction(method), toInject);
-
 			return writeClassToBytes(classNode);
 		}
 		else if (transformedName.equals("net.minecraft.block.BlockPistonBase"))
@@ -86,20 +84,6 @@ public class ClassTransformer implements IClassTransformer
 			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonMove", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;Z)V", false));
 
 			method.instructions.insertBefore(findFirstInstruction(method), toInject);
-
-			method = findMethodNodeOfClass(classNode, isObfuscated ? "a" : "eventReceived", isObfuscated ? "(Lars;Laid;Lcm;II)Z" : "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;II)Z");
-
-			/*
-			Hooks.onPistonBlockEventReceived(state, world, pos, event)
-			*/
-			toInject.clear();
-			toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			toInject.add(new VarInsnNode(Opcodes.ALOAD, 2));
-			toInject.add(new VarInsnNode(Opcodes.ALOAD, 3));
-			toInject.add(new VarInsnNode(Opcodes.ILOAD, 4));
-			toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(Hooks.class), "onPistonBlockEventReceived", "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;I)V", false));
-
-			method.instructions.insertBefore(getOrFindInstruction(method.instructions.getLast(), true).getPrevious(), toInject);
 
 			return writeClassToBytes(classNode);
 		}
