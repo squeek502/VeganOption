@@ -117,7 +117,7 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBasin)
 		{
-			((TileEntityBasin) tile).setPowered(world.isBlockIndirectlyGettingPowered(pos) > 0);
+			((TileEntityBasin) tile).setPowered(world.isBlockPowered(pos));
 			((TileEntityBasin) tile).scheduleFluidConsume();
 		}
 	}
