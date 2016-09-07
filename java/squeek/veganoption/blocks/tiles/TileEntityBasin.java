@@ -1,6 +1,5 @@
 package squeek.veganoption.blocks.tiles;
 
-import java.util.List;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,13 +12,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.content.modules.Basin;
 import squeek.veganoption.helpers.FluidContainerHelper;
@@ -27,9 +22,11 @@ import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.WorldHelper;
 
-public class TileEntityBasin extends TileEntity implements IFluidHandler, ITickable
+import java.util.List;
+
+public class TileEntityBasin extends TileEntity implements ITickable
 {
-	protected FluidTank fluid = new FluidTank(Fluid.BUCKET_VOLUME);
+	public FluidTank fluidTank = new BasinTank(Fluid.BUCKET_VOLUME);
 	protected boolean isPowered = false;
 	protected boolean fluidConsumeStopped = true;
 	protected int ticksUntilNextFluidConsume = FLUID_CONSUME_TICK_PERIOD;
@@ -72,7 +69,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 	 */
 	public boolean couldFillContainers()
 	{
-		return isOpen() && fluid.getFluidAmount() > 0;
+		return isOpen() && fluidTank.getFluidAmount() > 0;
 	}
 
 	public boolean shouldFillContainers()
@@ -94,7 +91,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 
 			EntityItem entityItemToFill = entityItemWithin;
 			ItemStack containerToFill = entityItemWithin.getEntityItem();
-			ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluid.getFluid(), containerToFill);
+			ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluidTank.getFluid(), containerToFill);
 
 			if (filledContainer == null)
 				continue;
@@ -110,7 +107,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 			entityItemToFill.setEntityItemStack(filledContainer);
 
 			FluidStack filledWith = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
-			drain(EnumFacing.NORTH, filledWith.amount, true);
+			fluidTank.drain(filledWith.amount, true);
 			return true;
 		}
 
@@ -135,7 +132,7 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 	 */
 	public boolean couldConsumeFluid()
 	{
-		return isOpen() && fluid.getFluidAmount() != fluid.getCapacity();
+		return isOpen() && fluidTank.getFluidAmount() != fluidTank.getCapacity();
 	}
 
 	public boolean shouldConsumeFluid()
@@ -152,15 +149,15 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 		IBlockState stateAbove = worldObj.getBlockState(blockPosAbove);
 		Fluid fluidAbove = FluidHelper.getFluidTypeOfBlock(stateAbove);
 
-		if (fluidAbove == null || !canFill(EnumFacing.UP, fluidAbove))
+		if (fluidAbove == null)
 			return false;
 
-		FluidStack fluidToAdd = FluidHelper.consumeFluid(worldObj, blockPosAbove, fluidAbove, fluid.getCapacity() - fluid.getFluidAmount());
+		FluidStack fluidToAdd = FluidHelper.consumeFluid(worldObj, blockPosAbove, fluidAbove, fluidTank.getCapacity() - fluidTank.getFluidAmount());
 
-		if (fluidToAdd == null)
+		if (fluidToAdd == null || !fluidTank.canFillFluidType(fluidToAdd))
 			return false;
 
-		fill(EnumFacing.UP, fluidToAdd, true);
+		fluidTank.fill(fluidToAdd, true);
 		return true;
 	}
 
@@ -219,23 +216,23 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 		{
 			FluidStack containerFluid = FluidContainerRegistry.getFluidForFilledItem(heldItem);
 
-			if (containerFluid != null && fill(EnumFacing.NORTH, containerFluid, false) == containerFluid.amount)
+			if (containerFluid != null && fluidTank.fill(containerFluid, false) == containerFluid.amount)
 			{
 				ItemStack emptyContainer = FluidContainerHelper.tryEmptyContainer(player, heldItem);
 
 				if (emptyContainer == null)
 					return false;
 
-				fill(EnumFacing.NORTH, containerFluid, true);
+				fluidTank.fill(containerFluid, true);
 			}
-			else if (fluid.getFluidAmount() > 0)
+			else if (fluidTank.getFluidAmount() > 0)
 			{
-				ItemStack filledContainer = FluidContainerHelper.tryFillContainer(player, heldItem, fluid.getFluid());
+				ItemStack filledContainer = FluidContainerHelper.tryFillContainer(player, heldItem, fluidTank.getFluid());
 
 				if (filledContainer == null)
 					return false;
 
-				drain(EnumFacing.NORTH, FluidContainerRegistry.getFluidForFilledItem(filledContainer).amount, true);
+				fluidTank.drain(FluidContainerRegistry.getFluidForFilledItem(filledContainer).amount, true);
 			}
 
 			return true;
@@ -296,77 +293,25 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 		}
 	}
 
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		if (resource == null || !canFill(from, resource.getFluid()))
-			return 0;
-
-		int amountFilled = fluid.fill(resource, doFill);
-
-		if (doFill && amountFilled > 0)
-			onFluidLevelChanged(fluid, new FluidStack(resource.getFluid(), amountFilled));
-
-		return amountFilled;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		if (resource == null || !canDrain(from, resource.getFluid()))
-			return null;
-
-		return drain(from, resource.amount, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		FluidStack drainedStack = fluid.drain(maxDrain, doDrain);
-
-		if (doDrain && drainedStack != null && drainedStack.amount > 0)
-			onFluidLevelChanged(fluid, drainedStack.copy());
-
-		return drainedStack;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return this.fluid.getFluid() == null || this.fluid.getFluid().getFluid() == fluid;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return this.fluid.getFluid() != null && this.fluid.getFluid().getFluid() == fluid;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from)
-	{
-		return new FluidTankInfo[]{fluid.getInfo()};
-	}
-
 	/*
 	 * Synced data
 	 */
 	public void readSyncedNBT(NBTTagCompound compound)
 	{
 		if (compound.hasKey("Fluid"))
-			fluid.setFluid(FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("Fluid")));
+			fluidTank.setFluid(FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("Fluid")));
 		else
-			fluid.setFluid(null);
+			fluidTank.setFluid(null);
 
 		setPowered(compound.getBoolean("Powered"));
 	}
 
 	public void writeSyncedNBT(NBTTagCompound compound)
 	{
-		if (fluid.getFluid() != null)
+		if (fluidTank.getFluid() != null)
 		{
 			NBTTagCompound fluidTag = new NBTTagCompound();
-			fluid.getFluid().writeToNBT(fluidTag);
+			fluidTank.getFluid().writeToNBT(fluidTag);
 			compound.setTag("Fluid", fluidTag);
 		}
 
@@ -435,5 +380,72 @@ public class TileEntityBasin extends TileEntity implements IFluidHandler, ITicka
 		}
 
 		return compound;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) fluidTank : super.getCapability(capability, facing);
+	}
+
+	private class BasinTank extends FluidTank
+	{
+		public BasinTank(int capacity)
+		{
+			super(capacity);
+		}
+
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill)
+		{
+			if (resource == null || !canFillFluidType(resource))
+				return 0;
+
+			int amountFilled = super.fill(resource, doFill);
+
+			if (doFill && amountFilled > 0)
+				onFluidLevelChanged(this, new FluidStack(resource.getFluid(), amountFilled));
+
+			return amountFilled;
+		}
+
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain)
+		{
+			if (resource == null || !canDrainFluidType(resource))
+				return null;
+
+			return drain(resource.amount, doDrain);
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain)
+		{
+			FluidStack drainedStack = super.drain(maxDrain, doDrain);
+
+			if (doDrain && drainedStack != null && drainedStack.amount > 0)
+				onFluidLevelChanged(this, drainedStack.copy());
+
+			return drainedStack;
+		}
+
+		@Override
+		public boolean canFillFluidType(FluidStack fluid)
+		{
+			return this.fluid == null || this.fluid.getFluid() == null || this.fluid.getFluid() == fluid.getFluid();
+		}
+
+		@Override
+		public boolean canDrainFluidType(FluidStack fluid)
+		{
+			return this.fluid != null && this.fluid.getFluid() != null && this.fluid.getFluid() == fluid.getFluid();
+		}
 	}
 }

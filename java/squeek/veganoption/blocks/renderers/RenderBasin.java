@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,7 +23,7 @@ public class RenderBasin extends TileEntitySpecialRenderer<TileEntityBasin>
 	@Override
 	public void renderTileEntityAt(TileEntityBasin basin, double x, double y, double z, float partialTickTime, int destroyStage)
 	{
-		FluidTankInfo tankInfo = basin.getTankInfo(EnumFacing.NORTH)[0];
+		FluidTankInfo tankInfo = basin.fluidTank.getInfo();
 		if (tankInfo.fluid == null || tankInfo.fluid.amount <= 0)
 			return;
 
