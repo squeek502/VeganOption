@@ -199,8 +199,8 @@ public class FluidHelper
 		if (tile instanceof net.minecraftforge.fluids.IFluidHandler)
 			return new FluidHandlerWrapper((net.minecraftforge.fluids.IFluidHandler) tile, facing);
 
-		if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.UP))
-			return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.UP);
+		if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
+			return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
 
 		return null;
 	}
