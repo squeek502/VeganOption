@@ -1,25 +1,21 @@
 package squeek.veganoption.content.recipes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import squeek.veganoption.content.crafting.PistonCraftingHandler;
+import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.WorldHelper;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class PistonCraftingRecipe
 {
@@ -131,7 +127,7 @@ public class PistonCraftingRecipe
 				}
 				if (fluidOutput != null && fluidHandler != null)
 				{
-					fluidHandler.fill(EnumFacing.UP, fluidOutput, true);
+					fluidHandler.fill(fluidOutput, true);
 				}
 				for (Entry<InputItemStack, List<EntityItem>> inputEntry : entityItemsByInput.entrySet())
 				{
@@ -180,7 +176,7 @@ public class PistonCraftingRecipe
 		if (fluidHandler == null)
 			return false;
 
-		return fluidHandler.fill(EnumFacing.UP, fluidOutput, false) == fluidOutput.amount;
+		return fluidHandler.fill(fluidOutput, false) == fluidOutput.amount;
 	}
 
 	public IFluidHandler getOutputFluidHandler(World world, BlockPos pos)
@@ -188,12 +184,7 @@ public class PistonCraftingRecipe
 		if (fluidOutput == null)
 			return null;
 
-		TileEntity tileUnderneath = world.getTileEntity(pos.down());
-
-		if (!(tileUnderneath instanceof IFluidHandler))
-			return null;
-
-		return (IFluidHandler) tileUnderneath;
+		return FluidHelper.getFluidHandlerAt(world, pos.down(), EnumFacing.UP);
 	}
 
 	public boolean itemInputMatches(World world, BlockPos pos)

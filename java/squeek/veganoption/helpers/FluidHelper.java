@@ -5,10 +5,14 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper;
 
 public class FluidHelper
 {
@@ -124,12 +128,12 @@ public class FluidHelper
 		if (maxAmount < minAmount)
 			return null;
 
-		if (world.getTileEntity(blockPos) instanceof IFluidHandler)
+		net.minecraftforge.fluids.capability.IFluidHandler fluidHandler = getFluidHandlerAt(world, blockPos, EnumFacing.UP);
+		if (fluidHandler != null)
 		{
-			IFluidHandler fluidHandler = (IFluidHandler) world.getTileEntity(blockPos);
-			FluidStack stackDrained = fluidHandler.drain(EnumFacing.UP, new FluidStack(fluid, maxAmount), false);
+			FluidStack stackDrained = fluidHandler.drain(new FluidStack(fluid, maxAmount), false);
 			if (stackDrained != null && stackDrained.amount >= minAmount)
-				return fluidHandler.drain(EnumFacing.UP, stackDrained, true);
+				return fluidHandler.drain(stackDrained, true);
 		}
 
 		BlockPos sourcePos = BlockHelper.followFluidStreamToSourceBlock(world, blockPos, fluid);
@@ -186,5 +190,18 @@ public class FluidHelper
 			world.setBlockToAir(fluidBlockPos);
 
 		return fluidConsumed;
+	}
+
+	public static net.minecraftforge.fluids.capability.IFluidHandler getFluidHandlerAt(IBlockAccess world, BlockPos pos, EnumFacing facing)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+
+		if (tile instanceof net.minecraftforge.fluids.IFluidHandler)
+			return new FluidHandlerWrapper((net.minecraftforge.fluids.IFluidHandler) tile, facing);
+
+		if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.UP))
+			return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.UP);
+
+		return null;
 	}
 }
