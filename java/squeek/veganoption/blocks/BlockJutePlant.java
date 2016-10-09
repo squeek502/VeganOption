@@ -34,6 +34,7 @@ public class BlockJutePlant extends BlockBush implements IGrowable
 	public static final int NUM_GROWTH_STAGES = NUM_BOTTOM_STAGES + NUM_TOP_STAGES;
 	public static final int BOTTOM_META_FULL = NUM_BOTTOM_STAGES;
 	public static final int TOP_META_START = BOTTOM_META_FULL + 1;
+	public static final int META_MAX = TOP_META_START + NUM_TOP_STAGES;
 	public static final float GROWTH_CHANCE_PER_UPDATETICK = 0.10f;
 
 	public static final PropertyBool HAS_TOP = PropertyBool.create("has_top");
@@ -70,7 +71,7 @@ public class BlockJutePlant extends BlockBush implements IGrowable
 	public int getMetaFromState(IBlockState state)
 	{
 		int stage = state.getValue(GROWTH_STAGE);
-		return isTop(state) ? TOP_META_START + stage : stage;
+		return Math.min(META_MAX, isTop(state) ? TOP_META_START + stage : stage);
 	}
 
 	@Override
