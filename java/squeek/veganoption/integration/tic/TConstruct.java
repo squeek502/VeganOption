@@ -22,6 +22,7 @@ import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.integration.IntegratorBase;
 
 // TODO: Faux feather as a valid fletching material
+// TODO: Update to 1.10.2
 public class TConstruct extends IntegratorBase
 {
 	public static final int MATID_PLASTIC = 1000; // what MFR uses

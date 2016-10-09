@@ -13,11 +13,8 @@ public class IntegrationHandler extends IntegrationBase
 	{
 		tryIntegration(MODID_HARVESTCRAFT, "pams", "HarvestCraft");
 		tryIntegration(MODID_TINKERS_CONSTRUCT, "tic");
-		tryIntegration(MODID_IGUANAS_TINKER_TWEAKS, "tic");
 		tryIntegration(MODID_WAILA, "waila");
-		tryIntegration(MODID_THAUMCRAFT, "thaumcraft");
 		tryIntegration(MODID_BIOMES_O_PLENTY, "bop");
-		tryIntegration(MODID_STILL_HUNGRY, "stillhungry", "StillHungry");
 	}
 
 	public static void preInit()
