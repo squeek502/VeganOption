@@ -43,15 +43,25 @@ if (System.getenv("GIT_COMMIT") != null)
 sourceSets.main.java.srcDirs += 'java'
 sourceSets.main.java.srcDirs += 'apis'
 sourceSets.main.resources.srcDirs += 'resources'
+sourceSets.test.java.srcDirs += 'tests'
 
 repositories {
 	maven {
 		url "http://mobiusstrip.eu/maven"
 	}
+	maven {
+		url "http://dvs1.progwml6.com/files/maven"
+	}
 }
  
 dependencies {
 	deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
+	// compile against the JEI API
+	deobfCompile "mezz.jei:jei_1.10.2:3.12.6.304:api"
+	// at runtime, use the full JEI jar
+	runtime "mezz.jei:jei_1.10.2:3.12.6.304"
+
+	testCompile 'junit:junit:4.11'
 }
 
 jar {
