@@ -94,6 +94,13 @@ public class FrozenBubble implements IContentModule
 				return new RenderSnowball<EntityBubble>(manager, frozenBubble, Minecraft.getMinecraft().getRenderItem());
 			}
 		});
+
+		// Skip the empty bubble as it has already been registered, and bind the model until it is full
+		ItemStack bubbleStack = new ItemStack(frozenBubble, 1, 1);
+		while (!ItemFrozenBubble.isFull(bubbleStack) && bubbleStack.getItem() != Items.ENDER_PEARL) {
+			ContentHelper.registerTypicalItemStackModel(bubbleStack, ModInfo.MODID_LOWER + ":frozenBubbleFilled");
+			bubbleStack = ItemFrozenBubble.fill(bubbleStack, 1);
+		}
 	}
 
 	@Override
