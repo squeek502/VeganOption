@@ -34,6 +34,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.content.modules.Jute;
+import squeek.veganoption.helpers.LangHelper;
 
 import javax.annotation.Nullable;
 
@@ -232,9 +233,9 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 
 		float growthValue = getGrowthPercent(world, data.getPos(), blockState) * 100F;
 		if (growthValue < 100)
-			probeInfo.text(String.format("%s : %.0f %%", I18n.format("hud.msg.growth"), growthValue));
+			probeInfo.text(LangHelper.translate("waila.growth", (int) growthValue));
 		else
-			probeInfo.text(String.format("%s : %s", I18n.format("hud.msg.growth"), I18n.format("hud.msg.mature")));
+			probeInfo.text(LangHelper.translate("waila.growth.mature"));
 	}
 
 	public static class ColorHandler implements IBlockColor, IItemColor

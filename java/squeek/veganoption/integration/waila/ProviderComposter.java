@@ -40,8 +40,8 @@ public class ProviderComposter implements IWailaDataProvider
 		}
 		else
 		{
-			toolTip.add(String.format("%s : %d%%", LangHelper.translate("waila.composter.composting"), (int) (tag.getFloat("Compost") * 100f)));
-			toolTip.add(String.format("%s : %.0f" + BlockComposter.DEGREE_SYMBOL + "C", LangHelper.translate("waila.composter.temperature"), tag.getFloat("Temperature")));
+			toolTip.add(LangHelper.translate("waila.composter.composting", (int) (tag.getFloat("Compost") * 100F)));
+			toolTip.add(LangHelper.translate("waila.composter.temperature", (int) tag.getFloat("Temperature")));
 		}
 		return toolTip;
 	}

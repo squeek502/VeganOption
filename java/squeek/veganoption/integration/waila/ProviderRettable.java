@@ -37,7 +37,7 @@ public class ProviderRettable implements IWailaDataProvider
 		else
 		{
 			if (blockRettable.canRet(accessor.getWorld(), accessor.getPosition()))
-				toolTip.add(LangHelper.translate("waila.retting") + " : " + (int) (rettingPercent * 100f) + "%");
+				toolTip.add(LangHelper.translate("waila.retting", (int) (rettingPercent * 100F)));
 			else
 				toolTip.add(LangHelper.translate("waila.retting.not.submerged"));
 		}

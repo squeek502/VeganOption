@@ -38,9 +38,11 @@ item.VeganOption.juteFibre.nei.crafting=%1$s is obtained by breaking fully rette
 item.VeganOption.juteSeeds.name=Jute Seeds
 item.VeganOption.juteSeeds.nei.usage=An alternative method of propagating a [[minecraft:double_plant:3]]. Can be planted on dirt, grass, or farmland.
 tile.VeganOption.jutePlant.name=Jute
-VeganOption.waila.retting=Retting
+VeganOption.waila.retting=Retting : %d%%
 VeganOption.waila.retting.not.submerged=Needs to be submerged in water
 VeganOption.waila.retted=Retted
+VeganOption.waila.growth=Growth : %d %%
+VeganOption.waila.growth.mature=Growth : Mature
 
 # Burlap
 item.VeganOption.burlap.name=Burlap
@@ -133,8 +135,8 @@ tile.VeganOption.compost.nei.usage=%1$s provides passive improvement to adjacent
 item.VeganOption.fertilizer.name=Fertilizer
 item.VeganOption.fertilizer.nei.usage=%1$s is a [[minecraft:dye:15]] alternative.
 VeganOption.waila.composter.empty=Empty
-VeganOption.waila.composter.composting=Composting
-VeganOption.waila.composter.temperature=Temperature
+VeganOption.waila.composter.composting=Composting : %d%%
+VeganOption.waila.composter.temperature=Temperature : %d°C
 VeganOption.gui.composter.tumble=Tumble Composter
 VeganOption.gui.composter.tumble.desc=Every time the composter is tumbled, it will lose heat initially, but will gain more heat in the long run. The composter should be tumbled about twice every Minecraft day.
 VeganOption.gui.composter.temperature=Temperature: %s
@@ -203,6 +205,7 @@ tile.VeganOption.basin.nei.usage=%1$s is a simple fluid tank that holds up to 1 
 VeganOption.waila.basin.empty=Empty
 VeganOption.waila.basin.open=Open
 VeganOption.waila.basin.closed=Closed
+VeganOption.waila.fluid=%s : %dmB
 
 # Seitan
 item.VeganOption.wheatFlour.name=Wheat Flour

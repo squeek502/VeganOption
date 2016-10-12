@@ -203,7 +203,7 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 		else
 		{
 			if (canRet(world, data.getPos()))
-				probeInfo.text(LangHelper.translate("waila.retting") + " : " + (int) (rettingPercent * 100F) + "%");
+				probeInfo.text(LangHelper.translate("waila.retting", (int) (rettingPercent * 100F)));
 			else
 				probeInfo.text(LangHelper.translate("waila.retting.not.submerged"));
 		}

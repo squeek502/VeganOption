@@ -37,9 +37,7 @@ public class ProviderBasin implements IWailaDataProvider
 
 		FluidTankInfo tankInfo = basin.fluidTank.getInfo();
 		if (tankInfo.fluid != null && tankInfo.fluid.amount > 0)
-		{
-			toolTip.add(tankInfo.fluid.getLocalizedName() + " : " + tankInfo.fluid.amount + "mB");
-		}
+			toolTip.add(LangHelper.translate("waila.fluid", tankInfo.fluid.getLocalizedName(), tankInfo.fluid.amount));
 		else
 			toolTip.add(LangHelper.translate("waila.basin.empty"));
 

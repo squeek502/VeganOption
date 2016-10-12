@@ -143,8 +143,8 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 			return;
 
 		if (composter.isComposting())
-			probeInfo.text(String.format("%s : %d%%", LangHelper.translate("waila.composter.composting"), (int) (composter.getCompostingPercent() * 100F)))
-				.text(String.format("%s : %.0f" + DEGREE_SYMBOL + "C", LangHelper.translate("waila.composter.temperature"), composter.getCompostTemperature()));
+			probeInfo.text(LangHelper.translate("waila.composter.composting", (int) (composter.getCompostingPercent() * 100F)))
+				.text(LangHelper.translate("waila.composter.temperature", (int) composter.getCompostTemperature()));
 		else
 			probeInfo.text(LangHelper.translate("waila.composter.empty"));
 	}
