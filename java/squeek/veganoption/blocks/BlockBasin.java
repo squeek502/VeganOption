@@ -8,7 +8,6 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -19,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -35,7 +33,7 @@ import squeek.veganoption.helpers.LangHelper;
 import javax.annotation.Nonnull;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockBasin extends BlockContainer implements IHollowBlock, IProbeInfoAccessor
+public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccessor
 {
 	public static final PropertyBool IS_OPEN = PropertyBool.create("is_open");
 	public static final double SIDE_WIDTH = 0.125D;
@@ -77,7 +75,13 @@ public class BlockBasin extends BlockContainer implements IHollowBlock, IProbeIn
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
+	public boolean hasTileEntity(IBlockState state)
+	{
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
 		return new TileEntityBasin();
 	}
@@ -317,13 +321,6 @@ public class BlockBasin extends BlockContainer implements IHollowBlock, IProbeIn
 	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
