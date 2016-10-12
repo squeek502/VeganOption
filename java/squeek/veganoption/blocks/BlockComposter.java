@@ -25,13 +25,14 @@ import net.minecraftforge.fml.common.Optional;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.DirectionHelper;
 import squeek.veganoption.helpers.LangHelper;
-import squeek.veganoption.integration.waila.ProviderComposter;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockComposter extends Block implements IProbeInfoAccessor
 {
 	public static final AxisAlignedBB COMPOSTER_AABB = new AxisAlignedBB(0.0625F, 0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+	public static final String DEGREE_SYMBOL = "\u00B0";
+
 	public BlockComposter()
 	{
 		super(Material.WOOD);
@@ -143,7 +144,7 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 
 		if (composter.isComposting())
 			probeInfo.text(String.format("%s : %d%%", LangHelper.translate("waila.composter.composting"), (int) (composter.getCompostingPercent() * 100F)))
-				.text(String.format("%s : %.0f" + ProviderComposter.DEGREE_SYMBOL + "C", LangHelper.translate("waila.composter.temperature"), composter.getCompostTemperature()));
+				.text(String.format("%s : %.0f" + DEGREE_SYMBOL + "C", LangHelper.translate("waila.composter.temperature"), composter.getCompostTemperature()));
 		else
 			probeInfo.text(LangHelper.translate("waila.composter.empty"));
 	}
