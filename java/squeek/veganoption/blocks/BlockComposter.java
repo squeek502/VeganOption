@@ -1,5 +1,9 @@
 package squeek.veganoption.blocks;
 
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoAccessor;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
@@ -17,13 +21,18 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.DirectionHelper;
+import squeek.veganoption.helpers.LangHelper;
 
-public class BlockComposter extends Block
+@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
+public class BlockComposter extends Block implements IProbeInfoAccessor
 {
 	public static final AxisAlignedBB COMPOSTER_AABB = new AxisAlignedBB(0.0625F, 0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+	public static final String DEGREE_SYMBOL = "\u00B0";
+
 	public BlockComposter()
 	{
 		super(Material.WOOD);
@@ -124,5 +133,19 @@ public class BlockComposter extends Block
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
+	}
+
+	@Override
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data)
+	{
+		TileEntityComposter composter = (TileEntityComposter) world.getTileEntity(data.getPos());
+		if (composter == null)
+			return;
+
+		if (composter.isComposting())
+			probeInfo.text(String.format("%s : %d%%", LangHelper.translate("waila.composter.composting"), (int) (composter.getCompostingPercent() * 100F)))
+				.text(String.format("%s : %.0f" + DEGREE_SYMBOL + "C", LangHelper.translate("waila.composter.temperature"), composter.getCompostTemperature()));
+		else
+			probeInfo.text(LangHelper.translate("waila.composter.empty"));
 	}
 }

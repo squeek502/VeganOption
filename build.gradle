@@ -52,9 +52,13 @@ repositories {
 	maven {
 		url "http://dvs1.progwml6.com/files/maven"
 	}
+	maven {
+		url "http://maven.tterrag.com/"
+	}
 }
  
 dependencies {
+	deobfCompile "mcjty.theoneprobe:TheOneProbe:1.10-1.1.4-35"
 	deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
 	// compile against the JEI API
 	deobfCompile "mezz.jei:jei_1.10.2:3.12.6.304:api"

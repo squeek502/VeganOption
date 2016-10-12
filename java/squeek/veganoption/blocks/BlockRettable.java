@@ -1,6 +1,11 @@
 package squeek.veganoption.blocks;
 
 import java.util.Random;
+
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoAccessor;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.BlockHay;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.PropertyInteger;
@@ -17,17 +22,16 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import squeek.veganoption.helpers.BlockHelper;
-import squeek.veganoption.helpers.ColorHelper;
-import squeek.veganoption.helpers.MiscHelper;
-import squeek.veganoption.helpers.RandomHelper;
+import squeek.veganoption.helpers.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BlockRettable extends BlockHay
+@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
+public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 {
 	// this cannot be any higher than 3 due to BlockRotatablePillar using the 3rd/4th bits
 	public static final int NUM_RETTING_STAGES = 3;
@@ -188,6 +192,21 @@ public class BlockRettable extends BlockHay
 	public int getComparatorInputOverride(IBlockState blockState, World world, BlockPos pos)
 	{
 		return MathHelper.floor_float(getRettingPercent(world, pos) * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH);
+	}
+
+	@Override
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data)
+	{
+		float rettingPercent = getRettingPercent(blockState);
+		if (rettingPercent >= 1)
+			probeInfo.text(LangHelper.translate("waila.retted"));
+		else
+		{
+			if (canRet(world, data.getPos()))
+				probeInfo.text(LangHelper.translate("waila.retting") + " : " + (int) (rettingPercent * 100F) + "%");
+			else
+				probeInfo.text(LangHelper.translate("waila.retting.not.submerged"));
+		}
 	}
 
 	public static class ColorHandler implements IBlockColor, IItemColor
