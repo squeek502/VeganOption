@@ -3,6 +3,10 @@ package squeek.veganoption.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoAccessor;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -22,13 +26,16 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
+import squeek.veganoption.helpers.LangHelper;
 
 import javax.annotation.Nonnull;
 
-public class BlockBasin extends BlockContainer implements IHollowBlock
+@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
+public class BlockBasin extends BlockContainer implements IHollowBlock, IProbeInfoAccessor
 {
 	public static final PropertyBool IS_OPEN = PropertyBool.create("is_open");
 	public static final double SIDE_WIDTH = 0.125D;
@@ -324,5 +331,15 @@ public class BlockBasin extends BlockContainer implements IHollowBlock
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
+	}
+
+	@Override
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data)
+	{
+		TileEntityBasin basin = (TileEntityBasin) world.getTileEntity(data.getPos());
+		if (basin == null)
+			return;
+		probeInfo.text(LangHelper.translate("waila.basin." + (basin.isPowered() ? "open" : "closed")));
+
 	}
 }

@@ -18,8 +18,6 @@ public class WailaRegistrar
 		registrar.registerBodyProvider(new ProviderComposter(), TileEntityComposter.class);
 		registrar.registerNBTProvider(new ProviderComposter(), TileEntityComposter.class);
 
-		registrar.registerStackProvider(new ProviderBed(), BlockBedGeneric.class);
-
 		registrar.registerBodyProvider(new ProviderBasin(), TileEntityBasin.class);
 
 		registrar.registerBodyProvider(new ProviderJutePlant(), BlockJutePlant.class);
