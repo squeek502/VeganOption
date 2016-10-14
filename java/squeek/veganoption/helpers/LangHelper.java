@@ -39,4 +39,9 @@ public class LangHelper
 	{
 		return I18n.hasKey(key);
 	}
+
+	public static String contextString(String format, String context, Object... params)
+	{
+		return translate(format + ".format", translate("context." + context + ".title", params), translate("context." + context + ".value", params), params);
+	}
 }

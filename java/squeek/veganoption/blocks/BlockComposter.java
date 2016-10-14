@@ -31,7 +31,6 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 {
 	public static final AxisAlignedBB COMPOSTER_AABB = new AxisAlignedBB(0.0625F, 0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
-	public static final String DEGREE_SYMBOL = "\u00B0";
 
 	public BlockComposter()
 	{
@@ -143,9 +142,9 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 			return;
 
 		if (composter.isComposting())
-			probeInfo.text(LangHelper.translate("waila.composter.composting", (int) (composter.getCompostingPercent() * 100F)))
-				.text(LangHelper.translate("waila.composter.temperature", (int) composter.getCompostTemperature()));
+			probeInfo.text(LangHelper.contextString("top", "composting", Math.round(composter.getCompostingPercent() * 100F)))
+				.text(LangHelper.contextString("top", "temperature", Math.round(composter.getCompostTemperature())));
 		else
-			probeInfo.text(LangHelper.translate("waila.composter.empty"));
+			probeInfo.text(LangHelper.translate("info.composter.empty"));
 	}
 }

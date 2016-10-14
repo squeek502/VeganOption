@@ -1,7 +1,5 @@
 package squeek.veganoption.blocks;
 
-import java.util.Random;
-
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
@@ -21,7 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,6 +26,7 @@ import squeek.veganoption.helpers.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Random;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockRettable extends BlockHay implements IProbeInfoAccessor
@@ -199,13 +197,13 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 	{
 		float rettingPercent = getRettingPercent(blockState);
 		if (rettingPercent >= 1)
-			probeInfo.text(LangHelper.translate("waila.retted"));
+			probeInfo.text(LangHelper.translate("info.retted"));
 		else
 		{
 			if (canRet(world, data.getPos()))
-				probeInfo.text(LangHelper.translate("waila.retting", (int) (rettingPercent * 100F)));
+				probeInfo.text(LangHelper.contextString("top", "retting", Math.round(rettingPercent * 100F)));
 			else
-				probeInfo.text(LangHelper.translate("waila.retting.not.submerged"));
+				probeInfo.text(LangHelper.translate("info.retting.not.submerged"));
 		}
 	}
 
