@@ -143,7 +143,7 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 
 		if (composter.isComposting())
 			probeInfo.text(LangHelper.contextString("top", "composting", Math.round(composter.getCompostingPercent() * 100F)))
-				.text(LangHelper.contextString("top", "temperature", Math.round(composter.getCompostTemperature())));
+				.text(LangHelper.contextString("top", "temperature", (int) Math.floor(composter.getCompostTemperature())));
 		else
 			probeInfo.text(LangHelper.translate("info.composter.empty"));
 	}

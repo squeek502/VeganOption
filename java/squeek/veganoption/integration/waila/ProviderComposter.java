@@ -41,7 +41,7 @@ public class ProviderComposter implements IWailaDataProvider
 		else
 		{
 			toolTip.add(LangHelper.contextString("waila", "composting", Math.round(tag.getFloat("Compost") * 100F)));
-			toolTip.add(LangHelper.contextString("waila", "temperature", Math.round(tag.getFloat("Temperature"))));
+			toolTip.add(LangHelper.contextString("waila", "temperature", (int) Math.floor(tag.getFloat("Temperature"))));
 		}
 		return toolTip;
 	}
