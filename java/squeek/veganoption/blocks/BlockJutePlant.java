@@ -1,7 +1,5 @@
 package squeek.veganoption.blocks;
 
-import java.util.Random;
-
 import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -18,7 +16,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -34,8 +31,10 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.content.modules.Jute;
+import squeek.veganoption.helpers.LangHelper;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccesor", modid = "theoneprobe")
 public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAccessor
@@ -232,9 +231,9 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 
 		float growthValue = getGrowthPercent(world, data.getPos(), blockState) * 100F;
 		if (growthValue < 100)
-			probeInfo.text(String.format("%s : %.0f %%", I18n.format("hud.msg.growth"), growthValue));
+			probeInfo.text(LangHelper.contextString("top", "growth", Math.round(growthValue)));
 		else
-			probeInfo.text(String.format("%s : %s", I18n.format("hud.msg.growth"), I18n.format("hud.msg.mature")));
+			probeInfo.text(LangHelper.contextString("top", "growth.mature"));
 	}
 
 	public static class ColorHandler implements IBlockColor, IItemColor

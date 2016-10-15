@@ -33,15 +33,13 @@ public class ProviderBasin implements IWailaDataProvider
 	public List<String> getWailaBody(ItemStack itemStack, List<String> toolTip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
 		TileEntityBasin basin = (TileEntityBasin) accessor.getTileEntity();
-		toolTip.add(LangHelper.translate(basin.isPowered() ? "waila.basin.open" : "waila.basin.closed"));
+		toolTip.add(LangHelper.translate(basin.isPowered() ? "info.basin.open" : "info.basin.closed"));
 
 		FluidTankInfo tankInfo = basin.fluidTank.getInfo();
 		if (tankInfo.fluid != null && tankInfo.fluid.amount > 0)
-		{
-			toolTip.add(tankInfo.fluid.getLocalizedName() + " : " + tankInfo.fluid.amount + "mB");
-		}
+			toolTip.add(LangHelper.contextString("waila", "fluid", tankInfo.fluid.getLocalizedName(), tankInfo.fluid.amount));
 		else
-			toolTip.add(LangHelper.translate("waila.basin.empty"));
+			toolTip.add(LangHelper.translate("info.basin.empty"));
 
 		return toolTip;
 	}

@@ -1,8 +1,5 @@
 package squeek.veganoption.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
@@ -31,6 +28,8 @@ import squeek.veganoption.blocks.tiles.TileEntityBasin;
 import squeek.veganoption.helpers.LangHelper;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccessor
@@ -336,7 +335,7 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 		TileEntityBasin basin = (TileEntityBasin) world.getTileEntity(data.getPos());
 		if (basin == null)
 			return;
-		probeInfo.text(LangHelper.translate("waila.basin." + (basin.isPowered() ? "open" : "closed")));
+		probeInfo.text(LangHelper.translate("info.basin." + (basin.isPowered() ? "open" : "closed")));
 
 	}
 }

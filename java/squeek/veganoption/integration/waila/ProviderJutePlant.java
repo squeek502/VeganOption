@@ -1,17 +1,18 @@
 package squeek.veganoption.integration.waila;
 
-import java.util.List;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import squeek.veganoption.blocks.BlockJutePlant;
+import squeek.veganoption.helpers.LangHelper;
+
+import java.util.List;
 
 public class ProviderJutePlant implements IWailaDataProvider
 {
@@ -34,9 +35,9 @@ public class ProviderJutePlant implements IWailaDataProvider
 		{
 			float growthValue = ((BlockJutePlant) accessor.getBlock()).getGrowthPercent(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState()) * 100.0F;
 			if (growthValue < 100)
-				toolTip.add(String.format("%s : %.0f %%", I18n.format("hud.msg.growth"), growthValue));
+				toolTip.add(LangHelper.contextString("waila", "growth", Math.round(growthValue)));
 			else
-				toolTip.add(String.format("%s : %s", I18n.format("hud.msg.growth"), I18n.format("hud.msg.mature")));
+				toolTip.add(LangHelper.contextString("waila", "growth.mature"));
 		}
 
 		return toolTip;

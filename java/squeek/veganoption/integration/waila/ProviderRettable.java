@@ -1,6 +1,5 @@
 package squeek.veganoption.integration.waila;
 
-import java.util.List;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -12,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.helpers.LangHelper;
+
+import java.util.List;
 
 public class ProviderRettable implements IWailaDataProvider
 {
@@ -33,13 +34,13 @@ public class ProviderRettable implements IWailaDataProvider
 		BlockRettable blockRettable = (BlockRettable) accessor.getBlock();
 		float rettingPercent = BlockRettable.getRettingPercent(accessor.getWorld(), accessor.getPosition());
 		if (rettingPercent >= 1)
-			toolTip.add(LangHelper.translate("waila.retted"));
+			toolTip.add(LangHelper.translate("info.retted"));
 		else
 		{
 			if (blockRettable.canRet(accessor.getWorld(), accessor.getPosition()))
-				toolTip.add(LangHelper.translate("waila.retting") + " : " + (int) (rettingPercent * 100f) + "%");
+				toolTip.add(LangHelper.contextString("waila", "retting", Math.round(rettingPercent * 100F)));
 			else
-				toolTip.add(LangHelper.translate("waila.retting.not.submerged"));
+				toolTip.add(LangHelper.translate("info.retting.not.submerged"));
 		}
 		return toolTip;
 	}

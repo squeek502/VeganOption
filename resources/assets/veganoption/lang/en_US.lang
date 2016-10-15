@@ -29,6 +29,28 @@
 # Creative Tab
 itemGroup.VeganOption=The Vegan Option
 
+# WAILA and The One Probe strings
+VeganOption.waila.format=%1$s : %2$s
+VeganOption.top.format=%1$s: %2$s
+VeganOption.context.growth.title=Growth
+VeganOption.context.growth.value=%1$d%%
+VeganOption.context.growth.mature.title=Growth
+VeganOption.context.growth.mature.value=Mature
+VeganOption.context.retting.title=Retting
+VeganOption.context.retting.value=%1$d%%
+VeganOption.info.retting.not.submerged=Needs to be submerged in water
+VeganOption.info.retted=Retted
+VeganOption.info.composter.empty=Empty
+VeganOption.context.composting.title=Composting
+VeganOption.context.composting.value=%1$d%%
+VeganOption.context.temperature.title=Temperature
+VeganOption.context.temperature.value=%1$d°C
+VeganOption.info.basin.empty=Empty
+VeganOption.info.basin.open=Open
+VeganOption.info.basin.closed=Closed
+VeganOption.context.fluid.title=%1$s
+VeganOption.context.fluid.value=%2$dmB
+
 # Jute
 tile.VeganOption.juteBundled.name=Bundled Jute
 tile.VeganOption.juteBundled.nei.usage=In order to extract the [[VeganOption:juteFibre]], %1$s must be first be retted (submerged in water). [[minecraft:comparator]] output is based on the current retting stage of the %1$s.
@@ -38,9 +60,6 @@ item.VeganOption.juteFibre.nei.crafting=%1$s is obtained by breaking fully rette
 item.VeganOption.juteSeeds.name=Jute Seeds
 item.VeganOption.juteSeeds.nei.usage=An alternative method of propagating a [[minecraft:double_plant:3]]. Can be planted on dirt, grass, or farmland.
 tile.VeganOption.jutePlant.name=Jute
-VeganOption.waila.retting=Retting
-VeganOption.waila.retting.not.submerged=Needs to be submerged in water
-VeganOption.waila.retted=Retted
 
 # Burlap
 item.VeganOption.burlap.name=Burlap
@@ -132,9 +151,6 @@ tile.VeganOption.compost.name=Compost
 tile.VeganOption.compost.nei.usage=%1$s provides passive improvement to adjacent [[minecraft:farmland]].
 item.VeganOption.fertilizer.name=Fertilizer
 item.VeganOption.fertilizer.nei.usage=%1$s is a [[minecraft:dye:15]] alternative.
-VeganOption.waila.composter.empty=Empty
-VeganOption.waila.composter.composting=Composting
-VeganOption.waila.composter.temperature=Temperature
 VeganOption.gui.composter.tumble=Tumble Composter
 VeganOption.gui.composter.tumble.desc=Every time the composter is tumbled, it will lose heat initially, but will gain more heat in the long run. The composter should be tumbled about twice every Minecraft day.
 VeganOption.gui.composter.temperature=Temperature: %s
@@ -200,9 +216,6 @@ item.VeganOption.dollsEye.nei.crafting={item.VeganOption.dollsEye.nei.common}\n\
 # Basin
 tile.VeganOption.basin.name=Basin
 tile.VeganOption.basin.nei.usage=%1$s is a simple fluid tank that holds up to 1 buckets worth of fluid. By default, it has a lid, but when a redstone signal is applied, the lid is removed and it acts as a fluid hopper (fluid blocks will flow into it).\n\nWhen container items (buckets, bottles, etc) are dropped inside an open %1$s, they will be filled with the fluid inside the %1$s if possible.
-VeganOption.waila.basin.empty=Empty
-VeganOption.waila.basin.open=Open
-VeganOption.waila.basin.closed=Closed
 
 # Seitan
 item.VeganOption.wheatFlour.name=Wheat Flour
