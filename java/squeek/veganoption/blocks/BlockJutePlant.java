@@ -1,11 +1,9 @@
 package squeek.veganoption.blocks;
 
-import mcjty.theoneprobe.Tools;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
 import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.config.Config;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.IGrowable;
@@ -226,9 +224,6 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	@Override
 	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data)
 	{
-		if (!Tools.show(mode, Config.getRealConfig().getShowCropPercentage()))
-			return;
-
 		float growthValue = getGrowthPercent(world, data.getPos(), blockState) * 100F;
 		if (growthValue < 100)
 			probeInfo.text(LangHelper.contextString("top", "growth", Math.round(growthValue)));
