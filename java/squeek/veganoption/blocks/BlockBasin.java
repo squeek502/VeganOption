@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
+import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.LangHelper;
 
 import javax.annotation.Nonnull;
@@ -52,7 +53,7 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = BlockHelper.getTileEntitySafely(world, pos);
 		boolean open = false;
 		if (tile != null && tile instanceof TileEntityBasin)
 		{
