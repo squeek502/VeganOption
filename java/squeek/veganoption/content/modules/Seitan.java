@@ -101,7 +101,6 @@ public class Seitan implements IContentModule
 	@Override
 	public void clientSidePre()
 	{
-		ContentHelper.registerTypicalItemModel(washableWheat);
 		ContentHelper.registerTypicalItemModel(seitanCooked);
 		ContentHelper.registerTypicalItemStackModel(seitanRawStack, ModInfo.MODID_LOWER + ":seitan_raw");
 		ContentHelper.registerTypicalItemStackModel(wheatFlourStack, ModInfo.MODID_LOWER + ":wheat_flour");
