@@ -69,7 +69,7 @@ public class ToxicMushroom implements IContentModule
 		};
 		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.MYCELIUM), dontDropWhenSilkTouching);
 
-		GameRegistry.addShapelessRecipe(new ItemStack(falseMorelFermented), new ItemStack(falseMorel), new ItemStack(Blocks.BROWN_MUSHROOM_BLOCK), new ItemStack(Items.SUGAR));
+		GameRegistry.addShapelessRecipe(new ItemStack(falseMorelFermented), new ItemStack(falseMorel), new ItemStack(Blocks.BROWN_MUSHROOM), new ItemStack(Items.SUGAR));
 	}
 
 	@Override
