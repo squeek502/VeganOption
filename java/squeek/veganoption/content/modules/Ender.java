@@ -94,6 +94,7 @@ public class Ender implements IContentModule
 		ContentHelper.registerTypicalItemModel(bucketRawEnder);
 		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(encrustedObsidian));
 		ContentHelper.registerFluidMapperAndMeshDef(rawEnder, "raw_ender");
+		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(enderRift));
 	}
 
 	@Override
