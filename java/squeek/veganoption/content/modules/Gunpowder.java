@@ -1,5 +1,7 @@
 package squeek.veganoption.content.modules;
 
+import net.minecraft.block.BlockSandStone;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -50,7 +52,13 @@ public class Gunpowder implements IContentModule
 	{
 		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.NETHERRACK), new DropSpecifier(new ItemStack(sulfur), 0.02f));
 
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.SANDSTONE), new DropSpecifier(new ItemStack(saltpeter), 0.02f, 1, 3));
+		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.SANDSTONE) {
+			@Override
+			public boolean stateMatches(IBlockState state)
+			{
+				return state.getValue(BlockSandStone.TYPE).equals(BlockSandStone.EnumType.DEFAULT);
+			}
+		}, new DropSpecifier(new ItemStack(saltpeter), 0.02f, 1, 3));
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.GUNPOWDER), ContentHelper.charcoal.copy(), ContentHelper.sulfurOreDict, ContentHelper.saltpeterOreDict));
 	}
