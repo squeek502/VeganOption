@@ -1,6 +1,8 @@
 package squeek.veganoption.content.modules;
 
+import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -55,12 +57,12 @@ public class Resin implements IContentModule
 	{
 		Modifiers.recipes.convertInput(new ItemStack(Items.SLIME_BALL), ContentHelper.slimeballOreDict);
 
-		BlockSpecifier spruceLogSpecifier = new BlockSpecifier(Blocks.LOG, 1)
+		BlockSpecifier spruceLogSpecifier = new BlockSpecifier(Blocks.LOG, BlockPlanks.EnumType.SPRUCE.getMetadata())
 		{
 			@Override
-			public boolean metaMatches(int meta)
+			public boolean stateMatches(IBlockState state)
 			{
-				return this.meta == BlockPlanks.EnumType.byMetadata(meta).getMetadata();
+				return state.getValue(BlockOldLog.VARIANT).equals(BlockPlanks.EnumType.SPRUCE);
 			}
 		};
 		Modifiers.drops.addDropsToBlock(spruceLogSpecifier, new DropSpecifier(new ItemStack(resin), 0.1f));

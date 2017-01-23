@@ -3,6 +3,7 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -96,14 +97,12 @@ public class VegetableOil implements IContentModule
 		ContentHelper.remapOre(ContentHelper.teaSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
 		ContentHelper.remapOre(ContentHelper.avocadoOreDict, ContentHelper.vegetableOilSourceOreDict);
 
-		BlockSpecifier sunflowerTopSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT, 0)
+		BlockSpecifier sunflowerTopSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT, BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta())
 		{
 			@Override
-			public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta)
+			public boolean stateMatches(IBlockState state)
 			{
-				boolean isRightBlock = this.block == block;
-				boolean isRightMeta = this.meta == BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta();
-				return isRightBlock && isRightMeta;
+				return state.getValue(BlockDoublePlant.VARIANT).equals(BlockDoublePlant.EnumPlantType.SUNFLOWER);
 			}
 		};
 		DropSpecifier sunflowerDropSpecifier = new DropSpecifier(new ItemStack(seedSunflower))
@@ -118,7 +117,7 @@ public class VegetableOil implements IContentModule
 					List<ItemStack> dropsToRemove = new ArrayList<ItemStack>();
 					for (ItemStack drop : drops)
 					{
-						if (drop.getItem() == Item.getItemFromBlock(Blocks.DOUBLE_PLANT) && drop.getItemDamage() == 0)
+						if (drop.getItem() == Item.getItemFromBlock(Blocks.DOUBLE_PLANT) && drop.getItemDamage() == BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta())
 							dropsToRemove.add(drop);
 					}
 					drops.removeAll(dropsToRemove);

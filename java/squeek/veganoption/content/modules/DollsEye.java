@@ -1,6 +1,8 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTallGrass;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.PotionTypes;
@@ -52,22 +54,24 @@ public class DollsEye implements IContentModule
 	{
 		PotionHelper.registerPotionTypeConversion(PotionTypes.AWKWARD, new PotionHelper.ItemPredicateInstance(dollsEye), PotionTypes.POISON);
 
-		BlockSpecifier forestGrass = new BlockSpecifier(Blocks.TALLGRASS, 1)
+		BlockSpecifier forestGrass = new BlockSpecifier(Blocks.TALLGRASS, BlockTallGrass.EnumType.GRASS.getMeta())
 		{
 			@Override
-			public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta) {
-				boolean blockMatches = super.matches(world, pos, block, meta);
+			public boolean matches(IBlockAccess world, BlockPos pos, IBlockState state)
+			{
+				boolean blockMatches = super.matches(world, pos, state);
 
-				if (!blockMatches || !(world instanceof World)) {
+				if (!blockMatches || !(world instanceof World))
 					return false;
-				}
+
+				if (!state.getValue(BlockTallGrass.TYPE).equals(BlockTallGrass.EnumType.GRASS))
+					return false;
 
 				Biome biome = ((World) world).provider.getBiomeForCoords(pos);
 
 				boolean isForest = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.FOREST);
 
 				return isForest && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.CONIFEROUS) && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.JUNGLE);
-
 			}
 		};
 		Modifiers.drops.addDropsToBlock(forestGrass, new DropSpecifier(new ItemStack(dollsEye), 0.01f, 1, 2));

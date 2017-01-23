@@ -1,7 +1,11 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.BlockColored;
+import net.minecraft.block.BlockLeaves;
+import net.minecraft.block.BlockOldLeaf;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -81,12 +85,12 @@ public class Kapok implements IContentModule
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(kapokBlock, 1, 15 - i), "dye" + ConstantHelper.dyeColors[i], new ItemStack(kapokBlock)));
 		}
 
-		BlockSpecifier jungleLeavesSpecifier = new BlockSpecifier(Blocks.LEAVES, 3)
+		BlockSpecifier jungleLeavesSpecifier = new BlockSpecifier(Blocks.LEAVES, BlockPlanks.EnumType.JUNGLE.getMetadata())
 		{
 			@Override
-			public boolean metaMatches(int meta)
+			public boolean stateMatches(IBlockState state)
 			{
-				return this.meta == (meta & 3);
+				return state.getValue(BlockOldLeaf.VARIANT).equals(BlockPlanks.EnumType.JUNGLE);
 			}
 		};
 		Modifiers.drops.addDropsToBlock(jungleLeavesSpecifier, new DropSpecifier(new ItemStack(kapokTuft), 0.07f, 1, 2));

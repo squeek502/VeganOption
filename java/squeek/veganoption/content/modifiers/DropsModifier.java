@@ -59,7 +59,7 @@ public class DropsModifier
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
 			BlockSpecifier block = blockDropSpecifier.getKey();
-			if (OreDictionary.itemMatches(new ItemStack(block.block, 1, block.meta), itemStack, false))
+			if (OreDictionary.itemMatches(new ItemStack(block.block, 1, block.itemStackMeta), itemStack, false))
 			{
 				return true;
 			}
@@ -86,7 +86,7 @@ public class DropsModifier
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
 			BlockSpecifier block = blockDropSpecifier.getKey();
-			if (OreDictionary.itemMatches(new ItemStack(block.block, 1, block.meta), itemStack, false))
+			if (OreDictionary.itemMatches(new ItemStack(block.block, 1, block.itemStackMeta), itemStack, false))
 			{
 				subset.add(new DropInfo(blockDropSpecifier.getKey(), blockDropSpecifier.getValue()));
 			}
@@ -107,7 +107,7 @@ public class DropsModifier
 	public static class BlockSpecifier
 	{
 		public final Block block;
-		public final int meta;
+		public final int itemStackMeta;
 		public final ItemStack neiItemStack;
 
 		public BlockSpecifier(Block block)
@@ -115,36 +115,31 @@ public class DropsModifier
 			this(block, null);
 		}
 
+		public BlockSpecifier(Block block, int itemStackMeta)
+		{
+			this(block, itemStackMeta, null);
+		}
+
 		public BlockSpecifier(Block block, ItemStack neiItemStack)
 		{
-			this(block, 0, neiItemStack);
+			this(block, OreDictionary.WILDCARD_VALUE, neiItemStack);
 		}
 
-		public BlockSpecifier(Block block, int meta)
-		{
-			this(block, meta, null);
-		}
-
-		public BlockSpecifier(Block block, int meta, ItemStack neiItemStack)
+		public BlockSpecifier(Block block, int itemStackMeta, ItemStack neiItemStack)
 		{
 			this.block = block;
-			this.meta = meta;
+			this.itemStackMeta = itemStackMeta;
 			this.neiItemStack = neiItemStack;
 		}
 
-		public boolean matches(Block block)
+		public boolean matches(IBlockState state)
 		{
-			return matches(block, 0);
+			return blockMatches(state.getBlock()) && stateMatches(state);
 		}
 
-		public boolean matches(Block block, int meta)
+		public boolean matches(IBlockAccess world, BlockPos pos, IBlockState state)
 		{
-			return blockMatches(block) && metaMatches(block, meta);
-		}
-
-		public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta)
-		{
-			return matches(block, meta);
+			return matches(state);
 		}
 
 		public boolean blockMatches(Block block)
@@ -154,17 +149,7 @@ public class DropsModifier
 
 		public boolean stateMatches(IBlockState state)
 		{
-			return metaMatches(state.getBlock(), state.getBlock().getMetaFromState(state));
-		}
-
-		public boolean metaMatches(int meta)
-		{
-			return this.meta == meta || this.meta == OreDictionary.WILDCARD_VALUE;
-		}
-
-		public boolean metaMatches(Block block, int meta)
-		{
-			return metaMatches(meta);
+			return true;
 		}
 	}
 
@@ -229,13 +214,18 @@ public class DropsModifier
 	// only shows in NEI, doesn't actually modify the drops
 	public static class NEIBlockSpecifier extends BlockSpecifier
 	{
-		public NEIBlockSpecifier(Block block, int meta, ItemStack neiItemStack)
+		public NEIBlockSpecifier(Block block, ItemStack neiItemStack)
 		{
-			super(block, meta, neiItemStack);
+			super(block, neiItemStack);
+		}
+
+		public NEIBlockSpecifier(Block block, int itemStackMeta, ItemStack neiItemStack)
+		{
+			super(block, itemStackMeta, neiItemStack);
 		}
 
 		@Override
-		public boolean matches(IBlockAccess world, BlockPos pos, Block block, int meta)
+		public boolean matches(IBlockAccess world, BlockPos pos, IBlockState state)
 		{
 			return false;
 		}
@@ -273,7 +263,7 @@ public class DropsModifier
 		Block block = event.getState().getBlock();
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
-			if (blockDropSpecifier.getKey().matches(event.getWorld(), event.getPos(), block, block.getMetaFromState(event.getState())))
+			if (blockDropSpecifier.getKey().matches(event.getWorld(), event.getPos(), event.getState()))
 			{
 				blockDropSpecifier.getValue().modifyDrops(event.getDrops(), event.getHarvester(), event.getFortuneLevel(), event.isSilkTouching());
 			}
