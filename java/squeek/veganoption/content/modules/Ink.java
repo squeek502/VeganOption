@@ -51,6 +51,7 @@ public class Ink implements IContentModule
 		blackInkFluid = new Fluid("ink_black", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_flow"));
 		FluidRegistry.registerFluid(blackInkFluid);
 		blackInk = new BlockFluidClassic(blackInkFluid, Material.WATER)
+				.setUnlocalizedName(ModInfo.MODID + ".inkBlack")
 				.setRegistryName(ModInfo.MODID_LOWER, "inkBlack");
 		blackInkFluid.setBlock(blackInk);
 		blackInkFluid.setUnlocalizedName(blackInk.getUnlocalizedName());
