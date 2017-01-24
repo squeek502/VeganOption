@@ -1,11 +1,12 @@
 package squeek.veganoption.helpers;
 
-import java.util.Collection;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.Collection;
 
 public class MiscHelper
 {

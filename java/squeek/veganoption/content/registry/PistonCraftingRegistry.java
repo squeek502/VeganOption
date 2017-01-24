@@ -1,12 +1,13 @@
 package squeek.veganoption.content.registry;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.helpers.FluidHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PistonCraftingRegistry
 {

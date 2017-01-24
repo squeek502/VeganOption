@@ -1,9 +1,5 @@
 package squeek.veganoption.content.modifiers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -20,7 +16,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.RandomHelper;
 
-import static jline.console.internal.ConsoleRunner.property;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class DropsModifier
 {
@@ -115,12 +114,12 @@ public class DropsModifier
 		public final ItemStack itemStackForDisplay;
 		public final ItemStack itemStackForComparison;
 
-		public BlockSpecifier(IBlockState stateToMatch, IProperty<?> ... propertiesToMatch)
+		public BlockSpecifier(IBlockState stateToMatch, IProperty<?>... propertiesToMatch)
 		{
 			this(stateToMatch, null, propertiesToMatch);
 		}
 
-		public BlockSpecifier(IBlockState stateToMatch, ItemStack itemStackForDisplay, IProperty<?> ... propertiesToMatch)
+		public BlockSpecifier(IBlockState stateToMatch, ItemStack itemStackForDisplay, IProperty<?>... propertiesToMatch)
 		{
 			this.stateToMatch = stateToMatch;
 			this.propertiesToMatch = propertiesToMatch;

@@ -1,11 +1,9 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.BlockColored;
-import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -29,8 +27,6 @@ import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
 import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
 import squeek.veganoption.helpers.ConstantHelper;
 
-import javax.annotation.Nonnull;
-
 public class Kapok implements IContentModule
 {
 	public static Item kapokTuft;
@@ -40,16 +36,16 @@ public class Kapok implements IContentModule
 	public void create()
 	{
 		kapokTuft = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".kapokTuft")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "kapokTuft");
+			.setUnlocalizedName(ModInfo.MODID + ".kapokTuft")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "kapokTuft");
 		GameRegistry.register(kapokTuft);
 
 		kapokBlock = (BlockColored) new BlockKapok(Material.CLOTH)
-				.setHardness(0.8F)
-				.setCreativeTab(VeganOption.creativeTab)
-				.setUnlocalizedName(ModInfo.MODID + ".kapok")
-				.setRegistryName(ModInfo.MODID_LOWER, "kapok");
+			.setHardness(0.8F)
+			.setCreativeTab(VeganOption.creativeTab)
+			.setUnlocalizedName(ModInfo.MODID + ".kapok")
+			.setRegistryName(ModInfo.MODID_LOWER, "kapok");
 		GameRegistry.register(kapokBlock);
 		GameRegistry.register(new ItemCloth(kapokBlock).setRegistryName(kapokBlock.getRegistryName()));
 	}

@@ -24,15 +24,15 @@ public class Bioplastic implements IContentModule
 	public void create()
 	{
 		bioplastic = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".bioplastic")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "bioplastic");
+			.setUnlocalizedName(ModInfo.MODID + ".bioplastic")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "bioplastic");
 		GameRegistry.register(bioplastic);
 
 		plasticRod = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".plasticRod")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "plastic_rod");
+			.setUnlocalizedName(ModInfo.MODID + ".plasticRod")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "plastic_rod");
 		GameRegistry.register(plasticRod);
 	}
 

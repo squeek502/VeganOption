@@ -41,25 +41,25 @@ public class Soap implements IContentModule
 		fluidLyeWater = new Fluid("lye_water", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/lye_water_flow"));
 		FluidRegistry.registerFluid(fluidLyeWater);
 		lyeWater = new BlockLyeWater(fluidLyeWater)
-				.setUnlocalizedName(ModInfo.MODID + ".lyeWater")
-				.setRegistryName(ModInfo.MODID_LOWER, "lyeWater");
+			.setUnlocalizedName(ModInfo.MODID + ".lyeWater")
+			.setRegistryName(ModInfo.MODID_LOWER, "lyeWater");
 		fluidLyeWater.setBlock(lyeWater);
 		fluidLyeWater.setUnlocalizedName(lyeWater.getUnlocalizedName());
 		GameRegistry.register(lyeWater);
 		GameRegistry.register(new ItemBlock(lyeWater).setRegistryName(lyeWater.getRegistryName()));
 
 		bucketLyeWater = new ItemBucketGeneric(lyeWater)
-				.setUnlocalizedName(ModInfo.MODID + ".bucketLyeWater")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "bucketLyeWater")
-				.setContainerItem(Items.BUCKET);
+			.setUnlocalizedName(ModInfo.MODID + ".bucketLyeWater")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "bucketLyeWater")
+			.setContainerItem(Items.BUCKET);
 		GameRegistry.register(bucketLyeWater);
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidLyeWater, Fluid.BUCKET_VOLUME), new ItemStack(bucketLyeWater), new ItemStack(Items.BUCKET));
 
 		soap = new ItemSoap()
-				.setUnlocalizedName(ModInfo.MODID + ".soap")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER + ":soap");
+			.setUnlocalizedName(ModInfo.MODID + ".soap")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER + ":soap");
 		GameRegistry.register(soap);
 	}
 
@@ -77,9 +77,9 @@ public class Soap implements IContentModule
 		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketLyeWater), new ItemStack(Items.WATER_BUCKET));
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soap),
-				new ItemStack(bucketLyeWater),
-				ContentHelper.vegetableOilOreDict,
-				ContentHelper.rosinOreDict));
+													  new ItemStack(bucketLyeWater),
+													  ContentHelper.vegetableOilOreDict,
+													  ContentHelper.rosinOreDict));
 
 		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidLyeWater, FluidRegistry.WATER, new InputItemStack(ContentHelper.woodAshOreDict, 3)));
 	}

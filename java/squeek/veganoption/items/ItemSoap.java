@@ -1,7 +1,5 @@
 package squeek.veganoption.items;
 
-import java.util.Collection;
-import java.util.List;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
@@ -18,6 +16,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import squeek.veganoption.helpers.RandomHelper;
+
+import java.util.Collection;
+import java.util.List;
 
 public class ItemSoap extends Item
 {
@@ -53,7 +54,7 @@ public class ItemSoap extends Item
 	}
 
 	/**
-	 * A way to cure potion effects without clearing effects that are meant 
+	 * A way to cure potion effects without clearing effects that are meant
 	 * to be uncurable (e.g. Thaumcraft warp)
 	 */
 	public static void cureAllCurablePotionEffects(EntityPlayer player)

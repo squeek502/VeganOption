@@ -24,7 +24,8 @@ public class BlockHelper
 {
 	public static final float BLOCK_HARDNESS_UNBREAKABLE = -1.0f;
 
-	private static final Method createStackedBlock = ReflectionHelper.findMethod(Block.class, null, new String[] {"createStackedBlock", "func_180643_i"}, IBlockState.class);
+	private static final Method createStackedBlock = ReflectionHelper.findMethod(Block.class, null, new String[]{"createStackedBlock", "func_180643_i"}, IBlockState.class);
+
 	public static ItemStack blockStateToItemStack(IBlockState state)
 	{
 		try
@@ -59,8 +60,8 @@ public class BlockHelper
 	public static BlockPos[] getBlocksAdjacentTo(BlockPos blockPos)
 	{
 		return new BlockPos[]{
-		blockPos.offset(EnumFacing.NORTH), blockPos.offset(EnumFacing.SOUTH),
-		blockPos.offset(EnumFacing.EAST), blockPos.offset(EnumFacing.WEST)
+			blockPos.offset(EnumFacing.NORTH), blockPos.offset(EnumFacing.SOUTH),
+			blockPos.offset(EnumFacing.EAST), blockPos.offset(EnumFacing.WEST)
 		};
 	}
 

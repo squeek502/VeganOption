@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -36,10 +35,10 @@ public class DollsEye implements IContentModule
 	public void create()
 	{
 		dollsEye = new ItemFood(2, 0.8F, false)
-				.setPotionEffect(new PotionEffect(MobEffects.POISON, 5, 0), 1F)
-				.setUnlocalizedName(ModInfo.MODID + ".dollsEye")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "dollsEye");
+			.setPotionEffect(new PotionEffect(MobEffects.POISON, 5, 0), 1F)
+			.setUnlocalizedName(ModInfo.MODID + ".dollsEye")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "dollsEye");
 		GameRegistry.register(dollsEye);
 	}
 

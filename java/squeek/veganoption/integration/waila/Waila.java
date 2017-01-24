@@ -1,7 +1,7 @@
 package squeek.veganoption.integration.waila;
 
-import squeek.veganoption.integration.IntegratorBase;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import squeek.veganoption.integration.IntegratorBase;
 
 public class Waila extends IntegratorBase
 {

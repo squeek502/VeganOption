@@ -1,12 +1,8 @@
 package squeek.veganoption.content.crafting;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
@@ -16,10 +12,8 @@ import squeek.veganoption.api.event.PistonEvent;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.helpers.FluidHelper;
-import squeek.veganoption.helpers.WorldHelper;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static squeek.veganoption.helpers.FluidHelper.getStillFluidLevel;
 

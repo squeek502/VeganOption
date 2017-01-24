@@ -1,11 +1,5 @@
 package squeek.veganoption.integration.tic;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +14,13 @@ import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.integration.IntegratorBase;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 // TODO: Faux feather as a valid fletching material
 // TODO: Update to 1.10.2
@@ -59,13 +60,13 @@ public class TConstruct extends IntegratorBase
 		CompostRegistry.blacklist(new FoodSpecifier()
 		{
 			private final Set<String> itemNameBlacklist = new HashSet<String>(
-					Arrays.asList(
-									fullItemName(ITEMNAME_JERKY),
-									fullItemName(ITEMNAME_GOLDENHEAD),
-									fullItemName(ITEMNAME_DIAMONDAPPLE),
-									fullItemName(ITEMNAME_STRANGEFOOD)
-							)
-					);
+				Arrays.asList(
+					fullItemName(ITEMNAME_JERKY),
+					fullItemName(ITEMNAME_GOLDENHEAD),
+					fullItemName(ITEMNAME_DIAMONDAPPLE),
+					fullItemName(ITEMNAME_STRANGEFOOD)
+				)
+			);
 
 			@Override
 			public boolean matches(ItemStack itemStack)
@@ -128,11 +129,11 @@ public class TConstruct extends IntegratorBase
 
 	/**
 	 * Allow plasticRod to be used as a tool rod directly by replacing it at build-time with an actual ToolRod
-	 * 
+	 *
 	 * Called from squeek.veganoption.asm.Hooks, which is called from tconstruct.tools.TinkerToolEvents.buildTool
 	 * I really don't want to have the build depend on TiC, so I just hook in through ASM.
 	 * Simply including ToolBuildEvent.java and listening for the event didn't seem to work.
-	 * 
+	 *
 	 * This seems to be the 'correct' way to allow usage of non-ToolRod items as ToolRods
 	 */
 	public static ItemStack getRealHandle(ItemStack itemStack)
@@ -157,6 +158,7 @@ public class TConstruct extends IntegratorBase
 	public static final String patternBuilderClassName = "tconstruct.library.crafting.PatternBuilder";
 	public static Object PatternBuilder = null;
 	public static Method registerMaterialSet = null;
+
 	static
 	{
 		try

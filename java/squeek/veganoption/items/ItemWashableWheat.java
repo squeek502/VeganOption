@@ -1,6 +1,5 @@
 package squeek.veganoption.items;
 
-import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
@@ -11,6 +10,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.helpers.FluidHelper;
+
+import java.util.List;
 
 public class ItemWashableWheat extends Item
 {

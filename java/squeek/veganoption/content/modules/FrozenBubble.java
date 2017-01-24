@@ -49,26 +49,26 @@ public class FrozenBubble implements IContentModule
 		fluidSoapSolution = new Fluid("fluid_soap_solution", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_flow"));
 		FluidRegistry.registerFluid(fluidSoapSolution);
 		blockFluidSoapSolution = new BlockFluidClassic(fluidSoapSolution, Material.WATER)
-				.setUnlocalizedName(ModInfo.MODID + ".fluidSoapSolution")
-				.setRegistryName(ModInfo.MODID_LOWER, "fluidSoapSolution");
+			.setUnlocalizedName(ModInfo.MODID + ".fluidSoapSolution")
+			.setRegistryName(ModInfo.MODID_LOWER, "fluidSoapSolution");
 		fluidSoapSolution.setBlock(blockFluidSoapSolution);
 		fluidSoapSolution.setUnlocalizedName(blockFluidSoapSolution.getUnlocalizedName());
 		GameRegistry.register(blockFluidSoapSolution);
 		GameRegistry.register(new ItemBlock(blockFluidSoapSolution).setRegistryName(blockFluidSoapSolution.getRegistryName()));
 
 		soapSolution = new ItemSoapSolution()
-				.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "soapSolution")
-				.setContainerItem(Items.GLASS_BOTTLE);
+			.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "soapSolution")
+			.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.register(soapSolution);
 
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidSoapSolution, Fluid.BUCKET_VOLUME), new ItemStack(soapSolution), new ItemStack(soapSolution.getContainerItem()));
 
 		frozenBubble = new ItemFrozenBubble()
-				.setUnlocalizedName(ModInfo.MODID + ".frozenBubble")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "frozenBubble");
+			.setUnlocalizedName(ModInfo.MODID + ".frozenBubble")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "frozenBubble");
 		GameRegistry.register(frozenBubble);
 
 		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", ContentHelper.ENTITYID_BUBBLE, ModInfo.MODID, 80, 1, true);
@@ -88,16 +88,19 @@ public class FrozenBubble implements IContentModule
 		ContentHelper.registerTypicalItemModel(frozenBubble);
 		ContentHelper.registerFluidMapperAndMeshDef(blockFluidSoapSolution, "fluid_soap_solution");
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, new IRenderFactory<EntityBubble>() {
+		RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, new IRenderFactory<EntityBubble>()
+		{
 			@Override
-			public Render<? super EntityBubble> createRenderFor(RenderManager manager) {
+			public Render<? super EntityBubble> createRenderFor(RenderManager manager)
+			{
 				return new RenderSnowball<EntityBubble>(manager, frozenBubble, Minecraft.getMinecraft().getRenderItem());
 			}
 		});
 
 		// Skip the empty bubble as it has already been registered, and bind the model until it is full
 		ItemStack bubbleStack = new ItemStack(frozenBubble, 1, 1);
-		while (!ItemFrozenBubble.isFull(bubbleStack) && bubbleStack.getItem() != Items.ENDER_PEARL) {
+		while (!ItemFrozenBubble.isFull(bubbleStack) && bubbleStack.getItem() != Items.ENDER_PEARL)
+		{
 			ContentHelper.registerTypicalItemStackModel(bubbleStack, ModInfo.MODID_LOWER + ":frozenBubbleFilled");
 			bubbleStack = ItemFrozenBubble.fill(bubbleStack, 1);
 		}
@@ -116,10 +119,10 @@ public class FrozenBubble implements IContentModule
 		Modifiers.recipes.convertInput(pufferFish, ContentHelper.pufferFishOreDict);
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soapSolution),
-				ContentHelper.soapOreDict,
-				new ItemStack(Items.WATER_BUCKET),
-				new ItemStack(Items.SUGAR),
-				new ItemStack(Items.GLASS_BOTTLE)));
+													  ContentHelper.soapOreDict,
+													  new ItemStack(Items.WATER_BUCKET),
+													  new ItemStack(Items.SUGAR),
+													  new ItemStack(Items.GLASS_BOTTLE)));
 		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(soapSolution), ContentHelper.soapOreDict);
 
 		GameRegistry.addShapedRecipe(new ItemStack(frozenBubble), "iii", "isi", "iii", 'i', Blocks.ICE, 's', soapSolution);

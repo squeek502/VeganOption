@@ -1,7 +1,8 @@
 package squeek.veganoption.asm;
 
-import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+
+import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion("1.10.2")
 @IFMLLoadingPlugin.TransformerExclusions("squeek.veganoption.asm")

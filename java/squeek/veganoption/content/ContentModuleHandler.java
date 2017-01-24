@@ -1,18 +1,18 @@
 package squeek.veganoption.content;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import squeek.veganoption.content.modules.*;
 import squeek.veganoption.content.modules.compat.CompatEnderBubble;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Modules should only depend on eachother through the OreDictionary. If modules are more intertwined,
  * then only the intertwined parts should be put in compatModules instead
- * 
+ *
  * This forces consistent and tested use of the OreDictionary for maximum compatibility with other mods
  * and for potential configurable modularity down the line
  */
@@ -21,6 +21,7 @@ public class ContentModuleHandler
 	private static Map<String, IContentModule> modules = new LinkedHashMap<String, IContentModule>();
 	// TODO: resolve dependent modules for compat modules
 	private static Map<String, IContentModule> compatModules = new HashMap<String, IContentModule>();
+
 	static
 	{
 		// CreativeTabProxy must be first.

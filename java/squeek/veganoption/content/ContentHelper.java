@@ -12,9 +12,7 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -112,12 +110,12 @@ public class ContentHelper
 	public static final String cookedVenisonOreDict = "listAllvenisoncooked";
 
 	public static final String[] harvestCraftRawMeatOreDicts = new String[]{
-	rawMeatOreDict, rawBeefOreDict, rawChickenOreDict, rawFishOreDict, rawMuttonOreDict,
-	rawPorkOreDict, rawRabbitOreDict, rawTurkeyOreDict, rawVenisonOreDict
+		rawMeatOreDict, rawBeefOreDict, rawChickenOreDict, rawFishOreDict, rawMuttonOreDict,
+		rawPorkOreDict, rawRabbitOreDict, rawTurkeyOreDict, rawVenisonOreDict
 	};
 	public static final String[] harvestCraftCookedMeatOreDicts = new String[]{
-	cookedMeatOreDict, cookedBeefOreDict, cookedChickenOreDict, cookedFishOreDict, cookedMuttonOreDict,
-	cookedPorkOreDict, cookedRabbitOreDict, cookedTurkeyOreDict, cookedVenisonOreDict
+		cookedMeatOreDict, cookedBeefOreDict, cookedChickenOreDict, cookedFishOreDict, cookedMuttonOreDict,
+		cookedPorkOreDict, cookedRabbitOreDict, cookedTurkeyOreDict, cookedVenisonOreDict
 	};
 
 	// various vegetable oil sources from other mods
@@ -143,7 +141,7 @@ public class ContentHelper
 			GameRegistry.addSmelting(ore.copy(), output, xp);
 		}
 	}
-	
+
 	public static void addOreSmelting(String inputOreName, ItemStack output)
 	{
 		addOreSmelting(inputOreName, output, 0.2F);
@@ -159,6 +157,7 @@ public class ContentHelper
 
 	/**
 	 * Registers a typical (no meta, no special inventory variant or anything) item model.
+	 *
 	 * @param item The item
 	 */
 	public static void registerTypicalItemModel(Item item)
@@ -168,6 +167,7 @@ public class ContentHelper
 
 	/**
 	 * Registers a model with a specific name for the given ItemStack
+	 *
 	 * @param stack The itemstack
 	 * @param name The specific name
 	 */
@@ -200,6 +200,7 @@ public class ContentHelper
 
 	/**
 	 * Maps the fluid to our custom blockstate for all fluids (fluids.json).
+	 *
 	 * @param fluid The fluid
 	 * @param variantName The variant for the fluid
 	 */
@@ -208,14 +209,16 @@ public class ContentHelper
 		final ModelResourceLocation loc = new ModelResourceLocation(ModInfo.MODID_LOWER + ":fluids", variantName);
 		Item itemblock = Item.getItemFromBlock(fluid);
 		ModelBakery.registerItemVariants(itemblock);
-		ModelLoader.setCustomMeshDefinition(itemblock, new ItemMeshDefinition() {
+		ModelLoader.setCustomMeshDefinition(itemblock, new ItemMeshDefinition()
+		{
 			@Override
 			public ModelResourceLocation getModelLocation(ItemStack stack)
 			{
 				return loc;
 			}
 		});
-		ModelLoader.setCustomStateMapper(fluid, new StateMapperBase() {
+		ModelLoader.setCustomStateMapper(fluid, new StateMapperBase()
+		{
 			@Override
 			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
 			{

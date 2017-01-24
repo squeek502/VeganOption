@@ -2,8 +2,6 @@ package squeek.veganoption.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleBreaking;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
@@ -100,7 +98,7 @@ public class MessageFX implements IMessage, IMessageHandler<MessageFX, IMessage>
 		for (int i = 0; i < iterations; ++i)
 		{
 			// random velocity taken from EntityEgg
-			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, x, y, z, ((double)RandomHelper.random.nextFloat() - 0.5D) * 0.08D, ((double)RandomHelper.random.nextFloat() - 0.5D) * 0.08D, ((double)RandomHelper.random.nextFloat() - 0.5D) * 0.08D, Item.getIdFromItem(breakFXItem));
+			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, x, y, z, ((double) RandomHelper.random.nextFloat() - 0.5D) * 0.08D, ((double) RandomHelper.random.nextFloat() - 0.5D) * 0.08D, ((double) RandomHelper.random.nextFloat() - 0.5D) * 0.08D, Item.getIdFromItem(breakFXItem));
 		}
 	}
 }

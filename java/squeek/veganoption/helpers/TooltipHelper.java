@@ -1,11 +1,12 @@
 package squeek.veganoption.helpers;
 
-import java.util.HashSet;
-import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class TooltipHelper
 {

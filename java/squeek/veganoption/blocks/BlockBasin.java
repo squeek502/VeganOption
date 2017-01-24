@@ -239,7 +239,6 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 		return new AxisAlignedBB(offsetX + minX, offsetY + minY, offsetZ + minZ, offsetX + maxX, offsetY + maxY, offsetZ + maxZ);
 	}
 
-//	@SuppressWarnings("rawtypes")
 	@Override
 	public void addCollisionBoxToList(IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB collidingAABB, @Nonnull List<AxisAlignedBB> collidingBoundingBoxes, Entity collidingEntity)
 	{

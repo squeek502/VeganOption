@@ -1,6 +1,5 @@
 package squeek.veganoption.blocks;
 
-import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEndPortal;
 import net.minecraft.block.material.MapColor;
@@ -29,6 +28,8 @@ import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
+
+import java.util.Random;
 
 public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 {

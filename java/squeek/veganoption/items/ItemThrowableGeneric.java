@@ -1,6 +1,5 @@
 package squeek.veganoption.items;
 
-import java.lang.reflect.Constructor;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
 import net.minecraft.dispenser.IPosition;
@@ -17,6 +16,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import squeek.veganoption.helpers.RandomHelper;
+
+import java.lang.reflect.Constructor;
 
 public class ItemThrowableGeneric extends Item
 {

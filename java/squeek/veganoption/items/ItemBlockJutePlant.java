@@ -13,8 +13,10 @@ public class ItemBlockJutePlant extends ItemBlock
 		super(block);
 	}
 
-	public static class ColorHandler implements IItemColor {
-		public int getColorFromItemstack(ItemStack itemStack, int tintIndex) {
+	public static class ColorHandler implements IItemColor
+	{
+		public int getColorFromItemstack(ItemStack itemStack, int tintIndex)
+		{
 			return ColorizerGrass.getGrassColor(0.5D, 1D);
 		}
 	}

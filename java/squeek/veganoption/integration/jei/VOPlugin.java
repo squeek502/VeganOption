@@ -4,7 +4,6 @@ import mezz.jei.api.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.modules.CreativeTabProxy;
 import squeek.veganoption.integration.jei.piston.PistonRecipeCategory;
@@ -15,6 +14,7 @@ import squeek.veganoption.integration.jei.piston.PistonRecipeMaker;
 public class VOPlugin extends BlankModPlugin
 {
 	public static IJeiHelpers jeiHelpers;
+
 	public static class VORecipeCategoryUid
 	{
 		public static final String PISTON = ModInfo.MODID + ".piston";
@@ -31,7 +31,6 @@ public class VOPlugin extends BlankModPlugin
 
 		IItemBlacklist itemBlacklist = jeiHelpers.getItemBlacklist();
 		itemBlacklist.addItemToBlacklist(new ItemStack(CreativeTabProxy.proxyItem));
-
 
 		registry.addRecipeCategories(
 			new PistonRecipeCategory(guiHelper)

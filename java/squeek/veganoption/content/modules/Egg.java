@@ -39,22 +39,22 @@ public class Egg implements IContentModule
 	public void create()
 	{
 		appleSauce = new ItemFoodContainered(3, 1f, false)
-				.setUnlocalizedName(ModInfo.MODID + ".appleSauce")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "apple_sauce")
-				.setContainerItem(Items.BOWL);
+			.setUnlocalizedName(ModInfo.MODID + ".appleSauce")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "apple_sauce")
+			.setContainerItem(Items.BOWL);
 		GameRegistry.register(appleSauce);
 
 		potatoStarch = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".potatoStarch")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "potato_starch");
+			.setUnlocalizedName(ModInfo.MODID + ".potatoStarch")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "potato_starch");
 		GameRegistry.register(potatoStarch);
 
 		plasticEgg = new ItemThrowableGeneric(EntityPlasticEgg.class)
-				.setUnlocalizedName(ModInfo.MODID + ".plasticEgg")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "plastic_egg");
+			.setUnlocalizedName(ModInfo.MODID + ".plasticEgg")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "plastic_egg");
 		GameRegistry.register(plasticEgg);
 
 		EntityRegistry.registerModEntity(EntityPlasticEgg.class, "plasticEgg", ContentHelper.ENTITYID_PLASTIC_EGG, ModInfo.MODID, 80, 1, true);
@@ -74,9 +74,11 @@ public class Egg implements IContentModule
 		ContentHelper.registerTypicalItemModel(potatoStarch);
 		ContentHelper.registerTypicalItemModel(plasticEgg);
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityPlasticEgg.class, new IRenderFactory<EntityPlasticEgg>() {
+		RenderingRegistry.registerEntityRenderingHandler(EntityPlasticEgg.class, new IRenderFactory<EntityPlasticEgg>()
+		{
 			@Override
-			public Render<? super EntityPlasticEgg> createRenderFor(RenderManager manager) {
+			public Render<? super EntityPlasticEgg> createRenderFor(RenderManager manager)
+			{
 				return new RenderSnowball<EntityPlasticEgg>(manager, plasticEgg, Minecraft.getMinecraft().getRenderItem());
 			}
 		});

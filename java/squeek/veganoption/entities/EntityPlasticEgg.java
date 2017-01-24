@@ -1,13 +1,13 @@
 package squeek.veganoption.entities;
 
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import squeek.veganoption.network.MessageFX;
-import squeek.veganoption.network.NetworkHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import squeek.veganoption.network.MessageFX;
+import squeek.veganoption.network.NetworkHandler;
 
 public class EntityPlasticEgg extends EntityThrowable
 {

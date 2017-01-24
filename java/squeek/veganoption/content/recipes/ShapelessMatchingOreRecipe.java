@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 
 /**
  * Like ShapelessOreRecipe, but all OreDict inputs need to match with eachother
- * 
+ *
  * For example, ShapelessMatchingOreRecipe(output, "slimeball", "slimeball") would
  * require both inputs to be the same item (both Resin or both Slimeball, for example);
  * a mixture (1 Resin, 1 Slimeball) would not work

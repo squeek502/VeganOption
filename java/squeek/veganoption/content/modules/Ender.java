@@ -40,42 +40,42 @@ public class Ender implements IContentModule
 	public void create()
 	{
 		encrustedObsidian = new BlockEncrustedObsidian()
-				.setHardness(50.0F)
-				.setResistance(2000.0F)
-				.setUnlocalizedName(ModInfo.MODID + ".encrustedObsidian")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "encrustedObsidian");
+			.setHardness(50.0F)
+			.setResistance(2000.0F)
+			.setUnlocalizedName(ModInfo.MODID + ".encrustedObsidian")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "encrustedObsidian");
 		GameRegistry.register(encrustedObsidian);
 		GameRegistry.register(new ItemBlock(encrustedObsidian).setRegistryName(encrustedObsidian.getRegistryName()));
 		encrustedObsidian.setHarvestLevel("pickaxe", 3);
 
 		enderRift = new BlockEnderRift()
-				.setHardness(-1.0F)
-				.setResistance(6000000.0F)
-				.setUnlocalizedName(ModInfo.MODID + ".enderRift")
-				.setRegistryName(ModInfo.MODID_LOWER, "enderRift");
+			.setHardness(-1.0F)
+			.setResistance(6000000.0F)
+			.setUnlocalizedName(ModInfo.MODID + ".enderRift")
+			.setRegistryName(ModInfo.MODID_LOWER, "enderRift");
 		GameRegistry.register(enderRift);
 		GameRegistry.register(new ItemBlock(enderRift).setRegistryName(enderRift.getRegistryName()));
 		GameRegistry.registerTileEntity(TileEntityEnderRift.class, ModInfo.MODID + ".enderRift");
 
 		fluidRawEnder = new Fluid("raw_ender", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_flow"))
-				.setLuminosity(3)
-				.setViscosity(3000)
-				.setDensity(4000);
+			.setLuminosity(3)
+			.setViscosity(3000)
+			.setDensity(4000);
 		FluidRegistry.registerFluid(fluidRawEnder);
 		rawEnder = new BlockRawEnder(fluidRawEnder)
-				.setUnlocalizedName(ModInfo.MODID + ".rawEnder")
-				.setRegistryName(ModInfo.MODID_LOWER, "rawEnder");
+			.setUnlocalizedName(ModInfo.MODID + ".rawEnder")
+			.setRegistryName(ModInfo.MODID_LOWER, "rawEnder");
 		fluidRawEnder.setBlock(rawEnder);
 		fluidRawEnder.setUnlocalizedName(rawEnder.getUnlocalizedName());
 		GameRegistry.register(rawEnder);
 		GameRegistry.register(new ItemBlock(rawEnder).setRegistryName(rawEnder.getRegistryName()));
 
 		bucketRawEnder = new ItemBucketGeneric(rawEnder)
-				.setUnlocalizedName(ModInfo.MODID + ".bucketRawEnder")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "bucketRawEnder")
-				.setContainerItem(Items.BUCKET);
+			.setUnlocalizedName(ModInfo.MODID + ".bucketRawEnder")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "bucketRawEnder")
+			.setContainerItem(Items.BUCKET);
 		GameRegistry.register(bucketRawEnder);
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, Fluid.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.BUCKET));
 	}

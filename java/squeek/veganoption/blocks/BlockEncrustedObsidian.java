@@ -1,6 +1,5 @@
 package squeek.veganoption.blocks;
 
-import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.block.SoundType;
@@ -12,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
+
+import java.util.Random;
 
 public class BlockEncrustedObsidian extends BlockObsidian
 {

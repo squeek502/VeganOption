@@ -28,15 +28,15 @@ public class ProofOfSuffering implements IContentModule
 	public void create()
 	{
 		fragmentOfSuffering = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".sufferingFragment")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "sufferingFragment");
+			.setUnlocalizedName(ModInfo.MODID + ".sufferingFragment")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "sufferingFragment");
 		GameRegistry.register(fragmentOfSuffering);
 
 		proofOfSuffering = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".sufferingProof")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "sufferingProof");
+			.setUnlocalizedName(ModInfo.MODID + ".sufferingProof")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "sufferingProof");
 		GameRegistry.register(proofOfSuffering);
 	}
 

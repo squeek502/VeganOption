@@ -37,9 +37,9 @@ public class Seitan implements IContentModule
 	public void create()
 	{
 		washableWheat = new ItemWashableWheat()
-				.setUnlocalizedName(ModInfo.MODID)
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "washableWheat");
+			.setUnlocalizedName(ModInfo.MODID)
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "washableWheat");
 		GameRegistry.register(washableWheat);
 		wheatFlourStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_FLOUR);
 		wheatDoughStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_DOUGH);
@@ -47,9 +47,9 @@ public class Seitan implements IContentModule
 		seitanRawStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_RAW);
 
 		seitanCooked = new ItemFood(8, 0.8f, false)
-				.setUnlocalizedName(ModInfo.MODID + ".seitanCooked")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "seitanCooked");
+			.setUnlocalizedName(ModInfo.MODID + ".seitanCooked")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "seitanCooked");
 		GameRegistry.register(seitanCooked);
 	}
 
@@ -106,7 +106,8 @@ public class Seitan implements IContentModule
 		ContentHelper.registerTypicalItemStackModel(wheatFlourStack, ModInfo.MODID_LOWER + ":wheat_flour");
 		ContentHelper.registerTypicalItemStackModel(wheatDoughStack, ModInfo.MODID_LOWER + ":wheat_dough");
 
-		for (int meta = ItemWashableWheat.META_UNWASHED_START; meta < ItemWashableWheat.META_UNWASHED_END; meta++) {
+		for (int meta = ItemWashableWheat.META_UNWASHED_START; meta < ItemWashableWheat.META_UNWASHED_END; meta++)
+		{
 			ModelLoader.setCustomModelResourceLocation(washableWheat, meta, new ModelResourceLocation(ModInfo.MODID_LOWER + ":seitan_unwashed", "inventory"));
 		}
 	}

@@ -24,15 +24,15 @@ public class StrawBed implements IContentModule
 	public void create()
 	{
 		bedStrawBlock = (BlockBedGeneric) new BlockBedStraw()
-				.setHardness(0.2F)
-				.setCreativeTab(VeganOption.creativeTab)
-				.setUnlocalizedName(ModInfo.MODID + ".bedStraw")
-				.setRegistryName(ModInfo.MODID_LOWER, "bedStraw");
+			.setHardness(0.2F)
+			.setCreativeTab(VeganOption.creativeTab)
+			.setUnlocalizedName(ModInfo.MODID + ".bedStraw")
+			.setRegistryName(ModInfo.MODID_LOWER, "bedStraw");
 		bedStrawItem = (ItemBedGeneric) new ItemBedStraw(bedStrawBlock)
-				.setMaxStackSize(1)
-				.setCreativeTab(VeganOption.creativeTab)
-				.setUnlocalizedName(ModInfo.MODID + ".bedStraw")
-				.setRegistryName(ModInfo.MODID_LOWER, "bedStraw");
+			.setMaxStackSize(1)
+			.setCreativeTab(VeganOption.creativeTab)
+			.setUnlocalizedName(ModInfo.MODID + ".bedStraw")
+			.setRegistryName(ModInfo.MODID_LOWER, "bedStraw");
 		bedStrawBlock.setBedItem(bedStrawItem);
 		GameRegistry.register(bedStrawBlock);
 		GameRegistry.register(bedStrawItem);

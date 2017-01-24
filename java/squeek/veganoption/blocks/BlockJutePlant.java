@@ -53,9 +53,9 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	{
 		super();
 		setDefaultState(blockState.getBaseState()
-				.withProperty(HALF, BlockDoublePlant.EnumBlockHalf.LOWER)
-				.withProperty(GROWTH_STAGE, 0)
-				.withProperty(HAS_TOP, false));
+							.withProperty(HALF, BlockDoublePlant.EnumBlockHalf.LOWER)
+							.withProperty(GROWTH_STAGE, 0)
+							.withProperty(HAS_TOP, false));
 	}
 
 	@Override

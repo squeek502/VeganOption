@@ -1,7 +1,5 @@
 package squeek.veganoption.content.registry;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -9,6 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.helpers.MiscHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompostRegistry
 {

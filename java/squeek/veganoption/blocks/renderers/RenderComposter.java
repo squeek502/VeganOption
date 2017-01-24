@@ -1,6 +1,5 @@
 package squeek.veganoption.blocks.renderers;
 
-import java.util.Calendar;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -13,16 +12,18 @@ import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.BlockComposter;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 
+import java.util.Calendar;
+
 @SideOnly(Side.CLIENT)
 public class RenderComposter extends TileEntitySpecialRenderer<TileEntityComposter>
 {
 	private static final ResourceLocation TEXTURE_CHRISTMAS = new ResourceLocation("textures/entity/chest/christmas.png");
 	private static final ResourceLocation TEXTURE_NORMAL = new ResourceLocation("textures/entity/chest/normal.png");
 	private static final ResourceLocation[] TEXTURE_TEMPERATURE_OVERLAYS = new ResourceLocation[]{
-	new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_blue.png"),
-	new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_yellow.png"),
-	new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_orange.png"),
-	new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_red.png")
+		new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_blue.png"),
+		new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_yellow.png"),
+		new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_orange.png"),
+		new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_red.png")
 	};
 	private ModelChest modelChest = new ModelChest();
 	private boolean isChristmas;

@@ -16,7 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 /**
- *  Necessary because Blocks.bed is hardcoded in ItemBed's onItemUse method
+ * Necessary because Blocks.bed is hardcoded in ItemBed's onItemUse method
  */
 public class ItemBedGeneric extends ItemBed
 {
@@ -52,7 +52,7 @@ public class ItemBedGeneric extends ItemBed
 				pos = pos.up();
 			}
 
-			int i = MathHelper.floor_double((double)(playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			int i = MathHelper.floor_double((double) (playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 			EnumFacing enumfacing = EnumFacing.getHorizontal(i);
 			BlockPos blockpos = pos.offset(enumfacing);
 

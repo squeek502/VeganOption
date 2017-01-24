@@ -3,7 +3,6 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -12,8 +11,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -50,26 +47,26 @@ public class VegetableOil implements IContentModule
 		oilPresser = new ItemStack(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
 
 		seedSunflower = new ItemFood(1, 0.05f, false)
-				.setUnlocalizedName(ModInfo.MODID + ".seedSunflower")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "seedsSunflower");
+			.setUnlocalizedName(ModInfo.MODID + ".seedSunflower")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "seedsSunflower");
 		GameRegistry.register(seedSunflower);
 
 		fluidVegetableOil = new Fluid("fluid_oil_vegetable", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_flow"));
 		FluidRegistry.registerFluid(fluidVegetableOil);
 		fluidBlockVegetableOil = new BlockFluidClassic(fluidVegetableOil, Material.WATER)
-				.setUnlocalizedName(ModInfo.MODID + ".fluidOilVegetable")
-				.setRegistryName(ModInfo.MODID_LOWER, "fluidOilVegetable");
+			.setUnlocalizedName(ModInfo.MODID + ".fluidOilVegetable")
+			.setRegistryName(ModInfo.MODID_LOWER, "fluidOilVegetable");
 		fluidVegetableOil.setBlock(fluidBlockVegetableOil);
 		fluidVegetableOil.setUnlocalizedName(fluidBlockVegetableOil.getUnlocalizedName());
 		GameRegistry.register(fluidBlockVegetableOil);
 		GameRegistry.register(new ItemBlock(fluidBlockVegetableOil).setRegistryName(fluidBlockVegetableOil.getRegistryName()));
 
 		oilVegetable = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".oilVegetable")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "oilVegetable")
-				.setContainerItem(Items.GLASS_BOTTLE);
+			.setUnlocalizedName(ModInfo.MODID + ".oilVegetable")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "oilVegetable")
+			.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.register(oilVegetable);
 
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidVegetableOil, Fluid.BUCKET_VOLUME), new ItemStack(oilVegetable), new ItemStack(oilVegetable.getContainerItem()));

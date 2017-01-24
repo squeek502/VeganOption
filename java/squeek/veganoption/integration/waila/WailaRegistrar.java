@@ -1,7 +1,6 @@
 package squeek.veganoption.integration.waila;
 
 import mcp.mobius.waila.api.IWailaRegistrar;
-import squeek.veganoption.blocks.BlockBedGeneric;
 import squeek.veganoption.blocks.BlockJutePlant;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;

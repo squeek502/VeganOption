@@ -29,16 +29,16 @@ public class ToxicMushroom implements IContentModule
 	public void create()
 	{
 		falseMorel = new ItemFood(2, 0.8F, false)
-				.setPotionEffect(new PotionEffect(MobEffects.POISON, 5, 0), 1.0F)
-				.setUnlocalizedName(ModInfo.MODID + ".falseMorel")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "falseMorel");
+			.setPotionEffect(new PotionEffect(MobEffects.POISON, 5, 0), 1.0F)
+			.setUnlocalizedName(ModInfo.MODID + ".falseMorel")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "falseMorel");
 		GameRegistry.register(falseMorel);
 
 		falseMorelFermented = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".falseMorelFermented")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "falseMorelFermented");
+			.setUnlocalizedName(ModInfo.MODID + ".falseMorelFermented")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "falseMorelFermented");
 		GameRegistry.register(falseMorelFermented);
 	}
 

@@ -1,10 +1,11 @@
 package squeek.veganoption.content.registry;
 
+import net.minecraft.item.ItemStack;
+import squeek.veganoption.helpers.MiscHelper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import net.minecraft.item.ItemStack;
-import squeek.veganoption.helpers.MiscHelper;
 
 public class RelationshipRegistry
 {

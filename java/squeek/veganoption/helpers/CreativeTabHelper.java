@@ -1,12 +1,12 @@
 package squeek.veganoption.helpers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreativeTabHelper
 {

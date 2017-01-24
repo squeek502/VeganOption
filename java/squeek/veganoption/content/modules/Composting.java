@@ -38,32 +38,32 @@ public class Composting implements IContentModule
 	public void create()
 	{
 		composter = new BlockComposter()
-				.setHardness(2.5F)
-				.setUnlocalizedName(ModInfo.MODID + ".composter")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "composter");
+			.setHardness(2.5F)
+			.setUnlocalizedName(ModInfo.MODID + ".composter")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "composter");
 		GameRegistry.register(composter);
 		GameRegistry.register(new ItemBlock(composter).setRegistryName(composter.getRegistryName()));
 		GameRegistry.registerTileEntity(TileEntityComposter.class, ModInfo.MODID + ".composter");
 
 		rottenPlants = new ItemFood(4, 0.1F, true)
-				.setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F)
-				.setUnlocalizedName(ModInfo.MODID + ".rottenPlants")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "rottenPlants");
+			.setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F)
+			.setUnlocalizedName(ModInfo.MODID + ".rottenPlants")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "rottenPlants");
 		GameRegistry.register(rottenPlants);
 
 		fertilizer = new ItemFertilizer()
-				.setUnlocalizedName(ModInfo.MODID + ".fertilizer")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "fertilizer");
+			.setUnlocalizedName(ModInfo.MODID + ".fertilizer")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "fertilizer");
 		GameRegistry.register(fertilizer);
 
 		compost = new BlockCompost()
-				.setHardness(0.5F)
-				.setUnlocalizedName(ModInfo.MODID + ".compost")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "compost");
+			.setHardness(0.5F)
+			.setUnlocalizedName(ModInfo.MODID + ".compost")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "compost");
 		GameRegistry.register(compost);
 		GameRegistry.register(new ItemBlock(compost).setRegistryName(compost.getRegistryName()));
 	}

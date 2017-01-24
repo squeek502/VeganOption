@@ -1,6 +1,5 @@
 package squeek.veganoption.blocks;
 
-import java.lang.reflect.Field;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
@@ -10,6 +9,8 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import squeek.veganoption.ModInfo;
+
+import java.lang.reflect.Field;
 
 public class BlockBedStraw extends BlockBedGeneric
 {

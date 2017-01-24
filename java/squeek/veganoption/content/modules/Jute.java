@@ -3,7 +3,6 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -51,36 +50,36 @@ public class Jute implements IContentModule
 	public void create()
 	{
 		juteFibre = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".juteFibre")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "juteFibre");
+			.setUnlocalizedName(ModInfo.MODID + ".juteFibre")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "juteFibre");
 		GameRegistry.register(juteFibre);
 
 		juteStalk = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".juteStalk")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "juteStalk");
+			.setUnlocalizedName(ModInfo.MODID + ".juteStalk")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "juteStalk");
 		GameRegistry.register(juteStalk);
 
 		juteBundled = (BlockRettable) new BlockRettable(juteFibre, 8, 15)
-				.setHardness(0.5F)
-				.setUnlocalizedName(ModInfo.MODID + ".juteBundled")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "juteBundled");
+			.setHardness(0.5F)
+			.setUnlocalizedName(ModInfo.MODID + ".juteBundled")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "juteBundled");
 		juteBundled.setHarvestLevel("axe", 0);
 		GameRegistry.register(juteBundled);
 		GameRegistry.register(new ItemBlock(juteBundled).setRegistryName(juteBundled.getRegistryName()));
 
 		jutePlant = new BlockJutePlant()
-				.setUnlocalizedName(ModInfo.MODID + ".jutePlant")
-				.setRegistryName(ModInfo.MODID_LOWER, "jutePlant");
+			.setUnlocalizedName(ModInfo.MODID + ".jutePlant")
+			.setRegistryName(ModInfo.MODID_LOWER, "jutePlant");
 		GameRegistry.register(jutePlant);
 		GameRegistry.register(new ItemBlockJutePlant(jutePlant).setRegistryName(jutePlant.getRegistryName()));
 
 		juteSeeds = new ItemSeedsGeneric(jutePlant, EnumPlantType.Plains)
-				.setUnlocalizedName(ModInfo.MODID + ".juteSeeds")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "juteSeeds");
+			.setUnlocalizedName(ModInfo.MODID + ".juteSeeds")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "juteSeeds");
 		GameRegistry.register(juteSeeds);
 	}
 

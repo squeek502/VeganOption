@@ -32,15 +32,15 @@ public class MobHeads implements IContentModule
 	public void create()
 	{
 		papierMache = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".papierMache")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "papierMache");
+			.setUnlocalizedName(ModInfo.MODID + ".papierMache")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "papierMache");
 		GameRegistry.register(papierMache);
 
 		mobHeadBlank = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".mobHeadBlank")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "mobHeadBlank");
+			.setUnlocalizedName(ModInfo.MODID + ".mobHeadBlank")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "mobHeadBlank");
 		GameRegistry.register(mobHeadBlank);
 	}
 

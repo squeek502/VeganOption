@@ -401,7 +401,6 @@ public class TileEntityBasin extends TileEntity implements ITickable
 			super(capacity);
 		}
 
-
 		@Override
 		public int fill(FluidStack resource, boolean doFill)
 		{

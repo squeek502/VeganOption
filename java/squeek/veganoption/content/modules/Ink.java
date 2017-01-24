@@ -36,23 +36,23 @@ public class Ink implements IContentModule
 	public void create()
 	{
 		waxVegetable = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".waxVegetable")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "waxVegetable");
+			.setUnlocalizedName(ModInfo.MODID + ".waxVegetable")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "waxVegetable");
 		GameRegistry.register(waxVegetable);
 
 		blackVegetableOilInk = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".inkVegetableOilBlack")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "inkVegetableOilBlack")
-				.setContainerItem(Items.GLASS_BOTTLE);
+			.setUnlocalizedName(ModInfo.MODID + ".inkVegetableOilBlack")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "inkVegetableOilBlack")
+			.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.register(blackVegetableOilInk);
 
 		blackInkFluid = new Fluid("ink_black", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_flow"));
 		FluidRegistry.registerFluid(blackInkFluid);
 		blackInk = new BlockFluidClassic(blackInkFluid, Material.WATER)
-				.setUnlocalizedName(ModInfo.MODID + ".inkBlack")
-				.setRegistryName(ModInfo.MODID_LOWER, "inkBlack");
+			.setUnlocalizedName(ModInfo.MODID + ".inkBlack")
+			.setRegistryName(ModInfo.MODID_LOWER, "inkBlack");
 		blackInkFluid.setBlock(blackInk);
 		blackInkFluid.setUnlocalizedName(blackInk.getUnlocalizedName());
 		GameRegistry.register(blackInk);
@@ -61,17 +61,17 @@ public class Ink implements IContentModule
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(blackInkFluid, Fluid.BUCKET_VOLUME), new ItemStack(blackVegetableOilInk), new ItemStack(blackVegetableOilInk.getContainerItem()));
 
 		whiteVegetableOilInk = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".inkVegetableOilWhite")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "inkVegetableOilWhite")
-				.setContainerItem(Items.GLASS_BOTTLE);
+			.setUnlocalizedName(ModInfo.MODID + ".inkVegetableOilWhite")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "inkVegetableOilWhite")
+			.setContainerItem(Items.GLASS_BOTTLE);
 		GameRegistry.register(whiteVegetableOilInk);
 
 		whiteInkFluid = new Fluid("ink_white", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_flow"));
 		FluidRegistry.registerFluid(whiteInkFluid);
 		whiteInk = new BlockFluidClassic(whiteInkFluid, Material.WATER)
-				.setUnlocalizedName(ModInfo.MODID + ".inkWhite")
-				.setRegistryName(ModInfo.MODID_LOWER, "inkWhite");
+			.setUnlocalizedName(ModInfo.MODID + ".inkWhite")
+			.setRegistryName(ModInfo.MODID_LOWER, "inkWhite");
 		whiteInkFluid.setBlock(whiteInk);
 		whiteInkFluid.setUnlocalizedName(whiteInk.getUnlocalizedName());
 		GameRegistry.register(whiteInk);

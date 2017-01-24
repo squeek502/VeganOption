@@ -1,6 +1,5 @@
 package squeek.veganoption.blocks;
 
-import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
@@ -10,6 +9,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+
+import java.util.Random;
 
 import static squeek.veganoption.helpers.RandomHelper.random;
 
@@ -31,7 +32,8 @@ public class BlockCompost extends Block
 
 		// skip ForgeDirection.DOWN
 		EnumFacing randomDirection = EnumFacing.DOWN;
-		while (randomDirection == EnumFacing.DOWN) {
+		while (randomDirection == EnumFacing.DOWN)
+		{
 			randomDirection = EnumFacing.random(rand);
 		}
 

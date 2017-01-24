@@ -1,8 +1,5 @@
 package squeek.veganoption.gui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -22,6 +19,10 @@ import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.inventory.ContainerComposter;
 import squeek.veganoption.network.MessageComposterTumble;
 import squeek.veganoption.network.NetworkHandler;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiComposter extends GuiContainer
 {
@@ -122,17 +123,17 @@ public class GuiComposter extends GuiContainer
 
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}
-	
+
 	public List<String> getRobustToolTip(String identifier, Object... args)
 	{
 		@SuppressWarnings("unchecked")
 		List<String> toolTipText = new ArrayList<String>(fontRendererObj.listFormattedStringToWidth(LangHelper.translate(identifier + ".desc").replaceAll("\\\\n", String.valueOf('\n')), xSize));
 		toolTipText.add(0, LangHelper.translate(identifier, args));
-        for (int i = 1; i < toolTipText.size(); ++i)
-        {
-            toolTipText.set(i, TextFormatting.GRAY + toolTipText.get(i));
-        }
-        return toolTipText;
+		for (int i = 1; i < toolTipText.size(); ++i)
+		{
+			toolTipText.set(i, TextFormatting.GRAY + toolTipText.get(i));
+		}
+		return toolTipText;
 	}
 
 	@Override
@@ -182,8 +183,12 @@ public class GuiComposter extends GuiContainer
 		{
 			NetworkHandler.channel.sendToServer(new MessageComposterTumble());
 		}
-		try {
+		try
+		{
 			super.mouseClicked(mouseX, mouseY, type);
-		} catch (IOException ignore) {}
+		}
+		catch (IOException ignore)
+		{
+		}
 	}
 }

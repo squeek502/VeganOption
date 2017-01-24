@@ -11,13 +11,13 @@ public class KeyHelper
 		boolean isCtrlKeyDown = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 		if (!isCtrlKeyDown && Minecraft.IS_RUNNING_ON_MAC)
 			isCtrlKeyDown = Keyboard.isKeyDown(Keyboard.KEY_LMETA) || Keyboard.isKeyDown(Keyboard.KEY_RMETA);
-	
+
 		return isCtrlKeyDown;
 	}
 
 	public static boolean isShiftKeyDown()
 	{
 		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
-		
+
 	}
 }

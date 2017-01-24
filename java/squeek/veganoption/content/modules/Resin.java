@@ -27,16 +27,15 @@ public class Resin implements IContentModule
 	public void create()
 	{
 		resin = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".resin")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "resin");
+			.setUnlocalizedName(ModInfo.MODID + ".resin")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "resin");
 		GameRegistry.register(resin);
 
-
 		rosin = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".rosin")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "rosin");
+			.setUnlocalizedName(ModInfo.MODID + ".rosin")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "rosin");
 		GameRegistry.register(rosin);
 	}
 

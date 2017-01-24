@@ -1,12 +1,5 @@
 package squeek.veganoption.content.modifiers;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -19,6 +12,10 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.helpers.MiscHelper;
+
+import java.lang.reflect.Constructor;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class RecipeModifier
 {
@@ -326,6 +323,7 @@ public class RecipeModifier
 	// reflection
 	public static Constructor<ShapedOreRecipe> shapedOreRecipeReplaceConstructor = null;
 	public static Constructor<ShapelessOreRecipe> shapelessOreRecipeReplaceConstructor = null;
+
 	static
 	{
 		try
