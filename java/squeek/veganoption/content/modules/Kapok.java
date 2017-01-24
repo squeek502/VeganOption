@@ -85,14 +85,7 @@ public class Kapok implements IContentModule
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(kapokBlock, 1, 15 - i), "dye" + ConstantHelper.dyeColors[i], new ItemStack(kapokBlock)));
 		}
 
-		BlockSpecifier jungleLeavesSpecifier = new BlockSpecifier(Blocks.LEAVES, BlockPlanks.EnumType.JUNGLE.getMetadata())
-		{
-			@Override
-			public boolean stateMatches(IBlockState state)
-			{
-				return state.getValue(BlockOldLeaf.VARIANT).equals(BlockPlanks.EnumType.JUNGLE);
-			}
-		};
+		BlockSpecifier jungleLeavesSpecifier = new BlockSpecifier(Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE), BlockOldLeaf.VARIANT);
 		Modifiers.drops.addDropsToBlock(jungleLeavesSpecifier, new DropSpecifier(new ItemStack(kapokTuft), 0.07f, 1, 2));
 
 		GameRegistry.addShapedRecipe(new ItemStack(Items.STRING), "~~~", '~', kapokTuft);

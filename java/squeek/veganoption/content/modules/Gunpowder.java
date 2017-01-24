@@ -1,7 +1,6 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.BlockSandStone;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -28,15 +27,15 @@ public class Gunpowder implements IContentModule
 	public void create()
 	{
 		sulfur = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".sulfur")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "sulfur");
+			.setUnlocalizedName(ModInfo.MODID + ".sulfur")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "sulfur");
 		GameRegistry.register(sulfur);
 
 		saltpeter = new Item()
-				.setUnlocalizedName(ModInfo.MODID + ".saltpeter")
-				.setCreativeTab(VeganOption.creativeTab)
-				.setRegistryName(ModInfo.MODID_LOWER, "saltpeter");
+			.setUnlocalizedName(ModInfo.MODID + ".saltpeter")
+			.setCreativeTab(VeganOption.creativeTab)
+			.setRegistryName(ModInfo.MODID_LOWER, "saltpeter");
 		GameRegistry.register(saltpeter);
 	}
 
@@ -50,15 +49,15 @@ public class Gunpowder implements IContentModule
 	@Override
 	public void recipes()
 	{
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.NETHERRACK), new DropSpecifier(new ItemStack(sulfur), 0.02f));
+		Modifiers.drops.addDropsToBlock(
+			new BlockSpecifier(Blocks.NETHERRACK.getDefaultState()),
+			new DropSpecifier(new ItemStack(sulfur), 0.02f)
+		);
 
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.SANDSTONE) {
-			@Override
-			public boolean stateMatches(IBlockState state)
-			{
-				return state.getValue(BlockSandStone.TYPE).equals(BlockSandStone.EnumType.DEFAULT);
-			}
-		}, new DropSpecifier(new ItemStack(saltpeter), 0.02f, 1, 3));
+		Modifiers.drops.addDropsToBlock(
+			new BlockSpecifier(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.DEFAULT), BlockSandStone.TYPE),
+			new DropSpecifier(new ItemStack(saltpeter), 0.02f, 1, 3)
+		);
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.GUNPOWDER), ContentHelper.charcoal.copy(), ContentHelper.sulfurOreDict, ContentHelper.saltpeterOreDict));
 	}

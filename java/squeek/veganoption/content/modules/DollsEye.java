@@ -54,17 +54,14 @@ public class DollsEye implements IContentModule
 	{
 		PotionHelper.registerPotionTypeConversion(PotionTypes.AWKWARD, new PotionHelper.ItemPredicateInstance(dollsEye), PotionTypes.POISON);
 
-		BlockSpecifier forestGrass = new BlockSpecifier(Blocks.TALLGRASS, BlockTallGrass.EnumType.GRASS.getMeta())
+		BlockSpecifier forestGrass = new BlockSpecifier(Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS), BlockTallGrass.TYPE)
 		{
 			@Override
 			public boolean matches(IBlockAccess world, BlockPos pos, IBlockState state)
 			{
-				boolean blockMatches = super.matches(world, pos, state);
+				boolean matches = super.matches(world, pos, state);
 
-				if (!blockMatches || !(world instanceof World))
-					return false;
-
-				if (!state.getValue(BlockTallGrass.TYPE).equals(BlockTallGrass.EnumType.GRASS))
+				if (!matches || !(world instanceof World))
 					return false;
 
 				Biome biome = ((World) world).provider.getBiomeForCoords(pos);

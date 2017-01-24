@@ -97,14 +97,7 @@ public class VegetableOil implements IContentModule
 		ContentHelper.remapOre(ContentHelper.teaSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
 		ContentHelper.remapOre(ContentHelper.avocadoOreDict, ContentHelper.vegetableOilSourceOreDict);
 
-		BlockSpecifier sunflowerTopSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT, BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta())
-		{
-			@Override
-			public boolean stateMatches(IBlockState state)
-			{
-				return state.getValue(BlockDoublePlant.VARIANT).equals(BlockDoublePlant.EnumPlantType.SUNFLOWER);
-			}
-		};
+		BlockSpecifier sunflowerTopSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT.getDefaultState().withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.SUNFLOWER), BlockDoublePlant.VARIANT);
 		DropSpecifier sunflowerDropSpecifier = new DropSpecifier(new ItemStack(seedSunflower))
 		{
 			@Override

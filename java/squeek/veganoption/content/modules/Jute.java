@@ -121,18 +121,11 @@ public class Jute implements IContentModule
 	{
 		GameRegistry.addShapedRecipe(new ItemStack(juteBundled), "///", "///", "///", '/', new ItemStack(juteStalk));
 
-		DropsModifier.NEIBlockSpecifier juteBundledBlockSpecifier = new DropsModifier.NEIBlockSpecifier(juteBundled, OreDictionary.WILDCARD_VALUE, new ItemStack(juteBundled, 1, BlockRettable.NUM_RETTING_STAGES));
+		DropsModifier.NEIBlockSpecifier juteBundledBlockSpecifier = new DropsModifier.NEIBlockSpecifier(juteBundled.getDefaultState(), new ItemStack(juteBundled, 1, BlockRettable.NUM_RETTING_STAGES));
 		DropsModifier.NEIDropSpecifier juteDropSpecifier = new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops);
 		Modifiers.drops.addDropsToBlock(juteBundledBlockSpecifier, juteDropSpecifier);
 
-		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT)
-		{
-			@Override
-			public boolean stateMatches(IBlockState state)
-			{
-				return state.getValue(BlockDoublePlant.VARIANT) == BlockDoublePlant.EnumPlantType.FERN;
-			}
-		};
+		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT.getDefaultState().withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.FERN), BlockDoublePlant.VARIANT);
 		juteDrops = new DropSpecifier(new ItemStack(juteStalk), 1, 3);
 		Modifiers.drops.addDropsToBlock(doubleFernSpecifier, juteDrops);
 

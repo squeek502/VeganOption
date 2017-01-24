@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,7 +17,10 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.RandomHelper;
+
+import static jline.console.internal.ConsoleRunner.property;
 
 public class DropsModifier
 {
@@ -34,7 +38,7 @@ public class DropsModifier
 
 	public void addDropsToBlock(Block block, ItemStack drop)
 	{
-		addDropsToBlock(new BlockSpecifier(block), new DropSpecifier(drop));
+		addDropsToBlock(new BlockSpecifier(block.getDefaultState()), new DropSpecifier(drop));
 	}
 
 	public void addDropsToBlock(BlockSpecifier blockSpecifier, DropSpecifier dropSpecifier)
@@ -59,7 +63,7 @@ public class DropsModifier
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
 			BlockSpecifier block = blockDropSpecifier.getKey();
-			if (OreDictionary.itemMatches(new ItemStack(block.block, 1, block.itemStackMeta), itemStack, false))
+			if (OreDictionary.itemMatches(block.itemStackForComparison, itemStack, false))
 			{
 				return true;
 			}
@@ -86,7 +90,7 @@ public class DropsModifier
 		for (Entry<BlockSpecifier, DropSpecifier> blockDropSpecifier : blockDrops.entrySet())
 		{
 			BlockSpecifier block = blockDropSpecifier.getKey();
-			if (OreDictionary.itemMatches(new ItemStack(block.block, 1, block.itemStackMeta), itemStack, false))
+			if (OreDictionary.itemMatches(block.itemStackForComparison, itemStack, false))
 			{
 				subset.add(new DropInfo(blockDropSpecifier.getKey(), blockDropSpecifier.getValue()));
 			}
@@ -106,49 +110,41 @@ public class DropsModifier
 
 	public static class BlockSpecifier
 	{
-		public final Block block;
-		public final int itemStackMeta;
-		public final ItemStack neiItemStack;
+		public final IBlockState stateToMatch;
+		public final IProperty<?>[] propertiesToMatch;
+		public final ItemStack itemStackForDisplay;
+		public final ItemStack itemStackForComparison;
 
-		public BlockSpecifier(Block block)
+		public BlockSpecifier(IBlockState stateToMatch, IProperty<?> ... propertiesToMatch)
 		{
-			this(block, null);
+			this(stateToMatch, null, propertiesToMatch);
 		}
 
-		public BlockSpecifier(Block block, int itemStackMeta)
+		public BlockSpecifier(IBlockState stateToMatch, ItemStack itemStackForDisplay, IProperty<?> ... propertiesToMatch)
 		{
-			this(block, itemStackMeta, null);
-		}
-
-		public BlockSpecifier(Block block, ItemStack neiItemStack)
-		{
-			this(block, OreDictionary.WILDCARD_VALUE, neiItemStack);
-		}
-
-		public BlockSpecifier(Block block, int itemStackMeta, ItemStack neiItemStack)
-		{
-			this.block = block;
-			this.itemStackMeta = itemStackMeta;
-			this.neiItemStack = neiItemStack;
-		}
-
-		public boolean matches(IBlockState state)
-		{
-			return blockMatches(state.getBlock()) && stateMatches(state);
+			this.stateToMatch = stateToMatch;
+			this.propertiesToMatch = propertiesToMatch;
+			this.itemStackForDisplay = itemStackForDisplay;
+			this.itemStackForComparison = BlockHelper.blockStateToItemStack(stateToMatch);
 		}
 
 		public boolean matches(IBlockAccess world, BlockPos pos, IBlockState state)
 		{
-			return matches(state);
+			return blockMatches(state.getBlock()) && stateMatches(state);
 		}
 
 		public boolean blockMatches(Block block)
 		{
-			return this.block == block;
+			return this.stateToMatch.getBlock() == block;
 		}
 
 		public boolean stateMatches(IBlockState state)
 		{
+			for (IProperty<?> property : propertiesToMatch)
+			{
+				if (!stateToMatch.getValue(property).equals(state.getValue(property)))
+					return false;
+			}
 			return true;
 		}
 	}
@@ -214,14 +210,9 @@ public class DropsModifier
 	// only shows in NEI, doesn't actually modify the drops
 	public static class NEIBlockSpecifier extends BlockSpecifier
 	{
-		public NEIBlockSpecifier(Block block, ItemStack neiItemStack)
+		public NEIBlockSpecifier(IBlockState stateToMatch, ItemStack itemStackForDisplay)
 		{
-			super(block, neiItemStack);
-		}
-
-		public NEIBlockSpecifier(Block block, int itemStackMeta, ItemStack neiItemStack)
-		{
-			super(block, itemStackMeta, neiItemStack);
+			super(stateToMatch, itemStackForDisplay);
 		}
 
 		@Override

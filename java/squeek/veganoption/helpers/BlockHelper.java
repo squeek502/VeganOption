@@ -3,6 +3,7 @@ package squeek.veganoption.helpers;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -13,12 +14,32 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class BlockHelper
 {
 	public static final float BLOCK_HARDNESS_UNBREAKABLE = -1.0f;
+
+	private static final Method createStackedBlock = ReflectionHelper.findMethod(Block.class, null, new String[] {"createStackedBlock", "func_180643_i"}, IBlockState.class);
+	public static ItemStack blockStateToItemStack(IBlockState state)
+	{
+		try
+		{
+			return (ItemStack) createStackedBlock.invoke(state.getBlock(), state);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 
 	public static boolean isMaterial(World world, BlockPos blockPos, Material material)
 	{

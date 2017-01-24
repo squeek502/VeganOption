@@ -67,7 +67,7 @@ public class ToxicMushroom implements IContentModule
 				return !isSilkTouching && super.shouldDrop(harvester, fortuneLevel, isSilkTouching);
 			}
 		};
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.MYCELIUM), dontDropWhenSilkTouching);
+		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.MYCELIUM.getDefaultState()), dontDropWhenSilkTouching);
 
 		GameRegistry.addShapelessRecipe(new ItemStack(falseMorelFermented), new ItemStack(falseMorel), new ItemStack(Blocks.BROWN_MUSHROOM), new ItemStack(Items.SUGAR));
 	}

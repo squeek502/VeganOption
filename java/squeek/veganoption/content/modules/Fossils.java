@@ -1,7 +1,6 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.block.BlockStone;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -28,13 +27,10 @@ public class Fossils implements IContentModule
 	public void recipes()
 	{
 		// bones as a rare drop from stone
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.STONE) {
-			@Override
-			public boolean stateMatches(IBlockState state)
-			{
-				return state.getValue(BlockStone.VARIANT) == BlockStone.EnumType.STONE;
-			}
-		}, new DropSpecifier(new ItemStack(Items.BONE), 0.01f, 1, 2));
+		Modifiers.drops.addDropsToBlock(
+			new BlockSpecifier(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), BlockStone.VARIANT),
+			new DropSpecifier(new ItemStack(Items.BONE), 0.01f, 1, 2)
+		);
 	}
 
 	@Override

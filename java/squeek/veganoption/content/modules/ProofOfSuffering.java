@@ -54,7 +54,7 @@ public class ProofOfSuffering implements IContentModule
 
 		Modifiers.recipes.convertInput(new ItemStack(Items.GHAST_TEAR), ContentHelper.tearOreDict);
 
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.SOUL_SAND), new DropSpecifier(new ItemStack(fragmentOfSuffering), 0.05f, 1, 3));
+		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.SOUL_SAND.getDefaultState()), new DropSpecifier(new ItemStack(fragmentOfSuffering), 0.05f, 1, 3));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(proofOfSuffering), "xxx", "x*x", "xxx", 'x', fragmentOfSuffering, '*', Items.GOLD_NUGGET));
 	}
