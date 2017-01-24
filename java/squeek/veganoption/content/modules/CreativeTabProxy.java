@@ -10,7 +10,7 @@ import squeek.veganoption.helpers.CreativeTabHelper;
 
 public class CreativeTabProxy implements IContentModule
 {
-	public Item proxyItem;
+	public static Item proxyItem;
 
 	@Override
 	public void create()

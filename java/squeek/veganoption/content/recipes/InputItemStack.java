@@ -1,6 +1,7 @@
 package squeek.veganoption.content.recipes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -74,6 +75,30 @@ public class InputItemStack
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @return A list of all possible inputs for JEI usage
+	 */
+	public List<ItemStack> getItemStackList()
+	{
+		if (wrappedItemStack != null)
+			return Collections.singletonList(wrappedItemStack);
+		else if (oreDictItemStacks != null)
+		{
+			// need to modify the stacksize of each itemstack without touching the
+			// underlying oredict itemstacks, so deep copy the list
+			List<ItemStack> sizedOreDictItemStacks = new ArrayList<ItemStack>();
+			for (ItemStack stack : oreDictItemStacks)
+			{
+				ItemStack sizedStack = stack.copy();
+				sizedStack.stackSize = stackSize();
+				sizedOreDictItemStacks.add(sizedStack);
+			}
+			return sizedOreDictItemStacks;
+		}
+		else
+			return Collections.emptyList();
 	}
 
 	public int stackSize()

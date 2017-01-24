@@ -15,6 +15,7 @@ public class IntegrationHandler extends IntegrationBase
 		tryIntegration(MODID_TINKERS_CONSTRUCT, "tic");
 		tryIntegration(MODID_WAILA, "waila");
 		tryIntegration(MODID_BIOMES_O_PLENTY, "bop");
+		tryIntegration(MODID_JEI, "jei");
 	}
 
 	public static void preInit()
