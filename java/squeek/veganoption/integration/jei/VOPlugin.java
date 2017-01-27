@@ -6,6 +6,9 @@ import net.minecraft.item.ItemStack;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.modules.CreativeTabProxy;
+import squeek.veganoption.integration.jei.drops.DropsCategory;
+import squeek.veganoption.integration.jei.drops.DropsHandler;
+import squeek.veganoption.integration.jei.drops.DropsMaker;
 import squeek.veganoption.integration.jei.piston.PistonRecipeCategory;
 import squeek.veganoption.integration.jei.piston.PistonRecipeHandler;
 import squeek.veganoption.integration.jei.piston.PistonRecipeMaker;
@@ -33,16 +36,19 @@ public class VOPlugin extends BlankModPlugin
 		itemBlacklist.addItemToBlacklist(new ItemStack(CreativeTabProxy.proxyItem));
 
 		registry.addRecipeCategories(
-			new PistonRecipeCategory(guiHelper)
+			new PistonRecipeCategory(guiHelper),
+			new DropsCategory(guiHelper)
 		);
 
 		registry.addRecipeHandlers(
-			new PistonRecipeHandler()
+			new PistonRecipeHandler(),
+			new DropsHandler()
 		);
 
 		registry.addRecipeCategoryCraftingItem(new ItemStack(Blocks.PISTON), VORecipeCategoryUid.PISTON);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(Composting.composter), VORecipeCategoryUid.COMPOSTING);
 
 		registry.addRecipes(PistonRecipeMaker.getRecipes());
+		registry.addRecipes(DropsMaker.getRecipes());
 	}
 }
