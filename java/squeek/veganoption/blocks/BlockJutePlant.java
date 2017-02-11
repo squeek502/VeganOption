@@ -34,7 +34,7 @@ import squeek.veganoption.helpers.LangHelper;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccesor", modid = "theoneprobe")
+@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAccessor
 {
 	public static final int NUM_BOTTOM_STAGES = 6;
