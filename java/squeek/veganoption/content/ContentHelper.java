@@ -31,11 +31,12 @@ public class ContentHelper
 	public static final ItemStack boneMeal = new ItemStack(Items.DYE, 1, 15);
 
 	// oredict
-	public static final String leatherOreDict = "materialLeather";
+	public static final String leatherOreDict = "leather"; // Forge's oredict entry
 	public static final String woolOreDict = "materialBedding";
-	public static final String featherOreDict = "materialFeather";
+	public static final String featherOreDict = "feather"; // Forge's oredict entry
 	public static final String bastFibreOreDict = "materialFiber";
 	public static final String milkOreDict = "listAllmilk"; // HarvestCraft's oredict entry
+	public static final String eggForgeOreDict = "egg"; // Forge's oredict entry
 	public static final String eggObjectOreDict = "objectEgg"; // not for food equivalents
 	public static final String eggBakingOreDict = "bakingEgg";
 	public static final String eggFoodOreDict = "listAllegg"; // HarvestCraft's oredict entry

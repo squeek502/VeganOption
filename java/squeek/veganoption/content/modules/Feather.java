@@ -32,7 +32,6 @@ public class Feather implements IContentModule
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.featherOreDict, new ItemStack(Items.FEATHER));
 		OreDictionary.registerOre(ContentHelper.featherOreDict, new ItemStack(fauxFeather));
 	}
 

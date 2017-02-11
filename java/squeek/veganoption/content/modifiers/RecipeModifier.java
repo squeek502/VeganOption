@@ -24,6 +24,8 @@ public class RecipeModifier
 	public HashMap<ItemStack, String> itemToOreDictConversionsForFoodOutputs = new HashMap<ItemStack, String>();
 	public HashMap<ItemStack, String> itemToOreDictConversionsForNonFoodOutputs = new HashMap<ItemStack, String>();
 	public HashMap<String, String> oreDictToOreDictConversions = new HashMap<String, String>();
+	public HashMap<String, String> oreDictToOreDictConversionsForFoodOutputs = new HashMap<String, String>();
+	public HashMap<String, String> oreDictToOreDictConversionsForNonFoodOutputs = new HashMap<String, String>();
 	public List<ItemStack> excludedRecipeOutputs = new ArrayList<ItemStack>();
 	public List<RecipeModification> customModifications = new ArrayList<RecipeModification>();
 
@@ -42,9 +44,19 @@ public class RecipeModifier
 		itemToOreDictConversionsForFoodOutputs.put(inputToConvert, oreDictEntry);
 	}
 
+	public void convertOreDictForFoodOutput(String oreDictToConvert, String oreDictEntry)
+	{
+		oreDictToOreDictConversionsForFoodOutputs.put(oreDictToConvert, oreDictEntry);
+	}
+
 	public void convertInputForNonFoodOutput(ItemStack inputToConvert, String oreDictEntry)
 	{
 		itemToOreDictConversionsForNonFoodOutputs.put(inputToConvert, oreDictEntry);
+	}
+
+	public void convertOreDictForNonFoodOutput(String oreDictToConvert, String oreDictEntry)
+	{
+		oreDictToOreDictConversionsForNonFoodOutputs.put(oreDictToConvert, oreDictEntry);
 	}
 
 	public void convertOreDict(String oreDictFrom, String oreDictTo)
@@ -119,25 +131,25 @@ public class RecipeModifier
 			return null;
 		}
 
-		IRecipe convertedRecipe = convertRecipe(recipe, itemToOreDictConversions);
+		IRecipe convertedRecipe = convertRecipe(recipe, itemToOreDictConversions, oreDictToOreDictConversions);
 
 		if (isFood(output))
 		{
 			IRecipe recipeToConvert = convertedRecipe != null ? convertedRecipe : recipe;
-			IRecipe convertedFoodRecipe = convertRecipe(recipeToConvert, itemToOreDictConversionsForFoodOutputs);
+			IRecipe convertedFoodRecipe = convertRecipe(recipeToConvert, itemToOreDictConversionsForFoodOutputs, oreDictToOreDictConversionsForFoodOutputs);
 			convertedRecipe = convertedFoodRecipe != null ? convertedFoodRecipe : convertedRecipe;
 		}
 		else
 		{
 			IRecipe recipeToConvert = convertedRecipe != null ? convertedRecipe : recipe;
-			IRecipe convertedNonFoodRecipe = convertRecipe(recipeToConvert, itemToOreDictConversionsForNonFoodOutputs);
+			IRecipe convertedNonFoodRecipe = convertRecipe(recipeToConvert, itemToOreDictConversionsForNonFoodOutputs, oreDictToOreDictConversionsForNonFoodOutputs);
 			convertedRecipe = convertedNonFoodRecipe != null ? convertedNonFoodRecipe : convertedRecipe;
 		}
 
 		return convertedRecipe;
 	}
 
-	public IRecipe convertRecipe(IRecipe recipe, Map<ItemStack, String> itemToOredictMap)
+	public IRecipe convertRecipe(IRecipe recipe, Map<ItemStack, String> itemToOredictMap, Map<String, String> oredictToOredictMap)
 	{
 		if (recipe.getClass() == ShapedRecipes.class)
 		{
@@ -149,11 +161,11 @@ public class RecipeModifier
 		}
 		else if (recipe.getClass() == ShapedOreRecipe.class)
 		{
-			return convertShapedOreRecipe((ShapedOreRecipe) recipe, itemToOredictMap);
+			return convertShapedOreRecipe((ShapedOreRecipe) recipe, itemToOredictMap, oredictToOredictMap);
 		}
 		else if (recipe.getClass() == ShapelessOreRecipe.class)
 		{
-			return convertShapelessOreRecipe((ShapelessOreRecipe) recipe, itemToOredictMap);
+			return convertShapelessOreRecipe((ShapelessOreRecipe) recipe, itemToOredictMap, oredictToOredictMap);
 		}
 		return null;
 	}
@@ -203,7 +215,7 @@ public class RecipeModifier
 		return null;
 	}
 
-	public IRecipe convertShapedOreRecipe(ShapedOreRecipe recipe, Map<ItemStack, String> itemToOredictMap)
+	public IRecipe convertShapedOreRecipe(ShapedOreRecipe recipe, Map<ItemStack, String> itemToOredictMap, Map<String, String> oredictToOredictMap)
 	{
 		Object[] inputs = recipe.getInput();
 		boolean inputReplaced = false;
@@ -215,15 +227,14 @@ public class RecipeModifier
 				inputs[i] = OreDictionary.getOres(getConversionFor((ItemStack) inputObj, itemToOredictMap));
 				inputReplaced = true;
 			}
-			else if (inputObj instanceof ArrayList)
+			else if (inputObj instanceof List)
 			{
 				@SuppressWarnings("unchecked")
-				ArrayList<ItemStack> inputOres = (ArrayList<ItemStack>) inputObj;
-				String currentOreDict = findMatchingOreDict(inputOres, oreDictToOreDictConversions.keySet());
-				if (currentOreDict != null)
+				List<ItemStack> inputOres = (List<ItemStack>) inputObj;
+				List<ItemStack> converted = getConvertedOredictInputs(inputOres, oredictToOredictMap);
+				if (converted != null)
 				{
-					String newOreDict = oreDictToOreDictConversions.get(currentOreDict);
-					inputs[i] = OreDictionary.getOres(newOreDict);
+					inputs[i] = converted;
 					inputReplaced = true;
 				}
 			}
@@ -231,7 +242,7 @@ public class RecipeModifier
 		return inputReplaced ? recipe : null;
 	}
 
-	public IRecipe convertShapelessOreRecipe(ShapelessOreRecipe recipe, Map<ItemStack, String> itemToOredictMap)
+	public IRecipe convertShapelessOreRecipe(ShapelessOreRecipe recipe, Map<ItemStack, String> itemToOredictMap, Map<String, String> oredictToOredictMap)
 	{
 		List<Object> inputsToRemove = new ArrayList<Object>();
 		List<Object> inputsToAdd = new ArrayList<Object>();
@@ -244,16 +255,15 @@ public class RecipeModifier
 				inputsToRemove.add(inputObj);
 				inputsToAdd.add(OreDictionary.getOres(getConversionFor((ItemStack) inputObj, itemToOredictMap)));
 			}
-			else if (inputObj instanceof ArrayList)
+			else if (inputObj instanceof List)
 			{
 				@SuppressWarnings("unchecked")
-				ArrayList<ItemStack> inputOres = (ArrayList<ItemStack>) inputObj;
-				String currentOreDict = findMatchingOreDict(inputOres, oreDictToOreDictConversions.keySet());
-				if (currentOreDict != null)
+				List<ItemStack> inputOres = (List<ItemStack>) inputObj;
+				List<ItemStack> converted = getConvertedOredictInputs(inputOres, oredictToOredictMap);
+				if (converted != null)
 				{
-					String newOreDict = oreDictToOreDictConversions.get(currentOreDict);
-					inputsToRemove.add(inputObj);
-					inputsToAdd.add(OreDictionary.getOres(newOreDict));
+					inputsToRemove.add(inputOres);
+					inputsToAdd.add(converted);
 				}
 			}
 		}
@@ -265,6 +275,20 @@ public class RecipeModifier
 			return recipe;
 		}
 
+		return null;
+	}
+
+	private List<ItemStack> getConvertedOredictInputs(List<ItemStack> inputOres, Map<String, String> oredictToOredictMap)
+	{
+		if (oredictToOredictMap == null)
+			return null;
+
+		String currentOreDict = findMatchingOreDict(inputOres, oredictToOredictMap.keySet());
+		if (currentOreDict != null)
+		{
+			String newOreDict = oredictToOredictMap.get(currentOreDict);
+			return OreDictionary.getOres(newOreDict);
+		}
 		return null;
 	}
 

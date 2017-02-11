@@ -65,7 +65,6 @@ public class Burlap implements IContentModule
 	@Override
 	public void oredict()
 	{
-		OreDictionary.registerOre(ContentHelper.leatherOreDict, new ItemStack(Items.LEATHER));
 		OreDictionary.registerOre(ContentHelper.leatherOreDict, new ItemStack(burlap));
 		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(Items.LEATHER_BOOTS));
 		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(burlapBoots));
@@ -80,10 +79,6 @@ public class Burlap implements IContentModule
 	@Override
 	public void recipes()
 	{
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.LEATHER_HELMET));
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.LEATHER_CHESTPLATE));
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.LEATHER_LEGGINGS));
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.LEATHER_BOOTS));
 		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER), ContentHelper.leatherOreDict);
 		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_BOOTS), ContentHelper.leatherBootsOreDict);
 		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_LEGGINGS), ContentHelper.leatherLeggingsOreDict);

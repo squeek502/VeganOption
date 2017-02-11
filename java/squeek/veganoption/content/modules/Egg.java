@@ -100,9 +100,16 @@ public class Egg implements IContentModule
 	@Override
 	public void recipes()
 	{
+		// there's no good way to handle this that I can think of... so this is just a mess of remapping
+		// and conversion to attempt to separate egg oredict entries into more specific categories
+		ContentHelper.remapOre(ContentHelper.eggForgeOreDict, ContentHelper.eggBakingOreDict);
+		ContentHelper.remapOre(ContentHelper.eggForgeOreDict, ContentHelper.eggObjectOreDict);
+
 		Modifiers.recipes.convertOreDict(ContentHelper.eggFoodOreDict, ContentHelper.eggBakingOreDict);
 		Modifiers.recipes.convertInputForFoodOutput(new ItemStack(Items.EGG), ContentHelper.eggBakingOreDict);
 		Modifiers.recipes.convertInputForNonFoodOutput(new ItemStack(Items.EGG), ContentHelper.eggObjectOreDict);
+		Modifiers.recipes.convertOreDictForFoodOutput(ContentHelper.eggForgeOreDict, ContentHelper.eggBakingOreDict);
+		Modifiers.recipes.convertOreDictForNonFoodOutput(ContentHelper.eggForgeOreDict, ContentHelper.eggObjectOreDict);
 
 		GameRegistry.addShapelessRecipe(new ItemStack(appleSauce), new ItemStack(Items.APPLE), new ItemStack(Items.BOWL));
 
