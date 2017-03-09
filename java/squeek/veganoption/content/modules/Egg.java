@@ -1,13 +1,18 @@
 package squeek.veganoption.content.modules;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -134,6 +139,27 @@ public class Egg implements IContentModule
 				eggEntity.worldObj.createExplosion(eggEntity.getThrower(), eggEntity.posX, eggEntity.posY, eggEntity.posZ, 2F, true);
 			}
 		});
+		EggModifier growModifier = new EggModifier()
+		{
+			@Override
+			public void onImpactGeneric(RayTraceResult rayTraceResult, EntityPlasticEgg eggEntity)
+			{
+				if (eggEntity.worldObj.isRemote)
+					return;
+				BlockPos posToGrow = rayTraceResult.getBlockPos();
+				IBlockState stateToGrow = eggEntity.worldObj.getBlockState(posToGrow);
+				Block blockToGrow = stateToGrow.getBlock();
+				if (blockToGrow instanceof IGrowable)
+				{
+					IGrowable growable = (IGrowable) blockToGrow;
+					if (growable.canUseBonemeal(eggEntity.worldObj, eggEntity.worldObj.rand, posToGrow, stateToGrow) &&
+						growable.canGrow(eggEntity.worldObj, posToGrow, stateToGrow, eggEntity.worldObj.isRemote))
+						growable.grow(eggEntity.worldObj, eggEntity.worldObj.rand, posToGrow, stateToGrow);
+				}
+			}
+		};
+		Modifiers.eggs.addItem(new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), growModifier);
+		Modifiers.eggs.addItem(new ItemStack(Composting.fertilizer), growModifier);
 	}
 
 	@Override
