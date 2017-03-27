@@ -1,5 +1,6 @@
 package squeek.veganoption.blocks.renderers;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -11,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.BlockComposter;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.content.modules.Composting;
 
 import java.util.Calendar;
 
@@ -46,7 +48,13 @@ public class RenderComposter extends TileEntitySpecialRenderer<TileEntityCompost
 	@Override
 	public void renderTileEntityAt(TileEntityComposter tile, double x, double y, double z, float partialTickTime, int destroyStage)
 	{
-		EnumFacing side = tile.hasWorldObj() ? tile.getWorld().getBlockState(tile.getPos()).getValue(BlockComposter.FACING) : EnumFacing.WEST;
+		EnumFacing side = EnumFacing.WEST;
+		if (tile.hasWorldObj())
+		{
+			IBlockState stateInTilePos = tile.getWorld().getBlockState(tile.getPos());
+			if (stateInTilePos.getBlock() == Composting.composter)
+				side = stateInTilePos.getValue(BlockComposter.FACING);
+		}
 
 		short rotation = 0;
 		switch (side)
