@@ -10,7 +10,9 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 import squeek.veganoption.content.modules.Egg;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.content.modules.FrozenBubble;
+import squeek.veganoption.content.modules.Seitan;
 import squeek.veganoption.integration.IntegratorBase;
+import squeek.veganoption.items.ItemWashableWheat;
 
 public class ThermalExpansion extends IntegratorBase
 {
@@ -21,6 +23,14 @@ public class ThermalExpansion extends IntegratorBase
 
 		addTransposerFill(4000, new ItemStack(FrozenBubble.frozenBubble), new ItemStack(Items.ENDER_PEARL), new FluidStack(Ender.fluidRawEnder, Ender.RAW_ENDER_PER_PEARL), true);
 		addTransposerFill(4000, new ItemStack(FrozenBubble.frozenBubble), new ItemStack(Items.ENDER_PEARL), FluidRegistry.getFluidStack("ender", FluidContainerRegistry.BUCKET_VOLUME / 4), false);
+
+		addTransposerFill(2000, Seitan.wheatFlourStack.copy(), Seitan.wheatDoughStack.copy(), new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), false);
+		addTransposerFill(2000, Seitan.wheatDoughStack.copy(), Seitan.seitanUnwashedStack.copy(), new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), false);
+		for (int outputMeta = ItemWashableWheat.META_UNWASHED_START + 1; outputMeta < ItemWashableWheat.META_UNWASHED_END; outputMeta++)
+		{
+			addTransposerFill(2000, new ItemStack(Seitan.washableWheat, 1, outputMeta - 1), new ItemStack(Seitan.washableWheat, 1, outputMeta), new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), false);
+		}
+		addTransposerFill(2000, new ItemStack(Seitan.washableWheat, 1, ItemWashableWheat.META_RAW - 1), Seitan.seitanRawStack.copy(), new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), false);
 
 		addPulverizerRecipe(1600, new ItemStack(Items.POTATO), new ItemStack(Egg.potatoStarch, 2), null, 100);
 	}
