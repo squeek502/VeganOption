@@ -10,6 +10,7 @@ public abstract class IntegrationBase
 	public static final String MODID_WAILA = "Waila";
 	public static final String MODID_BIOMES_O_PLENTY = "BiomesOPlenty";
 	public static final String MODID_JEI = "JEI";
+	public static final String MODID_THERMAL_EXPANSION = "thermalexpansion";
 
 	public static boolean integrationExists(String modID)
 	{

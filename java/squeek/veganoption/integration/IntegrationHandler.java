@@ -16,6 +16,7 @@ public class IntegrationHandler extends IntegrationBase
 		tryIntegration(MODID_WAILA, "waila");
 		tryIntegration(MODID_BIOMES_O_PLENTY, "bop");
 		tryIntegration(MODID_JEI, "jei");
+		tryIntegration(MODID_THERMAL_EXPANSION, "cofh", "ThermalExpansion");
 	}
 
 	public static void preInit()
