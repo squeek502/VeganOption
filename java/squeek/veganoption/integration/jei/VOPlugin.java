@@ -8,6 +8,7 @@ import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.modules.CreativeTabProxy;
 import squeek.veganoption.content.registry.DescriptionRegistry;
+import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.jei.composting.CompostingRecipeCategory;
 import squeek.veganoption.integration.jei.composting.CompostingRecipeHandler;
 import squeek.veganoption.integration.jei.composting.CompostingRecipeMaker;
@@ -50,8 +51,8 @@ public class VOPlugin extends BlankModPlugin
 			new PistonRecipeCategory(guiHelper),
 			new DropsCategory(guiHelper),
 			new CompostingRecipeCategory(guiHelper),
-			new CraftingDescCategory(guiHelper),
-			new UsageDescCategory(guiHelper)
+			new DescriptionCategory(guiHelper, VORecipeCategoryUid.CRAFTING, LangHelper.translate("nei.crafting")),
+			new DescriptionCategory(guiHelper, VORecipeCategoryUid.USAGE, LangHelper.translate("nei.usage"))
 		);
 
 		registry.addRecipeHandlers(

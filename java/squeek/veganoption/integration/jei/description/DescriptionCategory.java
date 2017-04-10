@@ -8,15 +8,16 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import squeek.veganoption.helpers.GuiHelper;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public abstract class DescriptionCategory extends BlankRecipeCategory<DescriptionWrapper>
+public class DescriptionCategory extends BlankRecipeCategory<DescriptionWrapper>
 {
-	public static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+	private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 	public static final int WIDTH = 160;
 	public static final int HEIGHT = 130;
 	public static final int Y_START = 22;
@@ -25,12 +26,21 @@ public abstract class DescriptionCategory extends BlankRecipeCategory<Descriptio
 	private final IDrawable background;
 	private final IGuiHelper guiHelper;
 	private final String localizedName;
+	private final String uid;
 
-	public DescriptionCategory(IGuiHelper guiHelper, String localizedName)
+	public DescriptionCategory(IGuiHelper guiHelper, String uid, String localizedName)
 	{
 		background = guiHelper.createBlankDrawable(WIDTH, HEIGHT);
 		this.guiHelper = guiHelper;
 		this.localizedName = localizedName;
+		this.uid = uid;
+	}
+
+	@Override
+	@Nonnull
+	public String getUid()
+	{
+		return uid;
 	}
 
 	@Override
@@ -51,43 +61,35 @@ public abstract class DescriptionCategory extends BlankRecipeCategory<Descriptio
 	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull DescriptionWrapper recipeWrapper, @Nonnull IIngredients ingredients)
 	{
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		boolean isUsage = recipeWrapper instanceof UsageDescWrapper;
-		boolean isCrafting = !isUsage;
-		boolean isMainSlotInput = isUsage;
+		boolean isMainSlotAnInput = recipeWrapper instanceof UsageDescWrapper;
 
-		int xPos = (WIDTH - 18) / 2;
+		int xPos = (WIDTH - GuiHelper.STANDARD_SLOT_WIDTH) / 2;
 		int yPos = 0;
 		int slotIndex = 0;
-		guiItemStacks.init(slotIndex, isMainSlotInput, xPos, yPos);
-		List<ItemStack> mainStack = isMainSlotInput ? ingredients.getInputs(ItemStack.class).get(0) : ingredients.getOutputs(ItemStack.class);
+		guiItemStacks.init(slotIndex, isMainSlotAnInput, xPos, yPos);
+		List<ItemStack> mainStack = isMainSlotAnInput ? ingredients.getInputs(ItemStack.class).get(0) : ingredients.getOutputs(ItemStack.class);
 		guiItemStacks.set(slotIndex, mainStack);
 
-		boolean isSlotInput = !isMainSlotInput;
+		boolean isSlotInput = !isMainSlotAnInput;
 
-		if (recipeWrapper.related != null)
+		yPos += GuiHelper.STANDARD_SLOT_WIDTH + fontRenderer.FONT_HEIGHT + PADDING;
+		xPos = (WIDTH - recipeWrapper.related.size() * GuiHelper.STANDARD_SLOT_WIDTH) / 2;
+		for (ItemStack relatedStack : recipeWrapper.related)
 		{
-			yPos += 18 + Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 4;
-			xPos = (WIDTH - recipeWrapper.related.size() * 18) / 2;
-			for (ItemStack relatedStack : recipeWrapper.related)
-			{
-				slotIndex++;
-				guiItemStacks.init(slotIndex, isSlotInput, xPos, yPos);
-				guiItemStacks.set(slotIndex, relatedStack);
-				xPos += GuiHelper.STANDARD_SLOT_WIDTH;
-			}
+			slotIndex++;
+			guiItemStacks.init(slotIndex, isSlotInput, xPos, yPos);
+			guiItemStacks.set(slotIndex, relatedStack);
+			xPos += GuiHelper.STANDARD_SLOT_WIDTH;
 		}
 
-		if (recipeWrapper.referenced != null)
+		yPos = HEIGHT - GuiHelper.STANDARD_SLOT_WIDTH;
+		xPos = (WIDTH - recipeWrapper.referenced.size() * GuiHelper.STANDARD_SLOT_WIDTH) / 2;
+		for (ItemStack referencedStack : recipeWrapper.referenced)
 		{
-			yPos = HEIGHT - GuiHelper.STANDARD_SLOT_WIDTH;
-			xPos = (WIDTH - recipeWrapper.referenced.size() * 18) / 2;
-			for (ItemStack referencedStack : recipeWrapper.referenced)
-			{
-				slotIndex++;
-				guiItemStacks.init(slotIndex, isSlotInput, xPos, yPos);
-				guiItemStacks.set(slotIndex, referencedStack);
-				xPos += GuiHelper.STANDARD_SLOT_WIDTH;
-			}
+			slotIndex++;
+			guiItemStacks.init(slotIndex, isSlotInput, xPos, yPos);
+			guiItemStacks.set(slotIndex, referencedStack);
+			xPos += GuiHelper.STANDARD_SLOT_WIDTH;
 		}
 	}
 }

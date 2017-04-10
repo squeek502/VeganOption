@@ -12,6 +12,7 @@ import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +34,7 @@ public class DescriptionRegistry
 			if (!item.getRegistryName().getResourceDomain().equals(ModInfo.MODID_LOWER))
 				continue;
 
-			ItemStack stack = new ItemStack(item);
-			if (tryRegisterDescriptions(stack))
-				numRegistered++;
+			numRegistered += tryRegisterItemAndSubtypes(item);
 		}
 
 		for (Block block : Block.REGISTRY)
@@ -49,14 +48,34 @@ public class DescriptionRegistry
 			if (Item.getItemFromBlock(block) == null)
 				continue;
 
-			ItemStack stack = new ItemStack(block);
-			if (tryRegisterDescriptions(stack))
-				numRegistered++;
+			numRegistered += tryRegisterItemAndSubtypes(Item.getItemFromBlock(block));
 		}
 
 		long timeSpentInMilliseconds = System.currentTimeMillis() - millisecondsStart;
 		String timeTakenString = "took " + (timeSpentInMilliseconds / 1000.0f) + " seconds";
 		VeganOption.Log.info("Found and registered " + numRegistered + " items/blocks with description text (" + timeTakenString + ")");
+	}
+
+	public static int tryRegisterItemAndSubtypes(Item item)
+	{
+		int numRegistered = 0;
+
+		List<ItemStack> stacks;
+		if (item.getHasSubtypes())
+		{
+			stacks = new ArrayList<ItemStack>();
+			item.getSubItems(item, null, stacks);
+		}
+		else
+			stacks = Collections.singletonList(new ItemStack(item));
+
+		for (ItemStack stack : stacks)
+		{
+			if (tryRegisterDescriptions(stack))
+				numRegistered++;
+		}
+
+		return numRegistered;
 	}
 
 	public static boolean tryRegisterDescriptions(ItemStack itemStack)

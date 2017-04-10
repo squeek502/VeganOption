@@ -1,5 +1,6 @@
 package squeek.veganoption.integration.jei.description;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -10,6 +11,7 @@ import squeek.veganoption.helpers.MiscHelper;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +20,7 @@ import static squeek.veganoption.integration.jei.description.DescriptionCategory
 
 public abstract class DescriptionMaker
 {
+	private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 	public static final int DESC_DISPLACEMENT_RELATED = 3;
 	public static final int DESC_DISPLACEMENT_REFERENCED = 3;
 
@@ -46,7 +49,7 @@ public abstract class DescriptionMaker
 		if (!referenced.isEmpty())
 			firstPageMaxLines -= DESC_DISPLACEMENT_REFERENCED;
 
-		List<String> splitText = splitText(text, DescriptionCategory.fontRenderer, DescriptionCategory.WIDTH - DescriptionCategory.PADDING * 2);
+		List<String> splitText = splitText(text, fontRenderer, DescriptionCategory.WIDTH - DescriptionCategory.PADDING * 2);
 
 		for (int page = 0; page < getNumPages(splitText, DescriptionCategory.MAX_LINES_PER_PAGE, firstPageMaxLines); page++)
 		{
@@ -56,13 +59,12 @@ public abstract class DescriptionMaker
 			while (!pageText.isEmpty() && TextFormatting.getTextWithoutFormattingCodes(pageText.get(0)).isEmpty())
 				pageText.remove(0);
 
-			Constructor<T> constructor = null;
-			T wrapper = null;
+			Constructor<T> constructor;
+			T wrapper;
 			try
 			{
 				constructor = clazz.getConstructor(ItemStack.class, List.class, List.class, List.class);
-				wrapper = constructor.newInstance(itemStack, page == 0 ? related : null, page == 0 ? referenced : null, pageText);
-
+				wrapper = constructor.newInstance(itemStack, page == 0 ? related : Collections.<ItemStack>emptyList(), page == 0 ? referenced : Collections.<ItemStack>emptyList(), pageText);
 			}
 			catch (Exception e)
 			{
