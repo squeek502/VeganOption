@@ -13,8 +13,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.content.modules.Basin;
 import squeek.veganoption.helpers.FluidContainerHelper;
@@ -23,6 +26,8 @@ import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.WorldHelper;
 
 import java.util.List;
+
+import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 public class TileEntityBasin extends TileEntity implements ITickable
 {
@@ -86,28 +91,20 @@ public class TileEntityBasin extends TileEntity implements ITickable
 
 		for (EntityItem entityItemWithin : entityItemsWithin)
 		{
-			if (!FluidContainerRegistry.isEmptyContainer(entityItemWithin.getEntityItem()))
+			if (!FluidContainerHelper.isEmptyContainer(entityItemWithin.getEntityItem()))
 				continue;
 
 			EntityItem entityItemToFill = entityItemWithin;
 			ItemStack containerToFill = entityItemWithin.getEntityItem();
-			ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluidTank.getFluid(), containerToFill);
+			FluidContainerHelper.drainHandlerIntoContainer(fluidTank, fluidTank.getFluid(), containerToFill);
 
-			if (filledContainer == null)
-				continue;
-
-			if (containerToFill.stackSize > 1)
+			if (containerToFill.stackSize > 1 && !FluidContainerHelper.isEmptyContainer(containerToFill))
 			{
 				containerToFill.splitStack(1);
-				entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, filledContainer);
+				entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, containerToFill);
 				entityItemToFill.setPickupDelay(10);
 				entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);
 			}
-
-			entityItemToFill.setEntityItemStack(filledContainer);
-
-			FluidStack filledWith = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
-			fluidTank.drain(filledWith.amount, true);
 			return true;
 		}
 
@@ -212,30 +209,22 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
-		if (heldItem != null && FluidContainerRegistry.isContainer(heldItem))
+		if (FluidContainerHelper.isFluidContainer(heldItem))
 		{
-			FluidStack containerFluid = FluidContainerRegistry.getFluidForFilledItem(heldItem);
-
-			if (containerFluid != null && fluidTank.fill(containerFluid, false) == containerFluid.amount)
+			net.minecraftforge.fluids.capability.IFluidHandler containerCap = heldItem.getCapability(FLUID_HANDLER_CAPABILITY, null);
+			for (IFluidTankProperties tankProp : containerCap.getTankProperties())
 			{
-				ItemStack emptyContainer = FluidContainerHelper.tryEmptyContainer(player, heldItem);
-
-				if (emptyContainer == null)
-					return false;
-
-				fluidTank.fill(containerFluid, true);
+				FluidStack containerFluid = tankProp.getContents();
+				if (containerFluid != null && fluidTank.fill(containerFluid, false) == containerFluid.amount)
+				{
+					FluidContainerHelper.drainContainerIntoHandler(heldItem, fluidTank);
+					return true;
+				} else if (fluidTank.getFluidAmount() > 0)
+				{
+					FluidContainerHelper.drainHandlerIntoContainer(fluidTank, fluidTank.getFluid(), heldItem);
+					return true;
+				}
 			}
-			else if (fluidTank.getFluidAmount() > 0)
-			{
-				ItemStack filledContainer = FluidContainerHelper.tryFillContainer(player, heldItem, fluidTank.getFluid());
-
-				if (filledContainer == null)
-					return false;
-
-				fluidTank.drain(FluidContainerRegistry.getFluidForFilledItem(filledContainer).amount, true);
-			}
-
-			return true;
 		}
 		return false;
 	}
@@ -385,13 +374,13 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+		return capability == FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) fluidTank : super.getCapability(capability, facing);
+		return capability == FLUID_HANDLER_CAPABILITY ? (T) fluidTank : super.getCapability(capability, facing);
 	}
 
 	private class BasinTank extends FluidTank

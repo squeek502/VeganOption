@@ -14,8 +14,9 @@ import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,6 +24,8 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import squeek.veganoption.content.modules.Ender;
 
 import java.lang.reflect.Method;
+
+import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 public class FluidContainerHelper
 {
@@ -119,7 +122,7 @@ public class FluidContainerHelper
 			return;
 
 		FluidStack fluidStack = new FluidStack(((BlockFluidClassic) block).getFluid(), Fluid.BUCKET_VOLUME);
-		boolean didFill = tryFillContainer(event.getEntityPlayer(), emptyContainer, fluidStack) != null;
+		boolean didFill = fillContainer(fluidStack, emptyContainer) > 0;
 
 		// this cancels the interaction if the bottle is unable to be filled with the fluid,
 		// which stops mod fluid blocks from creating water bottles, because all fluids *have* to use
@@ -135,55 +138,51 @@ public class FluidContainerHelper
 		}
 	}
 
-	public static ItemStack tryFillContainer(EntityPlayer player, ItemStack emptyContainer, FluidStack fluidStack)
+	public static boolean isFluidContainer(ItemStack container)
 	{
-		ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluidStack, emptyContainer);
-
-		if (filledContainer == null)
-			return null;
-
-		if (!player.capabilities.isCreativeMode)
-		{
-			--emptyContainer.stackSize;
-
-			if (emptyContainer.stackSize <= 0)
-			{
-				player.inventory.setInventorySlotContents(player.inventory.currentItem, filledContainer);
-				if (!player.worldObj.isRemote)
-					player.inventoryContainer.detectAndSendChanges();
-			}
-			else if (!player.inventory.addItemStackToInventory(filledContainer))
-			{
-				player.dropItem(filledContainer, false);
-			}
-		}
-
-		return filledContainer;
+		return container != null && container.hasCapability(FLUID_HANDLER_CAPABILITY, null);
 	}
 
-	public static ItemStack tryEmptyContainer(EntityPlayer player, ItemStack filledContainer)
+	public static boolean isEmptyContainer(ItemStack container)
 	{
-		ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(filledContainer);
-
-		if (emptyContainer == null)
-			return null;
-
-		if (!player.capabilities.isCreativeMode)
+		if (isFluidContainer(container))
 		{
-			--filledContainer.stackSize;
-
-			if (filledContainer.stackSize <= 0)
+			IFluidHandler handler = container.getCapability(FLUID_HANDLER_CAPABILITY, null);
+			for (IFluidTankProperties prop : handler.getTankProperties())
 			{
-				player.inventory.setInventorySlotContents(player.inventory.currentItem, emptyContainer);
-				if (!player.worldObj.isRemote)
-					player.inventoryContainer.detectAndSendChanges();
-			}
-			else if (!player.inventory.addItemStackToInventory(emptyContainer))
-			{
-				player.dropItem(emptyContainer, false);
+				if (prop.getContents() != null)
+					return prop.getContents().amount <= 0;
 			}
 		}
+		return true;
+	}
 
-		return emptyContainer;
+	public static int fillContainer(FluidStack fluid, ItemStack into)
+	{
+		if (isFluidContainer(into))
+		{
+			IFluidHandler intoCapability = into.getCapability(FLUID_HANDLER_CAPABILITY, null);
+			return intoCapability.fill(fluid, true);
+		}
+		return 0;
+	}
+
+	public static void drainHandlerIntoContainer(IFluidHandler from, FluidStack toFill, ItemStack into)
+	{
+		if (isFluidContainer(into))
+		{
+			IFluidHandler intoCapability = into.getCapability(FLUID_HANDLER_CAPABILITY, null);
+			from.drain(intoCapability.fill(toFill, true), true);
+		}
+	}
+
+	public static void drainContainerIntoHandler(ItemStack from, IFluidHandler into)
+	{
+		if (isFluidContainer(from))
+		{
+			IFluidHandler fromCapability = from.getCapability(FLUID_HANDLER_CAPABILITY, null);
+			for (IFluidTankProperties fromTank : fromCapability.getTankProperties())
+				fromCapability.drain(into.fill(fromTank.getContents(), true), true);
+		}
 	}
 }
