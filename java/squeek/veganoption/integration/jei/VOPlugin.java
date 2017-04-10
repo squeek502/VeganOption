@@ -7,9 +7,11 @@ import net.minecraft.item.ItemStack;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.modules.CreativeTabProxy;
+import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.integration.jei.composting.CompostingRecipeCategory;
 import squeek.veganoption.integration.jei.composting.CompostingRecipeHandler;
 import squeek.veganoption.integration.jei.composting.CompostingRecipeMaker;
+import squeek.veganoption.integration.jei.description.*;
 import squeek.veganoption.integration.jei.drops.DropsCategory;
 import squeek.veganoption.integration.jei.drops.DropsHandler;
 import squeek.veganoption.integration.jei.drops.DropsMaker;
@@ -28,12 +30,15 @@ public class VOPlugin extends BlankModPlugin
 		public static final String PISTON = ModInfo.MODID + ".piston";
 		public static final String COMPOSTING = ModInfo.MODID + ".composting";
 		public static final String DROPS = ModInfo.MODID + ".drops";
-		public static final String DESCRIPTION = ModInfo.MODID + ".description";
+		public static final String USAGE = ModInfo.MODID + ".usage";
+		public static final String CRAFTING = ModInfo.MODID + ".crafting";
 	}
 
 	@Override
 	public void register(IModRegistry registry)
 	{
+		DescriptionRegistry.registerAllDescriptions();
+
 		jeiHelpers = registry.getJeiHelpers();
 		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 		jeiItemStackHelper = registry.getIngredientRegistry().getIngredientHelper(ItemStack.class);
@@ -44,13 +49,17 @@ public class VOPlugin extends BlankModPlugin
 		registry.addRecipeCategories(
 			new PistonRecipeCategory(guiHelper),
 			new DropsCategory(guiHelper),
-			new CompostingRecipeCategory(guiHelper)
+			new CompostingRecipeCategory(guiHelper),
+			new CraftingDescCategory(guiHelper),
+			new UsageDescCategory(guiHelper)
 		);
 
 		registry.addRecipeHandlers(
 			new PistonRecipeHandler(),
 			new DropsHandler(),
-			new CompostingRecipeHandler()
+			new CompostingRecipeHandler(),
+			new CraftingDescHandler(),
+			new UsageDescHandler()
 		);
 
 		registry.addRecipeCategoryCraftingItem(new ItemStack(Blocks.PISTON), VORecipeCategoryUid.PISTON);
@@ -59,5 +68,7 @@ public class VOPlugin extends BlankModPlugin
 		registry.addRecipes(PistonRecipeMaker.getRecipes());
 		registry.addRecipes(DropsMaker.getRecipes());
 		registry.addRecipes(CompostingRecipeMaker.getRecipes());
+		registry.addRecipes(CraftingDescMaker.getRecipes());
+		registry.addRecipes(UsageDescMaker.getRecipes());
 	}
 }

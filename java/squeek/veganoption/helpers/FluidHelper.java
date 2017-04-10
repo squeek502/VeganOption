@@ -18,12 +18,20 @@ public class FluidHelper
 {
 	public static final int FINITE_FLUID_MB_PER_META = (int) (0.125f * Fluid.BUCKET_VOLUME);
 
-	public static ItemStack toItemStack(FluidStack fluidStack)
+	public static ItemStack toItemStack(Fluid fluid)
 	{
-		if (fluidStack == null || fluidStack.getFluid() == null || fluidStack.getFluid().getBlock() == null)
+		if (fluid == null || fluid.getBlock() == null)
 			return null;
 
-		return new ItemStack(fluidStack.getFluid().getBlock());
+		return new ItemStack(fluid.getBlock());
+	}
+
+	public static ItemStack toItemStack(FluidStack fluidStack)
+	{
+		if (fluidStack == null)
+			return null;
+
+		return FluidHelper.toItemStack(fluidStack.getFluid());
 	}
 
 	public static FluidStack fromItemStack(ItemStack itemStack)

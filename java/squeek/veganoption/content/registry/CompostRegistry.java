@@ -62,7 +62,7 @@ public class CompostRegistry
 	public static boolean isCompostableFood(ItemStack itemStack)
 	{
 		// TODO: optionally use AppleCore's method?
-		if (itemStack != null && itemStack.getItem() instanceof ItemFood && itemStack.getItem().getContainerItem() == null)
+		if (itemStack != null && itemStack.getItem() instanceof ItemFood && !itemStack.getItem().hasContainerItem(itemStack))
 		{
 			for (FoodSpecifier uncompostableFood : uncompostableFoods)
 			{
