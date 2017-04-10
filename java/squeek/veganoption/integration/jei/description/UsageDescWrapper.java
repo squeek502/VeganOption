@@ -23,6 +23,12 @@ public class UsageDescWrapper extends DescriptionWrapper
 	}
 
 	@Override
+	boolean isMainSlotInput()
+	{
+		return true;
+	}
+
+	@Override
 	public void getIngredients(@Nonnull IIngredients ingredients)
 	{
 		FluidStack fluidStack = FluidHelper.fromItemStack(itemStack);

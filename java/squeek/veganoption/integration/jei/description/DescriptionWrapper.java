@@ -35,6 +35,8 @@ public abstract class DescriptionWrapper extends BlankRecipeWrapper
 
 	protected abstract String getRelatedTitle();
 
+	abstract boolean isMainSlotInput();
+
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
 	{

@@ -8,7 +8,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import squeek.veganoption.helpers.GuiHelper;
 
@@ -61,7 +60,7 @@ public class DescriptionCategory extends BlankRecipeCategory<DescriptionWrapper>
 	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull DescriptionWrapper recipeWrapper, @Nonnull IIngredients ingredients)
 	{
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		boolean isMainSlotAnInput = recipeWrapper instanceof UsageDescWrapper;
+		boolean isMainSlotAnInput = recipeWrapper.isMainSlotInput();
 
 		int xPos = (WIDTH - GuiHelper.STANDARD_SLOT_WIDTH) / 2;
 		int yPos = 0;
