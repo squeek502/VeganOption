@@ -2,6 +2,8 @@ package squeek.veganoption.integration.jei.description;
 
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.LangHelper;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,10 @@ public class UsageDescWrapper extends DescriptionWrapper
 	@Override
 	public void getIngredients(@Nonnull IIngredients ingredients)
 	{
+		FluidStack fluidStack = FluidHelper.fromItemStack(itemStack);
+		if (fluidStack != null)
+			ingredients.setInput(FluidStack.class, fluidStack);
+
 		ingredients.setInput(ItemStack.class, itemStack);
 	}
 }
