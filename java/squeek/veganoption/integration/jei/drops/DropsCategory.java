@@ -33,7 +33,7 @@ public class DropsCategory extends BlankRecipeCategory<DropsWrapper>
 		ResourceLocation location = new ResourceLocation("minecraft", "textures/gui/container/crafting_table.png");
 		arrow = guiHelper.createDrawable(location, 90, 35, 22, 15);
 		background = guiHelper.createBlankDrawable(width, height);
-		localizedName = LangHelper.translate("nei.drops");
+		localizedName = LangHelper.translate("jei.drops");
 	}
 
 	@Override

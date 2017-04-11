@@ -19,7 +19,7 @@ public class CraftingDescWrapper extends DescriptionWrapper
 	@Override
 	protected String getRelatedTitle()
 	{
-		return LangHelper.translate("nei.byproduct.of");
+		return LangHelper.translate("jei.byproduct.of");
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class UsageDescWrapper extends DescriptionWrapper
 	@Override
 	protected String getRelatedTitle()
 	{
-		return LangHelper.translate("nei.byproducts");
+		return LangHelper.translate("jei.byproducts");
 	}
 
 	@Override

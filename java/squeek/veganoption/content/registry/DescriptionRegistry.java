@@ -31,18 +31,12 @@ public class DescriptionRegistry
 			if (item == null || item.getRegistryName() == null)
 				continue;
 
-			if (!item.getRegistryName().getResourceDomain().equals(ModInfo.MODID_LOWER))
-				continue;
-
 			numRegistered += tryRegisterItemAndSubtypes(item);
 		}
 
 		for (Block block : Block.REGISTRY)
 		{
 			if (block == null || block.getRegistryName() == null)
-				continue;
-
-			if (!block.getRegistryName().getResourceDomain().equals(ModInfo.MODID_LOWER))
 				continue;
 
 			if (Item.getItemFromBlock(block) == null)
@@ -96,11 +90,11 @@ public class DescriptionRegistry
 
 	public static boolean hasUsageText(ItemStack itemStack)
 	{
-		return LangHelper.existsRaw(itemStack.getUnlocalizedName() + ".nei.usage") || !RelationshipRegistry.getChildren(itemStack).isEmpty();
+		return LangHelper.existsRaw(itemStack.getUnlocalizedName() + ".vowiki.usage") || !RelationshipRegistry.getChildren(itemStack).isEmpty();
 	}
 
 	public static boolean hasCraftingText(ItemStack itemStack)
 	{
-		return LangHelper.existsRaw(itemStack.getUnlocalizedName() + ".nei.crafting") || !RelationshipRegistry.getParents(itemStack).isEmpty();
+		return LangHelper.existsRaw(itemStack.getUnlocalizedName() + ".vowiki.crafting") || !RelationshipRegistry.getParents(itemStack).isEmpty();
 	}
 }

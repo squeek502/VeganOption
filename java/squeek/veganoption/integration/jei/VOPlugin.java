@@ -51,8 +51,8 @@ public class VOPlugin extends BlankModPlugin
 			new PistonRecipeCategory(guiHelper),
 			new DropsCategory(guiHelper),
 			new CompostingRecipeCategory(guiHelper),
-			new DescriptionCategory(guiHelper, VORecipeCategoryUid.CRAFTING, LangHelper.translate("nei.crafting")),
-			new DescriptionCategory(guiHelper, VORecipeCategoryUid.USAGE, LangHelper.translate("nei.usage"))
+			new DescriptionCategory(guiHelper, VORecipeCategoryUid.CRAFTING, LangHelper.translate("jei.crafting")),
+			new DescriptionCategory(guiHelper, VORecipeCategoryUid.USAGE, LangHelper.translate("jei.usage"))
 		);
 
 		registry.addRecipeHandlers(

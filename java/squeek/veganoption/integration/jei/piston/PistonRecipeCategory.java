@@ -27,7 +27,7 @@ public class PistonRecipeCategory extends BlankRecipeCategory<PistonRecipeWrappe
 	{
 		ResourceLocation location = new ResourceLocation("minecraft", "textures/gui/container/crafting_table.png");
 		background = guiHelper.createDrawable(location, 29, 16, width, height);
-		localizedName = LangHelper.translate("nei.pistonCrafting");
+		localizedName = LangHelper.translate("jei.pistonCrafting");
 		craftingGridHelper = guiHelper.createCraftingGridHelper(craftInputSlot1, craftOutputSlot);
 	}
 

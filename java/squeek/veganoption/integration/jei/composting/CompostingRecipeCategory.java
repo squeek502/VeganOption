@@ -35,7 +35,7 @@ public class CompostingRecipeCategory extends BlankRecipeCategory<CompostingReci
 		arrowAndOutputSlot = guiHelper.createDrawable(location, 90, 30, 55, 26);
 		slot = guiHelper.getSlotDrawable();
 		background = guiHelper.createBlankDrawable(width, height);
-		localizedName = LangHelper.translate("nei.composting");
+		localizedName = LangHelper.translate("jei.composting");
 
 		ResourceLocation animatedArrowLocation = new ResourceLocation("minecraft", "textures/gui/container/furnace.png");
 

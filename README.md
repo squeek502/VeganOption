@@ -189,7 +189,7 @@ Dragon Egg | No alternative yet
 
 ### Integration With Other Mods
 
-- Extensive [NEI](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1279956-chickenbones-mods) integration (every single item has both Usage and Crafting of some sort defined for it)
+- Extensive [JEI](https://minecraft.curseforge.com/projects/just-enough-items-jei) integration (every single item has both Usage and Crafting of some sort defined for it)
 - [Bioplastic](#bioplastic) is added as a tool material to [Tinkers' Construct](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2218638-tinkers-construct) (defers to [MFR](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292152-powercrystals-mods-minefactoryreloaded)'s plastic if it exists)
 - [Frozen Bubbles](#frozen-bubble) can be filled with and drained of their Raw Ender in a [Thermal Expansion](http://minecraft.curseforge.com/mc-mods/69163-thermalexpansion) Fluid Transposer
 - [Potato Starch](#egg-replacers) can be created in a [Thermal Expansion](http://minecraft.curseforge.com/mc-mods/69163-thermalexpansion) Pulverizer

@@ -76,7 +76,7 @@ public abstract class DescriptionWrapper extends BlankRecipeWrapper
 
 		if (referenced.size() > 0)
 		{
-			final String referencesString = LangHelper.translate("nei.references");
+			final String referencesString = LangHelper.translate("jei.references");
 			xPos = (recipeWidth - fontRenderer.getStringWidth(referencesString)) / 2;
 			yPos = DescriptionCategory.HEIGHT - GuiHelper.STANDARD_SLOT_WIDTH - fontRenderer.FONT_HEIGHT;
 

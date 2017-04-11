@@ -163,12 +163,12 @@ public abstract class DescriptionMaker
 
 	public String getUsageOfItemStack(ItemStack itemStack)
 	{
-		return getStringOfItemStack(itemStack.getUnlocalizedName() + ".nei.usage", itemStack);
+		return getStringOfItemStack(itemStack.getUnlocalizedName() + ".vowiki.usage", itemStack);
 	}
 
 	public String getCraftingOfItemStack(ItemStack itemStack)
 	{
-		return getStringOfItemStack(itemStack.getUnlocalizedName() + ".nei.crafting", itemStack);
+		return getStringOfItemStack(itemStack.getUnlocalizedName() + ".vowiki.crafting", itemStack);
 	}
 
 	public boolean isReferenceRedundant(ItemStack itemStack, ItemStack referencedItemStack, List<ItemStack> referenced, List<ItemStack> related)
