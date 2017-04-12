@@ -76,7 +76,7 @@ public class HarvestCraft extends IntegratorBase
 		if (freshMilkItem != null)
 			Modifiers.recipes.excludeOutput(new ItemStack(freshMilkItem));
 		// add plant milk -> fresh milk specifically
-		GameRegistry.addShapelessRecipe(new ItemStack(freshMilkItem, 4), PlantMilk.bucketPlantMilk);
+		GameRegistry.addShapelessRecipe(new ItemStack(freshMilkItem, 4), PlantMilk.bucketPlantMilk.copy());
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqSauce), "toolSaucepan", "foodKetchup", "foodVinegar", Items.SUGAR, "foodMustard", "listAllwater", "foodSalt", "foodBlackpepper"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bbqTofu), "toolBakeware", "foodFirmtofu", ContentHelper.bbqSauceOreDict));

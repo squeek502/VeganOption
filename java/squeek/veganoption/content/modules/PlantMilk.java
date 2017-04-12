@@ -3,34 +3,33 @@ package squeek.veganoption.content.modules;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.recipes.ShapelessMatchingOreRecipe;
+import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.integration.IntegrationBase;
 import squeek.veganoption.integration.IntegrationHandler;
-import squeek.veganoption.items.ItemBucketGeneric;
 
 public class PlantMilk implements IContentModule
 {
 	public static Fluid fluidPlantMilk;
 	public static Block plantMilk;
-	public static Item bucketPlantMilk;
+	public static ItemStack bucketPlantMilk;
 
 	@Override
 	public void create()
@@ -46,13 +45,11 @@ public class PlantMilk implements IContentModule
 		GameRegistry.register(plantMilk);
 		GameRegistry.register(new ItemBlock(plantMilk).setRegistryName(plantMilk.getRegistryName()));
 
-		bucketPlantMilk = new ItemBucketGeneric(plantMilk)
-			.setUnlocalizedName(ModInfo.MODID + ".bucketPlantMilk")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "bucketPlantMilk")
-			.setContainerItem(Items.BUCKET);
-		GameRegistry.register(bucketPlantMilk);
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidPlantMilk, Fluid.BUCKET_VOLUME), new ItemStack(bucketPlantMilk), new ItemStack(Items.BUCKET));
+		FluidRegistry.addBucketForFluid(fluidPlantMilk);
+
+		UniversalBucket bucket = ForgeModContainer.getInstance().universalBucket;
+		bucketPlantMilk = new ItemStack(bucket);
+		bucket.fill(bucketPlantMilk, new FluidStack(fluidPlantMilk, Fluid.BUCKET_VOLUME), true);
 	}
 
 	@Override
@@ -60,7 +57,8 @@ public class PlantMilk implements IContentModule
 	{
 		if (!IntegrationHandler.modExists(IntegrationBase.MODID_MINEFACTORY_RELOADED))
 			OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(Items.MILK_BUCKET));
-		OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(bucketPlantMilk));
+
+		OreDictionary.registerOre(ContentHelper.milkOreDict, bucketPlantMilk.copy());
 
 		OreDictionary.registerOre(ContentHelper.plantMilkSourceOreDict, new ItemStack(Items.PUMPKIN_SEEDS));
 	}
@@ -76,22 +74,25 @@ public class PlantMilk implements IContentModule
 
 		Modifiers.recipes.convertInput(new ItemStack(Items.MILK_BUCKET), ContentHelper.milkOreDict);
 
-		GameRegistry.addRecipe(new ShapelessMatchingOreRecipe(new ItemStack(bucketPlantMilk),
+		GameRegistry.addRecipe(new ShapelessMatchingOreRecipe(bucketPlantMilk.copy(),
 															  new ItemStack(Items.WATER_BUCKET),
 															  ContentHelper.plantMilkSourceOreDict,
 															  ContentHelper.plantMilkSourceOreDict,
 															  new ItemStack(Items.SUGAR)));
-		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketPlantMilk), // output
+		Modifiers.crafting.addInputsToRemoveForOutput(bucketPlantMilk.copy(), // output
 													  new ItemStack(Items.WATER_BUCKET));
 
 		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidPlantMilk, FluidRegistry.WATER, Items.SUGAR, new InputItemStack(ContentHelper.plantMilkSourceOreDict, 2)));
+
+		DescriptionRegistry.registerCustomCraftingText(bucketPlantMilk.copy(), ModInfo.MODID + ":plant_milk_bucket.vowiki.crafting");
+		DescriptionRegistry.registerCustomUsageText(bucketPlantMilk.copy(), ModInfo.MODID + ":plant_milk_bucket.vowiki.usage");
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(bucketPlantMilk), new ItemStack(plantMilk));
-		RelationshipRegistry.addRelationship(new ItemStack(plantMilk), new ItemStack(bucketPlantMilk));
+		RelationshipRegistry.addRelationship(bucketPlantMilk.copy(), new ItemStack(plantMilk));
+		RelationshipRegistry.addRelationship(new ItemStack(plantMilk), bucketPlantMilk.copy());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -104,7 +105,6 @@ public class PlantMilk implements IContentModule
 	@Override
 	public void clientSidePre()
 	{
-		ContentHelper.registerTypicalItemModel(bucketPlantMilk);
 		ContentHelper.registerFluidMapperAndMeshDef(plantMilk, "plant_milk");
 	}
 }

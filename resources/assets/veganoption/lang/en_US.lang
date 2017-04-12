@@ -106,8 +106,9 @@ death.attack.VeganOption.itchyBed.player=%1$s itched themselves to death in thei
 
 # Plant Milk
 item.VeganOption.bucketPlantMilk.name=Plant Milk Bucket
-item.VeganOption.bucketPlantMilk.vowiki.crafting=Note: %1$s can only be crafted using two of the same items as the plant milk source.
-item.VeganOption.bucketPlantMilk.vowiki.usage=If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives, use [[VeganOption:soap]] instead.
+VeganOption:plant_milk_bucket.vowiki.crafting=Note: %1$s can only be crafted using two of the same items as the plant milk source.
+VeganOption:plant_milk_bucket.vowiki.usage=If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives,
+use [[VeganOption:soap]] instead.
 tile.VeganOption.plantMilk.name=Plant Milk
 fluid.tile.VeganOption.plantMilk=Plant Milk
 
@@ -159,7 +160,6 @@ VeganOption.gui.composter.composting=Composting: %s
 VeganOption.gui.composter.composting.desc=The higher the temperature inside the composter, the faster the material will decompose.
 
 # Soap
-item.VeganOption.bucketLyeWater.name=Wood Ash Lye Bucket
 tile.VeganOption.lyeWater.name=Wood Ash Lye
 tile.VeganOption.lyeWater.vowiki.usage=Warning: %1$s is corrosive.
 fluid.tile.VeganOption.lyeWater=Wood Ash Lye

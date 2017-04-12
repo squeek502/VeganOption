@@ -86,9 +86,8 @@ death.attack.VeganOption.itchyBed=%1$s 在床上痒死了
 death.attack.VeganOption.itchyBed.player=%1$s 试着躲避 %2$s 而在床上痒死了
 
 # Plant Milk
-item.VeganOption.bucketPlantMilk.name=植物乳桶
-item.VeganOption.bucketPlantMilk.vowiki.crafting=注意: %1$s只能用两种相同的植物作为乳源来制造.
-item.VeganOption.bucketPlantMilk.vowiki.usage=如果你在找寻和[[minecraft:milk_bucket]]一样消除负面效果的物品, 用[[VeganOption:soap]]来代替.
+VeganOption:plant_milk_bucket.vowiki.crafting=注意: %1$s只能用两种相同的植物作为乳源来制造.
+VeganOption:plant_milk_bucket.vowiki.usage=如果你在找寻和[[minecraft:milk_bucket]]一样消除负面效果的物品, 用[[VeganOption:soap]]来代替.
 tile.VeganOption.plantMilk.name=植物乳
 fluid.tile.VeganOption.plantMilk=植物乳
 
@@ -143,7 +142,6 @@ VeganOption.gui.composter.composting=堆肥: %s
 VeganOption.gui.composter.composting.desc=堆肥机内的温度越高, 材料分解得越快.
 
 # Soap
-item.VeganOption.bucketLyeWater.name=木灰碱液桶
 tile.VeganOption.lyeWater.name=木灰碱液
 tile.VeganOption.lyeWater.vowiki.usage=警告: %1$s具有腐蚀性.
 fluid.tile.VeganOption.lyeWater=木灰碱液
@@ -167,7 +165,6 @@ item.VeganOption.frozenBubbleFilled.vowiki.usage=%1$s被[[VeganOption:rawEnder]]
 # Raw Ender
 tile.VeganOption.encrustedObsidian.name=镶嵌黑曜石
 tile.VeganOption.encrustedObsidian.vowiki.usage=用4个%1$s包围一格空方块来制造[[VeganOption:enderRift]].
-item.VeganOption.bucketRawEnder.name=末影原料桶
 tile.VeganOption.rawEnder.name=末影原料
 tile.VeganOption.rawEnder.vowiki.crafting=水流在晚上通过[[VeganOption:enderRift]]有几率变成%1$s. 然而, 如果你在白天做的话, [[VeganOption:enderRift]]周围的一个方块将会永远消失.
 fluid.tile.VeganOption.rawEnder=末影原料

@@ -7,10 +7,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,7 +26,6 @@ import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.RelationshipRegistry;
-import squeek.veganoption.items.ItemBucketGeneric;
 
 public class Ender implements IContentModule
 {
@@ -33,7 +33,7 @@ public class Ender implements IContentModule
 	public static Block enderRift;
 	public static Fluid fluidRawEnder;
 	public static Block rawEnder;
-	public static Item bucketRawEnder;
+	public static ItemStack bucketRawEnder;
 	public static int RAW_ENDER_PER_PEARL = Fluid.BUCKET_VOLUME;
 
 	@Override
@@ -71,13 +71,11 @@ public class Ender implements IContentModule
 		GameRegistry.register(rawEnder);
 		GameRegistry.register(new ItemBlock(rawEnder).setRegistryName(rawEnder.getRegistryName()));
 
-		bucketRawEnder = new ItemBucketGeneric(rawEnder)
-			.setUnlocalizedName(ModInfo.MODID + ".bucketRawEnder")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "bucketRawEnder")
-			.setContainerItem(Items.BUCKET);
-		GameRegistry.register(bucketRawEnder);
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidRawEnder, Fluid.BUCKET_VOLUME), new ItemStack(bucketRawEnder), new ItemStack(Items.BUCKET));
+		FluidRegistry.addBucketForFluid(fluidRawEnder);
+
+		UniversalBucket bucket = ForgeModContainer.getInstance().universalBucket;
+		bucketRawEnder = new ItemStack(bucket);
+		bucket.fill(bucketRawEnder, new FluidStack(fluidRawEnder, Fluid.BUCKET_VOLUME), true);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -91,7 +89,6 @@ public class Ender implements IContentModule
 	@Override
 	public void clientSidePre()
 	{
-		ContentHelper.registerTypicalItemModel(bucketRawEnder);
 		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(encrustedObsidian));
 		ContentHelper.registerFluidMapperAndMeshDef(rawEnder, "raw_ender");
 		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(enderRift));
@@ -111,8 +108,8 @@ public class Ender implements IContentModule
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(bucketRawEnder), new ItemStack(rawEnder));
-		RelationshipRegistry.addRelationship(new ItemStack(rawEnder), new ItemStack(bucketRawEnder));
+		RelationshipRegistry.addRelationship(bucketRawEnder.copy(), new ItemStack(rawEnder));
+		RelationshipRegistry.addRelationship(new ItemStack(rawEnder), bucketRawEnder.copy());
 		RelationshipRegistry.addRelationship(new ItemStack(rawEnder), new ItemStack(enderRift));
 		RelationshipRegistry.addRelationship(new ItemStack(enderRift), new ItemStack(encrustedObsidian));
 	}

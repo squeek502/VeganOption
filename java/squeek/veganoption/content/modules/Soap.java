@@ -6,10 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,14 +26,13 @@ import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
-import squeek.veganoption.items.ItemBucketGeneric;
 import squeek.veganoption.items.ItemSoap;
 
 public class Soap implements IContentModule
 {
 	public static Fluid fluidLyeWater;
 	public static Block lyeWater;
-	public static Item bucketLyeWater;
+	public static ItemStack bucketLyeWater;
 	public static Item soap;
 
 	@Override
@@ -48,19 +48,17 @@ public class Soap implements IContentModule
 		GameRegistry.register(lyeWater);
 		GameRegistry.register(new ItemBlock(lyeWater).setRegistryName(lyeWater.getRegistryName()));
 
-		bucketLyeWater = new ItemBucketGeneric(lyeWater)
-			.setUnlocalizedName(ModInfo.MODID + ".bucketLyeWater")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "bucketLyeWater")
-			.setContainerItem(Items.BUCKET);
-		GameRegistry.register(bucketLyeWater);
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidLyeWater, Fluid.BUCKET_VOLUME), new ItemStack(bucketLyeWater), new ItemStack(Items.BUCKET));
+		FluidRegistry.addBucketForFluid(fluidLyeWater);
 
 		soap = new ItemSoap()
 			.setUnlocalizedName(ModInfo.MODID + ".soap")
 			.setCreativeTab(VeganOption.creativeTab)
 			.setRegistryName(ModInfo.MODID_LOWER + ":soap");
 		GameRegistry.register(soap);
+
+		UniversalBucket bucket = ForgeModContainer.getInstance().universalBucket;
+		bucketLyeWater = new ItemStack(bucket);
+		bucket.fill(bucketLyeWater, new FluidStack(fluidLyeWater, Fluid.BUCKET_VOLUME), true);
 	}
 
 	@Override
@@ -73,11 +71,11 @@ public class Soap implements IContentModule
 	@Override
 	public void recipes()
 	{
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(bucketLyeWater), new ItemStack(Items.WATER_BUCKET), ContentHelper.woodAshOreDict, ContentHelper.woodAshOreDict, ContentHelper.woodAshOreDict));
-		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(bucketLyeWater), new ItemStack(Items.WATER_BUCKET));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(bucketLyeWater.copy(), new ItemStack(Items.WATER_BUCKET), ContentHelper.woodAshOreDict, ContentHelper.woodAshOreDict, ContentHelper.woodAshOreDict));
+		Modifiers.crafting.addInputsToRemoveForOutput(bucketLyeWater.copy(), new ItemStack(Items.WATER_BUCKET));
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soap),
-													  new ItemStack(bucketLyeWater),
+													  bucketLyeWater.copy(),
 													  ContentHelper.vegetableOilOreDict,
 													  ContentHelper.rosinOreDict));
 
@@ -87,8 +85,8 @@ public class Soap implements IContentModule
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(lyeWater), new ItemStack(bucketLyeWater));
-		RelationshipRegistry.addRelationship(new ItemStack(bucketLyeWater), new ItemStack(lyeWater));
+		RelationshipRegistry.addRelationship(new ItemStack(lyeWater), bucketLyeWater.copy());
+		RelationshipRegistry.addRelationship(bucketLyeWater.copy(), new ItemStack(lyeWater));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -101,7 +99,6 @@ public class Soap implements IContentModule
 	@Override
 	public void clientSidePre()
 	{
-		ContentHelper.registerTypicalItemModel(bucketLyeWater);
 		ContentHelper.registerTypicalItemModel(soap);
 		ContentHelper.registerFluidMapperAndMeshDef(lyeWater, "lye_water");
 	}

@@ -1,6 +1,7 @@
 package squeek.veganoption;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -21,6 +22,10 @@ import squeek.veganoption.network.NetworkHandler;
 public class VeganOption
 {
 	public static final Logger Log = LogManager.getLogger(ModInfo.MODID);
+
+	static {
+		FluidRegistry.enableUniversalBucket();
+	}
 
 	@Mod.Instance(ModInfo.MODID)
 	public static VeganOption instance;

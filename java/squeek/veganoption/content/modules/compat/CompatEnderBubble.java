@@ -30,7 +30,7 @@ public class CompatEnderBubble implements IContentModule
 	@Override
 	public void recipes()
 	{
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.ENDER_PEARL), new ItemStack(FrozenBubble.frozenBubble), new ItemStack(Ender.bucketRawEnder));
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.ENDER_PEARL), new ItemStack(FrozenBubble.frozenBubble), Ender.bucketRawEnder.copy());
 	}
 
 	@Override
