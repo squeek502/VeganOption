@@ -190,13 +190,6 @@ Dragon Egg | No alternative yet
 ### Integration With Other Mods
 
 - Extensive [JEI](https://minecraft.curseforge.com/projects/just-enough-items-jei) integration (every single item has both Usage and Crafting of some sort defined for it)
-- [Bioplastic](#bioplastic) is added as a tool material to [Tinkers' Construct](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2218638-tinkers-construct) (defers to [MFR](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292152-powercrystals-mods-minefactoryreloaded)'s plastic if it exists)
-- [Frozen Bubbles](#frozen-bubble) can be filled with and drained of their Raw Ender in a [Thermal Expansion](http://minecraft.curseforge.com/mc-mods/69163-thermalexpansion) Fluid Transposer
-- [Potato Starch](#egg-replacers) can be created in a [Thermal Expansion](http://minecraft.curseforge.com/mc-mods/69163-thermalexpansion) Pulverizer
-- [Fertilizer](#fertilizer) is a valid fertilizer for [MFR](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292152-powercrystals-mods-minefactoryreloaded)'s Fertilizer
-- Support for the [Version Checker mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2091981-version-checker)
-- Various [Waila](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289765-waila) integration
-- Wood Ash from [Witchery](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289765-waila) can be used to create [Wood Ash Lye](#soap)
-- Blank Mob Head recipes added for [Iguanas Tinker Tweaks](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2176855-iguanas-tinker-tweaks)' mob heads
-- Burlap and Black Vegetable Oil Ink are usable in the [Mystcraft](http://xcompwiz.com/) Book Binder/Ink Mixer
+- Various [Thermal Expansion](http://minecraft.curseforge.com/mc-mods/69163-thermalexpansion) integration
+- Various [Waila](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289765-waila)/[Hwyla](https://minecraft.curseforge.com/projects/hwyla)/[TOP](https://minecraft.curseforge.com/projects/the-one-probe) integration
 - ![](resources/assets/veganoption/textures/items/bbq_sauce.png) BBQ Sauce and ![](resources/assets/veganoption/textures/items/bbq_tofu.png) BBQ Tofu added when [HarvestCraft](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1294413-pams-mods) is installed
