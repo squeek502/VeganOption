@@ -1,5 +1,6 @@
 package squeek.veganoption.blocks;
 
+import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -14,6 +15,7 @@ public class BlockRawEnder extends BlockFluidFinite
 	public BlockRawEnder(Fluid fluid)
 	{
 		super(fluid, materialRawEnder);
+		this.setDefaultState(blockState.getBaseState().withProperty(LEVEL, 7));
 	}
 
 	@Override
