@@ -13,10 +13,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.content.modules.Basin;
@@ -208,10 +205,14 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	 */
 	public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
+		// TODO: Support either hand.
 		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
 		if (FluidContainerHelper.isFluidContainer(heldItem))
 		{
-			net.minecraftforge.fluids.capability.IFluidHandler containerCap = heldItem.getCapability(FLUID_HANDLER_CAPABILITY, null);
+			// TODO: This would be better moved directly into FluidContainerHelper
+			net.minecraftforge.fluids.capability.IFluidHandler containerCap = FluidUtil.getFluidHandler(heldItem);
+			if (containerCap == null)
+				return false;
 			for (IFluidTankProperties tankProp : containerCap.getTankProperties())
 			{
 				FluidStack containerFluid = tankProp.getContents();

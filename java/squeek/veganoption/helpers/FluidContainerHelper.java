@@ -11,9 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fluids.BlockFluidClassic;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -135,29 +133,35 @@ public class FluidContainerHelper
 
 	public static boolean isFluidContainer(ItemStack container)
 	{
-		return container != null && container.hasCapability(FLUID_HANDLER_CAPABILITY, null);
+		return container != null && (container.hasCapability(FLUID_HANDLER_CAPABILITY, null) || FluidContainerRegistry.isContainer(container));
 	}
 
 	public static boolean isEmptyContainer(ItemStack container)
 	{
+		if (FluidContainerRegistry.isEmptyContainer(container))
+			return true;
 		if (isFluidContainer(container))
 		{
-			IFluidHandler handler = container.getCapability(FLUID_HANDLER_CAPABILITY, null);
-			for (IFluidTankProperties prop : handler.getTankProperties())
+			IFluidHandler handler = FluidUtil.getFluidHandler(container);
+			if (handler != null)
 			{
-				if (prop.getContents() != null)
-					return prop.getContents().amount <= 0;
+				for (IFluidTankProperties prop : handler.getTankProperties())
+				{
+					if (prop.getContents() != null)
+						return prop.getContents().amount <= 0;
+				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public static int fillContainer(FluidStack fluid, ItemStack into)
 	{
 		if (isFluidContainer(into))
 		{
-			IFluidHandler intoCapability = into.getCapability(FLUID_HANDLER_CAPABILITY, null);
-			return intoCapability.fill(fluid, true);
+			IFluidHandler intoCapability = FluidUtil.getFluidHandler(into);
+			if (intoCapability != null)
+				return intoCapability.fill(fluid, true);
 		}
 		return 0;
 	}
@@ -166,8 +170,9 @@ public class FluidContainerHelper
 	{
 		if (isFluidContainer(into))
 		{
-			IFluidHandler intoCapability = into.getCapability(FLUID_HANDLER_CAPABILITY, null);
-			from.drain(intoCapability.fill(toFill, true), true);
+			IFluidHandler intoCapability = FluidUtil.getFluidHandler(into);
+			if (intoCapability != null)
+				from.drain(intoCapability.fill(toFill, true), true);
 		}
 	}
 
@@ -175,9 +180,12 @@ public class FluidContainerHelper
 	{
 		if (isFluidContainer(from))
 		{
-			IFluidHandler fromCapability = from.getCapability(FLUID_HANDLER_CAPABILITY, null);
-			for (IFluidTankProperties fromTank : fromCapability.getTankProperties())
-				fromCapability.drain(into.fill(fromTank.getContents(), true), true);
+			IFluidHandler fromCapability = FluidUtil.getFluidHandler(from);
+			if (fromCapability != null)
+			{
+				for (IFluidTankProperties fromTank : fromCapability.getTankProperties())
+					fromCapability.drain(into.fill(fromTank.getContents(), true), true);
+			}
 		}
 	}
 }
