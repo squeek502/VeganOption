@@ -26,6 +26,8 @@ public abstract class IntegratorBase extends IntegrationBase implements IContent
 	{
 		create();
 		oredict();
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+			clientSidePre();
 	}
 
 	public void init()

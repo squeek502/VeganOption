@@ -9,6 +9,8 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import squeek.veganoption.ModInfo;
@@ -48,6 +50,14 @@ public class HarvestCraft extends IntegratorBase
 			.setRegistryName(ModInfo.MODID_LOWER, "bbqTofu");
 		GameRegistry.register(bbqTofu);
 		TooltipHelper.registerItem(bbqTofu);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void clientSidePre()
+	{
+		ContentHelper.registerTypicalItemModel(bbqSauce);
+		ContentHelper.registerTypicalItemModel(bbqTofu);
 	}
 
 	@Override
