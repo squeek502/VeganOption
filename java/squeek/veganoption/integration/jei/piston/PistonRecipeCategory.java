@@ -5,10 +5,14 @@ import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.jei.VOPlugin;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class PistonRecipeCategory extends BlankRecipeCategory<PistonRecipeWrapper>
 {
@@ -57,6 +61,7 @@ public class PistonRecipeCategory extends BlankRecipeCategory<PistonRecipeWrappe
 	{
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		IGuiFluidStackGroup guiFluidStacks = recipeLayout.getFluidStacks();
+		guiFluidStacks.addTooltipCallback(fluidTooltipHandler);
 
 		if (recipeWrapper.recipe.fluidOutput != null)
 			guiFluidStacks.init(craftOutputSlot, false, 95, 19, 16, 16, 1000, false, null);
@@ -78,4 +83,20 @@ public class PistonRecipeCategory extends BlankRecipeCategory<PistonRecipeWrappe
 		guiItemStacks.set(ingredients);
 		guiFluidStacks.set(ingredients);
 	}
+
+	public static class FluidTooltipCallback implements ITooltipCallback<FluidStack>
+	{
+		@Override
+		public void onTooltip(int slotIndex, boolean input, @Nonnull FluidStack ingredient, @Nonnull List<String> tooltip)
+		{
+			String tooltipStr;
+			if (input)
+				tooltipStr = LangHelper.translate("jei.pistonCrafting.tooltip.fluidInput");
+			else
+				tooltipStr = LangHelper.translate("jei.pistonCrafting.tooltip.fluidOutput");
+
+			tooltip.add(1, TextFormatting.GOLD + TextFormatting.ITALIC.toString() + tooltipStr + TextFormatting.RESET);
+		}
+	}
+	private static FluidTooltipCallback fluidTooltipHandler = new FluidTooltipCallback();
 }
