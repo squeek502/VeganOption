@@ -159,6 +159,7 @@ public class FluidHelper
 			if (world.getBlockState(sourcePos).getBlock() instanceof BlockFluidFinite)
 			{
 				fluidToAdd = consumePartialFiniteFluidBlock(world, sourcePos, fluidToAdd, maxAmount);
+				return fluidToAdd;
 			}
 			else
 				return null;
