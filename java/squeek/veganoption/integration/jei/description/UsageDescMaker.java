@@ -13,7 +13,6 @@ public class UsageDescMaker extends DescriptionMaker
 	{
 		UsageDescMaker maker = new UsageDescMaker();
 		List<UsageDescWrapper> recipes = new ArrayList<UsageDescWrapper>();
-
 		for (ItemStack itemStack : DescriptionRegistry.itemStacksWithUsageDescriptions)
 		{
 			List<UsageDescWrapper> pages = maker.create(UsageDescWrapper.class, itemStack);

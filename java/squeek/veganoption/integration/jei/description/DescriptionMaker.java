@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
+import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
 
@@ -163,12 +164,14 @@ public abstract class DescriptionMaker
 
 	public String getUsageOfItemStack(ItemStack itemStack)
 	{
-		return getStringOfItemStack(itemStack.getUnlocalizedName() + ".vowiki.usage", itemStack);
+		String str = DescriptionRegistry.itemStacksWithCustomUsageDescriptions.containsKey(itemStack) ? DescriptionRegistry.itemStacksWithCustomUsageDescriptions.get(itemStack) : itemStack.getUnlocalizedName() + ".vowiki.usage";
+		return getStringOfItemStack(str, itemStack);
 	}
 
 	public String getCraftingOfItemStack(ItemStack itemStack)
 	{
-		return getStringOfItemStack(itemStack.getUnlocalizedName() + ".vowiki.crafting", itemStack);
+		String str = DescriptionRegistry.itemStacksWithCustomCraftingDescriptions.containsKey(itemStack) ? DescriptionRegistry.itemStacksWithCustomCraftingDescriptions.get(itemStack) : itemStack.getUnlocalizedName() + ".vowiki.crafting";
+		return getStringOfItemStack(str, itemStack);
 	}
 
 	public boolean isReferenceRedundant(ItemStack itemStack, ItemStack referencedItemStack, List<ItemStack> referenced, List<ItemStack> related)
