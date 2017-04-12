@@ -203,10 +203,9 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	/*
 	 * Right Click Handling
 	 */
-	public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		// TODO: Support either hand.
-		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
+		ItemStack heldItem = player.getHeldItem(hand);
 		if (FluidContainerHelper.isFluidContainer(heldItem))
 		{
 			// TODO: This would be better moved directly into FluidContainerHelper

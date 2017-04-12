@@ -140,7 +140,7 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 			return true;
 
 		TileEntity tile = world.getTileEntity(pos);
-		return tile instanceof TileEntityBasin && ((TileEntityBasin) tile).onBlockActivated(player, side, hitX, hitY, hitZ);
+		return tile instanceof TileEntityBasin && ((TileEntityBasin) tile).onBlockActivated(player, hand, side, hitX, hitY, hitZ);
 	}
 
 	/*
