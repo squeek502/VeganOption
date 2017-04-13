@@ -92,12 +92,11 @@ public class TileEntityBasin extends TileEntity implements ITickable
 				continue;
 
 			EntityItem entityItemToFill = entityItemWithin;
-			ItemStack containerToFill = entityItemWithin.getEntityItem();
+			ItemStack containerToFill = entityItemWithin.getEntityItem().splitStack(1);
 			FluidContainerHelper.drainHandlerIntoContainer(fluidTank, fluidTank.getFluid(), containerToFill);
 
-			if (containerToFill.stackSize > 1 && !FluidContainerHelper.isEmptyContainer(containerToFill))
+			if (!FluidContainerHelper.isEmptyContainer(containerToFill))
 			{
-				containerToFill.splitStack(1);
 				entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, containerToFill);
 				entityItemToFill.setPickupDelay(10);
 				entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);
@@ -217,16 +216,38 @@ public class TileEntityBasin extends TileEntity implements ITickable
 				FluidStack containerFluid = tankProp.getContents();
 				if (containerFluid != null && fluidTank.fill(containerFluid, false) == containerFluid.amount)
 				{
-					FluidContainerHelper.drainContainerIntoHandler(heldItem, fluidTank);
+					ItemStack toDrain = heldItem.splitStack(1);
+					FluidContainerHelper.drainContainerIntoHandler(toDrain, fluidTank);
+					tryAddItemToInventory(player, hand, toDrain);
 					return true;
 				} else if (fluidTank.getFluidAmount() > 0)
 				{
-					FluidContainerHelper.drainHandlerIntoContainer(fluidTank, fluidTank.getFluid(), heldItem);
+					ItemStack toFill = heldItem.splitStack(1);
+					FluidContainerHelper.drainHandlerIntoContainer(fluidTank, fluidTank.getFluid(), toFill);
+					tryAddItemToInventory(player, hand, toFill);
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Attempts to add an item to the player's inventory in the following order:
+	 * 1. Their current hand if there is no held item, or the held item has a stack size of 0
+	 * 2. The first open slot in their inventory
+	 * 3. Dropped in the world, if there is no free slot in the inventory.
+	 */
+	private void tryAddItemToInventory(EntityPlayer player, EnumHand hand, ItemStack newItem)
+	{
+		ItemStack heldItem = player.getHeldItem(hand);
+		if (heldItem == null || heldItem.stackSize == 0)
+		{
+			player.setHeldItem(hand, newItem);
+			return;
+		}
+		if (!player.inventory.addItemStackToInventory(newItem))
+			player.dropItem(newItem, false);
 	}
 
 	/*
