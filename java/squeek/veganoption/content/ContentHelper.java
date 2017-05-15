@@ -161,6 +161,7 @@ public class ContentHelper
 	 *
 	 * @param item The item
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void registerTypicalItemModel(Item item)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
@@ -172,6 +173,7 @@ public class ContentHelper
 	 * @param stack The itemstack
 	 * @param name The specific name
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void registerTypicalItemStackModel(ItemStack stack, String name)
 	{
 		ModelLoader.setCustomModelResourceLocation(stack.getItem(), stack.getItemDamage(), new ModelResourceLocation(name, "inventory"));
@@ -180,6 +182,7 @@ public class ContentHelper
 	/**
 	 * Registers an ItemStack for each valid state of the block
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void registerTypicalBlockItemModels(Block block, String name)
 	{
 		for (IBlockState state : block.getBlockState().getValidStates())
@@ -205,6 +208,7 @@ public class ContentHelper
 	 * @param fluid The fluid
 	 * @param variantName The variant for the fluid
 	 */
+	@SideOnly(Side.CLIENT)
 	public static void registerFluidMapperAndMeshDef(Block fluid, final String variantName)
 	{
 		final ModelResourceLocation loc = new ModelResourceLocation(ModInfo.MODID_LOWER + ":fluids", variantName);
