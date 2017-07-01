@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class BlockEncrustedObsidian extends BlockObsidian
@@ -22,6 +23,7 @@ public class BlockEncrustedObsidian extends BlockObsidian
 		setSoundType(SoundType.STONE);
 	}
 
+	@Nonnull
 	@Override
 	public Item getItemDropped(IBlockState state, Random random, int fortune)
 	{

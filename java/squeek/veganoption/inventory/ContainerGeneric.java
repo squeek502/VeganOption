@@ -8,6 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public abstract class ContainerGeneric extends Container
 {
 	protected IInventory inventory;
@@ -112,6 +114,7 @@ public abstract class ContainerGeneric extends Container
 		}
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotNum)
 	{
@@ -127,7 +130,7 @@ public abstract class ContainerGeneric extends Container
 			{
 				if (!this.mergeItemStack(stackToTransfer, this.inventory.getSizeInventory(), this.inventorySlots.size(), true))
 				{
-					return null;
+					return ItemStack.EMPTY;
 				}
 			}
 			// transferring from the player inventory into the container
@@ -135,7 +138,7 @@ public abstract class ContainerGeneric extends Container
 			{
 				if (!this.mergeItemStack(stackToTransfer, 0, this.inventory.getSizeInventory(), false))
 				{
-					return null;
+					return ItemStack.EMPTY;
 				}
 			}
 
@@ -153,8 +156,8 @@ public abstract class ContainerGeneric extends Container
 				return stackToTransfer;
 		}
 
-		// returning null stops it from attempting to fill consecutive slots with the remaining stack
-		return null;
+		// returning empty stops it from attempting to fill consecutive slots with the remaining stack
+		return ItemStack.EMPTY;
 	}
 
 	public int getEffectiveMaxStackSizeForSlot(int slotNum, ItemStack itemStack)
@@ -263,6 +266,7 @@ public abstract class ContainerGeneric extends Container
 		return didMerge;
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack slotClick(int slotNum, int mouseButton, ClickType modifier, EntityPlayer player)
 	{
@@ -270,7 +274,7 @@ public abstract class ContainerGeneric extends Container
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player)
+	public boolean canInteractWith(@Nonnull EntityPlayer player)
 	{
 		return inventory.isUsableByPlayer(player);
 	}

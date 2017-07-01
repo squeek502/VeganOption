@@ -26,6 +26,8 @@ import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.DirectionHelper;
 import squeek.veganoption.helpers.LangHelper;
 
+import javax.annotation.Nonnull;
+
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockComposter extends Block implements IProbeInfoAccessor
 {
@@ -45,11 +47,12 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityComposter();
 	}
 
+	@Nonnull
 	@Override
 	public BlockStateContainer createBlockState()
 	{
@@ -62,12 +65,14 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 		return state.getValue(FACING).getHorizontalIndex();
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
 	}
 
+	@Nonnull
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
@@ -86,7 +91,7 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
+	public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile != null && tile instanceof TileEntityComposter)

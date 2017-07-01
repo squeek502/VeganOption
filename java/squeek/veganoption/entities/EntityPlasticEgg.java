@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
 
+import javax.annotation.Nonnull;
+
 public class EntityPlasticEgg extends EntityThrowable
 {
 	public EntityPlasticEgg(World world)
@@ -27,7 +29,7 @@ public class EntityPlasticEgg extends EntityThrowable
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult rayTraceResult)
+	protected void onImpact(@Nonnull RayTraceResult rayTraceResult)
 	{
 		if (rayTraceResult.entityHit != null)
 		{

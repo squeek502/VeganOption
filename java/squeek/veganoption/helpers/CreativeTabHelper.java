@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ public class CreativeTabHelper
 		creativeTabIconItemMap.put(name, item);
 		return new CreativeTabs(name)
 		{
+			@Nonnull
 			@Override
 			@SideOnly(Side.CLIENT)
 			public ItemStack getTabIconItem()

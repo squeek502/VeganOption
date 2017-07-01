@@ -19,6 +19,8 @@ import squeek.veganoption.helpers.TemperatureHelper;
 import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
 
+import javax.annotation.Nonnull;
+
 public class EntityBubble extends EntityThrowable
 {
 	public static final int LIFETIME_BASE = 40;
@@ -52,7 +54,7 @@ public class EntityBubble extends EntityThrowable
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount)
+	public boolean attackEntityFrom(@Nonnull DamageSource source, float amount)
 	{
 		pop();
 		return super.attackEntityFrom(source, amount);
@@ -128,7 +130,7 @@ public class EntityBubble extends EntityThrowable
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult rayTraceResult)
+	protected void onImpact(@Nonnull RayTraceResult rayTraceResult)
 	{
 		pop();
 	}

@@ -14,6 +14,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.content.modules.Basin;
@@ -22,6 +23,7 @@ import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.WorldHelper;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
@@ -208,7 +210,7 @@ public class TileEntityBasin extends TileEntity implements ITickable
 		if (FluidContainerHelper.isFluidContainer(heldItem))
 		{
 			// TODO: This would be better moved directly into FluidContainerHelper
-			net.minecraftforge.fluids.capability.IFluidHandler containerCap = FluidUtil.getFluidHandler(heldItem);
+			IFluidHandler containerCap = FluidUtil.getFluidHandler(heldItem);
 			if (containerCap == null)
 				return false;
 			for (IFluidTankProperties tankProp : containerCap.getTankProperties())
@@ -343,6 +345,7 @@ public class TileEntityBasin extends TileEntity implements ITickable
 		return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound getUpdateTag()
 	{
@@ -352,7 +355,7 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag)
+	public void handleUpdateTag(@Nonnull NBTTagCompound tag)
 	{
 		readSyncedNBT(tag);
 	}
@@ -377,6 +380,7 @@ public class TileEntityBasin extends TileEntity implements ITickable
 		}
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
@@ -393,13 +397,13 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)
 	{
 		return capability == FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing)
 	{
 		return capability == FLUID_HANDLER_CAPABILITY ? (T) fluidTank : super.getCapability(capability, facing);
 	}

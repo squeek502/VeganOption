@@ -51,6 +51,7 @@ public class DropsCategory extends BlankRecipeCategory<DropsWrapper>
 		return localizedName;
 	}
 
+	@Nonnull
 	@Override
 	public String getModName()
 	{
@@ -65,7 +66,7 @@ public class DropsCategory extends BlankRecipeCategory<DropsWrapper>
 	}
 
 	@Override
-	public void drawExtras(Minecraft minecraft)
+	public void drawExtras(@Nonnull Minecraft minecraft)
 	{
 		super.drawExtras(minecraft);
 

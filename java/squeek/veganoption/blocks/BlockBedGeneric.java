@@ -12,6 +12,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -33,10 +34,11 @@ public class BlockBedGeneric extends BlockBed
 		return this;
 	}
 
+	@Nonnull
 	@Override
 	public Item getItemDropped(IBlockState state, Random random, int fortune)
 	{
-		return state.getValue(PART) == EnumPartType.HEAD ? null : bedItem;
+		return state.getValue(PART) == EnumPartType.HEAD ? Items.AIR : bedItem;
 	}
 
 	@Override
@@ -45,8 +47,9 @@ public class BlockBedGeneric extends BlockBed
 		return true;
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+	public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player)
 	{
 		return new ItemStack(bedItem);
 	}

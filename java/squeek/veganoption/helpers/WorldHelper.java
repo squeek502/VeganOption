@@ -14,7 +14,6 @@ public class WorldHelper
 		return getItemEntitiesWithin(world, new AxisAlignedBB(pos));
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<EntityItem> getItemEntitiesWithin(World world, AxisAlignedBB aabb)
 	{
 		return world.getEntitiesWithinAABB(EntityItem.class, aabb);

@@ -57,6 +57,7 @@ public class DescriptionCategory extends BlankRecipeCategory<DescriptionWrapper>
 		return localizedName;
 	}
 
+	@Nonnull
 	@Override
 	public String getModName()
 	{

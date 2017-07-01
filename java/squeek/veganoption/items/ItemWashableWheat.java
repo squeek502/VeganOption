@@ -12,6 +12,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.helpers.FluidHelper;
 
+import javax.annotation.Nonnull;
+
 public class ItemWashableWheat extends Item
 {
 	public static final int META_FLOUR = 0;
@@ -101,6 +103,7 @@ public class ItemWashableWheat extends Item
 		return false;
 	}
 
+	@Nonnull
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
@@ -119,7 +122,7 @@ public class ItemWashableWheat extends Item
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTab, NonNullList<ItemStack> subItems)
+	public void getSubItems(@Nonnull Item item, CreativeTabs creativeTab, NonNullList<ItemStack> subItems)
 	{
 		subItems.add(new ItemStack(item, 1, META_FLOUR));
 		subItems.add(new ItemStack(item, 1, META_DOUGH));

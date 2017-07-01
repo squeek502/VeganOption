@@ -2,6 +2,7 @@ package squeek.veganoption.content.registry;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -33,10 +34,7 @@ public class DescriptionRegistry
 
 		for (Block block : Block.REGISTRY)
 		{
-			if (block == null || block.getRegistryName() == null)
-				continue;
-
-			if (Item.getItemFromBlock(block) == null)
+			if (block == Blocks.AIR || block.getRegistryName() == null)
 				continue;
 
 			numRegistered += tryRegisterItemAndSubtypes(Item.getItemFromBlock(block));

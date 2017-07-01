@@ -17,6 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import squeek.veganoption.helpers.RandomHelper;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ItemSoap extends Item
 		setNoRepair();
 	}
 
+	@Nonnull
 	@Override
 	public EnumAction getItemUseAction(ItemStack itemStack)
 	{
@@ -59,7 +61,6 @@ public class ItemSoap extends Item
 	 */
 	public static void cureAllCurablePotionEffects(EntityPlayer player)
 	{
-		@SuppressWarnings({"unchecked"})
 		Collection<PotionEffect> activePotionEffects = player.getActivePotionEffects();
 		for (PotionEffect potionEffect : activePotionEffects)
 		{
@@ -70,8 +71,9 @@ public class ItemSoap extends Item
 		}
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entityLiving)
+	public ItemStack onItemUseFinish(@Nonnull ItemStack stack, World world, EntityLivingBase entityLiving)
 	{
 		if (!world.isRemote)
 		{
@@ -83,8 +85,9 @@ public class ItemSoap extends Item
 		return super.onItemUseFinish(stack, world, entityLiving);
 	}
 
+	@Nonnull
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		player.setActiveHand(hand);
 		return super.onItemRightClick(world, player, hand);
@@ -92,6 +95,7 @@ public class ItemSoap extends Item
 
 	public static class DispenserBehavior extends BehaviorDefaultDispenseItem
 	{
+		@Nonnull
 		@Override
 		public ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
 		{

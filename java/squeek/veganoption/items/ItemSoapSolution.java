@@ -16,6 +16,8 @@ import net.minecraft.world.World;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.helpers.RandomHelper;
 
+import javax.annotation.Nonnull;
+
 public class ItemSoapSolution extends Item
 {
 	public static final float BUBBLE_INITIAL_VELOCITY = 0.3f;
@@ -29,6 +31,7 @@ public class ItemSoapSolution extends Item
 		setNoRepair();
 	}
 
+	@Nonnull
 	@Override
 	public EnumAction getItemUseAction(ItemStack itemStack)
 	{
@@ -41,8 +44,9 @@ public class ItemSoapSolution extends Item
 		return 16;
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityLivingBase player)
+	public ItemStack onItemUseFinish(@Nonnull ItemStack itemStack, World world, EntityLivingBase player)
 	{
 		if (!world.isRemote)
 		{
@@ -61,8 +65,9 @@ public class ItemSoapSolution extends Item
 		return super.onItemUseFinish(itemStack, world, player);
 	}
 
+	@Nonnull
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		player.setActiveHand(hand);
 		return super.onItemRightClick(world, player, hand);
@@ -70,12 +75,14 @@ public class ItemSoapSolution extends Item
 
 	public static class DispenserBehavior extends BehaviorProjectileDispense
 	{
+		@Nonnull
 		@Override
-		protected IProjectile getProjectileEntity(World world, IPosition iPosition, ItemStack stack)
+		protected IProjectile getProjectileEntity(@Nonnull World world, @Nonnull IPosition iPosition, @Nonnull ItemStack stack)
 		{
 			return new EntityBubble(world, iPosition.getX(), iPosition.getY(), iPosition.getZ());
 		}
 
+		@Nonnull
 		@Override
 		public ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
 		{

@@ -6,6 +6,8 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class ItemFoodContainered extends ItemFood
 {
 
@@ -19,8 +21,9 @@ public class ItemFoodContainered extends ItemFood
 		super(hunger, saturation, isWolfsFavoriteFood);
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityLivingBase entity)
+	public ItemStack onItemUseFinish(ItemStack itemStack, @Nonnull World world, EntityLivingBase entity)
 	{
 		ItemStack itemStackRemaining = super.onItemUseFinish(itemStack, world, entity);
 

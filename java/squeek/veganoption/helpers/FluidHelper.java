@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -36,7 +37,7 @@ public class FluidHelper
 
 	public static FluidStack fromItemStack(ItemStack itemStack)
 	{
-		if (itemStack == null || itemStack.getItem() == null || Block.getBlockFromItem(itemStack.getItem()) == null)
+		if (itemStack.isEmpty() || Block.getBlockFromItem(itemStack.getItem()) == Blocks.AIR)
 			return null;
 
 		Block block = Block.getBlockFromItem(itemStack.getItem());

@@ -17,6 +17,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import squeek.veganoption.helpers.RandomHelper;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 
 public class ItemThrowableGeneric extends Item
@@ -68,8 +69,9 @@ public class ItemThrowableGeneric extends Item
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemThrowableGeneric.DispenserBehavior(this));
 	}
 
+	@Nonnull
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		ItemStack itemStack = player.getHeldItem(hand);
 		if (!player.capabilities.isCreativeMode)
@@ -129,8 +131,9 @@ public class ItemThrowableGeneric extends Item
 			this.itemThrowableGeneric = itemThrowableGeneric;
 		}
 
+		@Nonnull
 		@Override
-		protected IProjectile getProjectileEntity(World world, IPosition position, ItemStack stack)
+		protected IProjectile getProjectileEntity(@Nonnull World world, @Nonnull IPosition position, @Nonnull ItemStack stack)
 		{
 			return itemThrowableGeneric.getNewThrownEntity(world, position.getX(), position.getY(), position.getZ());
 		}

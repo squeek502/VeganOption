@@ -38,7 +38,7 @@ public abstract class DescriptionWrapper extends BlankRecipeWrapper
 	abstract boolean isMainSlotInput();
 
 	@Override
-	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
+	public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
 	{
 		FontRenderer fontRenderer = minecraft.fontRenderer;
 		IDrawable slotDrawable = VOPlugin.jeiHelpers.getGuiHelper().getSlotDrawable();

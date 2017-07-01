@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.content.modules.Jute;
 import squeek.veganoption.helpers.LangHelper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -58,12 +59,14 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 							.withProperty(HAS_TOP, false));
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, HALF, GROWTH_STAGE, HAS_TOP);
 	}
 
+	@Nonnull
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
@@ -82,6 +85,7 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 		return Math.min(META_MAX, isTop(state) ? TOP_META_START + stage : stage);
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
@@ -91,19 +95,21 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 			.withProperty(HALF, isTop ? BlockDoublePlant.EnumBlockHalf.UPPER : BlockDoublePlant.EnumBlockHalf.LOWER);
 	}
 
+	@Nonnull
 	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		boolean isTop = state.getValue(HALF) == BlockDoublePlant.EnumBlockHalf.LOWER;
 		return state.withProperty(HAS_TOP, isTop && world.getBlockState(pos.up()).getBlock() == this);
 	}
 
 	@Override
-	public int quantityDropped(IBlockState state, int fortune, Random random)
+	public int quantityDropped(IBlockState state, int fortune, @Nonnull Random random)
 	{
 		return isTop(state) ? 0 : 1;
 	}
 
+	@Nonnull
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
@@ -179,7 +185,7 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	}
 
 	@Override
-	public void updateTick(World world, BlockPos pos, IBlockState state, Random random)
+	public void updateTick(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, Random random)
 	{
 		super.updateTick(world, pos, state, random);
 
@@ -203,19 +209,19 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	}
 
 	@Override
-	public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient)
+	public boolean canGrow(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state, boolean isClient)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canUseBonemeal(World world, Random random, BlockPos pos, IBlockState state)
+	public boolean canUseBonemeal(@Nonnull World world, @Nonnull Random random, @Nonnull BlockPos pos, @Nonnull IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public void grow(World world, Random random, BlockPos pos, IBlockState state)
+	public void grow(@Nonnull World world, @Nonnull Random random, @Nonnull BlockPos pos, @Nonnull IBlockState state)
 	{
 		int deltaGrowth = MathHelper.getInt(random, 2, 5);
 		deltaGrowth(world, pos, state, deltaGrowth);
@@ -235,13 +241,13 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	{
 		@SideOnly(Side.CLIENT)
 		@Override
-		public int colorMultiplier(IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
+		public int colorMultiplier(@Nonnull IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
 		{
-			return BiomeColorHelper.getGrassColorAtPos(world, pos);
+			return world != null && pos != null ? BiomeColorHelper.getGrassColorAtPos(world, pos) : -1;
 		}
 
 		@Override
-		public int getColorFromItemstack(ItemStack stack, int tintIndex)
+		public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex)
 		{
 			return ColorizerGrass.getGrassColor(0.5D, 1.0D);
 		}

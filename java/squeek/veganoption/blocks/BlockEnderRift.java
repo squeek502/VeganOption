@@ -29,6 +29,7 @@ import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.network.MessageFX;
 import squeek.veganoption.network.NetworkHandler;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
@@ -66,7 +67,7 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 	}
 
 	@Override
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean shouldSideBeRendered(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EnumFacing side)
 	{
 		return side == EnumFacing.UP || side == EnumFacing.DOWN;
 	}
@@ -144,7 +145,7 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World world, BlockPos pos)
+	public boolean canPlaceBlockAt(World world, @Nonnull BlockPos pos)
 	{
 		return isValidPortalLocation(world, pos) && super.canPlaceBlockAt(world, pos);
 	}
@@ -161,7 +162,7 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 
 	// by not calling the super's method, this also stops colliding entities from teleporting to the end
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
+	public void onEntityCollidedWithBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state, Entity entity)
 	{
 		if (entity instanceof EntityPlayer)
 		{

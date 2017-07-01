@@ -146,16 +146,15 @@ public class HarvestCraft extends IntegratorBase
 		// do this late because I think HarvestCraft registers its recipes late
 		for (ItemStack juice : OreDictionary.getOres("listAlljuice"))
 		{
-			if (juice.getItem() == null || juice.getItem().hasContainerItem(juice))
+			if (juice.getItem() == Items.AIR || juice.getItem().hasContainerItem(juice))
 				continue;
 
 			List<InputItemStack> juiceInputs = new ArrayList<InputItemStack>();
 
-			@SuppressWarnings("unchecked")
 			List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 			for (IRecipe recipe : recipes)
 			{
-				if (recipe.getRecipeOutput() != null && OreDictionary.itemMatches(juice, recipe.getRecipeOutput(), false))
+				if (!recipe.getRecipeOutput().isEmpty() && OreDictionary.itemMatches(juice, recipe.getRecipeOutput(), false))
 				{
 					@SuppressWarnings("rawtypes")
 					List ingredients = null;

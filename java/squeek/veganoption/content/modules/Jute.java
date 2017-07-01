@@ -173,7 +173,7 @@ public class Jute implements IContentModule
 		if (stateBelow.getValue(BlockDoublePlant.VARIANT) != BlockDoublePlant.EnumPlantType.FERN)
 			return;
 
-		if (event.getPlayer().getHeldItemMainhand() != null && event.getPlayer().getHeldItemMainhand().getItem() instanceof ItemShears)
+		if (!event.getPlayer().getHeldItemMainhand().isEmpty() && event.getPlayer().getHeldItemMainhand().getItem() instanceof ItemShears)
 			return;
 
 		for (ItemStack drop : juteDrops.getDrops(event.getPlayer(), squeek.veganoption.helpers.EnchantmentHelper.getFortuneModifier(event.getPlayer()), squeek.veganoption.helpers.EnchantmentHelper.getSilkTouchModifier(event.getPlayer())))

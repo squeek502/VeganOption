@@ -1,6 +1,7 @@
 package squeek.veganoption.helpers;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -68,7 +69,7 @@ public class MiscHelper
 
 		Block block = getBlockByName(name);
 
-		if (block != null)
+		if (block != Blocks.AIR)
 			return new ItemStack(block);
 
 		return null;

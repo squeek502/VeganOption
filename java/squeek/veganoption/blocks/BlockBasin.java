@@ -43,14 +43,16 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 		setSoundType(SoundType.METAL);
 	}
 
+	@Nonnull
 	@Override
 	public BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, IS_OPEN);
 	}
 
+	@Nonnull
 	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = BlockHelper.getTileEntitySafely(world, pos);
 		boolean open = false;
@@ -61,6 +63,7 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 		return state.withProperty(IS_OPEN, open);
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
@@ -80,7 +83,7 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
+	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
 	{
 		return new TileEntityBasin();
 	}
@@ -89,7 +92,7 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 	 * Misc properties
 	 */
 	@Override
-	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean isSideSolid(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side)
 	{
 		if (side != EnumFacing.UP)
 			return true;
@@ -316,11 +319,12 @@ public class BlockBasin extends Block implements IHollowBlock, IProbeInfoAccesso
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean shouldSideBeRendered(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side)
 	{
 		return true;
 	}
 
+	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()

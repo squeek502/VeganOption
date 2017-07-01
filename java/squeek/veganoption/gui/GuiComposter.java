@@ -126,7 +126,6 @@ public class GuiComposter extends GuiContainer
 
 	public List<String> getRobustToolTip(String identifier, Object... args)
 	{
-		@SuppressWarnings("unchecked")
 		List<String> toolTipText = new ArrayList<String>(fontRenderer.listFormattedStringToWidth(LangHelper.translate(identifier + ".desc").replaceAll("\\\\n", String.valueOf('\n')), xSize));
 		toolTipText.add(0, LangHelper.translate(identifier, args));
 		for (int i = 1; i < toolTipText.size(); ++i)

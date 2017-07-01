@@ -20,6 +20,8 @@ import squeek.veganoption.integration.jei.piston.PistonRecipeCategory;
 import squeek.veganoption.integration.jei.piston.PistonRecipeHandler;
 import squeek.veganoption.integration.jei.piston.PistonRecipeMaker;
 
+import javax.annotation.Nonnull;
+
 @JEIPlugin
 public class VOPlugin extends BlankModPlugin
 {
@@ -36,7 +38,7 @@ public class VOPlugin extends BlankModPlugin
 	}
 
 	@Override
-	public void register(IModRegistry registry)
+	public void register(@Nonnull IModRegistry registry)
 	{
 		DescriptionRegistry.registerAllDescriptions();
 

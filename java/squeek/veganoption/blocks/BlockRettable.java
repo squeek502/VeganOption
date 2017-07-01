@@ -49,12 +49,14 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 		setSoundType(SoundType.GROUND);
 	}
 
+	@Nonnull
 	@Override
 	public BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, STAGE, AXIS);
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
@@ -107,11 +109,12 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 	}
 
 	@Override
-	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player)
+	public boolean canSilkHarvest(World world, BlockPos pos, @Nonnull IBlockState state, EntityPlayer player)
 	{
 		return false;
 	}
 
+	@Nonnull
 	@Override
 	public Item getItemDropped(IBlockState state, Random random, int fortune)
 	{
@@ -122,7 +125,7 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 	}
 
 	@Override
-	public int quantityDropped(IBlockState state, int fortune, Random random)
+	public int quantityDropped(IBlockState state, int fortune, @Nonnull Random random)
 	{
 		if (isRetted(state))
 			return RandomHelper.getRandomIntFromRange(random, minRettedItemDrops, maxRettedItemDrops);
@@ -131,7 +134,7 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 	}
 
 	@Override
-	public boolean isToolEffective(String type, IBlockState state)
+	public boolean isToolEffective(String type, @Nonnull IBlockState state)
 	{
 		if (isRetted(state))
 			return false;
@@ -140,7 +143,7 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 	}
 
 	@Override
-	public void setHarvestLevel(String toolClass, int level, IBlockState state)
+	public void setHarvestLevel(@Nonnull String toolClass, int level, @Nonnull IBlockState state)
 	{
 		if (isRetted(state))
 			return;
@@ -231,7 +234,7 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 		}
 
 		@Override
-		public int getColorFromItemstack(ItemStack stack, int tintIndex)
+		public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex)
 		{
 			// TODO: Handle retting stage based on ItemStack metadata
 			return baseColor;

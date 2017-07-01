@@ -13,6 +13,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class ItemFertilizer extends Item
 {
 	public ItemFertilizer()
@@ -21,11 +23,12 @@ public class ItemFertilizer extends Item
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemFertilizer.DispenserBehavior());
 	}
 
+	@Nonnull
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		ItemStack stack = player.getHeldItem(hand);
-		if (ItemDye.applyBonemeal(stack, world, pos, player))
+		if (ItemDye.applyBonemeal(stack, world, pos, player, hand))
 		{
 			if (!world.isRemote)
 			{
@@ -42,6 +45,7 @@ public class ItemFertilizer extends Item
 	{
 		private boolean didFertilize = true;
 
+		@Nonnull
 		@Override
 		protected ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
 		{

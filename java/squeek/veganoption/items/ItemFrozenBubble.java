@@ -10,6 +10,8 @@ import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.FluidHelper;
 
+import javax.annotation.Nonnull;
+
 public class ItemFrozenBubble extends Item
 {
 	public ItemFrozenBubble()
@@ -94,6 +96,7 @@ public class ItemFrozenBubble extends Item
 		return false;
 	}
 
+	@Nonnull
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{

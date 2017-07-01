@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Necessary because Blocks.bed is hardcoded in ItemBed's onItemUse method
  */
@@ -30,8 +32,9 @@ public class ItemBedGeneric extends ItemBed
 
 	// gross duplication
 	// required because Blocks.bed is hardcoded in ItemBed.onItemUse
+	@Nonnull
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(@Nonnull EntityPlayer playerIn, World worldIn, @Nonnull BlockPos pos, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if (worldIn.isRemote)

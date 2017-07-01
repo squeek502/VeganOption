@@ -17,7 +17,6 @@ public class ItemBedStraw extends ItemBedGeneric
 		super(bed);
 	}
 
-	@SuppressWarnings("unchecked")
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> toolTip, boolean advanced)

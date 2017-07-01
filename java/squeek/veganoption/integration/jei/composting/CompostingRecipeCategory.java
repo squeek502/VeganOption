@@ -58,6 +58,7 @@ public class CompostingRecipeCategory extends BlankRecipeCategory<CompostingReci
 		return localizedName;
 	}
 
+	@Nonnull
 	@Override
 	public String getModName()
 	{
@@ -72,7 +73,7 @@ public class CompostingRecipeCategory extends BlankRecipeCategory<CompostingReci
 	}
 
 	@Override
-	public void drawExtras(Minecraft minecraft)
+	public void drawExtras(@Nonnull Minecraft minecraft)
 	{
 		super.drawExtras(minecraft);
 

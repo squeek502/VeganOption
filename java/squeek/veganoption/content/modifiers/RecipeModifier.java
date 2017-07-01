@@ -79,7 +79,6 @@ public class RecipeModifier
 	{
 		long millisecondsStart = System.currentTimeMillis();
 
-		@SuppressWarnings("unchecked")
 		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 		List<IRecipe> recipesToRemove = new ArrayList<IRecipe>();
 		List<IRecipe> recipesToAdd = new ArrayList<IRecipe>();
@@ -127,7 +126,7 @@ public class RecipeModifier
 	{
 		ItemStack output = recipe.getRecipeOutput();
 
-		if (output == null || containsMatch(excludedRecipeOutputs, output))
+		if (output.isEmpty() || containsMatch(excludedRecipeOutputs, output))
 		{
 			return null;
 		}
@@ -339,7 +338,7 @@ public class RecipeModifier
 	// TODO: Optionally use the AppleCore API method
 	public boolean isFood(ItemStack itemStack)
 	{
-		if (itemStack == null || itemStack.getItem() == null)
+		if (itemStack.isEmpty())
 			return false;
 
 		return itemStack.getItem() instanceof ItemFood || itemStack.getItem() == Items.CAKE;

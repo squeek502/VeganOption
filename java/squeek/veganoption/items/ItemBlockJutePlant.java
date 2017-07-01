@@ -6,6 +6,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.ColorizerGrass;
 
+import javax.annotation.Nonnull;
+
 public class ItemBlockJutePlant extends ItemBlock
 {
 	public ItemBlockJutePlant(Block block)
@@ -15,7 +17,7 @@ public class ItemBlockJutePlant extends ItemBlock
 
 	public static class ColorHandler implements IItemColor
 	{
-		public int getColorFromItemstack(ItemStack itemStack, int tintIndex)
+		public int getColorFromItemstack(@Nonnull ItemStack itemStack, int tintIndex)
 		{
 			return ColorizerGrass.getGrassColor(0.5D, 1D);
 		}

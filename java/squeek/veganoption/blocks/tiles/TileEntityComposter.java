@@ -22,6 +22,7 @@ import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.helpers.*;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -191,8 +192,8 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 				int randomBrown = brownSlots.get(RandomHelper.random.nextInt(brownSlots.size()));
 
 				setInventorySlotContents(firstRandomGreen, new ItemStack(Composting.compost));
-				setInventorySlotContents(secondRandomGreen, null);
-				setInventorySlotContents(randomBrown, null);
+				setInventorySlotContents(secondRandomGreen, ItemStack.EMPTY);
+				setInventorySlotContents(randomBrown, ItemStack.EMPTY);
 				return true;
 			}
 		}
@@ -456,21 +457,23 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		return true;
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack getStackInSlot(int slotNum)
 	{
 		if (isValidSlotNum(slotNum))
 			return inventoryItems.get(slotNum);
 		else
-			return null;
+			return ItemStack.EMPTY;
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack decrStackSize(int slotNum, int count)
 	{
 		ItemStack itemStack = getStackInSlot(slotNum);
 
-		if (itemStack != null)
+		if (!itemStack.isEmpty())
 		{
 			if (itemStack.getCount() <= count)
 				setInventorySlotContents(slotNum, ItemStack.EMPTY);
@@ -484,21 +487,22 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		return itemStack;
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack removeStackFromSlot(int slotNum)
 	{
 		ItemStack item = getStackInSlot(slotNum);
-		setInventorySlotContents(slotNum, null);
+		setInventorySlotContents(slotNum, ItemStack.EMPTY);
 		return item;
 	}
 
 	@Override
-	public void setInventorySlotContents(int slotNum, ItemStack itemStack)
+	public void setInventorySlotContents(int slotNum, @Nonnull ItemStack itemStack)
 	{
 		if (!isValidSlotNum(slotNum))
 			return;
 
-		boolean wasEmpty = getStackInSlot(slotNum) == null;
+		boolean wasEmpty = getStackInSlot(slotNum).isEmpty();
 		inventoryItems.set(slotNum, itemStack);
 
 		if (!itemStack.isEmpty() && itemStack.getCount() > getInventoryStackLimit())
@@ -512,6 +516,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		onInventoryChanged();
 	}
 
+	@Nonnull
 	@Override
 	public String getName()
 	{
@@ -537,13 +542,13 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player)
+	public boolean isUsableByPlayer(@Nonnull EntityPlayer player)
 	{
 		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0D;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slotNum, ItemStack itemStack)
+	public boolean isItemValidForSlot(int slotNum, @Nonnull ItemStack itemStack)
 	{
 		return CompostRegistry.isCompostable(itemStack) || Block.getBlockFromItem(itemStack.getItem()) == Composting.compost;
 	}
@@ -566,7 +571,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player)
+	public void openInventory(@Nonnull EntityPlayer player)
 	{
 		if (this.numPlayersUsing < 0)
 		{
@@ -580,7 +585,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player)
+	public void closeInventory(@Nonnull EntityPlayer player)
 	{
 		--this.numPlayersUsing;
 		if (this.numPlayersUsing < 0)
@@ -680,6 +685,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound getUpdateTag()
 	{
@@ -690,7 +696,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag)
+	public void handleUpdateTag(@Nonnull NBTTagCompound tag)
 	{
 		lastAeration = tag.getLong("LastAeration");
 		compostTemperature = tag.getFloat("Temp");
@@ -699,6 +705,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	/*
 	 * Save data
 	 */
+	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound data)
 	{

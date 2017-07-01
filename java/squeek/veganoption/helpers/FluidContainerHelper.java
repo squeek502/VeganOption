@@ -69,7 +69,7 @@ public class FluidContainerHelper
 
 		EntityPlayer player = event.getEntityPlayer();
 		ItemStack heldItem = event.getItemStack();
-		if (heldItem == null || heldItem.getItem() != Items.GLASS_BOTTLE)
+		if (heldItem.isEmpty() || heldItem.getItem() != Items.GLASS_BOTTLE)
 			return;
 
 		World world = event.getWorld();

@@ -49,6 +49,7 @@ public class PistonRecipeCategory extends BlankRecipeCategory<PistonRecipeWrappe
 		return localizedName;
 	}
 
+	@Nonnull
 	@Override
 	public String getModName()
 	{

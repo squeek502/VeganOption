@@ -19,6 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import squeek.veganoption.ModInfo;
 
+import javax.annotation.Nonnull;
+
 public class ContentHelper
 {
 	// entity ids; mod-specific, don't need to be universally unique
@@ -216,16 +218,18 @@ public class ContentHelper
 		ModelBakery.registerItemVariants(itemblock);
 		ModelLoader.setCustomMeshDefinition(itemblock, new ItemMeshDefinition()
 		{
+			@Nonnull
 			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack)
+			public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack)
 			{
 				return loc;
 			}
 		});
 		ModelLoader.setCustomStateMapper(fluid, new StateMapperBase()
 		{
+			@Nonnull
 			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
+			protected ModelResourceLocation getModelResourceLocation(@Nonnull IBlockState state)
 			{
 				return loc;
 			}

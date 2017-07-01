@@ -14,6 +14,8 @@ import squeek.veganoption.content.modules.Seitan;
 import squeek.veganoption.integration.IntegratorBase;
 import squeek.veganoption.items.ItemWashableWheat;
 
+import javax.annotation.Nonnull;
+
 public class ThermalExpansion extends IntegratorBase
 {
 	@Override
@@ -32,10 +34,10 @@ public class ThermalExpansion extends IntegratorBase
 		}
 		addTransposerFill(2000, new ItemStack(Seitan.washableWheat, 1, ItemWashableWheat.META_RAW - 1), Seitan.seitanRawStack.copy(), new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), false);
 
-		addPulverizerRecipe(1600, new ItemStack(Items.POTATO), new ItemStack(Egg.potatoStarch, 2), null, 100);
+		addPulverizerRecipe(1600, new ItemStack(Items.POTATO), new ItemStack(Egg.potatoStarch, 2), ItemStack.EMPTY, 100);
 	}
 
-	public static void addPulverizerRecipe(int energy, ItemStack input, ItemStack primaryOutput, ItemStack secondaryOutput, int secondaryChance)
+	public static void addPulverizerRecipe(int energy, @Nonnull ItemStack input, @Nonnull ItemStack primaryOutput, @Nonnull ItemStack secondaryOutput, int secondaryChance)
 	{
 		NBTTagCompound toSend = new NBTTagCompound();
 
@@ -50,7 +52,7 @@ public class ThermalExpansion extends IntegratorBase
 		primaryOutputTag = primaryOutput.writeToNBT(primaryOutputTag);
 		toSend.setTag("primaryOutput", primaryOutputTag);
 
-		if (secondaryOutput != null)
+		if (!secondaryOutput.isEmpty())
 		{
 			NBTTagCompound secondaryOutputTag = new NBTTagCompound();
 			secondaryOutputTag = secondaryOutput.writeToNBT(secondaryOutputTag);

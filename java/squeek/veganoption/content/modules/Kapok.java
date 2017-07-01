@@ -104,7 +104,7 @@ public class Kapok implements IContentModule
 	{
 		ContentHelper.registerTypicalItemModel(kapokTuft);
 		Item kapokBlockItem = Item.getItemFromBlock(kapokBlock);
-		if (kapokBlockItem != null)
+		if (kapokBlockItem != Items.AIR)
 		{
 			for (EnumDyeColor color : EnumDyeColor.values())
 			{
