@@ -75,14 +75,14 @@ public class BlockComposter extends Block implements IProbeInfoAccessor
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile != null && tile instanceof TileEntityComposter)
 		{
 			return ((TileEntityComposter) tile).onActivated(player, side, hitX, hitY, hitZ);
 		}
-		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+		return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class EntityPlasticEgg extends EntityThrowable
 			rayTraceResult.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), 0.0F);
 		}
 
-		if (!worldObj.isRemote)
+		if (!world.isRemote)
 		{
 			NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, 80);
 			NetworkHandler.channel.sendToAllAround(new MessageFX(posX, posY, posZ, MessageFX.FX.PLASTIC_EGG_BREAK), target);

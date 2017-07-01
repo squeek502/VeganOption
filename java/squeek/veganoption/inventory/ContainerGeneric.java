@@ -139,9 +139,9 @@ public abstract class ContainerGeneric extends Container
 				}
 			}
 
-			if (stackToTransfer.stackSize == 0)
+			if (stackToTransfer.isEmpty())
 			{
-				slot.putStack(null);
+				slot.putStack(ItemStack.EMPTY);
 			}
 			else
 			{
@@ -181,28 +181,28 @@ public abstract class ContainerGeneric extends Container
 
 		if (itemStack.isStackable())
 		{
-			while (itemStack.stackSize > 0 && (!checkBackwards && k < endSlotNum || checkBackwards && k >= startSlotNum))
+			while (itemStack.getCount() > 0 && (!checkBackwards && k < endSlotNum || checkBackwards && k >= startSlotNum))
 			{
 				slot = this.inventorySlots.get(k);
 				itemstack1 = slot.getStack();
 
-				if (itemstack1 != null && itemstack1.getItem() == itemStack.getItem() && (!itemStack.getHasSubtypes() || itemStack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(itemStack, itemstack1) && slot.isItemValid(itemStack))
+				if (!itemstack1.isEmpty() && itemstack1.getItem() == itemStack.getItem() && (!itemStack.getHasSubtypes() || itemStack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(itemStack, itemstack1) && slot.isItemValid(itemStack))
 				{
-					int l = itemstack1.stackSize + itemStack.stackSize;
+					int l = itemstack1.getCount() + itemStack.getCount();
 					int effectiveMaxStackSize = getEffectiveMaxStackSizeForSlot(k, itemStack);
 
 					if (l <= effectiveMaxStackSize)
 					{
-						itemStack.stackSize = 0;
-						itemstack1.stackSize = l;
+						itemStack.setCount(0);
+						itemstack1.setCount(l);
 						slot.onSlotChanged();
 						didMerge = true;
 						break;
 					}
-					else if (itemstack1.stackSize < effectiveMaxStackSize)
+					else if (itemstack1.getCount() < effectiveMaxStackSize)
 					{
-						itemStack.stackSize -= effectiveMaxStackSize - itemstack1.stackSize;
-						itemstack1.stackSize = effectiveMaxStackSize;
+						itemStack.shrink(effectiveMaxStackSize + itemstack1.getCount());
+						itemstack1.setCount(effectiveMaxStackSize);
 						slot.onSlotChanged();
 						didMerge = true;
 						break;
@@ -220,7 +220,7 @@ public abstract class ContainerGeneric extends Container
 			}
 		}
 
-		if (itemStack.stackSize > 0)
+		if (itemStack.getCount() > 0)
 		{
 			if (checkBackwards)
 			{
@@ -236,15 +236,15 @@ public abstract class ContainerGeneric extends Container
 				slot = this.inventorySlots.get(k);
 				itemstack1 = slot.getStack();
 
-				if (itemstack1 == null && slot.isItemValid(itemStack))
+				if (itemstack1.isEmpty() && slot.isItemValid(itemStack))
 				{
 					int effectiveMaxStackSize = getEffectiveMaxStackSizeForSlot(k, itemStack);
 					ItemStack transferedStack = itemStack.copy();
-					if (transferedStack.stackSize > effectiveMaxStackSize)
-						transferedStack.stackSize = effectiveMaxStackSize;
+					if (transferedStack.getCount() > effectiveMaxStackSize)
+						transferedStack.setCount(effectiveMaxStackSize);
 					slot.putStack(transferedStack);
 					slot.onSlotChanged();
-					itemStack.stackSize = itemStack.stackSize - transferedStack.stackSize;
+					itemStack.shrink(transferedStack.getCount());
 					didMerge = true;
 					break;
 				}
@@ -272,7 +272,7 @@ public abstract class ContainerGeneric extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
-		return inventory.isUseableByPlayer(player);
+		return inventory.isUsableByPlayer(player);
 	}
 
 	public void onContainerOpened(EntityPlayer player)

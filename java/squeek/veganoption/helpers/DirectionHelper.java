@@ -8,7 +8,7 @@ public class DirectionHelper
 {
 	public static EnumFacing getDirectionFromYaw(EntityLivingBase entity)
 	{
-		int l = MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int l = MathHelper.floor((entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		switch (l)
 		{
 			case 0:

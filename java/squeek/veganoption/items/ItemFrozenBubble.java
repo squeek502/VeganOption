@@ -64,29 +64,29 @@ public class ItemFrozenBubble extends Item
 
 	public static boolean tryFillWithRawEnderFromWorld(EntityItem entityItem)
 	{
-		if (entityItem == null || entityItem.worldObj.isRemote || entityItem.getEntityItem() == null)
+		if (entityItem == null || entityItem.world.isRemote || entityItem.getItem().isEmpty())
 			return false;
 
-		if (!isFull(entityItem.getEntityItem()))
+		if (!isFull(entityItem.getItem()))
 		{
-			BlockPos fluidBlockPos = new BlockPos(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ));
-			FluidStack consumedFluid = FluidHelper.consumeExactFluid(entityItem.worldObj, fluidBlockPos, Ender.fluidRawEnder, FluidHelper.FINITE_FLUID_MB_PER_META);
+			BlockPos fluidBlockPos = new BlockPos(MathHelper.floor(entityItem.posX), MathHelper.floor(entityItem.posY), MathHelper.floor(entityItem.posZ));
+			FluidStack consumedFluid = FluidHelper.consumeExactFluid(entityItem.world, fluidBlockPos, Ender.fluidRawEnder, FluidHelper.FINITE_FLUID_MB_PER_META);
 
 			if (consumedFluid != null)
 			{
 				EntityItem entityItemToFill = entityItem;
-				ItemStack bubbleToFill = entityItemToFill.getEntityItem();
+				ItemStack bubbleToFill = entityItemToFill.getItem();
 
-				if (entityItemToFill.getEntityItem().stackSize > 1)
+				if (entityItemToFill.getItem().getCount() > 1)
 				{
-					bubbleToFill = entityItem.getEntityItem().splitStack(1);
-					entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, bubbleToFill);
+					bubbleToFill = entityItem.getItem().splitStack(1);
+					entityItemToFill = new EntityItem(entityItemToFill.world, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, bubbleToFill);
 					entityItemToFill.setPickupDelay(10);
-					entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);
+					entityItemToFill.world.spawnEntity(entityItemToFill);
 				}
 
 				ItemStack filledItemStack = fill(bubbleToFill, 1);
-				entityItemToFill.setEntityItemStack(filledItemStack);
+				entityItemToFill.setItem(filledItemStack);
 
 				return true;
 			}

@@ -71,7 +71,7 @@ public class FrozenBubble implements IContentModule
 			.setRegistryName(ModInfo.MODID_LOWER, "frozenBubble");
 		GameRegistry.register(frozenBubble);
 
-		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", ContentHelper.ENTITYID_BUBBLE, ModInfo.MODID, 80, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ModInfo.MODID_LOWER, "bubble"), EntityBubble.class, "bubble", ContentHelper.ENTITYID_BUBBLE, VeganOption.instance, 80, 1, true);
 	}
 
 	@SideOnly(Side.CLIENT)

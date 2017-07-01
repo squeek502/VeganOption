@@ -30,7 +30,7 @@ public class DropsWrapper extends BlankRecipeWrapper
 	{
 		super.drawInfo(minecraft, recipeWidth, recipeHeight, mouseX, mouseY);
 
-		FontRenderer fontRenderer = minecraft.fontRendererObj;
+		FontRenderer fontRenderer = minecraft.fontRenderer;
 		String dropChance = String.format("%.0f%%", drop.drop.dropChance * 100f);
 		fontRenderer.drawString(dropChance, recipeWidth / 2 - fontRenderer.getStringWidth(dropChance) / 2, 8, 0x8b8b8b, false);
 

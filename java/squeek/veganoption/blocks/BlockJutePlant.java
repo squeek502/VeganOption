@@ -217,7 +217,7 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	@Override
 	public void grow(World world, Random random, BlockPos pos, IBlockState state)
 	{
-		int deltaGrowth = MathHelper.getRandomIntegerInRange(random, 2, 5);
+		int deltaGrowth = MathHelper.getInt(random, 2, 5);
 		deltaGrowth(world, pos, state, deltaGrowth);
 	}
 

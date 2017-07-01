@@ -40,7 +40,7 @@ public abstract class DescriptionWrapper extends BlankRecipeWrapper
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
 	{
-		FontRenderer fontRenderer = minecraft.fontRendererObj;
+		FontRenderer fontRenderer = minecraft.fontRenderer;
 		IDrawable slotDrawable = VOPlugin.jeiHelpers.getGuiHelper().getSlotDrawable();
 		int xPos = (recipeWidth - slotDrawable.getWidth()) / 2;
 		int yPos = 0;

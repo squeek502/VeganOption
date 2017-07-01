@@ -21,7 +21,7 @@ import static squeek.veganoption.integration.jei.description.DescriptionCategory
 
 public abstract class DescriptionMaker
 {
-	private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+	private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	public static final int DESC_DISPLACEMENT_RELATED = 3;
 	public static final int DESC_DISPLACEMENT_REFERENCED = 3;
 
@@ -142,7 +142,7 @@ public abstract class DescriptionMaker
 
 	public int getNumPages(List<String> splitText, int maxLinesPerPage, int firstPageMaxLines)
 	{
-		return splitText.size() > firstPageMaxLines ? 1 + MathHelper.ceiling_float_int((splitText.size() - firstPageMaxLines) / (float) maxLinesPerPage) : 1;
+		return splitText.size() > firstPageMaxLines ? 1 + MathHelper.ceil((splitText.size() - firstPageMaxLines) / (float) maxLinesPerPage) : 1;
 	}
 
 	public int getStartingLine(int page, int maxLinesPerPage, int firstPageMaxLines)

@@ -41,9 +41,9 @@ public class BlockEncrustedObsidian extends BlockObsidian
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
 	{
-		super.neighborChanged(state, world, pos, blockIn);
+		super.neighborChanged(state, world, pos, blockIn, fromPos);
 
 		tryPlacePortalAdjacentTo(world, pos);
 	}

@@ -17,13 +17,6 @@ public class DropsHandler implements IRecipeHandler<DropsWrapper>
 
 	@Override
 	@Nonnull
-	public String getRecipeCategoryUid()
-	{
-		return VOPlugin.VORecipeCategoryUid.DROPS;
-	}
-
-	@Override
-	@Nonnull
 	public String getRecipeCategoryUid(@Nonnull DropsWrapper recipe)
 	{
 		return VOPlugin.VORecipeCategoryUid.DROPS;

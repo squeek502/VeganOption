@@ -65,9 +65,9 @@ public class DollsEye implements IContentModule
 
 				Biome biome = ((World) world).provider.getBiomeForCoords(pos);
 
-				boolean isForest = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.FOREST);
+				boolean isForest = BiomeDictionary.hasType(biome, BiomeDictionary.Type.FOREST);
 
-				return isForest && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.CONIFEROUS) && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.JUNGLE);
+				return isForest && !BiomeDictionary.hasType(biome, BiomeDictionary.Type.CONIFEROUS) && !BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE);
 			}
 		};
 		Modifiers.drops.addDropsToBlock(forestGrass, new DropSpecifier(new ItemStack(dollsEye), 0.01f, 1, 2));

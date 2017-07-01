@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.jei.VOPlugin;
 
@@ -51,6 +52,12 @@ public class DropsCategory extends BlankRecipeCategory<DropsWrapper>
 	}
 
 	@Override
+	public String getModName()
+	{
+		return ModInfo.MODID;
+	}
+
+	@Override
 	@Nonnull
 	public IDrawable getBackground()
 	{
@@ -75,7 +82,7 @@ public class DropsCategory extends BlankRecipeCategory<DropsWrapper>
 		guiItemStacks.init(craftOutputSlotMax, false, 87, 13);
 
 		ItemStack minItemStack = recipeWrapper.drop.drop.itemStack.copy();
-		minItemStack.stackSize = recipeWrapper.drop.drop.dropsMin;
+		minItemStack.setCount(recipeWrapper.drop.drop.dropsMin);
 
 		guiItemStacks.set(ingredients);
 		guiItemStacks.set(craftOutputSlotMin, minItemStack);
@@ -83,7 +90,7 @@ public class DropsCategory extends BlankRecipeCategory<DropsWrapper>
 		if (recipeWrapper.drop.drop.dropsMin != recipeWrapper.drop.drop.dropsMax)
 		{
 			ItemStack maxItemStack = recipeWrapper.drop.drop.itemStack.copy();
-			maxItemStack.stackSize = recipeWrapper.drop.drop.dropsMax;
+			maxItemStack.setCount(recipeWrapper.drop.drop.dropsMax);
 			guiItemStacks.set(craftOutputSlotMax, maxItemStack);
 		}
 	}

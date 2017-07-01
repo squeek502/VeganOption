@@ -182,6 +182,6 @@ public class BlockHelper
 
 	public static TileEntity getTileEntitySafely(IBlockAccess world, BlockPos pos)
 	{
-		return world instanceof ChunkCache ? ((ChunkCache) world).func_190300_a(pos, Chunk.EnumCreateEntityType.CHECK) : world.getTileEntity(pos);
+		return world instanceof ChunkCache ? ((ChunkCache) world).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : world.getTileEntity(pos);
 	}
 }

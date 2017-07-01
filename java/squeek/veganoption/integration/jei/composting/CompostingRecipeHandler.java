@@ -17,13 +17,6 @@ public class CompostingRecipeHandler implements IRecipeHandler<CompostingRecipeW
 
 	@Override
 	@Nonnull
-	public String getRecipeCategoryUid()
-	{
-		return VOPlugin.VORecipeCategoryUid.COMPOSTING;
-	}
-
-	@Override
-	@Nonnull
 	public String getRecipeCategoryUid(CompostingRecipeWrapper recipe)
 	{
 		return VOPlugin.VORecipeCategoryUid.COMPOSTING;

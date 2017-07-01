@@ -1,8 +1,10 @@
 package squeek.veganoption.content.registry;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
@@ -49,14 +51,17 @@ public class DescriptionRegistry
 	{
 		int numRegistered = 0;
 
-		List<ItemStack> stacks;
+		NonNullList<ItemStack> stacks;
 		if (item.getHasSubtypes())
 		{
-			stacks = new ArrayList<ItemStack>();
-			item.getSubItems(item, null, stacks);
+			stacks = NonNullList.create();
+			item.getSubItems(item, CreativeTabs.SEARCH, stacks);
 		}
 		else
-			stacks = Collections.singletonList(new ItemStack(item));
+		{
+			stacks = NonNullList.create();
+			stacks.addAll(Collections.singletonList(new ItemStack(item)));
+		}
 
 		for (ItemStack stack : stacks)
 		{

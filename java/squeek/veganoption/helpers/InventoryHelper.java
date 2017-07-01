@@ -2,22 +2,9 @@ package squeek.veganoption.helpers;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
 public class InventoryHelper
 {
-	public static IInventory getInventoryAtLocation(World world, int x, int y, int z)
-	{
-		return TileEntityHopper.getInventoryAtPosition(world, x, y, z);
-	}
-
-	public static ItemStack insertStackIntoInventory(ItemStack itemStack, IInventory inventory)
-	{
-		return TileEntityHopper.putStackInInventoryAllSlots(inventory, itemStack, EnumFacing.DOWN);
-	}
-
 	public static float getPercentInventoryFilled(IInventory inventory)
 	{
 		if (inventory == null || inventory.getSizeInventory() == 0)
@@ -29,9 +16,9 @@ public class InventoryHelper
 		{
 			ItemStack itemstack = inventory.getStackInSlot(slotNum);
 
-			if (itemstack != null)
+			if (!itemstack.isEmpty())
 			{
-				filledPercent += (float) itemstack.stackSize / (float) Math.min(inventory.getInventoryStackLimit(), itemstack.getMaxStackSize());
+				filledPercent += (float) itemstack.getCount() / (float) Math.min(inventory.getInventoryStackLimit(), itemstack.getMaxStackSize());
 			}
 		}
 

@@ -43,7 +43,7 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	@Override
 	public void update()
 	{
-		if (worldObj.isRemote)
+		if (world.isRemote)
 			return;
 
 		if (shouldConsumeFluid())
@@ -81,25 +81,25 @@ public class TileEntityBasin extends TileEntity implements ITickable
 
 	public boolean tryFillContainersInside()
 	{
-		if (worldObj == null || worldObj.isRemote || !couldFillContainers())
+		if (world == null || world.isRemote || !couldFillContainers())
 			return false;
 
-		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(worldObj, ((BlockBasin) Basin.basin).getInnerBoundingBox(worldObj, pos.getX(), pos.getY(), pos.getZ()));
+		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(world, ((BlockBasin) Basin.basin).getInnerBoundingBox(world, pos.getX(), pos.getY(), pos.getZ()));
 
 		for (EntityItem entityItemWithin : entityItemsWithin)
 		{
-			if (!FluidContainerHelper.isEmptyContainer(entityItemWithin.getEntityItem()))
+			if (!FluidContainerHelper.isEmptyContainer(entityItemWithin.getItem()))
 				continue;
 
 			EntityItem entityItemToFill = entityItemWithin;
-			ItemStack containerToFill = entityItemWithin.getEntityItem().splitStack(1);
+			ItemStack containerToFill = entityItemWithin.getItem().splitStack(1);
 			FluidContainerHelper.drainHandlerIntoContainer(fluidTank, fluidTank.getFluid(), containerToFill);
 
 			if (!FluidContainerHelper.isEmptyContainer(containerToFill))
 			{
-				entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, containerToFill);
+				entityItemToFill = new EntityItem(entityItemToFill.world, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, containerToFill);
 				entityItemToFill.setPickupDelay(10);
-				entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);
+				entityItemToFill.world.spawnEntity(entityItemToFill);
 			}
 			return true;
 		}
@@ -135,17 +135,17 @@ public class TileEntityBasin extends TileEntity implements ITickable
 
 	public boolean tryConsumeFluidAbove()
 	{
-		if (worldObj == null || worldObj.isRemote || !couldConsumeFluid())
+		if (world == null || world.isRemote || !couldConsumeFluid())
 			return false;
 
 		BlockPos blockPosAbove = pos.up();
-		IBlockState stateAbove = worldObj.getBlockState(blockPosAbove);
+		IBlockState stateAbove = world.getBlockState(blockPosAbove);
 		Fluid fluidAbove = FluidHelper.getFluidTypeOfBlock(stateAbove);
 
 		if (fluidAbove == null)
 			return false;
 
-		FluidStack fluidToAdd = FluidHelper.consumeFluid(worldObj, blockPosAbove, fluidAbove, fluidTank.getCapacity() - fluidTank.getFluidAmount());
+		FluidStack fluidToAdd = FluidHelper.consumeFluid(world, blockPosAbove, fluidAbove, fluidTank.getCapacity() - fluidTank.getFluidAmount());
 
 		if (fluidToAdd == null || !fluidTank.canFillFluidType(fluidToAdd))
 			return false;
@@ -241,7 +241,7 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	private void tryAddItemToInventory(EntityPlayer player, EnumHand hand, ItemStack newItem)
 	{
 		ItemStack heldItem = player.getHeldItem(hand);
-		if (heldItem == null || heldItem.stackSize == 0)
+		if (heldItem.isEmpty())
 		{
 			player.setHeldItem(hand, newItem);
 			return;
@@ -264,8 +264,8 @@ public class TileEntityBasin extends TileEntity implements ITickable
 			else
 				onUnpowered();
 
-			if (worldObj != null)
-				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
+			if (world != null)
+				world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 0);
 		}
 	}
 
@@ -276,16 +276,16 @@ public class TileEntityBasin extends TileEntity implements ITickable
 
 	public void onPowered()
 	{
-		if (worldObj != null)
-			worldObj.notifyNeighborsOfStateChange(pos, Basin.basin);
+		if (world != null)
+			world.notifyNeighborsOfStateChange(pos, Basin.basin, true);
 
 		onOpen();
 	}
 
 	public void onUnpowered()
 	{
-		if (worldObj != null)
-			worldObj.notifyNeighborsOfStateChange(pos, Basin.basin);
+		if (world != null)
+			world.notifyNeighborsOfStateChange(pos, Basin.basin, true);
 
 		onClose();
 	}
@@ -295,10 +295,10 @@ public class TileEntityBasin extends TileEntity implements ITickable
 	 */
 	public void onFluidLevelChanged(IFluidTank tank, FluidStack fluidDelta)
 	{
-		if (worldObj != null)
+		if (world != null)
 		{
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
-			worldObj.notifyNeighborsOfStateChange(pos, Basin.basin);
+			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 0);
+			world.notifyNeighborsOfStateChange(pos, Basin.basin, true);
 			scheduleFluidConsume();
 		}
 	}

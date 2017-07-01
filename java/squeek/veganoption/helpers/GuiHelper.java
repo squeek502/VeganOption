@@ -29,7 +29,7 @@ public class GuiHelper implements IGuiHandler
 
 	public static boolean openGuiOfTile(EntityPlayer player, TileEntity tile)
 	{
-		if (!player.worldObj.isRemote)
+		if (!player.world.isRemote)
 		{
 			if (tile instanceof TileEntityComposter)
 			{

@@ -49,7 +49,7 @@ public class RenderComposter extends TileEntitySpecialRenderer<TileEntityCompost
 	public void renderTileEntityAt(TileEntityComposter tile, double x, double y, double z, float partialTickTime, int destroyStage)
 	{
 		EnumFacing side = EnumFacing.WEST;
-		if (tile.hasWorldObj())
+		if (tile.hasWorld())
 		{
 			IBlockState stateInTilePos = tile.getWorld().getBlockState(tile.getPos());
 			if (stateInTilePos.getBlock() == Composting.composter)
@@ -91,7 +91,7 @@ public class RenderComposter extends TileEntitySpecialRenderer<TileEntityCompost
 		GlStateManager.scale(axis == Axis.X ? 0.8F : 1F, -0.8F, axis == Axis.X ? -1F : -0.8F);
 		GlStateManager.translate(0.5F, 0.5F, 0.5F);
 
-		if (tile.hasWorldObj() && tile.isAerating())
+		if (tile.hasWorld() && tile.isAerating())
 		{
 			final int num_turns = 3;
 			GlStateManager.rotate(-(tile.getAeratingPercent() * 360F * num_turns), axis == Axis.X ? 0F : 1F, 0F, axis == Axis.X ? 1F : 0F);

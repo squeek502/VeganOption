@@ -17,13 +17,6 @@ public class CraftingDescHandler implements IRecipeHandler<CraftingDescWrapper>
 
 	@Override
 	@Nonnull
-	public String getRecipeCategoryUid()
-	{
-		return VOPlugin.VORecipeCategoryUid.CRAFTING;
-	}
-
-	@Override
-	@Nonnull
 	public String getRecipeCategoryUid(@Nonnull CraftingDescWrapper recipe)
 	{
 		return VOPlugin.VORecipeCategoryUid.CRAFTING;

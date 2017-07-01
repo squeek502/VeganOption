@@ -94,10 +94,10 @@ public class PistonCraftingRecipe
 				ItemStack output = itemOutputs.get(i);
 				for (EntityItem inputEntity : entry.getValue())
 				{
-					ItemStack inputStack = inputEntity.getEntityItem();
+					ItemStack inputStack = inputEntity.getItem();
 					ItemStack newItemStack = output.copy();
-					newItemStack.stackSize = (int) (inputStack.stackSize * ((float) output.stackSize / entry.getKey().stackSize()));
-					inputEntity.setEntityItemStack(newItemStack);
+					newItemStack.setCount((int) (inputStack.getCount() * ((float) output.getCount() / entry.getKey().stackSize())));
+					inputEntity.setItem(newItemStack);
 				}
 				i++;
 			}
@@ -110,7 +110,7 @@ public class PistonCraftingRecipe
 				List<EntityItem> randomReferenceEntityList = entityItemsByInput.get(itemInputs.get(rand.nextInt(itemInputs.size())));
 				EntityItem randomReferenceEntity = randomReferenceEntityList.get(rand.nextInt(randomReferenceEntityList.size()));
 				EntityItem outputEntity = new EntityItem(world, randomReferenceEntity.posX, randomReferenceEntity.posY, randomReferenceEntity.posZ, itemOutput.copy());
-				outputEntity.getEntityItem().stackSize = 0;
+				outputEntity.getItem().setCount(0);
 				entityItemsByOutput.put(itemOutput, outputEntity);
 			}
 
@@ -135,9 +135,9 @@ public class PistonCraftingRecipe
 					int numConsumed = 0;
 					for (EntityItem inputEntity : inputEntry.getValue())
 					{
-						ItemStack inputStack = inputEntity.getEntityItem();
-						int numToConsume = Math.min(inputStack.stackSize, numRequired - numConsumed);
-						inputStack.stackSize -= numToConsume;
+						ItemStack inputStack = inputEntity.getItem();
+						int numToConsume = Math.min(inputStack.getCount(), numRequired - numConsumed);
+						inputStack.shrink(numToConsume);
 						numConsumed += numToConsume;
 
 						if (numConsumed >= numRequired)
@@ -146,14 +146,14 @@ public class PistonCraftingRecipe
 				}
 				for (Entry<ItemStack, EntityItem> entry : entityItemsByOutput.entrySet())
 				{
-					entry.getValue().getEntityItem().stackSize += entry.getKey().stackSize;
+					entry.getValue().getItem().grow(entry.getKey().getCount());
 				}
 			}
 			while (fluidInputMatches(displacedFluid) && itemInputMatches(entityItemsByInput) && canOutputFluid(fluidHandler));
 
 			for (Entry<ItemStack, EntityItem> entry : entityItemsByOutput.entrySet())
 			{
-				world.spawnEntityInWorld(entry.getValue());
+				world.spawnEntity(entry.getValue());
 			}
 		}
 
@@ -231,7 +231,7 @@ public class PistonCraftingRecipe
 		List<EntityItem> matchingEntities = new ArrayList<EntityItem>();
 		for (EntityItem entityItem : entityItems)
 		{
-			if (target.matches(entityItem.getEntityItem()))
+			if (target.matches(entityItem.getItem()))
 			{
 				matchingEntities.add(entityItem);
 			}
@@ -242,10 +242,10 @@ public class PistonCraftingRecipe
 			int largestStackSize = 0;
 			for (EntityItem entityItem : matchingEntities)
 			{
-				if (entitiesOfOneTypeWithLargestStackSize != null && entitiesOfOneTypeWithLargestStackSize.get(0).getEntityItem().isItemEqual(entityItem.getEntityItem()))
+				if (entitiesOfOneTypeWithLargestStackSize != null && entitiesOfOneTypeWithLargestStackSize.get(0).getItem().isItemEqual(entityItem.getItem()))
 					continue;
 
-				List<EntityItem> exactMatches = getMatchingEntityItems(new InputItemStack(entityItem.getEntityItem()), matchingEntities);
+				List<EntityItem> exactMatches = getMatchingEntityItems(new InputItemStack(entityItem.getItem()), matchingEntities);
 				int exactMatchesStackSize = getStackSizeOfEntityItems(exactMatches);
 
 				if (exactMatchesStackSize >= target.stackSize())
@@ -267,7 +267,7 @@ public class PistonCraftingRecipe
 		int stackSize = 0;
 		for (EntityItem entityItem : entityItems)
 		{
-			stackSize += entityItem.getEntityItem().stackSize;
+			stackSize = entityItem.getItem().getCount();
 		}
 		return stackSize;
 	}

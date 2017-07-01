@@ -8,6 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -57,7 +58,7 @@ public class Egg implements IContentModule
 			.setRegistryName(ModInfo.MODID_LOWER, "plastic_egg");
 		GameRegistry.register(plasticEgg);
 
-		EntityRegistry.registerModEntity(EntityPlasticEgg.class, "plasticEgg", ContentHelper.ENTITYID_PLASTIC_EGG, ModInfo.MODID, 80, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ModInfo.MODID_LOWER, "plastic_egg"), EntityPlasticEgg.class, "plastic_egg", ContentHelper.ENTITYID_PLASTIC_EGG, VeganOption.instance, 80, 1, true);
 	}
 
 	@SideOnly(Side.CLIENT)

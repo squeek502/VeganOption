@@ -4,14 +4,13 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import squeek.veganoption.helpers.FluidHelper;
-
-import java.util.List;
 
 public class ItemWashableWheat extends Item
 {
@@ -72,29 +71,29 @@ public class ItemWashableWheat extends Item
 
 	public static boolean tryWash(EntityItem entityItem)
 	{
-		if (entityItem == null || entityItem.worldObj.isRemote || entityItem.getEntityItem() == null)
+		if (entityItem == null || entityItem.world.isRemote || entityItem.getItem().isEmpty())
 			return false;
 
-		if (!isReadyToCook(entityItem.getEntityItem()))
+		if (!isReadyToCook(entityItem.getItem()))
 		{
-			BlockPos fluidBlockPos = new BlockPos(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ));
-			FluidStack consumedFluid = FluidHelper.consumeExactFluid(entityItem.worldObj, fluidBlockPos, FluidRegistry.WATER, Fluid.BUCKET_VOLUME);
+			BlockPos fluidBlockPos = new BlockPos(MathHelper.floor(entityItem.posX), MathHelper.floor(entityItem.posY), MathHelper.floor(entityItem.posZ));
+			FluidStack consumedFluid = FluidHelper.consumeExactFluid(entityItem.world, fluidBlockPos, FluidRegistry.WATER, Fluid.BUCKET_VOLUME);
 
 			if (consumedFluid != null)
 			{
 				EntityItem entityItemToWash = entityItem;
-				ItemStack doughToWash = entityItemToWash.getEntityItem();
+				ItemStack doughToWash = entityItemToWash.getItem();
 
-				if (entityItemToWash.getEntityItem().stackSize > 1)
+				if (entityItemToWash.getItem().getCount() > 1)
 				{
-					doughToWash = entityItem.getEntityItem().splitStack(1);
-					entityItemToWash = new EntityItem(entityItemToWash.worldObj, entityItemToWash.posX, entityItemToWash.posY, entityItemToWash.posZ, doughToWash);
+					doughToWash = entityItem.getItem().splitStack(1);
+					entityItemToWash = new EntityItem(entityItemToWash.world, entityItemToWash.posX, entityItemToWash.posY, entityItemToWash.posZ, doughToWash);
 					entityItemToWash.setPickupDelay(10);
-					entityItemToWash.worldObj.spawnEntityInWorld(entityItemToWash);
+					entityItemToWash.world.spawnEntity(entityItemToWash);
 				}
 
 				ItemStack washedItemStack = wash(doughToWash, 1);
-				entityItemToWash.setEntityItemStack(washedItemStack);
+				entityItemToWash.setItem(washedItemStack);
 
 				return true;
 			}
@@ -120,7 +119,7 @@ public class ItemWashableWheat extends Item
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTab, List<ItemStack> subItems)
+	public void getSubItems(Item item, CreativeTabs creativeTab, NonNullList<ItemStack> subItems)
 	{
 		subItems.add(new ItemStack(item, 1, META_FLOUR));
 		subItems.add(new ItemStack(item, 1, META_DOUGH));

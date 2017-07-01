@@ -48,12 +48,12 @@ public class ItemSoapSolution extends Item
 		{
 			EntityBubble bubble = new EntityBubble(world, player);
 			bubble.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, BUBBLE_INITIAL_VELOCITY, 1.0F);
-			world.spawnEntityInWorld(bubble);
+			world.spawnEntity(bubble);
 		}
 
 		itemStack.damageItem(1, player);
 
-		if (itemStack.stackSize == 0 && getContainerItem() != null)
+		if (itemStack.getCount() == 0 && getContainerItem() != null)
 		{
 			return new ItemStack(getContainerItem());
 		}
@@ -62,10 +62,10 @@ public class ItemSoapSolution extends Item
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
 	{
 		player.setActiveHand(hand);
-		return super.onItemRightClick(itemStack, world, player, hand);
+		return super.onItemRightClick(world, player, hand);
 	}
 
 	public static class DispenserBehavior extends BehaviorProjectileDispense
@@ -80,15 +80,15 @@ public class ItemSoapSolution extends Item
 		public ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
 		{
 			// counteract the splitStack in super.dispenseStack
-			itemStack.stackSize++;
+			itemStack.grow(1);
 			super.dispenseStack(blockSource, itemStack);
 
 			itemStack.attemptDamageItem(1, RandomHelper.random);
 			if (itemStack.getItemDamage() >= itemStack.getMaxDamage())
 			{
-				itemStack.stackSize = 0;
+				itemStack.setCount(0);
 			}
-			if (itemStack.stackSize == 0 && itemStack.getItem().getContainerItem() != null)
+			if (itemStack.getCount() == 0 && itemStack.getItem().getContainerItem() != null)
 			{
 				return new ItemStack(itemStack.getItem().getContainerItem());
 			}

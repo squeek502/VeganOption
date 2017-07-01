@@ -189,7 +189,7 @@ public class BlockRettable extends BlockHay implements IProbeInfoAccessor
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World world, BlockPos pos)
 	{
-		return MathHelper.floor_float(getRettingPercent(world, pos) * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH);
+		return MathHelper.floor(getRettingPercent(world, pos) * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH);
 	}
 
 	@Override

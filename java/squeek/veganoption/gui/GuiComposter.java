@@ -112,8 +112,8 @@ public class GuiComposter extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRendererObj.drawString(this.inventory.hasCustomName() ? this.inventory.getName() : I18n.format(this.inventory.getName()), 8, 6, ColorHelper.DEFAULT_TEXT_COLOR);
-		this.fontRendererObj.drawString(this.playerInventory.hasCustomName() ? this.playerInventory.getName() : I18n.format(this.playerInventory.getName()), 8, this.ySize - 96 + 2, ColorHelper.DEFAULT_TEXT_COLOR);
+		this.fontRenderer.drawString(this.inventory.hasCustomName() ? this.inventory.getName() : I18n.format(this.inventory.getName()), 8, 6, ColorHelper.DEFAULT_TEXT_COLOR);
+		this.fontRenderer.drawString(this.playerInventory.hasCustomName() ? this.playerInventory.getName() : I18n.format(this.playerInventory.getName()), 8, this.ySize - 96 + 2, ColorHelper.DEFAULT_TEXT_COLOR);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(guiComponents);
@@ -127,7 +127,7 @@ public class GuiComposter extends GuiContainer
 	public List<String> getRobustToolTip(String identifier, Object... args)
 	{
 		@SuppressWarnings("unchecked")
-		List<String> toolTipText = new ArrayList<String>(fontRendererObj.listFormattedStringToWidth(LangHelper.translate(identifier + ".desc").replaceAll("\\\\n", String.valueOf('\n')), xSize));
+		List<String> toolTipText = new ArrayList<String>(fontRenderer.listFormattedStringToWidth(LangHelper.translate(identifier + ".desc").replaceAll("\\\\n", String.valueOf('\n')), xSize));
 		toolTipText.add(0, LangHelper.translate(identifier, args));
 		for (int i = 1; i < toolTipText.size(); ++i)
 		{
@@ -143,15 +143,15 @@ public class GuiComposter extends GuiContainer
 
 		if (isMouseOverTumbleButton(mouseX, mouseY))
 		{
-			drawHoveringText(getRobustToolTip("gui.composter.tumble"), mouseX, mouseY, fontRendererObj);
+			drawHoveringText(getRobustToolTip("gui.composter.tumble"), mouseX, mouseY, fontRenderer);
 		}
 		else if (isMouseOverTemperature(mouseX, mouseY))
 		{
-			drawHoveringText(getRobustToolTip("gui.composter.temperature", Math.round(composter.getCompostTemperature()) + DEGREE_SYMBOL + "C"), mouseX, mouseY, fontRendererObj);
+			drawHoveringText(getRobustToolTip("gui.composter.temperature", Math.round(composter.getCompostTemperature()) + DEGREE_SYMBOL + "C"), mouseX, mouseY, fontRenderer);
 		}
 		else if (isMouseOverCompostingPercent(mouseX, mouseY))
 		{
-			drawHoveringText(getRobustToolTip("gui.composter.composting", ((int) (composter.getCompostingPercent() * 100)) + "%"), mouseX, mouseY, fontRendererObj);
+			drawHoveringText(getRobustToolTip("gui.composter.composting", ((int) (composter.getCompostingPercent() * 100)) + "%"), mouseX, mouseY, fontRenderer);
 		}
 	}
 

@@ -6,8 +6,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.jei.VOPlugin;
 
@@ -47,6 +47,12 @@ public class PistonRecipeCategory extends BlankRecipeCategory<PistonRecipeWrappe
 	public String getTitle()
 	{
 		return localizedName;
+	}
+
+	@Override
+	public String getModName()
+	{
+		return ModInfo.MODID;
 	}
 
 	@Override

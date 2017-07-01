@@ -25,7 +25,7 @@ public class TooltipHelper
 	@SubscribeEvent
 	public void getItemTooltip(ItemTooltipEvent event)
 	{
-		if (event.getItemStack() == null || event.getItemStack().getItem() == null)
+		if (event.getItemStack().isEmpty())
 			return;
 
 		if (!itemsThatHaveTooltips.contains(event.getItemStack().getItem()))

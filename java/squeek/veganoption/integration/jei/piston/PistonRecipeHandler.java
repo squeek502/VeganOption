@@ -17,14 +17,6 @@ public class PistonRecipeHandler implements IRecipeHandler<PistonRecipeWrapper>
 
 	@Override
 	@Nonnull
-	@Deprecated
-	public String getRecipeCategoryUid()
-	{
-		return VOPlugin.VORecipeCategoryUid.PISTON;
-	}
-
-	@Override
-	@Nonnull
 	public String getRecipeCategoryUid(@Nonnull PistonRecipeWrapper recipe)
 	{
 		return VOPlugin.VORecipeCategoryUid.PISTON;

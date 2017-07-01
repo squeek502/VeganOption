@@ -48,7 +48,7 @@ public class EntityBubble extends EntityThrowable
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.temperature = TemperatureHelper.getBiomeTemperature(worldObj, new BlockPos((int) posX, (int) posY, (int) posZ));
+		this.temperature = TemperatureHelper.getBiomeTemperature(world, new BlockPos((int) posX, (int) posY, (int) posZ));
 	}
 
 	@Override
@@ -67,22 +67,22 @@ public class EntityBubble extends EntityThrowable
 	@Override
 	public void onUpdate()
 	{
-		if (!this.worldObj.isRemote && (ticksExisted >= lifetime || this.isInWater()))
+		if (!this.world.isRemote && (ticksExisted >= lifetime || this.isInWater()))
 		{
 			pop();
 			return;
 		}
 
-		float surroundingTemp = getSurroundingAirTemperature(worldObj, new BlockPos(posX, posY, posZ));
+		float surroundingTemp = getSurroundingAirTemperature(world, new BlockPos(posX, posY, posZ));
 		temperature += (surroundingTemp - temperature) * 0.05f;
 
-		if (!this.worldObj.isRemote && temperature <= FREEZING_TEMPERATURE)
+		if (!this.world.isRemote && temperature <= FREEZING_TEMPERATURE)
 		{
 			freeze();
 			return;
 		}
 
-		if (!this.worldObj.isRemote && ticksExisted % 10 == 0)
+		if (!this.world.isRemote && ticksExisted % 10 == 0)
 		{
 			this.motionX += 0.1F * (RandomHelper.random.nextFloat() - 0.5F);
 			this.motionY += 0.1F * (RandomHelper.random.nextFloat() - 0.5F);
@@ -109,7 +109,7 @@ public class EntityBubble extends EntityThrowable
 
 	public void pop()
 	{
-		if (!this.worldObj.isRemote)
+		if (!this.world.isRemote)
 		{
 			NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, 80);
 			NetworkHandler.channel.sendToAllAround(new MessageFX(posX, posY, posZ, MessageFX.FX.BUBBLE_POP), target);
@@ -119,10 +119,10 @@ public class EntityBubble extends EntityThrowable
 
 	public void freeze()
 	{
-		if (!this.worldObj.isRemote)
+		if (!this.world.isRemote)
 		{
-			EntityItem frozenBubble = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(FrozenBubble.frozenBubble));
-			worldObj.spawnEntityInWorld(frozenBubble);
+			EntityItem frozenBubble = new EntityItem(world, posX, posY, posZ, new ItemStack(FrozenBubble.frozenBubble));
+			world.spawnEntity(frozenBubble);
 			this.setDead();
 		}
 	}

@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.jei.VOPlugin;
 
@@ -58,18 +59,16 @@ public class CompostingRecipeCategory extends BlankRecipeCategory<CompostingReci
 	}
 
 	@Override
+	public String getModName()
+	{
+		return ModInfo.MODID;
+	}
+
+	@Override
 	@Nonnull
 	public IDrawable getBackground()
 	{
 		return background;
-	}
-
-	@Override
-	public void drawAnimations(Minecraft minecraft)
-	{
-		super.drawAnimations(minecraft);
-
-		arrowAnimated.draw(minecraft, width - arrowAndOutputSlot.getWidth(), height / 2 - arrowAnimated.getHeight() / 2);
 	}
 
 	@Override
@@ -87,6 +86,8 @@ public class CompostingRecipeCategory extends BlankRecipeCategory<CompostingReci
 		GlStateManager.color(1f, 1f, .75f, 1);
 		slot.draw(minecraft, 36, 11);
 		GlStateManager.color(1f, 1f, 1f, 1);
+
+		arrowAnimated.draw(minecraft, width - arrowAndOutputSlot.getWidth(), height / 2 - arrowAnimated.getHeight() / 2);
 	}
 
 	@Override
@@ -100,7 +101,7 @@ public class CompostingRecipeCategory extends BlankRecipeCategory<CompostingReci
 		guiItemStacks.init(2, true, 18, 11);
 		guiItemStacks.init(3, true, 36, 11);
 
-		guiItemStacks.set(craftOutputSlot, ingredients.getOutputs(ItemStack.class));
+		guiItemStacks.set(craftOutputSlot, ingredients.getOutputs(ItemStack.class).get(0));
 
 		if (recipeLayout.getFocus().getValue() != null && recipeWrapper.numGreens > 1)
 		{

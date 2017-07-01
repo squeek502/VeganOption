@@ -11,7 +11,7 @@ import java.util.List;
 
 public class InputItemStack
 {
-	public ItemStack wrappedItemStack = null;
+	public ItemStack wrappedItemStack = ItemStack.EMPTY;
 	public List<ItemStack> oreDictItemStacks = null;
 	protected int oreDictStackSize = 1;
 
@@ -65,7 +65,7 @@ public class InputItemStack
 
 	public boolean matches(ItemStack input, boolean strict)
 	{
-		if (wrappedItemStack != null)
+		if (!wrappedItemStack.isEmpty())
 			return OreDictionary.itemMatches(wrappedItemStack, input, strict);
 		else if (oreDictItemStacks != null)
 		{
@@ -83,7 +83,7 @@ public class InputItemStack
 	 */
 	public List<ItemStack> getItemStackList()
 	{
-		if (wrappedItemStack != null)
+		if (!wrappedItemStack.isEmpty())
 			return Collections.singletonList(wrappedItemStack);
 		else if (oreDictItemStacks != null)
 		{
@@ -93,7 +93,7 @@ public class InputItemStack
 			for (ItemStack stack : oreDictItemStacks)
 			{
 				ItemStack sizedStack = stack.copy();
-				sizedStack.stackSize = stackSize();
+				sizedStack.setCount(stackSize());
 				sizedOreDictItemStacks.add(sizedStack);
 			}
 			return sizedOreDictItemStacks;
@@ -104,7 +104,7 @@ public class InputItemStack
 
 	public int stackSize()
 	{
-		return wrappedItemStack != null ? wrappedItemStack.stackSize : (oreDictItemStacks != null ? oreDictStackSize : 0);
+		return !wrappedItemStack.isEmpty() ? wrappedItemStack.getCount() : (oreDictItemStacks != null ? oreDictStackSize : 0);
 	}
 
 	public boolean isOreDict()

@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.helpers.GuiHelper;
 
 import javax.annotation.Nonnull;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class DescriptionCategory extends BlankRecipeCategory<DescriptionWrapper>
 {
-	private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+	private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	public static final int WIDTH = 160;
 	public static final int HEIGHT = 130;
 	public static final int Y_START = 22;
@@ -57,6 +58,12 @@ public class DescriptionCategory extends BlankRecipeCategory<DescriptionWrapper>
 	}
 
 	@Override
+	public String getModName()
+	{
+		return ModInfo.MODID;
+	}
+
+	@Override
 	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull DescriptionWrapper recipeWrapper, @Nonnull IIngredients ingredients)
 	{
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
@@ -66,7 +73,7 @@ public class DescriptionCategory extends BlankRecipeCategory<DescriptionWrapper>
 		int yPos = 0;
 		int slotIndex = 0;
 		guiItemStacks.init(slotIndex, isMainSlotAnInput, xPos, yPos);
-		List<ItemStack> mainStack = isMainSlotAnInput ? ingredients.getInputs(ItemStack.class).get(0) : ingredients.getOutputs(ItemStack.class);
+		List<ItemStack> mainStack = isMainSlotAnInput ? ingredients.getInputs(ItemStack.class).get(0) : ingredients.getOutputs(ItemStack.class).get(0);
 		guiItemStacks.set(slotIndex, mainStack);
 
 		boolean isSlotInput = !isMainSlotAnInput;

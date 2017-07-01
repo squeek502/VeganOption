@@ -133,13 +133,11 @@ public class FluidContainerHelper
 
 	public static boolean isFluidContainer(ItemStack container)
 	{
-		return container != null && (container.hasCapability(FLUID_HANDLER_CAPABILITY, null) || FluidContainerRegistry.isContainer(container));
+		return container != null && (container.hasCapability(FLUID_HANDLER_CAPABILITY, null));
 	}
 
 	public static boolean isEmptyContainer(ItemStack container)
 	{
-		if (FluidContainerRegistry.isEmptyContainer(container))
-			return true;
 		if (isFluidContainer(container))
 		{
 			IFluidHandler handler = FluidUtil.getFluidHandler(container);

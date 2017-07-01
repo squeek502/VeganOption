@@ -17,13 +17,6 @@ public class UsageDescHandler implements IRecipeHandler<UsageDescWrapper>
 
 	@Override
 	@Nonnull
-	public String getRecipeCategoryUid()
-	{
-		return VOPlugin.VORecipeCategoryUid.USAGE;
-	}
-
-	@Override
-	@Nonnull
 	public String getRecipeCategoryUid(@Nonnull UsageDescWrapper recipe)
 	{
 		return VOPlugin.VORecipeCategoryUid.USAGE;

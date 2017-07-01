@@ -84,10 +84,10 @@ public class ItemSoap extends Item
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
 	{
 		player.setActiveHand(hand);
-		return super.onItemRightClick(itemStack, world, player, hand);
+		return super.onItemRightClick(world, player, hand);
 	}
 
 	public static class DispenserBehavior extends BehaviorDefaultDispenseItem
@@ -116,7 +116,7 @@ public class ItemSoap extends Item
 				itemStack.attemptDamageItem(1, RandomHelper.random);
 				if (itemStack.getItemDamage() >= itemStack.getMaxDamage())
 				{
-					itemStack.stackSize = 0;
+					itemStack.setCount(0);
 				}
 				return itemStack;
 			}

@@ -69,11 +69,12 @@ public class ItemThrowableGeneric extends Item
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
 	{
+		ItemStack itemStack = player.getHeldItem(hand);
 		if (!player.capabilities.isCreativeMode)
 		{
-			--itemStack.stackSize;
+			itemStack.shrink(1);
 		}
 
 		player.playSound(throwSound, 0.5F, 0.4F / (RandomHelper.random.nextFloat() * 0.4F + 0.8F));
@@ -82,7 +83,7 @@ public class ItemThrowableGeneric extends Item
 		{
 			EntityThrowable entity = getNewThrownEntity(world, player);
 			entity.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, throwSpeed, 1.0F);
-			world.spawnEntityInWorld(entity);
+			world.spawnEntity(entity);
 		}
 
 		return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);

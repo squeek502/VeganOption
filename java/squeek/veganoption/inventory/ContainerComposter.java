@@ -60,7 +60,7 @@ public class ContainerComposter extends ContainerGeneric
 		{
 			for (IContainerListener crafter : listeners)
 			{
-				crafter.sendProgressBarUpdate(this, PROGRESS_ID_PERCENT_COMPOSTED, (byte) (composter.getCompostingPercent() * 100));
+				crafter.sendWindowProperty(this, PROGRESS_ID_PERCENT_COMPOSTED, (byte) (composter.getCompostingPercent() * 100));
 			}
 			lastPercentComposted = (byte) (composter.getCompostingPercent() * 100);
 		}
@@ -69,7 +69,7 @@ public class ContainerComposter extends ContainerGeneric
 		{
 			for (IContainerListener crafter : listeners)
 			{
-				crafter.sendProgressBarUpdate(this, PROGRESS_ID_BIOME_TEMPERATURE, Math.round(composter.getBiomeTemperature()));
+				crafter.sendWindowProperty(this, PROGRESS_ID_BIOME_TEMPERATURE, Math.round(composter.getBiomeTemperature()));
 			}
 			lastBiomeTemperature = (byte) Math.round(composter.getBiomeTemperature());
 		}

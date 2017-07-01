@@ -2,6 +2,7 @@ package squeek.veganoption.content.recipes;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
@@ -34,13 +35,13 @@ public class ShapelessMatchingOreRecipe extends ShapelessOreRecipe
 	{
 		super(result, recipe);
 
-		ArrayList<Object> inputs = getInput();
+		NonNullList<Object> inputs = getInput();
 
 		for (int i = 0; i < inputs.size(); i++)
 		{
 			Object input = inputs.get(i);
 
-			if (input == null || !(input instanceof ArrayList))
+			if (!(input instanceof ArrayList))
 				continue;
 
 			int numRequiredMatches = 1;
@@ -82,7 +83,7 @@ public class ShapelessMatchingOreRecipe extends ShapelessOreRecipe
 			{
 				ItemStack slot = var1.getStackInSlot(x);
 
-				if (slot != null)
+				if (!slot.isEmpty())
 				{
 					for (ItemStack requiredInput : requiredInputs)
 					{

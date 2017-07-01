@@ -135,9 +135,9 @@ public class BlockEnderRift extends BlockEndPortal implements IFluidFlowHandler
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block changedBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block changedBlock, BlockPos fromPos)
 	{
-		super.neighborChanged(state, world, pos, changedBlock);
+		super.neighborChanged(state, world, pos, changedBlock, fromPos);
 
 		if (!canPlaceBlockAt(world, pos))
 			world.setBlockToAir(pos);

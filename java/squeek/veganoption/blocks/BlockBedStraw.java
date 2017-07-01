@@ -33,12 +33,12 @@ public class BlockBedStraw extends BlockBedGeneric
 		if (!wokenByWakeAllPlayers)
 			return;
 
-		BlockPos pos = event.getEntityPlayer().playerLocation;
+		BlockPos pos = event.getEntityPlayer().getBedLocation();
 
 		if (pos == null)
 			return;
 
-		Block block = event.getEntityPlayer().worldObj.getBlockState(pos).getBlock();
+		Block block = event.getEntityPlayer().world.getBlockState(pos).getBlock();
 
 		if (block != this)
 			return;

@@ -27,7 +27,7 @@ public class MessageComposterTumble implements IMessage, IMessageHandler<Message
 	@Override
 	public IMessage onMessage(MessageComposterTumble message, MessageContext ctx)
 	{
-		EntityPlayer player = ctx.getServerHandler().playerEntity;
+		EntityPlayer player = ctx.getServerHandler().player;
 		if (player.openContainer != null && player.openContainer instanceof ContainerComposter)
 		{
 			ContainerComposter container = (ContainerComposter) player.openContainer;

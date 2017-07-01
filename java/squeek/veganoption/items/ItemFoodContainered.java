@@ -27,7 +27,7 @@ public class ItemFoodContainered extends ItemFood
 		if (getContainerItem() != null)
 		{
 			ItemStack container = getContainerItem(itemStack);
-			if (itemStackRemaining == null || itemStackRemaining.stackSize <= 0)
+			if (itemStackRemaining.isEmpty())
 				return container;
 			else if (!(entity instanceof EntityPlayer) || !((EntityPlayer) entity).inventory.addItemStackToInventory(container))
 				entity.entityDropItem(container, 0);

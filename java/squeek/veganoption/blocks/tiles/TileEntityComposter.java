@@ -6,24 +6,23 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.util.Constants;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.helpers.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	public static final long NOT_COMPOSTING = -1;
 	public static final float NOT_AERATING = -1;
 
-	protected ItemStack[] inventoryItems;
+	protected NonNullList<ItemStack> inventoryItems;
 	protected float compostPercent;
 	public long lastAeration;
 	public long compostStart = NOT_COMPOSTING;
@@ -60,7 +59,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	public TileEntityComposter()
 	{
 		super();
-		this.inventoryItems = new ItemStack[getSizeInventory()];
+		this.inventoryItems = NonNullList.withSize(getSizeInventory(), ItemStack.EMPTY);
 	}
 
 	@Override
@@ -78,7 +77,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 			return GuiHelper.openGuiOfTile(player, this);
 		else
 		{
-			if (!worldObj.isRemote && !isAerating())
+			if (!world.isRemote && !isAerating())
 			{
 				aerate();
 			}
@@ -88,13 +87,13 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 
 	public void onBlockBroken()
 	{
-		net.minecraft.inventory.InventoryHelper.dropInventoryItems(worldObj, pos, this);
+		net.minecraft.inventory.InventoryHelper.dropInventoryItems(world, pos, this);
 	}
 
 	public int getComparatorSignalStrength()
 	{
 		if (isComposting())
-			return Math.max(0, MathHelper.floor_float(getCompostTemperature() / MAX_COMPOST_TEMPERATURE * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH));
+			return Math.max(0, MathHelper.floor(getCompostTemperature() / MAX_COMPOST_TEMPERATURE * MiscHelper.MAX_REDSTONE_SIGNAL_STRENGTH));
 		else
 			return 0;
 	}
@@ -111,11 +110,11 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	@Override
 	public void update()
 	{
-		if (!worldObj.isRemote)
+		if (!world.isRemote)
 		{
 			if (isComposting() && !isAerating())
 			{
-				long ticksSinceCycleStart = worldObj.getWorldTime() - Math.max(compostStart, lastAeration);
+				long ticksSinceCycleStart = world.getWorldTime() - Math.max(compostStart, lastAeration);
 				float percentCooled = (float) ticksSinceCycleStart / TICKS_TO_FULLY_COOL;
 				float deltaTemperature = getTemperatureDeltaAtTime(percentCooled);
 				deltaTemperature *= MAX_TEMPERATURE_DELTA_PER_TICK;
@@ -203,19 +202,20 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	public void aerate()
 	{
 		// shuffle the inventory
-		List<ItemStack> itemList = Arrays.asList(inventoryItems);
+		List<ItemStack> itemList = new ArrayList<ItemStack>();
+		itemList.addAll(inventoryItems);
 		Collections.shuffle(itemList);
 		for (int slotNum = 0; slotNum < getSizeInventory(); slotNum++)
 		{
 			setInventorySlotContents(slotNum, itemList.get(slotNum));
 		}
-		lastAeration = worldObj.getWorldTime();
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
+		lastAeration = world.getWorldTime();
+		world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 0);
 	}
 
 	public boolean isAerating()
 	{
-		long ticksSinceLastAeration = worldObj.getWorldTime() - lastAeration;
+		long ticksSinceLastAeration = world.getWorldTime() - lastAeration;
 		return ticksSinceLastAeration >= 0 && ticksSinceLastAeration <= NUM_TICKS_FOR_FULL_AERATION;
 	}
 
@@ -224,7 +224,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		if (!isAerating())
 			return NOT_AERATING;
 
-		return (float) ((worldObj.getWorldTime() - lastAeration) / (double) TileEntityComposter.NUM_TICKS_FOR_FULL_AERATION);
+		return (float) ((world.getWorldTime() - lastAeration) / (double) TileEntityComposter.NUM_TICKS_FOR_FULL_AERATION);
 	}
 
 	public void setTemperature(float temperature)
@@ -236,7 +236,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 
 		if (Math.round(compostTemperature) != Math.round(oldTemp))
 		{
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
+			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 0);
 		}
 	}
 
@@ -247,7 +247,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 
 	public void clampTemperature()
 	{
-		float airTemperature = TemperatureHelper.getBiomeTemperature(worldObj, pos);
+		float airTemperature = TemperatureHelper.getBiomeTemperature(world, pos);
 		compostTemperature = Math.min(MAX_COMPOST_TEMPERATURE, Math.max(compostTemperature, airTemperature));
 	}
 
@@ -263,7 +263,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 
 	public void updateBiomeTemperature()
 	{
-		biomeTemperature = TemperatureHelper.getBiomeTemperature(worldObj, pos);
+		biomeTemperature = TemperatureHelper.getBiomeTemperature(world, pos);
 	}
 
 	/**
@@ -388,7 +388,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 
 	public void startComposting()
 	{
-		compostStart = worldObj.getWorldTime();
+		compostStart = world.getWorldTime();
 		compostPercent = 0;
 	}
 
@@ -409,7 +409,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 
 	protected void onSlotEmptied(int slotNum)
 	{
-		if (isInventoryEmpty())
+		if (isEmpty())
 		{
 			stopComposting();
 			resetTemperature();
@@ -421,21 +421,11 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		markDirty();
 	}
 
-	public boolean isInventoryEmpty()
-	{
-		for (ItemStack itemStack : inventoryItems)
-		{
-			if (itemStack != null)
-				return false;
-		}
-		return true;
-	}
-
 	public boolean isInventoryFull()
 	{
 		for (ItemStack itemStack : inventoryItems)
 		{
-			if (itemStack == null || itemStack.stackSize < Math.min(getInventoryStackLimit(), itemStack.getMaxStackSize()))
+			if (itemStack == null || itemStack.getCount() < Math.min(getInventoryStackLimit(), itemStack.getMaxStackSize()))
 				return false;
 		}
 		return true;
@@ -456,10 +446,21 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	}
 
 	@Override
+	public boolean isEmpty()
+	{
+		for (ItemStack itemStack : inventoryItems)
+		{
+			if (itemStack != null)
+				return false;
+		}
+		return true;
+	}
+
+	@Override
 	public ItemStack getStackInSlot(int slotNum)
 	{
 		if (isValidSlotNum(slotNum))
-			return inventoryItems[slotNum];
+			return inventoryItems.get(slotNum);
 		else
 			return null;
 	}
@@ -471,8 +472,8 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 
 		if (itemStack != null)
 		{
-			if (itemStack.stackSize <= count)
-				setInventorySlotContents(slotNum, null);
+			if (itemStack.getCount() <= count)
+				setInventorySlotContents(slotNum, ItemStack.EMPTY);
 			else
 			{
 				itemStack = itemStack.splitStack(count);
@@ -498,14 +499,14 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 			return;
 
 		boolean wasEmpty = getStackInSlot(slotNum) == null;
-		inventoryItems[slotNum] = itemStack;
+		inventoryItems.set(slotNum, itemStack);
 
-		if (itemStack != null && itemStack.stackSize > getInventoryStackLimit())
-			itemStack.stackSize = getInventoryStackLimit();
+		if (!itemStack.isEmpty() && itemStack.getCount() > getInventoryStackLimit())
+			itemStack.setCount(getInventoryStackLimit());
 
-		if (wasEmpty && itemStack != null)
+		if (wasEmpty && !itemStack.isEmpty())
 			onSlotFilled(slotNum);
-		else if (!wasEmpty && itemStack == null)
+		else if (!wasEmpty && itemStack.isEmpty())
 			onSlotEmptied(slotNum);
 
 		onInventoryChanged();
@@ -536,9 +537,9 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
+	public boolean isUsableByPlayer(EntityPlayer player)
 	{
-		return worldObj.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0D;
+		return world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0D;
 	}
 
 	@Override
@@ -573,9 +574,9 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		}
 		++this.numPlayersUsing;
 
-		this.worldObj.addBlockEvent(pos, this.getBlockType(), CLIENT_EVENT_NUM_USING_PLAYERS, this.numPlayersUsing);
-		this.worldObj.notifyNeighborsOfStateChange(pos, this.getBlockType());
-		this.worldObj.notifyNeighborsOfStateChange(pos, this.getBlockType());
+		this.world.addBlockEvent(pos, this.getBlockType(), CLIENT_EVENT_NUM_USING_PLAYERS, this.numPlayersUsing);
+		this.world.notifyNeighborsOfStateChange(pos, this.getBlockType(), true);
+		this.world.notifyNeighborsOfStateChange(pos, this.getBlockType(), true);
 	}
 
 	@Override
@@ -587,9 +588,9 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 			this.numPlayersUsing = 0;
 		}
 
-		this.worldObj.addBlockEvent(pos, this.getBlockType(), CLIENT_EVENT_NUM_USING_PLAYERS, this.numPlayersUsing);
-		this.worldObj.notifyNeighborsOfStateChange(pos, this.getBlockType());
-		this.worldObj.notifyNeighborsOfStateChange(pos.down(), this.getBlockType());
+		this.world.addBlockEvent(pos, this.getBlockType(), CLIENT_EVENT_NUM_USING_PLAYERS, this.numPlayersUsing);
+		this.world.notifyNeighborsOfStateChange(pos, this.getBlockType(), true);
+		this.world.notifyNeighborsOfStateChange(pos.down(), this.getBlockType(), true);
 	}
 
 	public void updateLidAngle()
@@ -597,11 +598,11 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		++this.ticksSinceSync;
 		float f;
 
-		if (!this.worldObj.isRemote && this.numPlayersUsing != 0 && (this.ticksSinceSync + pos.getX() + pos.getY() + pos.getZ()) % 200 == 0)
+		if (!this.world.isRemote && this.numPlayersUsing != 0 && (this.ticksSinceSync + pos.getX() + pos.getY() + pos.getZ()) % 200 == 0)
 		{
 			this.numPlayersUsing = 0;
 			f = 5.0F;
-			List<EntityPlayer> list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - f, pos.getY() - f, pos.getZ() - f, pos.getX() + 1 + f, pos.getY() + 1 + f, pos.getZ() + 1 + f));
+			List<EntityPlayer> list = this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - f, pos.getY() - f, pos.getZ() - f, pos.getX() + 1 + f, pos.getY() + 1 + f, pos.getZ() + 1 + f));
 
 			for (EntityPlayer entityplayer : list)
 			{
@@ -626,7 +627,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 			double d1 = pos.getX() + 0.5D;
 			d2 = pos.getZ() + 0.5D;
 
-			worldObj.playSound(d1, pos.getY() + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F, true);
+			world.playSound(d1, pos.getY() + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F, true);
 		}
 
 		if (this.numPlayersUsing <= 0 && this.lidAngle > 0.0F || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
@@ -654,7 +655,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 				d2 = pos.getX() + 0.5D;
 				double d0 = pos.getZ() + 0.5D;
 
-				worldObj.playSound(d2, pos.getY() + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F, true);
+				world.playSound(d2, pos.getY() + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F, true);
 			}
 
 			if (this.lidAngle < 0.0F)
@@ -708,20 +709,7 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		data.setLong("Start", compostStart);
 		data.setFloat("Temperature", compostTemperature);
 
-		NBTTagList items = new NBTTagList();
-		for (int slotNum = 0; slotNum < getSizeInventory(); slotNum++)
-		{
-			ItemStack stack = getStackInSlot(slotNum);
-
-			if (stack != null)
-			{
-				NBTTagCompound item = new NBTTagCompound();
-				item.setByte("Slot", (byte) slotNum);
-				stack.writeToNBT(item);
-				items.appendTag(item);
-			}
-		}
-		data.setTag("Items", items);
+		ItemStackHelper.saveAllItems(data, inventoryItems);
 
 		return data;
 	}
@@ -736,25 +724,16 @@ public class TileEntityComposter extends TileEntity implements IInventory, ITick
 		compostStart = data.getLong("Start");
 		compostTemperature = data.getLong("Temperature");
 
-		NBTTagList items = data.getTagList("Items", Constants.NBT.TAG_COMPOUND);
-		for (int slotNum = 0; slotNum < items.tagCount(); slotNum++)
-		{
-			NBTTagCompound item = items.getCompoundTagAt(slotNum);
-			int slot = item.getByte("Slot");
-
-			if (slot >= 0 && slot < getSizeInventory())
-			{
-				setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
-			}
-		}
+		inventoryItems = NonNullList.withSize(getSizeInventory(), ItemStack.EMPTY);
+		ItemStackHelper.loadAllItems(data, inventoryItems);
 	}
 
 	@Override
 	public void clear()
 	{
-		for (int i = 0; i < inventoryItems.length; i++)
+		for (int i = 0; i < inventoryItems.size(); i++)
 		{
-			inventoryItems[i] = null;
+			inventoryItems.set(i, ItemStack.EMPTY);
 		}
 	}
 

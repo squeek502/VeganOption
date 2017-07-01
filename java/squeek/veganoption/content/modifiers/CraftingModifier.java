@@ -65,15 +65,15 @@ public class CraftingModifier
 		for (int i = 0; i < event.craftMatrix.getSizeInventory(); i++)
 		{
 			ItemStack stackInSlot = event.craftMatrix.getStackInSlot(i);
-			if (stackInSlot != null)
+			if (!stackInSlot.isEmpty())
 			{
 				for (ItemStack inputToRemove : inputsToRemove)
 				{
 					if (OreDictionary.itemMatches(inputToRemove, stackInSlot, false))
 					{
-						stackInSlot.stackSize -= inputToRemove.stackSize;
-						if (stackInSlot.stackSize <= 0)
-							event.craftMatrix.setInventorySlotContents(i, null);
+						stackInSlot.shrink(inputToRemove.getCount());
+						if (stackInSlot.getCount() <= 0)
+							event.craftMatrix.setInventorySlotContents(i, ItemStack.EMPTY);
 						break;
 					}
 				}
@@ -81,10 +81,10 @@ public class CraftingModifier
 				{
 					if (OreDictionary.itemMatches(inputToKeep, stackInSlot, false))
 					{
-						stackInSlot.stackSize += inputToKeep.stackSize;
-						if (stackInSlot.isItemStackDamageable() && stackInSlot.attemptDamageItem(inputToKeep.stackSize, RandomHelper.random))
+						stackInSlot.grow(inputToKeep.getCount());
+						if (stackInSlot.isItemStackDamageable() && stackInSlot.attemptDamageItem(inputToKeep.getCount(), RandomHelper.random))
 						{
-							stackInSlot.stackSize--;
+							stackInSlot.shrink(1);
 						}
 						break;
 					}

@@ -12,7 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidHelper
 {
@@ -201,12 +201,9 @@ public class FluidHelper
 		return fluidConsumed;
 	}
 
-	public static net.minecraftforge.fluids.capability.IFluidHandler getFluidHandlerAt(IBlockAccess world, BlockPos pos, EnumFacing facing)
+	public static IFluidHandler getFluidHandlerAt(IBlockAccess world, BlockPos pos, EnumFacing facing)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-
-		if (tile instanceof net.minecraftforge.fluids.IFluidHandler)
-			return new FluidHandlerWrapper((net.minecraftforge.fluids.IFluidHandler) tile, facing);
 
 		if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing))
 			return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
