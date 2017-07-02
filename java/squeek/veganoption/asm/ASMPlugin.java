@@ -4,7 +4,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 import java.util.Map;
 
-@IFMLLoadingPlugin.MCVersion("1.10.2")
+@IFMLLoadingPlugin.MCVersion("1.11.2")
 @IFMLLoadingPlugin.TransformerExclusions("squeek.veganoption.asm")
 public class ASMPlugin implements IFMLLoadingPlugin
 {
