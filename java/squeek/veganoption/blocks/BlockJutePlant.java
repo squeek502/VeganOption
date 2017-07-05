@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.veganoption.content.modules.Jute;
 import squeek.veganoption.helpers.LangHelper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -235,13 +236,16 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	{
 		@SideOnly(Side.CLIENT)
 		@Override
-		public int colorMultiplier(IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
+		public int colorMultiplier(@Nonnull IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex)
 		{
+			if (world == null || pos == null)
+				return ColorizerGrass.getGrassColor(0.5D, 1.0D);
+
 			return BiomeColorHelper.getGrassColorAtPos(world, pos);
 		}
 
 		@Override
-		public int getColorFromItemstack(ItemStack stack, int tintIndex)
+		public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex)
 		{
 			return ColorizerGrass.getGrassColor(0.5D, 1.0D);
 		}
