@@ -12,6 +12,7 @@ public abstract class IntegrationBase
 	public static final String MODID_JEI = "JEI";
 	public static final String MODID_THERMAL_EXPANSION = "thermalexpansion";
 	public static final String MODID_THERMAL_FOUNDATION = "thermalfoundation";
+	public static final String MODID_IMMERSIVE_ENGINEERING = "immersiveengineering";
 
 	public static boolean integrationExists(String modID)
 	{

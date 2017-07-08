@@ -18,6 +18,7 @@ public class IntegrationHandler extends IntegrationBase
 		tryIntegration(MODID_JEI, "jei");
 		tryIntegration(MODID_THERMAL_EXPANSION, "cofh", "ThermalExpansion");
 		tryIntegration(MODID_THERMAL_FOUNDATION, "cofh", "ThermalFoundation");
+		tryIntegration(MODID_IMMERSIVE_ENGINEERING, "ie", "ImmersiveEngineering");
 	}
 
 	public static void preInit()
