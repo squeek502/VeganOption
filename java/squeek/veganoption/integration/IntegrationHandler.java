@@ -17,6 +17,7 @@ public class IntegrationHandler extends IntegrationBase
 		tryIntegration(MODID_BIOMES_O_PLENTY, "bop");
 		tryIntegration(MODID_JEI, "jei");
 		tryIntegration(MODID_THERMAL_EXPANSION, "cofh", "ThermalExpansion");
+		tryIntegration(MODID_THERMAL_FOUNDATION, "cofh", "ThermalFoundation");
 	}
 
 	public static void preInit()
