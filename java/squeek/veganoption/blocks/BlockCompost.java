@@ -46,9 +46,9 @@ public class BlockCompost extends Block
 
 	public void attemptSoilBuilding(World world, int x, int y, int z, Random random, boolean growPlantDirectly)
 	{
-		tryGrowthTickAt(world, x, y, z, random);
+		tryGrowthTickAt(world, x, y + 1, z, random);
 
 		if (growPlantDirectly)
-			tryGrowthTickAt(world, x, y + 1, z, random);
+			tryGrowthTickAt(world, x, y, z, random);
 	}
 }
