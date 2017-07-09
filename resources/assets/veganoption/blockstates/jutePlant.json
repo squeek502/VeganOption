@@ -1,11 +1,10 @@
 {
-	"__comment": "growth stages 0-5 are for the bottom, and 6-10 are for the top.",
+	"__comment": "growth stages 0-5 are for the bottom, and 6-10 are for the top. 11 is a special case for the bottom half when it has a top",
 	"forge_marker": 1,
 	"defaults": {
 		"model": "tinted_cross"
 	},
 	"variants": {
-		"half": { "upper": {}, "lower": {} },
 		"growth": {
 			"0": {
 				"textures": {
@@ -62,15 +61,11 @@
 					"cross": "veganoption:blocks/jute_plant_4"
 				}
 			},
-			"11": {}
-		},
-		"has_top": {
-			"true": {
+			"11": {
 				"textures": {
 					"cross": "veganoption:blocks/jute_plant_6"
 				}
-			},
-			"false": {}
+			}
 		}
 	}
 }

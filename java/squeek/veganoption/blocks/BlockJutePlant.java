@@ -7,8 +7,6 @@ import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -41,66 +39,55 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	public static final int NUM_BOTTOM_STAGES = 6;
 	public static final int NUM_TOP_STAGES = 5;
 	public static final int NUM_GROWTH_STAGES = NUM_BOTTOM_STAGES + NUM_TOP_STAGES;
-	public static final int BOTTOM_META_FULL = NUM_BOTTOM_STAGES;
-	public static final int TOP_META_START = BOTTOM_META_FULL + 1;
-	public static final int META_MAX = TOP_META_START + NUM_TOP_STAGES;
+	public static final int GROWTH_STAGE_BOTTOM_WITH_TOP = NUM_GROWTH_STAGES;
 	public static final float GROWTH_CHANCE_PER_UPDATETICK = 0.10f;
 
-	public static final PropertyBool HAS_TOP = PropertyBool.create("has_top");
-	public static final PropertyEnum<BlockDoublePlant.EnumBlockHalf> HALF = BlockDoublePlant.HALF;
 	public static final PropertyInteger GROWTH_STAGE = PropertyInteger.create("growth", 0, NUM_GROWTH_STAGES);
 
 	public BlockJutePlant()
 	{
 		super();
-		setDefaultState(blockState.getBaseState()
-							.withProperty(HALF, BlockDoublePlant.EnumBlockHalf.LOWER)
-							.withProperty(GROWTH_STAGE, 0)
-							.withProperty(HAS_TOP, false));
+		setDefaultState(blockState.getBaseState().withProperty(GROWTH_STAGE, 0));
 	}
 
 	@Override
+	@Nonnull
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, HALF, GROWTH_STAGE, HAS_TOP);
+		return new BlockStateContainer(this, GROWTH_STAGE);
 	}
 
 	@Override
+	@Nonnull
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		boolean isTop = isTop(state);
-		int max = isTop ? NUM_TOP_STAGES : NUM_BOTTOM_STAGES;
-		int stage = state.getValue(GROWTH_STAGE);
-		int individualStage = isTop ? stage - TOP_META_START : stage;
-		float growthPercent = (float) individualStage / max;
+		float growthPercent = 1f;
+		if (!hasTop(state))
+		{
+			boolean isTop = isTop(state);
+			int max = (isTop ? NUM_TOP_STAGES : NUM_BOTTOM_STAGES);
+			int stage = state.getValue(GROWTH_STAGE);
+			int individualStage = isTop ? stage - NUM_BOTTOM_STAGES : stage;
+			growthPercent = (float) individualStage / max;
+		}
 		return new AxisAlignedBB(0.15F, 0.0F, 0.15F, 0.85F, 0.25f + growthPercent * 0.75f, 0.85F);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		int stage = state.getValue(GROWTH_STAGE);
-		return Math.min(META_MAX, isTop(state) ? TOP_META_START + stage : stage);
+		return state.getValue(GROWTH_STAGE);
 	}
 
 	@Override
+	@Nonnull
 	public IBlockState getStateFromMeta(int meta)
 	{
-		boolean isTop = meta >= TOP_META_START;
-		return getDefaultState()
-			.withProperty(GROWTH_STAGE, isTop ? meta - TOP_META_START : meta)
-			.withProperty(HALF, isTop ? BlockDoublePlant.EnumBlockHalf.UPPER : BlockDoublePlant.EnumBlockHalf.LOWER);
+		return getDefaultState().withProperty(GROWTH_STAGE, meta);
 	}
 
 	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		boolean isTop = state.getValue(HALF) == BlockDoublePlant.EnumBlockHalf.LOWER;
-		return state.withProperty(HAS_TOP, isTop && world.getBlockState(pos.up()).getBlock() == this);
-	}
-
-	@Override
-	public int quantityDropped(IBlockState state, int fortune, Random random)
+	public int quantityDropped(IBlockState state, int fortune, @Nonnull Random random)
 	{
 		return isTop(state) ? 0 : 1;
 	}
@@ -118,7 +105,7 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 
 		int oldGrowthStage = state.getValue(GROWTH_STAGE);
 
-		if (hasTop(world, pos))
+		if (hasTop(state))
 		{
 			deltaGrowth(world, pos.up(), world.getBlockState(pos.up()), delta);
 			return;
@@ -128,19 +115,22 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 
 		if (isFullyGrown(newGrowthStage))
 		{
+			// set to air preemptively to avoid canBlockStay shenanigans
+			world.setBlockState(pos.down(), Blocks.AIR.getDefaultState(), 0);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 0);
 			Blocks.DOUBLE_PLANT.placeAt(world, pos.down(), BlockDoublePlant.EnumPlantType.FERN, 3);
 		}
 		else
 		{
-			boolean isGrowingToTop = !isTop(state) && newGrowthStage >= NUM_BOTTOM_STAGES;
+			boolean isGrowingToTop = !isTop(oldGrowthStage) && isTop(newGrowthStage);
 			if (!isGrowingToTop)
 			{
 				world.setBlockState(pos, state.withProperty(GROWTH_STAGE, newGrowthStage), 3);
 			}
 			else if (world.isAirBlock(pos.up()))
 			{
-				world.setBlockState(pos, state.withProperty(GROWTH_STAGE, NUM_BOTTOM_STAGES - 1));
-				world.setBlockState(pos.up(), getDefaultState().withProperty(GROWTH_STAGE, newGrowthStage).withProperty(HALF, BlockDoublePlant.EnumBlockHalf.UPPER));
+				world.setBlockState(pos, state.withProperty(GROWTH_STAGE, GROWTH_STAGE_BOTTOM_WITH_TOP));
+				world.setBlockState(pos.up(), getDefaultState().withProperty(GROWTH_STAGE, newGrowthStage));
 			}
 			else
 			{
@@ -153,7 +143,7 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 
 	public float getGrowthPercent(IBlockAccess world, BlockPos pos, IBlockState state)
 	{
-		if (world.getBlockState(pos.up()).getBlock() == this && hasTop(world, pos))
+		if (hasTop(state))
 			return getGrowthPercent(world, pos.up(), world.getBlockState(pos.up()));
 
 		return (float) state.getValue(GROWTH_STAGE) / NUM_GROWTH_STAGES;
@@ -169,23 +159,33 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 		return isFullyGrown(state.getValue(GROWTH_STAGE));
 	}
 
-	public static boolean isTop(IBlockState state)
+	public static boolean isTop(int growthStage)
 	{
-		return state.getValue(HALF) == BlockDoublePlant.EnumBlockHalf.UPPER;
+		return growthStage >= NUM_BOTTOM_STAGES && growthStage != GROWTH_STAGE_BOTTOM_WITH_TOP;
 	}
 
-	public static boolean hasTop(IBlockAccess world, BlockPos pos)
+	public static boolean isTop(IBlockState state)
 	{
-		return world.getBlockState(pos).getActualState(world, pos).getValue(HAS_TOP);
+		return isTop(state.getValue(GROWTH_STAGE));
+	}
+
+	public static boolean hasTop(int growthStage)
+	{
+		return growthStage == GROWTH_STAGE_BOTTOM_WITH_TOP;
+	}
+
+	public static boolean hasTop(@Nonnull IBlockState state)
+	{
+		return hasTop(state.getValue(GROWTH_STAGE));
 	}
 
 	@Override
-	public void updateTick(World world, BlockPos pos, IBlockState state, Random random)
+	public void updateTick(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, @Nullable Random random)
 	{
 		super.updateTick(world, pos, state, random);
 
 		boolean shouldGrow = random.nextFloat() < GROWTH_CHANCE_PER_UPDATETICK;
-		if (shouldGrow && !hasTop(world, pos))
+		if (shouldGrow && !hasTop(state))
 			deltaGrowth(world, pos, state, 1);
 	}
 
@@ -195,7 +195,7 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 		if (state.getBlock() != this)
 			return super.canBlockStay(world, pos, state);
 
-		if (hasTop(world, pos))
+		if (hasTop(state))
 			return world.getBlockState(pos.up()).getBlock() == this;
 		if (isTop(state))
 			return world.getBlockState(pos.down()).getBlock() == this;
@@ -204,19 +204,19 @@ public class BlockJutePlant extends BlockBush implements IGrowable, IProbeInfoAc
 	}
 
 	@Override
-	public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient)
+	public boolean canGrow(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state, boolean isClient)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canUseBonemeal(World world, Random random, BlockPos pos, IBlockState state)
+	public boolean canUseBonemeal(@Nonnull World world, @Nonnull Random random, @Nonnull BlockPos pos, @Nonnull IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public void grow(World world, Random random, BlockPos pos, IBlockState state)
+	public void grow(@Nonnull World world, @Nonnull Random random, @Nonnull BlockPos pos, @Nonnull IBlockState state)
 	{
 		int deltaGrowth = MathHelper.getRandomIntegerInRange(random, 2, 5);
 		deltaGrowth(world, pos, state, deltaGrowth);
