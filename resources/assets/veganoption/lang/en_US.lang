@@ -118,6 +118,7 @@ item.VeganOption.potatoStarch.name=Potato Starch
 item.VeganOption.plasticEgg.name=Plastic Egg
 item.VeganOption.plasticEgg.vowiki.usage=A %1$s is an [[minecraft:egg]] alternative for non-baking purposes.
 entity.VeganOption.plasticEgg.name=Plastic Egg
+item.VeganOption.plasticEgg.tooltip=Contains %s
 
 # Resin
 item.VeganOption.resin.name=Resin

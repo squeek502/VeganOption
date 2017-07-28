@@ -80,7 +80,7 @@ public class ItemThrowableGeneric extends Item
 
 		if (!world.isRemote)
 		{
-			EntityThrowable entity = getNewThrownEntity(world, player);
+			EntityThrowable entity = getNewThrownEntity(itemStack, world, player);
 			entity.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, throwSpeed, 1.0F);
 			world.spawnEntityInWorld(entity);
 		}
@@ -88,7 +88,7 @@ public class ItemThrowableGeneric extends Item
 		return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
 	}
 
-	public EntityThrowable getNewThrownEntity(World world, EntityLivingBase thrower)
+	public EntityThrowable getNewThrownEntity(ItemStack thrownItem, World world, EntityLivingBase thrower)
 	{
 		try
 		{
@@ -101,7 +101,7 @@ public class ItemThrowableGeneric extends Item
 		}
 	}
 
-	public EntityThrowable getNewThrownEntity(World world, double x, double y, double z)
+	public EntityThrowable getNewThrownEntity(ItemStack thrownItem, World world, double x, double y, double z)
 	{
 		try
 		{
@@ -131,7 +131,7 @@ public class ItemThrowableGeneric extends Item
 		@Override
 		protected IProjectile getProjectileEntity(World world, IPosition position, ItemStack stack)
 		{
-			return itemThrowableGeneric.getNewThrownEntity(world, position.getX(), position.getY(), position.getZ());
+			return itemThrowableGeneric.getNewThrownEntity(stack, world, position.getX(), position.getY(), position.getZ());
 		}
 	}
 }
