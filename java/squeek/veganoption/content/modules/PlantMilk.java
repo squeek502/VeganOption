@@ -22,6 +22,7 @@ import squeek.veganoption.content.recipes.ShapelessMatchingOreRecipe;
 import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
+import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.integration.IntegrationBase;
 import squeek.veganoption.integration.IntegrationHandler;
 
@@ -47,19 +48,13 @@ public class PlantMilk implements IContentModule
 
 		FluidRegistry.addBucketForFluid(fluidPlantMilk);
 
-		UniversalBucket bucket = ForgeModContainer.getInstance().universalBucket;
-		bucketPlantMilk = new ItemStack(bucket);
-		bucket.fill(bucketPlantMilk, new FluidStack(fluidPlantMilk, Fluid.BUCKET_VOLUME), true);
+		bucketPlantMilk = new ItemStack(Items.MILK_BUCKET);
+		bucketPlantMilk.setStackDisplayName(LangHelper.translateRaw("item.VeganOption.bucketPlantMilk.name"));
 	}
 
 	@Override
 	public void oredict()
 	{
-		if (!IntegrationHandler.modExists(IntegrationBase.MODID_MINEFACTORY_RELOADED))
-			OreDictionary.registerOre(ContentHelper.milkOreDict, new ItemStack(Items.MILK_BUCKET));
-
-		OreDictionary.registerOre(ContentHelper.milkOreDict, bucketPlantMilk.copy());
-
 		OreDictionary.registerOre(ContentHelper.plantMilkSourceOreDict, new ItemStack(Items.PUMPKIN_SEEDS));
 	}
 
@@ -91,8 +86,8 @@ public class PlantMilk implements IContentModule
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(bucketPlantMilk.copy(), new ItemStack(plantMilk));
-		RelationshipRegistry.addRelationship(new ItemStack(plantMilk), bucketPlantMilk.copy());
+		//RelationshipRegistry.addRelationship(bucketPlantMilk.copy(), new ItemStack(plantMilk));
+		//RelationshipRegistry.addRelationship(new ItemStack(plantMilk), bucketPlantMilk.copy());
 	}
 
 	@SideOnly(Side.CLIENT)
