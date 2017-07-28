@@ -6,8 +6,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeModContainer;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.BlockFluidClassic;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,10 +22,6 @@ import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.recipes.ShapelessMatchingOreRecipe;
 import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
-import squeek.veganoption.content.registry.RelationshipRegistry;
-import squeek.veganoption.helpers.LangHelper;
-import squeek.veganoption.integration.IntegrationBase;
-import squeek.veganoption.integration.IntegrationHandler;
 
 public class PlantMilk implements IContentModule
 {
@@ -49,7 +46,7 @@ public class PlantMilk implements IContentModule
 		FluidRegistry.addBucketForFluid(fluidPlantMilk);
 
 		bucketPlantMilk = new ItemStack(Items.MILK_BUCKET);
-		bucketPlantMilk.setStackDisplayName(LangHelper.translateRaw("item.VeganOption.bucketPlantMilk.name"));
+		bucketPlantMilk.setStackDisplayName("Plant Milk Bucket");
 	}
 
 	@Override
