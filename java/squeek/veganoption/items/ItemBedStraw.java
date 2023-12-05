@@ -22,7 +22,7 @@ public class ItemBedStraw extends BedItem
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag advanced)
 	{
-		tooltip.add(Component.translatable(ModInfo.MODID_LOWER + ".straw_bed.tooltip"));
+		tooltip.add(Component.translatable("item." + ModInfo.MODID_LOWER + ".straw_bed.tooltip"));
 		super.appendHoverText(stack, level, tooltip, advanced);
 	}
 }
