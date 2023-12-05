@@ -1,0 +1,59 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "forge:dyes/gray"
+    },
+    [
+      {
+        "item": "veganoption:white_kapok"
+      },
+      {
+        "item": "veganoption:orange_kapok"
+      },
+      {
+        "item": "veganoption:magenta_kapok"
+      },
+      {
+        "item": "veganoption:light_blue_kapok"
+      },
+      {
+        "item": "veganoption:yellow_kapok"
+      },
+      {
+        "item": "veganoption:lime_kapok"
+      },
+      {
+        "item": "veganoption:pink_kapok"
+      },
+      {
+        "item": "veganoption:light_gray_kapok"
+      },
+      {
+        "item": "veganoption:cyan_kapok"
+      },
+      {
+        "item": "veganoption:purple_kapok"
+      },
+      {
+        "item": "veganoption:blue_kapok"
+      },
+      {
+        "item": "veganoption:brown_kapok"
+      },
+      {
+        "item": "veganoption:green_kapok"
+      },
+      {
+        "item": "veganoption:red_kapok"
+      },
+      {
+        "item": "veganoption:black_kapok"
+      }
+    ]
+  ],
+  "result": {
+    "item": "veganoption:gray_kapok"
+  }
+}

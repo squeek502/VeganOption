@@ -1,93 +1,86 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.food.Foods;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class ToxicMushroom implements IContentModule
 {
-	public static Item falseMorel;
-	public static Item falseMorelFermented;
+	public static RegistryObject<Item> falseMorel;
+	public static RegistryObject<Item> falseMorelFermented;
 
 	@Override
 	public void create()
 	{
-		falseMorel = new ItemFood(2, 0.8F, false)
-			.setPotionEffect(new PotionEffect(MobEffects.POISON, 5, 0), 1.0F)
-			.setUnlocalizedName(ModInfo.MODID + ".falseMorel")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "falseMorel");
-		GameRegistry.register(falseMorel);
-
-		falseMorelFermented = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".falseMorelFermented")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "falseMorelFermented");
-		GameRegistry.register(falseMorelFermented);
+		falseMorel = REGISTER_ITEMS.register("false_morel", () -> new Item(new Item.Properties().food(Foods.SPIDER_EYE)));
+		falseMorelFermented = REGISTER_ITEMS.register("false_morel_fermented", () -> new Item(new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.poisonousOreDict, Items.SPIDER_EYE);
-		OreDictionary.registerOre(ContentHelper.poisonousOreDict, falseMorel);
-		OreDictionary.registerOre(ContentHelper.fermentedOreDict, Items.FERMENTED_SPIDER_EYE);
-		OreDictionary.registerOre(ContentHelper.fermentedOreDict, falseMorelFermented);
+		provider.tagW(ContentHelper.ItemTags.REAGENT_POISONOUS)
+			.add(falseMorel.get())
+			.add(Items.SPIDER_EYE);
+		provider.tagW(ContentHelper.ItemTags.REAGENT_FERMENTED)
+			.add(falseMorelFermented.get())
+			.add(Items.FERMENTED_SPIDER_EYE);
 	}
 
 	@Override
-	public void recipes()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.SPIDER_EYE), ContentHelper.poisonousOreDict);
-		Modifiers.recipes.excludeOutput(new ItemStack(Items.FERMENTED_SPIDER_EYE));
+		provider.basicItem(falseMorel.get());
+		provider.basicItem(falseMorelFermented.get());
+	}
 
-		Modifiers.recipes.convertInput(new ItemStack(Items.FERMENTED_SPIDER_EYE), ContentHelper.fermentedOreDict);
+	@Override
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
+	{
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.BREWING, falseMorelFermented.get())
+			.requires(falseMorel.get())
+			.requires(Items.BROWN_MUSHROOM)
+			.requires(Items.SUGAR)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.save(output);
+	}
 
-		DropSpecifier dontDropWhenSilkTouching = new DropSpecifier(new ItemStack(falseMorel), 0.15f)
-		{
-			@Override
-			public boolean shouldDrop(EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
-			{
-				return !isSilkTouching && super.shouldDrop(harvester, fortuneLevel, isSilkTouching);
-			}
-		};
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.MYCELIUM.getDefaultState()), dontDropWhenSilkTouching);
-
-		GameRegistry.addShapelessRecipe(new ItemStack(falseMorelFermented), new ItemStack(falseMorel), new ItemStack(Blocks.BROWN_MUSHROOM), new ItemStack(Items.SUGAR));
+	@Override
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
+	{
+		provider.add(
+			"mycelium_false_morel",
+			new SimpleBlockDropLootModifier(
+				Blocks.MYCELIUM,
+				falseMorel.get(),
+				ConstantValue.exactly(0.15f),
+				ConstantValue.exactly(1)
+			)
+		);
 	}
 
 	@Override
 	public void finish()
 	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(falseMorel);
-		ContentHelper.registerTypicalItemModel(falseMorelFermented);
+		Modifiers.recipes.convertInput(Ingredient.of(Items.SPIDER_EYE), Ingredient.of(ContentHelper.ItemTags.REAGENT_POISONOUS));
+		Modifiers.recipes.excludeOutput(Items.FERMENTED_SPIDER_EYE);
+		Modifiers.recipes.convertInput(Ingredient.of(Items.FERMENTED_SPIDER_EYE), Ingredient.of(ContentHelper.ItemTags.REAGENT_FERMENTED));
 	}
 }

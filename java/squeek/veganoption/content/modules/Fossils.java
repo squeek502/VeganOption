@@ -1,52 +1,32 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.BlockStone;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 
+// todo: there is now an archaeology feature in vanilla. we may want to look into using that instead of a simple stone loot modifier.
 public class Fossils implements IContentModule
 {
 	@Override
 	public void create()
 	{
+		// Only feature for this module is the stone-drops-bone loot modifier.
 	}
 
 	@Override
-	public void oredict()
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
 	{
-	}
-
-	@Override
-	public void recipes()
-	{
-		// bones as a rare drop from stone
-		Modifiers.drops.addDropsToBlock(
-			new BlockSpecifier(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), BlockStone.VARIANT),
-			new DropSpecifier(new ItemStack(Items.BONE), 0.01f, 1, 2)
-		);
-	}
-
-	@Override
-	public void finish()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
+		provider.add(
+			"stone_fossils",
+			new SimpleBlockDropLootModifier(
+				Blocks.STONE,
+				Items.BONE,
+				ConstantValue.exactly(0.01f),
+				UniformGenerator.between(1, 2))
+			);
 	}
 }

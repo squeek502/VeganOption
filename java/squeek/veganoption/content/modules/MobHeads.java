@@ -1,85 +1,87 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.CompostRegistry;
+
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 // currently depends on potatoStarch
 public class MobHeads implements IContentModule
 {
-	public static Item papierMache;
-	public static Item mobHeadBlank;
-
-	// {"skeleton", "wither", "zombie", "steve", "creeper"}
-	public static final ItemStack mobHeadSkeleton = new ItemStack(Items.SKULL, 1, 0);
-	public static final ItemStack mobHeadWitherSkeleton = new ItemStack(Items.SKULL, 1, 1);
-	public static final ItemStack mobHeadZombie = new ItemStack(Items.SKULL, 1, 2);
-	public static final ItemStack mobHeadSteve = new ItemStack(Items.SKULL, 1, 3);
-	public static final ItemStack mobHeadCreeper = new ItemStack(Items.SKULL, 1, 4);
+	public static RegistryObject<Item> papierMache;
+	public static RegistryObject<Item> mobHeadBlank;
 
 	@Override
 	public void create()
 	{
-		papierMache = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".papierMache")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "papierMache");
-		GameRegistry.register(papierMache);
-
-		mobHeadBlank = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".mobHeadBlank")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "mobHeadBlank");
-		GameRegistry.register(mobHeadBlank);
+		papierMache = REGISTER_ITEMS.register("papier_mache", () -> new Item(new Item.Properties()));
+		mobHeadBlank = REGISTER_ITEMS.register("blank_mob_head", () -> new Item(new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, papierMache.get(), 8)
+			.requires(Items.WATER_BUCKET)
+			.requires(ContentHelper.ItemTags.STARCH)
+			.requires(Items.PAPER)
+			.requires(Items.PAPER)
+			.requires(Items.PAPER)
+			.requires(Items.PAPER)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output);
+
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, mobHeadBlank.get())
+			.pattern("///")
+			.pattern("/m/")
+			.pattern("///")
+			.define('/', papierMache.get())
+			.define('m', Items.MELON)
+			.unlockedBy("has_papier_mache", provider.hasW(papierMache.get()))
+			.save(output);
+
+		mobHeadRecipe(ContentHelper.ItemTags.DYES_LIGHT_GRAY, Items.SKELETON_SKULL, output, provider);
+		mobHeadRecipe(ContentHelper.ItemTags.DYES_BLACK, Items.WITHER_SKELETON_SKULL, output, provider);
+		mobHeadRecipe(ContentHelper.ItemTags.DYES_BROWN, Items.PLAYER_HEAD, output, provider);
+		mobHeadRecipe(ContentHelper.ItemTags.DYES_GREEN, Items.ZOMBIE_HEAD, output, provider);
+		mobHeadRecipe(ContentHelper.ItemTags.DYES_LIME, Items.CREEPER_HEAD, output, provider);
+		// todo: piglin head
 	}
 
-	@Override
-	public void recipes()
+	private void mobHeadRecipe(TagKey<Item> dye, Item mobHead, RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(papierMache, 8), new ItemStack(Items.WATER_BUCKET), ContentHelper.starchOreDict, new ItemStack(Items.PAPER), new ItemStack(Items.PAPER), new ItemStack(Items.PAPER), new ItemStack(Items.PAPER)));
-
-		GameRegistry.addShapedRecipe(new ItemStack(mobHeadBlank), "///", "/m/", "///", '/', new ItemStack(papierMache), 'm', new ItemStack(Blocks.MELON_BLOCK));
-
-		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadSkeleton.copy(), "ddd", "dhd", "ddd", 'd', "dyeLightGray", 'h', mobHeadBlank));
-		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadWitherSkeleton.copy(), "ddd", "dhd", "ddd", 'd', "dyeBlack", 'h', mobHeadBlank));
-		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadSteve.copy(), "ddd", "dhd", "ddd", 'd', "dyeBrown", 'h', mobHeadBlank));
-		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadZombie.copy(), "ddd", "dhd", "ddd", 'd', "dyeGreen", 'h', mobHeadBlank));
-		GameRegistry.addRecipe(new ShapedOreRecipe(mobHeadCreeper.copy(), "ddd", "dhd", "ddd", 'd', "dyeLime", 'h', mobHeadBlank));
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, mobHead)
+			.pattern("ddd")
+			.pattern("dhd")
+			.pattern("ddd")
+			.define('d', dye)
+			.define('h', mobHeadBlank.get())
+			.unlockedBy("has_papier_mache", provider.hasW(papierMache.get()))
+			.save(output);
 	}
 
 	@Override
 	public void finish()
 	{
-		CompostRegistry.addBrown(papierMache);
+		CompostRegistry.addBrown(papierMache.get());
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePost()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(papierMache);
-		ContentHelper.registerTypicalItemModel(mobHeadBlank);
+		provider.basicItem(papierMache.get());
+		provider.basicItem(mobHeadBlank.get());
 	}
 }

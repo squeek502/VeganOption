@@ -1,12 +1,12 @@
 package squeek.veganoption.items;
 
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.fluids.FluidStack;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.FluidHelper;
 
@@ -14,15 +14,14 @@ public class ItemFrozenBubble extends Item
 {
 	public ItemFrozenBubble()
 	{
-		super();
-		setHasSubtypes(true);
+		super(new Item.Properties().durability(8));
 	}
 
 	@Override
-	public boolean onEntityItemUpdate(EntityItem entityItem)
+	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity itemEntity)
 	{
-		tryFillWithRawEnderFromWorld(entityItem);
-		return super.onEntityItemUpdate(entityItem);
+		tryFillWithRawEnderFromWorld(itemEntity);
+		return super.onEntityItemUpdate(stack, itemEntity);
 	}
 
 	public static boolean isFull(ItemStack itemStack)
@@ -37,7 +36,7 @@ public class ItemFrozenBubble extends Item
 
 	public static ItemStack fill(ItemStack itemStack, int amount)
 	{
-		itemStack.setItemDamage(itemStack.getItemDamage() + amount);
+		itemStack.setDamageValue(itemStack.getDamageValue() + amount);
 		if (isFull(itemStack))
 		{
 			return new ItemStack(Items.ENDER_PEARL);
@@ -47,46 +46,40 @@ public class ItemFrozenBubble extends Item
 
 	public static float getPercentFilled(ItemStack itemStack)
 	{
-		return itemStack.getItemDamage() / 8f;
+		return itemStack.getDamageValue() / 8f;
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack itemStack)
+	public boolean isBarVisible(ItemStack stack)
 	{
-		return !isEmpty(itemStack);
+		return !isEmpty(stack);
 	}
 
-	@Override
-	public double getDurabilityForDisplay(ItemStack itemStack)
+	public static boolean tryFillWithRawEnderFromWorld(ItemEntity itemEntity)
 	{
-		return 1.0f - getPercentFilled(itemStack);
-	}
-
-	public static boolean tryFillWithRawEnderFromWorld(EntityItem entityItem)
-	{
-		if (entityItem == null || entityItem.worldObj.isRemote || entityItem.getEntityItem() == null)
+		if (itemEntity == null || itemEntity.level().isClientSide() || itemEntity.getItem().isEmpty())
 			return false;
 
-		if (!isFull(entityItem.getEntityItem()))
+		if (!isFull(itemEntity.getItem()))
 		{
-			BlockPos fluidBlockPos = new BlockPos(MathHelper.floor_double(entityItem.posX), MathHelper.floor_double(entityItem.posY), MathHelper.floor_double(entityItem.posZ));
-			FluidStack consumedFluid = FluidHelper.consumeExactFluid(entityItem.worldObj, fluidBlockPos, Ender.fluidRawEnder, FluidHelper.FINITE_FLUID_MB_PER_META);
+			BlockPos fluidBlockPos = new BlockPos(Mth.floor(itemEntity.getX()), Mth.floor(itemEntity.getY()), Mth.floor(itemEntity.getZ()));
+			FluidStack consumedFluid = FluidHelper.consumeExactFluid(itemEntity.level(), fluidBlockPos, Ender.rawEnderStill.get(), FluidHelper.FLUID_MB_PER_AMOUNT);
 
 			if (consumedFluid != null)
 			{
-				EntityItem entityItemToFill = entityItem;
-				ItemStack bubbleToFill = entityItemToFill.getEntityItem();
+				ItemEntity itemEntityToFill = itemEntity;
+				ItemStack bubbleToFill = itemEntityToFill.getItem();
 
-				if (entityItemToFill.getEntityItem().stackSize > 1)
+				if (itemEntityToFill.getItem().getCount() > 1)
 				{
-					bubbleToFill = entityItem.getEntityItem().splitStack(1);
-					entityItemToFill = new EntityItem(entityItemToFill.worldObj, entityItemToFill.posX, entityItemToFill.posY, entityItemToFill.posZ, bubbleToFill);
-					entityItemToFill.setPickupDelay(10);
-					entityItemToFill.worldObj.spawnEntityInWorld(entityItemToFill);
+					bubbleToFill = itemEntity.getItem().split(1);
+					itemEntityToFill = new ItemEntity(itemEntityToFill.level(), itemEntityToFill.getX(), itemEntityToFill.getY(), itemEntityToFill.getZ(), bubbleToFill);
+					itemEntityToFill.setPickUpDelay(10);
+					itemEntityToFill.level().addFreshEntity(itemEntityToFill);
 				}
 
 				ItemStack filledItemStack = fill(bubbleToFill, 1);
-				entityItemToFill.setEntityItemStack(filledItemStack);
+				itemEntityToFill.setItem(filledItemStack);
 
 				return true;
 			}
@@ -94,9 +87,10 @@ public class ItemFrozenBubble extends Item
 		return false;
 	}
 
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack)
-	{
-		return super.getUnlocalizedName(itemStack) + (!isEmpty(itemStack) ? "Filled" : "");
-	}
+//	todo
+//	@Override
+//	public String getUnlocalizedName(ItemStack itemStack)
+//	{
+//		return super.getUnlocalizedName(itemStack) + (!isEmpty(itemStack) ? "Filled" : "");
+//	}
 }

@@ -1,106 +1,111 @@
 package squeek.veganoption.helpers;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EnumFaceDirection;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class RenderHelper
 {
-	public static void putStillFluidCube(FluidStack fluid, AxisAlignedBB bounds, int brightness, VertexBuffer buffer)
+	public static void putStillFluidCube(FluidStack fluid, AABB bounds, int brightness, VertexConsumer buffer)
 	{
-		Minecraft mc = Minecraft.getMinecraft();
-		TextureAtlasSprite fluidIcon = mc.getTextureMapBlocks().getTextureExtry(fluid.getFluid().getStill(fluid).toString());
-		int color = fluid.getFluid().getColor(fluid);
+		Minecraft mc = Minecraft.getInstance();
+		IClientFluidTypeExtensions fluidExt = IClientFluidTypeExtensions.of(fluid.getFluid());
+		ResourceLocation fluidIconLoc = fluidExt.getStillTexture(fluid);
+		TextureAtlasSprite fluidIcon = mc.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(fluidIconLoc);
+		int color = fluidExt.getTintColor(fluid);
 
-		for (EnumFaceDirection face : EnumFaceDirection.values())
+		for (Direction face : Direction.values())
 		{
 			putFace(buffer, fluidIcon, bounds, face, color, brightness);
 		}
 	}
 
-	public static void putFace(VertexBuffer buffer, TextureAtlasSprite sprite, AxisAlignedBB bounds, EnumFaceDirection face, int color, int brightness)
+	public static void putFace(VertexConsumer buffer, TextureAtlasSprite sprite, AABB bounds, Direction face, int color, int brightness)
 	{
 		putFace(buffer, sprite, bounds, face, color, brightness, 16.0D);
 	}
 
-	public static void putFace(VertexBuffer buffer, TextureAtlasSprite sprite, AxisAlignedBB bounds, EnumFaceDirection face, int color, int brightness, double size)
+	public static void putFace(VertexConsumer buffer, TextureAtlasSprite sprite, AABB bounds, Direction face, int color, int brightness, double size)
 	{
 		int[] rgba = ColorHelper.toRGBA(color);
 		int r = rgba[0], g = rgba[1], b = rgba[2], a = rgba[3];
 		int brightnessHighBits = brightness >> 16 & 0xFFFF;
 		int brightnessLowBits = brightness & 0xFFFF;
 
-		double minU, minV, maxU, maxV;
+		float minU, minV, maxU, maxV;
 		switch (face)
 		{
 			case DOWN:
 			case UP:
-				minU = sprite.getInterpolatedU(bounds.minX * size);
-				maxU = sprite.getInterpolatedU(bounds.maxX * size);
-				minV = sprite.getInterpolatedV(bounds.minZ * size);
-				maxV = sprite.getInterpolatedV(bounds.maxZ * size);
+				minU = sprite.getU((float) (bounds.minX * size));
+				maxU = sprite.getU((float) (bounds.maxX * size));
+				minV = sprite.getV((float) (bounds.minZ * size));
+				maxV = sprite.getV((float) (bounds.maxZ * size));
 				break;
 			case NORTH:
 			case SOUTH:
-				minU = sprite.getInterpolatedU(bounds.maxX * size);
-				maxU = sprite.getInterpolatedU(bounds.minX * size);
-				minV = sprite.getInterpolatedV(bounds.minY * size);
-				maxV = sprite.getInterpolatedV(bounds.maxY * size);
+				minU = sprite.getU((float) (bounds.maxX * size));
+				maxU = sprite.getU((float) (bounds.minX * size));
+				minV = sprite.getV((float) (bounds.minY * size));
+				maxV = sprite.getV((float) (bounds.maxY * size));
 				break;
 			case WEST:
 			case EAST:
-				minU = sprite.getInterpolatedU(bounds.maxZ * size);
-				maxU = sprite.getInterpolatedU(bounds.minZ * size);
-				minV = sprite.getInterpolatedV(bounds.minY * size);
-				maxV = sprite.getInterpolatedV(bounds.maxY * size);
+				minU = sprite.getU((float) (bounds.maxZ * size));
+				maxU = sprite.getU((float) (bounds.minZ * size));
+				minV = sprite.getV((float) (bounds.minY * size));
+				maxV = sprite.getV((float) (bounds.maxY * size));
 				break;
 			default:
-				minU = sprite.getMinU();
-				maxU = sprite.getMaxU();
-				minV = sprite.getMinV();
-				maxV = sprite.getMaxV();
+				minU = sprite.getU0();
+				maxU = sprite.getU1();
+				minV = sprite.getV0();
+				maxV = sprite.getV1();
 		}
 
 		switch (face)
 		{
 			case DOWN:
-				buffer.pos(bounds.minX, bounds.minY, bounds.minZ).color(r, g, b, a).tex(minU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.minY, bounds.minZ).color(r, g, b, a).tex(maxU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.minY, bounds.maxZ).color(r, g, b, a).tex(maxU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.minX, bounds.minY, bounds.maxZ).color(r, g, b, a).tex(minU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.minY, bounds.minZ).color(r, g, b, a).uv(minU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.minY, bounds.minZ).color(r, g, b, a).uv(maxU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.minY, bounds.maxZ).color(r, g, b, a).uv(maxU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.minY, bounds.maxZ).color(r, g, b, a).uv(minU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
 				break;
 			case UP:
-				buffer.pos(bounds.minX, bounds.maxY, bounds.minZ).color(r, g, b, a).tex(minU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.minX, bounds.maxY, bounds.maxZ).color(r, g, b, a).tex(minU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.maxY, bounds.maxZ).color(r, g, b, a).tex(maxU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.maxY, bounds.minZ).color(r, g, b, a).tex(maxU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.maxY, bounds.minZ).color(r, g, b, a).uv(minU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.maxY, bounds.maxZ).color(r, g, b, a).uv(minU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.maxY, bounds.maxZ).color(r, g, b, a).uv(maxU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.maxY, bounds.minZ).color(r, g, b, a).uv(maxU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
 				break;
 			case NORTH:
-				buffer.pos(bounds.minX, bounds.minY, bounds.minZ).color(r, g, b, a).tex(minU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.minX, bounds.maxY, bounds.minZ).color(r, g, b, a).tex(minU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.maxY, bounds.minZ).color(r, g, b, a).tex(maxU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.minY, bounds.minZ).color(r, g, b, a).tex(maxU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.minY, bounds.minZ).color(r, g, b, a).uv(minU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.maxY, bounds.minZ).color(r, g, b, a).uv(minU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.maxY, bounds.minZ).color(r, g, b, a).uv(maxU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.minY, bounds.minZ).color(r, g, b, a).uv(maxU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
 				break;
 			case SOUTH:
-				buffer.pos(bounds.minX, bounds.minY, bounds.maxZ).color(r, g, b, a).tex(maxU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.minY, bounds.maxZ).color(r, g, b, a).tex(minU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.maxY, bounds.maxZ).color(r, g, b, a).tex(minU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.minX, bounds.maxY, bounds.maxZ).color(r, g, b, a).tex(maxU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.minY, bounds.maxZ).color(r, g, b, a).uv(maxU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.minY, bounds.maxZ).color(r, g, b, a).uv(minU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.maxY, bounds.maxZ).color(r, g, b, a).uv(minU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.maxY, bounds.maxZ).color(r, g, b, a).uv(maxU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
 				break;
 			case WEST:
-				buffer.pos(bounds.minX, bounds.minY, bounds.minZ).color(r, g, b, a).tex(maxU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.minX, bounds.minY, bounds.maxZ).color(r, g, b, a).tex(minU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.minX, bounds.maxY, bounds.maxZ).color(r, g, b, a).tex(minU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.minX, bounds.maxY, bounds.minZ).color(r, g, b, a).tex(maxU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.minY, bounds.minZ).color(r, g, b, a).uv(maxU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.minY, bounds.maxZ).color(r, g, b, a).uv(minU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.maxY, bounds.maxZ).color(r, g, b, a).uv(minU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.minX, bounds.maxY, bounds.minZ).color(r, g, b, a).uv(maxU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
 				break;
 			case EAST:
-				buffer.pos(bounds.maxX, bounds.minY, bounds.minZ).color(r, g, b, a).tex(minU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.maxY, bounds.minZ).color(r, g, b, a).tex(minU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.maxY, bounds.maxZ).color(r, g, b, a).tex(maxU, minV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
-				buffer.pos(bounds.maxX, bounds.minY, bounds.maxZ).color(r, g, b, a).tex(maxU, maxV).lightmap(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.minY, bounds.minZ).color(r, g, b, a).uv(minU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.maxY, bounds.minZ).color(r, g, b, a).uv(minU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.maxY, bounds.maxZ).color(r, g, b, a).uv(maxU, minV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
+				buffer.vertex(bounds.maxX, bounds.minY, bounds.maxZ).color(r, g, b, a).uv(maxU, maxV).uv2(brightnessHighBits, brightnessLowBits).endVertex();
 				break;
 		}
 	}

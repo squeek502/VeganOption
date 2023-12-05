@@ -1,36 +1,28 @@
 package squeek.veganoption.blocks;
 
-import net.minecraft.block.BlockDoublePlant;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidFinite;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
+import squeek.veganoption.content.modules.Ender;
 
-public class BlockRawEnder extends BlockFluidFinite
+public class BlockRawEnder extends LiquidBlock
 {
-	public static Material materialRawEnder = Material.WATER;
-
-	public BlockRawEnder(Fluid fluid)
+	public BlockRawEnder()
 	{
-		super(fluid, materialRawEnder);
-		this.setDefaultState(blockState.getBaseState().withProperty(LEVEL, 7));
-	}
-
-	@Override
-	public boolean canDisplace(IBlockAccess world, BlockPos pos)
-	{
-		//if (world.getBlock(x, y, z).getMaterial().isLiquid())
-		//	return false;
-		return super.canDisplace(world, pos);
-	}
-
-	@Override
-	public boolean displaceIfPossible(World world, BlockPos pos)
-	{
-		//if (world.getBlock(x, y, z).getMaterial().isLiquid())
-		//	return false;
-		return super.displaceIfPossible(world, pos);
+		super(() -> (FlowingFluid) Ender.rawEnderStill.get(), BlockBehaviour.Properties.of()
+			.mapColor(MapColor.COLOR_BLACK)
+			.replaceable()
+			.noCollission()
+			.randomTicks()
+			.strength(100f)
+			.lightLevel(state -> 3)
+			.pushReaction(PushReaction.DESTROY)
+			.noLootTable()
+			.liquid()
+			.sound(SoundType.EMPTY));
+		registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
 	}
 }

@@ -1,37 +1,11 @@
-buildscript {
-	repositories {
-		jcenter()
-		maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
-		}
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-		classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.5"
-	}
+plugins {
+	id 'java-library'
+	id 'eclipse'
+	id 'idea'
+	id 'maven-publish'
+	id 'net.neoforged.gradle.userdev' version '7.0.43'
+	id 'net.neoforged.gradle.mixin' version '7.0.43'
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-minecraft {
-	version = "1.10.2-12.18.3.2254"
-	runDir = "run"
-	mappings = "snapshot_20160518"
-
-	coreMod = "squeek.veganoption.asm.ASMPlugin"
-
-	replace "\${version}", project.version
-	replaceIn "ModInfo.java"
-}
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-
-group = project.projectDir.name.toLowerCase()
-archivesBaseName = project.projectDir.name + "-mc" + project.minecraft.version
 
 if (version == "unspecified")
 	version = "0.2.0"
@@ -40,134 +14,93 @@ if (System.getenv("BUILD_NUMBER") != null)
 if (System.getenv("GIT_COMMIT") != null)
 	version += (version ? "." : "") + "${System.getenv("GIT_COMMIT").take(5)}"
 
+repositories {
+	mavenLocal()
+	maven {
+		// JEI
+		url "https://maven.blamejared.com/"
+	}
+	maven {
+		// JEI fallback
+		url "https://modmaven.dev"
+	}
+}
+
+base {
+	archivesName = project.projectDir.name + "-mc1.20.2"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+runs {
+	configureEach {
+		systemProperty 'forge.logging.markers', 'REGISTRIES'
+		systemProperty 'forge.logging.console.level', 'debug'
+
+		modSource project.sourceSets.main
+	}
+
+	client {
+		systemProperty 'forge.enabledGameTestNamespaces', 'veganoption'
+	}
+
+	server {
+		systemProperty 'forge.enabledGameTestNamespaces', 'veganoption'
+		programArgument '--nogui'
+	}
+
+	gameTestServer {
+		systemProperty 'forge.enabledGameTestNamespaces', 'veganoption'
+	}
+
+	data {
+		programArguments.addAll '--mod', 'veganoption', '--all', '--output', file('generated/resources/').getAbsolutePath(),
+				'--existing', file('resources/').getAbsolutePath()
+	}
+}
+
+minecraft.accessTransformers.file rootProject.file('resources/META-INF/accesstransformer.cfg')
+
+mixin {
+	config 'mixins.veganoption.json'
+}
+
 sourceSets.main.java.srcDirs += 'java'
 sourceSets.main.java.srcDirs += 'apis'
 sourceSets.main.resources.srcDirs += 'resources'
+sourceSets.main.resources.srcDirs += 'generated/resources'
 sourceSets.test.java.srcDirs += 'tests'
 
-repositories {
-	maven {
-		url "http://mobiusstrip.eu/maven"
-	}
-	maven {
-		url "http://dvs1.progwml6.com/files/maven"
-	}
-	maven {
-		url "http://maven.tterrag.com/"
-	}
-}
+def forgeVersion = "20.2.44-beta"
+def jeiVersion = "16.0.0.28"
  
 dependencies {
-	deobfCompile "mcjty.theoneprobe:TheOneProbe:1.10-1.3.3-41:api"
-	deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
-	// compile against the JEI API
-	deobfCompile "mezz.jei:jei_1.10.2:3.14.7.420:api"
-	// at runtime, use the full JEI jar
-	runtime "mezz.jei:jei_1.10.2:3.14.7.420"
-
-	testCompile 'junit:junit:4.11'
+	implementation "net.neoforged:neoforge:${forgeVersion}"
+//	Awaiting a NeoForge version...
+//	compileOnly "mezz.jei:jei-1.20.2-common-api:${jeiVersion}"
+//	compileOnly "mezz.jei:jei-1.20.2-forge-api:${jeiVersion}"
+//	runtimeOnly "mezz.jei:jei-1.20.2-forge:${jeiVersion}"
 }
 
-jar {
-	manifest {
-		attributes 'FMLCorePlugin': 'squeek.veganoption.asm.ASMPlugin'
-		attributes 'FMLCorePluginContainsFMLMod': 'true'
+tasks.withType(ProcessResources).configureEach {
+	var replaceProperties = [
+			minecraft_version: "1.20.2", minecraft_version_range: "1.20.2",
+			neo_version: forgeVersion, neo_version_range: forgeVersion,
+			loader_version_range: "[1,)",
+			mod_id: "veganoption",
+			mod_name: "The Vegan Option",
+			mod_license: "Public Domain",
+			mod_version: project.version,
+			mod_authors: "squeek502, SatanicSanta",
+			mod_description: "Adds vegan alternatives for the various animal products used in Minecraft.",
+	]
+	inputs.properties replaceProperties
+
+	filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+		expand replaceProperties + [project: project]
 	}
 }
 
-def getHeadCommitMessage() {
-	def headProc = "git log -1 --format=%B".execute()
-	headProc.waitForOrKill(1000)
-	assert headProc.exitValue() == 0, headProc.err.text
-	return headProc.in.text.trim()
-}
-
-def getLastTaggedCommit() {
-	return getLastTaggedCommit(0)
-}
-
-def getLastTaggedCommit(int skip) {
-	def lastTagProc = "git rev-list HEAD --tags --max-count=1 --no-walk --skip=$skip".execute()
-	lastTagProc.waitForOrKill(1000)
-	assert lastTagProc.exitValue() == 0, lastTagProc.err.text
-	def lastTag = lastTagProc.in.text.trim()
-
-	if (lastTag.equals(getHeadCommit()))
-		return getLastTaggedCommit(1)
-	else
-		return lastTag
-}
-
-def getHeadCommit() {
-	def headProc = "git rev-parse HEAD".execute()
-	headProc.waitForOrKill(1000)
-	assert headProc.exitValue() == 0, headProc.err.text
-	return headProc.in.text.trim()
-}
-
-def getChangelogSince(String commitSHA, String format="- %B") {
-	def changelog = ""
-	def range = commitSHA.isEmpty() ? "HEAD" : "$commitSHA..HEAD"
-	def cmd = ["git", "log", "--no-merges", "--format=$format", "$range"]
-	def changelogProc = cmd.execute()
-	changelogProc.in.eachLine { line ->
-		if (!line.isEmpty()) {
-			changelog += line + "\n"
-		}
-	}
-	changelogProc.err.eachLine { line -> println line }
-	return changelog
-}
-
-def sanitizeChangelog(String changelog) {
-	def splitChangelog = changelog.split(/(^|\n)\- /)
-	def sanitizedChangelog = ""
-	splitChangelog.each { change ->
-		if (!change.isEmpty() && !change.contains(":skip:"))
-		sanitizedChangelog += "\n- " + change.replaceAll(/\n\n/) { match ->
-			return "\n"
-		}
-	}
-	return sanitizedChangelog
-}
-
-task changelog() << {
-	def changelogFile = new File(project.buildDir.getPath() + '/changelog.md')
-	if (!changelogFile.getParentFile().exists())
-		changelogFile.getParentFile().mkdirs()
-	changelogFile.delete()
-
-	def lastTag = getLastTaggedCommit()
-	def changelog = getChangelogSince(lastTag)
-	def sanitizedChangelog = sanitizeChangelog(changelog)
-	println sanitizedChangelog
-	changelogFile << sanitizedChangelog
-}
-
-processResources {
-	inputs.property "vars", project.version + project.minecraft.version
-	from(sourceSets.main.resources.srcDirs) {
-		include '**/*.info'
-		expand 'version':project.version, 'mcversion':project.minecraft.version
-	}
-	from(sourceSets.main.resources.srcDirs) {
-		exclude '**/*.info'
-	}
-}
-
-ext.curseApiKey = project.hasProperty('curseApiKey') ? curseApiKey : System.getenv("CURSE_API_KEY")
-if (curseApiKey) {
-	apply plugin: "com.matthewprenger.cursegradle"
-	curseforge {
-		apiKey = curseApiKey
-		if (!getHeadCommitMessage().contains(":skip:")) {
-			project {
-				id = '227309'
-				changelog = new File(project.buildDir.getPath() + '/changelog.md')
-				changelogType = 'markdown'
-				releaseType = project.version.contains("+") ? 'alpha' : (project.version.startsWith('0') ? 'beta' : 'release')
-				addGameVersion project.minecraft.version
-			}
-		}
-	}
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
 }

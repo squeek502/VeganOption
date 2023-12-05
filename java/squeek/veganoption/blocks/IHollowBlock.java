@@ -1,9 +1,9 @@
 package squeek.veganoption.blocks;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface IHollowBlock
 {
-	boolean isBlockFullCube(World world, BlockPos pos);
+	boolean isBlockFullCube(Level world, BlockPos pos);
 }

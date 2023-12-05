@@ -1,84 +1,82 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.BlockSandStone;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class Gunpowder implements IContentModule
 {
-	public static Item sulfur;
-	public static Item saltpeter;
+	public static RegistryObject<Item> sulfur;
+	public static RegistryObject<Item> saltpeter;
 
 	@Override
 	public void create()
 	{
-		sulfur = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".sulfur")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "sulfur");
-		GameRegistry.register(sulfur);
-
-		saltpeter = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".saltpeter")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "saltpeter");
-		GameRegistry.register(saltpeter);
+		sulfur = REGISTER_ITEMS.register("sulfur", () -> new Item(new Item.Properties()));
+		saltpeter = REGISTER_ITEMS.register("saltpeter", () -> new Item(new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.sulfurOreDict, sulfur);
-		OreDictionary.registerOre(ContentHelper.saltpeterOreDict, saltpeter);
+		provider.tagW(ContentHelper.ItemTags.SULFUR).add(sulfur.get());
+		provider.tagW(ContentHelper.ItemTags.SALTPETER).add(saltpeter.get());
 	}
 
 	@Override
-	public void recipes()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-		Modifiers.drops.addDropsToBlock(
-			new BlockSpecifier(Blocks.NETHERRACK.getDefaultState()),
-			new DropSpecifier(new ItemStack(sulfur), 0.02f)
+		provider.basicItem(sulfur.get());
+		provider.basicItem(saltpeter.get());
+	}
+
+	@Override
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
+	{
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.GUNPOWDER)
+			.requires(Items.CHARCOAL)
+			.requires(ContentHelper.ItemTags.SULFUR)
+			.requires(ContentHelper.ItemTags.SALTPETER)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) // todo
+			.save(output);
+	}
+
+	@Override
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
+	{
+		provider.add(
+			"netherrack_sulfur",
+			new SimpleBlockDropLootModifier(
+				Blocks.NETHERRACK,
+				sulfur.get(),
+				ConstantValue.exactly(0.02f),
+				ConstantValue.exactly(1)
+			)
 		);
 
-		Modifiers.drops.addDropsToBlock(
-			new BlockSpecifier(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.DEFAULT), BlockSandStone.TYPE),
-			new DropSpecifier(new ItemStack(saltpeter), 0.02f, 1, 3)
+		provider.add(
+			"sandstone_saltpeter",
+			new SimpleBlockDropLootModifier(
+				Blocks.SANDSTONE,
+				saltpeter.get(),
+				ConstantValue.exactly(0.02f),
+				UniformGenerator.between(1, 3)
+			)
 		);
-
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.GUNPOWDER), ContentHelper.charcoal.copy(), ContentHelper.sulfurOreDict, ContentHelper.saltpeterOreDict));
 	}
-
-	@Override
-	public void finish()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(sulfur);
-		ContentHelper.registerTypicalItemModel(saltpeter);
-	}
-
 }

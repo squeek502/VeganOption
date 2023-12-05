@@ -1,0 +1,12 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 0.01,
+  "conditions": [
+    {
+      "block": "minecraft:spruce_log",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "drop": "veganoption:resin",
+  "num": 1.0
+}

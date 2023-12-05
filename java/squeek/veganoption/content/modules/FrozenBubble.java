@@ -1,144 +1,133 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemFishFood;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.recipes.PistonCraftingRecipe;
-import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.items.ItemFrozenBubble;
 import squeek.veganoption.items.ItemSoapSolution;
 
+import static squeek.veganoption.ModInfo.MODID_LOWER;
+import static squeek.veganoption.VeganOption.*;
+
 public class FrozenBubble implements IContentModule
 {
-	public static Item soapSolution;
-	public static Item frozenBubble;
-	public static Fluid fluidSoapSolution;
-	public static Block blockFluidSoapSolution;
-
-	public static final ItemStack pufferFish = new ItemStack(Items.FISH, 1, ItemFishFood.FishType.PUFFERFISH.ordinal());
+	public static RegistryObject<Item> soapSolution;
+	public static RegistryObject<Item> frozenBubble;
+	public static RegistryObject<EntityType<EntityBubble>> bubbleEntityType;
+	public static RegistryObject<FluidType> soapSolutionFluidType;
+	public static RegistryObject<Fluid> soapSolutionStill;
+	public static RegistryObject<Fluid> soapSolutionFlowing;
+	public static RegistryObject<Block> soapSolutionBlock;
+	public static RegistryObject<Item> soapSolutionBlockItem;
 
 	@Override
 	public void create()
 	{
-		fluidSoapSolution = new Fluid("fluid_soap_solution", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/soap_solution_flow"));
-		FluidRegistry.registerFluid(fluidSoapSolution);
-		blockFluidSoapSolution = new BlockFluidClassic(fluidSoapSolution, Material.WATER)
-			.setUnlocalizedName(ModInfo.MODID + ".fluidSoapSolution")
-			.setRegistryName(ModInfo.MODID_LOWER, "fluidSoapSolution");
-		fluidSoapSolution.setBlock(blockFluidSoapSolution);
-		fluidSoapSolution.setUnlocalizedName(blockFluidSoapSolution.getUnlocalizedName());
-		GameRegistry.register(blockFluidSoapSolution);
-		GameRegistry.register(new ItemBlock(blockFluidSoapSolution).setRegistryName(blockFluidSoapSolution.getRegistryName()));
+		BaseFlowingFluid.Properties fluidProperties = new BaseFlowingFluid.Properties(() -> soapSolutionFluidType.get(), () -> soapSolutionStill.get(), () -> soapSolutionFlowing.get())
+			.block(() -> (LiquidBlock) soapSolutionBlock.get())
+			.bucket(() -> soapSolution.get());
 
-		soapSolution = new ItemSoapSolution()
-			.setUnlocalizedName(ModInfo.MODID + ".soapSolution")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "soapSolution")
-			.setContainerItem(Items.GLASS_BOTTLE);
-		GameRegistry.register(soapSolution);
+		soapSolutionFluidType = REGISTER_FLUIDTYPES.register("soap_solution", () -> new FluidType(FluidType.Properties.create()));
+		soapSolutionStill = REGISTER_FLUIDS.register("soap_solution", () -> new BaseFlowingFluid.Source(fluidProperties));
+		soapSolutionFlowing = REGISTER_FLUIDS.register("soap_solution_flowing", () -> new BaseFlowingFluid.Flowing(fluidProperties));
+		soapSolutionBlock = REGISTER_BLOCKS.register("soap_solution", () -> new LiquidBlock(() -> (FlowingFluid) soapSolutionStill.get(), BlockBehaviour.Properties.of().noLootTable()));
+		soapSolutionBlockItem = REGISTER_ITEMS.register("fluid_soap_solution", () -> new BlockItem(soapSolutionBlock.get(), new Item.Properties()));
 
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidSoapSolution, Fluid.BUCKET_VOLUME), new ItemStack(soapSolution), new ItemStack(soapSolution.getContainerItem()));
+		soapSolution = REGISTER_ITEMS.register("soap_solution", ItemSoapSolution::new);
 
-		frozenBubble = new ItemFrozenBubble()
-			.setUnlocalizedName(ModInfo.MODID + ".frozenBubble")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "frozenBubble");
-		GameRegistry.register(frozenBubble);
-
-		EntityRegistry.registerModEntity(EntityBubble.class, "bubble", ContentHelper.ENTITYID_BUBBLE, ModInfo.MODID, 80, 1, true);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(soapSolution);
-		ContentHelper.registerTypicalItemModel(frozenBubble);
-		ContentHelper.registerFluidMapperAndMeshDef(blockFluidSoapSolution, "fluid_soap_solution");
-
-		RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, new IRenderFactory<EntityBubble>()
-		{
-			@Override
-			public Render<? super EntityBubble> createRenderFor(RenderManager manager)
-			{
-				return new RenderSnowball<EntityBubble>(manager, frozenBubble, Minecraft.getMinecraft().getRenderItem());
-			}
-		});
-
-		// Skip the empty bubble as it has already been registered, and bind the model until it is full
-		ItemStack bubbleStack = new ItemStack(frozenBubble, 1, 1);
-		while (!ItemFrozenBubble.isFull(bubbleStack) && bubbleStack.getItem() != Items.ENDER_PEARL)
-		{
-			ContentHelper.registerTypicalItemStackModel(bubbleStack, ModInfo.MODID_LOWER + ":frozenBubbleFilled");
-			bubbleStack = ItemFrozenBubble.fill(bubbleStack, 1);
-		}
+		frozenBubble = REGISTER_ITEMS.register("frozen_bubble", ItemFrozenBubble::new);
+		bubbleEntityType = REGISTER_ENTITIES.register("bubble", () -> EntityType.Builder.<EntityBubble>of(EntityBubble::new, MobCategory.MISC)
+			.updateInterval(80)
+			.setTrackingRange(1)
+			.setShouldReceiveVelocityUpdates(true)
+			.build(new ResourceLocation(MODID_LOWER, "bubble").toString()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-		OreDictionary.registerOre(ContentHelper.pufferFishOreDict, pufferFish.copy());
-		OreDictionary.registerOre(ContentHelper.pufferFishOreDict, frozenBubble);
+		provider.basicItem(soapSolution.get());
+		provider.basicItem(frozenBubble.get());
+		provider.withExistingParent("fluid_soap_solution", provider.modLoc("soap_solution"));
 	}
 
 	@Override
-	public void recipes()
+	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{
-		Modifiers.recipes.convertInput(pufferFish, ContentHelper.pufferFishOreDict);
+		event.registerEntityRenderer(bubbleEntityType.get(), ThrownItemRenderer::new);
+	}
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(soapSolution),
-													  ContentHelper.soapOreDict,
-													  new ItemStack(Items.WATER_BUCKET),
-													  new ItemStack(Items.SUGAR),
-													  new ItemStack(Items.GLASS_BOTTLE)));
-		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(soapSolution), ContentHelper.soapOreDict);
+	@Override
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
+	{
+		provider.tagW(ContentHelper.ItemTags.REAGENT_WATERBREATHING)
+			.add(Items.PUFFERFISH)
+			.add(frozenBubble.get());
+	}
 
-		GameRegistry.addShapedRecipe(new ItemStack(frozenBubble), "iii", "isi", "iii", 'i', Blocks.ICE, 's', soapSolution);
-		GameRegistry.addShapelessRecipe(new ItemStack(frozenBubble), Blocks.PACKED_ICE, soapSolution);
-
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidSoapSolution, FluidRegistry.WATER, ContentHelper.soapOreDict, new ItemStack(Items.SUGAR)));
+	@Override
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
+	{
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, soapSolution.get())
+			.requires(ContentHelper.ItemTags.SOAP)
+			.requires(Items.WATER_BUCKET)
+			.requires(Items.SUGAR)
+			.requires(Items.GLASS_BOTTLE)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.save(output);
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, frozenBubble.get())
+			.pattern("iii")
+			.pattern("isi")
+			.pattern("iii")
+			.define('i', Items.ICE)
+			.define('s', soapSolution.get())
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "frozen_bubble_ice"));
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, frozenBubble.get())
+			.requires(Items.PACKED_ICE)
+			.requires(soapSolution.get())
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "frozen_bubble_packed_ice"));
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(frozenBubble), new ItemStack(soapSolution));
-		RelationshipRegistry.addRelationship(new ItemStack(frozenBubble, 1, 1), new ItemStack(frozenBubble));
-		RelationshipRegistry.addRelationship(new ItemStack(Items.ENDER_PEARL), new ItemStack(frozenBubble, 1, 1));
-		RelationshipRegistry.addRelationship(new ItemStack(soapSolution), new ItemStack(blockFluidSoapSolution));
-		RelationshipRegistry.addRelationship(new ItemStack(blockFluidSoapSolution), new ItemStack(soapSolution));
+		Modifiers.recipes.convertInput(Ingredient.of(Items.PUFFERFISH), Ingredient.of(ContentHelper.ItemTags.REAGENT_WATERBREATHING));
+
+		Modifiers.crafting.addInputsToKeepForOutput(soapSolution.get(), ContentHelper.ItemTags.SOAP);
+
+		RelationshipRegistry.addRelationship(frozenBubble.get(), soapSolution.get());
+		RelationshipRegistry.addRelationship(Items.ENDER_PEARL, frozenBubble.get());
+		RelationshipRegistry.addRelationship(soapSolution.get(), soapSolutionBlockItem.get());
+		RelationshipRegistry.addRelationship(soapSolutionBlockItem.get(), soapSolution.get());
 	}
 
 }

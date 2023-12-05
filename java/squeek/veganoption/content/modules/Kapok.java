@@ -1,115 +1,180 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.BlockColored;
-import net.minecraft.block.BlockOldLeaf;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemCloth;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockKapok;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
-import squeek.veganoption.helpers.ConstantHelper;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.GenericBlockLootSubProvider;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import static squeek.veganoption.VeganOption.REGISTER_BLOCKS;
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class Kapok implements IContentModule
 {
-	public static Item kapokTuft;
-	public static BlockColored kapokBlock;
+	public static RegistryObject<Item> kapokTuft;
+	public static Map<DyeColor, RegistryObject<Block>> kapokBlocks = new EnumMap<>(DyeColor.class);
+	public static Map<DyeColor, RegistryObject<Item>> kapokBlockItems = new EnumMap<>(DyeColor.class);
+	private static Map<DyeColor, Supplier<Item>> woolBlockItems = new EnumMap<>(DyeColor.class);
 
 	@Override
 	public void create()
 	{
-		kapokTuft = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".kapokTuft")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "kapokTuft");
-		GameRegistry.register(kapokTuft);
+		kapokTuft = REGISTER_ITEMS.register("kapok_tuft", () -> new Item(new Item.Properties()));
+		for (DyeColor color : DyeColor.values())
+		{
+			kapokBlocks.put(color, REGISTER_BLOCKS.register(color.getName() + "_kapok", () -> new BlockKapok(color)));
+			kapokBlockItems.put(color, REGISTER_ITEMS.register(color.getName() + "_kapok", () -> new BlockItem(kapokBlocks.get(color).get(), new Item.Properties())));
+		}
 
-		kapokBlock = (BlockColored) new BlockKapok(Material.CLOTH)
-			.setHardness(0.8F)
-			.setCreativeTab(VeganOption.creativeTab)
-			.setUnlocalizedName(ModInfo.MODID + ".kapok")
-			.setRegistryName(ModInfo.MODID_LOWER, "kapok");
-		GameRegistry.register(kapokBlock);
-		GameRegistry.register(new ItemCloth(kapokBlock).setRegistryName(kapokBlock.getRegistryName()));
+		// As far as I can tell, there's no field anywhere in vanilla that ties DyeColors to wool items or blocks. So we have to do it ourselves.
+		woolBlockItems.put(DyeColor.WHITE, () -> Items.WHITE_WOOL);
+		woolBlockItems.put(DyeColor.ORANGE, () -> Items.ORANGE_WOOL);
+		woolBlockItems.put(DyeColor.MAGENTA, () -> Items.MAGENTA_WOOL);
+		woolBlockItems.put(DyeColor.LIGHT_BLUE, () -> Items.LIGHT_BLUE_WOOL);
+		woolBlockItems.put(DyeColor.YELLOW, () -> Items.YELLOW_WOOL);
+		woolBlockItems.put(DyeColor.LIME, () -> Items.LIME_WOOL);
+		woolBlockItems.put(DyeColor.PINK, () -> Items.PINK_WOOL);
+		woolBlockItems.put(DyeColor.GRAY, () -> Items.GRAY_WOOL);
+		woolBlockItems.put(DyeColor.LIGHT_GRAY, () -> Items.LIGHT_GRAY_WOOL);
+		woolBlockItems.put(DyeColor.CYAN, () -> Items.CYAN_WOOL);
+		woolBlockItems.put(DyeColor.PURPLE, () -> Items.PURPLE_WOOL);
+		woolBlockItems.put(DyeColor.BLUE, () -> Items.BLUE_WOOL);
+		woolBlockItems.put(DyeColor.BROWN, () -> Items.BROWN_WOOL);
+		woolBlockItems.put(DyeColor.GREEN, () -> Items.GREEN_WOOL);
+		woolBlockItems.put(DyeColor.RED, () -> Items.RED_WOOL);
+		woolBlockItems.put(DyeColor.BLACK, () -> Items.BLACK_WOOL);
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.kapokOreDict, new ItemStack(kapokTuft));
-		OreDictionary.registerOre(ContentHelper.vegetableOilSourceOreDict, new ItemStack(kapokTuft));
-		OreDictionary.registerOre(ContentHelper.woolOreDict, new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre(ContentHelper.woolOreDict, new ItemStack(kapokBlock, 1, OreDictionary.WILDCARD_VALUE));
-		for (int i = 0; i < ConstantHelper.dyeColors.length; i++)
+		IntrinsicHolderTagsProvider.IntrinsicTagAppender<Item> genericBeddingTag = provider.tagW(ContentHelper.ItemTags.BEDDING_MATERIALS);
+		for (DyeColor color : DyeColor.values())
 		{
-			OreDictionary.registerOre(ContentHelper.woolOreDict + ConstantHelper.dyeColors[i], new ItemStack(Blocks.WOOL, 1, 15 - i));
-			OreDictionary.registerOre(ContentHelper.woolOreDict + ConstantHelper.dyeColors[i], new ItemStack(kapokBlock, 1, 15 - i));
+			TagKey<Item> colorTag = ContentHelper.ItemTags.BEDDING_MATERIALS_BY_COLOR.get(color);
+			provider.tagW(colorTag)
+				.add(kapokBlockItems.get(color).get())
+				.add(woolBlockItems.get(color).get());
+			genericBeddingTag.addTag(colorTag);
 		}
 	}
 
 	@Override
-	public void recipes()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), ContentHelper.woolOreDict);
-		for (int i = 0; i < ConstantHelper.dyeColors.length; i++)
+		for (Map.Entry<DyeColor, RegistryObject<Item>> entry : kapokBlockItems.entrySet())
 		{
-			Modifiers.recipes.convertInput(new ItemStack(Blocks.WOOL, 1, 15 - i), ContentHelper.woolOreDict + ConstantHelper.dyeColors[i]);
-			Modifiers.recipes.excludeOutput(new ItemStack(Blocks.WOOL, 1, 15 - i));
+			ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, entry.getValue().get())
+				.requires(entry.getKey().getTag())
+				.requires(Ingredient.of(kapokBlockItems
+					.values()
+					.stream()
+					// Exclude dyeing a block the color it already is, e.g., dyeing black kapok black.
+					.filter(registryItem -> !registryItem.get().equals(entry.getValue().get()))
+					.map(registryItem -> new ItemStack(registryItem.get()))))
+//				.unlockedBy("has_needed_dye", provider.hasW(entry.getKey().getTag())) todo
+				.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+				.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "dye_" + entry.getValue().getId().getPath()));
 		}
 
-		GameRegistry.addShapedRecipe(new ItemStack(kapokBlock), "~~", "~~", '~', new ItemStack(kapokTuft));
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STRING)
+			.pattern("~~~")
+			.define('~', kapokTuft.get())
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "string"));
 
-		for (int i = 0; i < ConstantHelper.dyeColors.length; i++)
-		{
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(kapokBlock, 1, 15 - i), "dye" + ConstantHelper.dyeColors[i], new ItemStack(kapokBlock)));
-		}
-
-		BlockSpecifier jungleLeavesSpecifier = new BlockSpecifier(Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE), BlockOldLeaf.VARIANT);
-		Modifiers.drops.addDropsToBlock(jungleLeavesSpecifier, new DropSpecifier(new ItemStack(kapokTuft), 0.07f, 1, 2));
-
-		GameRegistry.addShapedRecipe(new ItemStack(Items.STRING), "~~~", '~', kapokTuft);
+		ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, kapokBlockItems.get(DyeColor.WHITE).get())
+			.pattern("~~")
+			.pattern("~~")
+			.define('~', kapokTuft.get())
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output);
 	}
 
 	@Override
 	public void finish()
 	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(kapokTuft);
-		Item kapokBlockItem = Item.getItemFromBlock(kapokBlock);
-		if (kapokBlockItem != null)
+		for (DyeColor color : DyeColor.values())
 		{
-			for (EnumDyeColor color : EnumDyeColor.values())
-			{
-				ModelLoader.setCustomModelResourceLocation(kapokBlockItem, color.getMetadata(), new ModelResourceLocation(kapokBlock.getRegistryName(), "color=" + color.getName()));
-			}
+			// TODO: Any generic uses of wool? Without OreDictionary wildcards, I'm not sure how we'll handle that.
+			Modifiers.recipes.convertInput(Ingredient.of(woolBlockItems.get(color).get()), Ingredient.of(ContentHelper.ItemTags.BEDDING_MATERIALS_BY_COLOR.get(color)));
+			Modifiers.recipes.excludeOutput(woolBlockItems.get(color).get());
 		}
+	}
+
+	@Override
+	public void datagenBlockStatesAndModels(BlockStateProvider provider)
+	{
+		kapokBlocks.forEach((color, obj) -> provider.simpleBlock(obj.get(), provider.models().withExistingParent(obj.getId().getPath(), provider.mcLoc(color.getName() + "_wool"))));
+	}
+
+	@Override
+	public void datagenItemModels(ItemModelProvider provider)
+	{
+		for (Map.Entry<DyeColor, RegistryObject<Item>> entry : kapokBlockItems.entrySet())
+		{
+			String color = entry.getKey().getName();
+			provider.withExistingParent(color + "_kapok", provider.modLoc(color + "_kapok"));
+		}
+		provider.basicItem(kapokTuft.get());
+	}
+
+	@Override
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
+	{
+		provider.add(
+			"jungle_leaves_kapok_tuft",
+			new SimpleBlockDropLootModifier(
+				Blocks.JUNGLE_LEAVES,
+				kapokTuft.get(),
+				ConstantValue.exactly(0.07f),
+				UniformGenerator.between(1, 2)
+			)
+		);
+	}
+
+	@Override
+	public BlockLootSubProvider getBlockLootProvider()
+	{
+		return new GenericBlockLootSubProvider()
+		{
+			@Override
+			protected void generate()
+			{
+				kapokBlocks.values().forEach(i -> dropSelf(i.get()));
+			}
+
+			@Override
+			protected Iterable<Block> getKnownBlocks()
+			{
+				return kapokBlocks.values().stream().map(RegistryObject::get).toList();
+			}
+		};
 	}
 }

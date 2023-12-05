@@ -1,0 +1,22 @@
+{
+  "type": "veganoption:replace_with",
+  "conditions": [
+    {
+      "condition": "minecraft:inverted",
+      "term": {
+        "condition": "minecraft:match_tool",
+        "predicate": {
+          "items": [
+            "minecraft:shears"
+          ]
+        }
+      }
+    },
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "forge:stone"
+    }
+  ],
+  "replace": "minecraft:sunflower",
+  "with": "veganoption:sunflower_seeds"
+}

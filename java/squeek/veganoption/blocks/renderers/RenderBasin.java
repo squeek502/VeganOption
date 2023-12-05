@@ -1,58 +1,41 @@
 package squeek.veganoption.blocks.renderers;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
 import squeek.veganoption.helpers.RenderHelper;
 
-@SideOnly(Side.CLIENT)
-public class RenderBasin extends TileEntitySpecialRenderer<TileEntityBasin>
+@OnlyIn(Dist.CLIENT)
+public class RenderBasin implements BlockEntityRenderer<TileEntityBasin>
 {
 	public static final double SIDE_WIDTH = BlockBasin.SIDE_WIDTH;
 
 	@Override
-	public void renderTileEntityAt(TileEntityBasin basin, double x, double y, double z, float partialTickTime, int destroyStage)
+	public void render(TileEntityBasin basin, float partialTickTime, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay)
 	{
-		FluidTankInfo tankInfo = basin.fluidTank.getInfo();
-		if (tankInfo.fluid == null || tankInfo.fluid.amount <= 0)
+		FluidTank tank = basin.fluidTank;
+		if (tank.isEmpty())
 			return;
+		poseStack.pushPose();
+		Tesselator tess = Tesselator.getInstance();
+		BufferBuilder builder = tess.getBuilder();
+		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color(1, 1, 1, 1);
+		int brightness = basin.getLevel().getRawBrightness(basin.getBlockPos(), tank.getFluid().getFluid().getFluidType().getLightLevel());
+		float percentFull = (float) tank.getFluidAmount() / tank.getCapacity();
+		double fluidTop = SIDE_WIDTH + (percentFull * (1f - SIDE_WIDTH - SIDE_WIDTH));
+		AABB bounds = new AABB(SIDE_WIDTH, SIDE_WIDTH, SIDE_WIDTH, 1d - SIDE_WIDTH, fluidTop, 1d - SIDE_WIDTH);
 
-		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
-		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		RenderHelper.putStillFluidCube(tank.getFluid(), bounds, brightness, buffer.getBuffer(RenderType.translucent()));
 
-		int brightness = getWorld().getCombinedLight(basin.getPos(), tankInfo.fluid.getFluid().getLuminosity());
-		float percentFull = (float) tankInfo.fluid.amount / tankInfo.capacity;
-
-		double fluidTop = SIDE_WIDTH + (percentFull * (1.0F - SIDE_WIDTH - SIDE_WIDTH));
-		AxisAlignedBB bounds = new AxisAlignedBB(SIDE_WIDTH, SIDE_WIDTH, SIDE_WIDTH, 1.0D - SIDE_WIDTH, fluidTop, 1.0D - SIDE_WIDTH);
-
-		// render the liquid
-		RenderHelper.putStillFluidCube(tankInfo.fluid, bounds, brightness, buffer);
-
-		tessellator.draw();
-
-		GlStateManager.popMatrix();
-		GlStateManager.disableBlend();
-		GlStateManager.color(1, 1, 1, 1);
-		GlStateManager.enableLighting();
+		tess.end();
+		poseStack.popPose();
 	}
 }

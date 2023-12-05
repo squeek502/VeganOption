@@ -1,58 +1,52 @@
 package squeek.veganoption.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockObsidian;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
 
-import java.util.Random;
-
-public class BlockEncrustedObsidian extends BlockObsidian
+public class BlockEncrustedObsidian extends Block
 {
 	public BlockEncrustedObsidian()
 	{
-		super();
-		setSoundType(SoundType.STONE);
+		super(BlockBehaviour.Properties.of()
+			.sound(SoundType.STONE)
+			.strength(50f, 2000f)
+			.mapColor(MapColor.COLOR_BLACK)
+			.instrument(NoteBlockInstrument.BASEDRUM)
+			.requiresCorrectToolForDrops());
 	}
 
-	@Override
-	public Item getItemDropped(IBlockState state, Random random, int fortune)
-	{
-		return Item.getItemFromBlock(this);
-	}
-
-	public static void tryPlacePortalAdjacentTo(World world, BlockPos pos)
+	public static void tryPlacePortalAdjacentTo(Level level, BlockPos pos)
 	{
 		for (BlockPos blockPosToCheck : BlockHelper.getBlocksAdjacentTo(pos))
 		{
-			Block blockToCheck = world.getBlockState(blockPosToCheck).getBlock();
-			if (blockToCheck != Ender.enderRift && BlockEnderRift.isValidPortalLocation(world, blockPosToCheck) && blockToCheck.isReplaceable(world, blockPosToCheck))
+			BlockState stateToCheck = level.getBlockState(blockPosToCheck);
+			Block blockToCheck = stateToCheck.getBlock();
+			if (blockToCheck != Ender.enderRift.get() && BlockEnderRift.isValidPortalLocation(level, blockPosToCheck) && stateToCheck.canBeReplaced())
 			{
-				world.setBlockState(blockPosToCheck, Ender.enderRift.getDefaultState());
+				level.setBlockAndUpdate(blockPosToCheck, Ender.enderRift.get().defaultBlockState());
 			}
 		}
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
+	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston)
 	{
-		super.neighborChanged(state, world, pos, blockIn);
-
-		tryPlacePortalAdjacentTo(world, pos);
+		super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+		tryPlacePortalAdjacentTo(level, pos);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston)
 	{
-		super.onBlockPlacedBy(world, pos, state, placer, stack);
-
-		tryPlacePortalAdjacentTo(world, pos);
+		super.onPlace(state, level, pos, state, movedByPiston);
+		tryPlacePortalAdjacentTo(level, pos);
 	}
 }

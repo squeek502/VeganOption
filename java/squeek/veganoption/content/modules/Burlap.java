@@ -1,127 +1,138 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 
-import javax.annotation.Nonnull;
+import static squeek.veganoption.ModInfo.MODID_LOWER;
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER)
 public class Burlap implements IContentModule
 {
-	public static Item burlap;
-	public static ItemArmor burlapHelmet;
-	public static ItemArmor burlapChestplate;
-	public static ItemArmor burlapLeggings;
-	public static ItemArmor burlapBoots;
+	public static RegistryObject<Item> burlap;
+	public static RegistryObject<Item> burlapHelmet;
+	public static RegistryObject<Item> burlapChestplate;
+	public static RegistryObject<Item> burlapLeggings;
+	public static RegistryObject<Item> burlapBoots;
 
 	@Override
 	public void create()
 	{
-		burlap = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".burlap")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "burlap");
-		GameRegistry.register(burlap);
-
-		burlapHelmet = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.HEAD)
-			.setUnlocalizedName(ModInfo.MODID + ".helmetBurlap")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "helmetBurlap");
-		GameRegistry.register(burlapHelmet);
-
-		burlapChestplate = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.CHEST)
-			.setUnlocalizedName(ModInfo.MODID + ".chestplateBurlap")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "chestplateBurlap");
-		GameRegistry.register(burlapChestplate);
-
-		burlapLeggings = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.LEGS)
-			.setUnlocalizedName(ModInfo.MODID + ".leggingsBurlap")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "leggingsBurlap");
-		GameRegistry.register(burlapLeggings);
-
-		burlapBoots = (ItemArmor) new ItemArmor(ItemArmor.ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.FEET)
-			.setUnlocalizedName(ModInfo.MODID + ".bootsBurlap")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "bootsBurlap");
-		GameRegistry.register(burlapBoots);
+		burlap = REGISTER_ITEMS.register("burlap", () -> new Item(new Item.Properties()));
+		burlapBoots = REGISTER_ITEMS.register("burlap_boots", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.BOOTS, new Item.Properties()));
+		burlapLeggings = REGISTER_ITEMS.register("burlap_leggings", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+		burlapChestplate = REGISTER_ITEMS.register("burlap_chestplate", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+		burlapHelmet = REGISTER_ITEMS.register("burlap_helmet", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.leatherOreDict, new ItemStack(burlap));
-		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(Items.LEATHER_BOOTS));
-		OreDictionary.registerOre(ContentHelper.leatherBootsOreDict, new ItemStack(burlapBoots));
-		OreDictionary.registerOre(ContentHelper.leatherLeggingsOreDict, new ItemStack(Items.LEATHER_LEGGINGS));
-		OreDictionary.registerOre(ContentHelper.leatherLeggingsOreDict, new ItemStack(burlapLeggings));
-		OreDictionary.registerOre(ContentHelper.leatherChestplateOreDict, new ItemStack(Items.LEATHER_CHESTPLATE));
-		OreDictionary.registerOre(ContentHelper.leatherChestplateOreDict, new ItemStack(burlapChestplate));
-		OreDictionary.registerOre(ContentHelper.leatherHelmetOreDict, new ItemStack(Items.LEATHER_HELMET));
-		OreDictionary.registerOre(ContentHelper.leatherHelmetOreDict, new ItemStack(burlapHelmet));
+		provider.tagW(ContentHelper.ItemTags.LEATHER).add(burlap.get());
+		provider.tagW(ContentHelper.ItemTags.ARMOR_BOOTS).add(burlapBoots.get());
+		provider.tagW(ContentHelper.ItemTags.ARMOR_LEGGINGS).add(burlapLeggings.get());
+		provider.tagW(ContentHelper.ItemTags.ARMOR_CHESTPLATES).add(burlapChestplate.get());
+		provider.tagW(ContentHelper.ItemTags.ARMOR_HELMETS).add(burlapHelmet.get());
+
+		// For recipe replacements
+		provider.tagW(ContentHelper.ItemTags.LEATHER_BOOTS)
+			.add(burlapBoots.get())
+			.add(Items.LEATHER_BOOTS);
+		provider.tagW(ContentHelper.ItemTags.LEATHER_LEGGINGS)
+			.add(burlapLeggings.get())
+			.add(Items.LEATHER_LEGGINGS);
+		provider.tagW(ContentHelper.ItemTags.LEATHER_CHESTPLATES)
+			.add(burlapChestplate.get())
+			.add(Items.LEATHER_CHESTPLATE);
+		provider.tagW(ContentHelper.ItemTags.LEATHER_HELMETS)
+			.add(burlapHelmet.get())
+			.add(Items.LEATHER_HELMET);
 	}
 
 	@Override
-	public void recipes()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER), ContentHelper.leatherOreDict);
-		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_BOOTS), ContentHelper.leatherBootsOreDict);
-		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_LEGGINGS), ContentHelper.leatherLeggingsOreDict);
-		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_CHESTPLATE), ContentHelper.leatherChestplateOreDict);
-		Modifiers.recipes.convertInput(new ItemStack(Items.LEATHER_HELMET), ContentHelper.leatherHelmetOreDict);
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, burlap.get())
+			.pattern("~~")
+			.pattern("~~")
+			.define('~', ContentHelper.ItemTags.FIBRES)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) // todo
+			.save(output);
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(burlap), "~~", "~~", '~', ContentHelper.bastFibreOreDict));
-
-		GameRegistry.addRecipe(new ItemStack(burlapHelmet), "XXX", "X X", 'X', new ItemStack(burlap));
-		GameRegistry.addRecipe(new ItemStack(burlapChestplate), "X X", "XXX", "XXX", 'X', new ItemStack(burlap));
-		GameRegistry.addRecipe(new ItemStack(burlapLeggings), "XXX", "X X", "X X", 'X', new ItemStack(burlap));
-		GameRegistry.addRecipe(new ItemStack(burlapBoots), "X X", "X X", 'X', new ItemStack(burlap));
-
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.STRING), "~~", '~', ContentHelper.bastFibreOreDict));
+		ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, burlapBoots.get())
+			.pattern("X X")
+			.pattern("X X")
+			.define('X', burlap.get())
+			.unlockedBy("has_burlap", provider.hasW(burlap.get()))
+			.save(output);
+		ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, burlapLeggings.get())
+			.pattern("XXX")
+			.pattern("X X")
+			.pattern("X X")
+			.define('X', burlap.get())
+			.unlockedBy("has_burlap", provider.hasW(burlap.get()))
+			.save(output);
+		ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, burlapChestplate.get())
+			.pattern("X X")
+			.pattern("XXX")
+			.pattern("XXX")
+			.define('X', burlap.get())
+			.unlockedBy("has_burlap", provider.hasW(burlap.get()))
+			.save(output);
+		ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, burlapHelmet.get())
+			.pattern("XXX")
+			.pattern("X X")
+			.define('X', burlap.get())
+			.unlockedBy("has_burlap", provider.hasW(burlap.get()))
+			.save(output);
 	}
 
 	@Override
 	public void finish()
 	{
+		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER), Ingredient.of(ContentHelper.ItemTags.LEATHER));
+		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER_BOOTS), Ingredient.of(ContentHelper.ItemTags.LEATHER_BOOTS));
+		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER_LEGGINGS), Ingredient.of(ContentHelper.ItemTags.LEATHER_LEGGINGS));
+		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER_CHESTPLATE), Ingredient.of(ContentHelper.ItemTags.LEATHER_CHESTPLATES));
+		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER_HELMET), Ingredient.of(ContentHelper.ItemTags.LEATHER_HELMETS));
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePost()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-		// Gross duplicate of the leather armor color handler
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor()
-		{
-			public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex)
+		provider.basicItem(burlap.get());
+		provider.withExistingParent(burlapBoots.getId().getPath(), provider.mcLoc("leather_boots"));
+		provider.withExistingParent(burlapChestplate.getId().getPath(), provider.mcLoc("leather_chestplate"));
+		provider.withExistingParent(burlapLeggings.getId().getPath(), provider.mcLoc("leather_leggings"));
+		provider.withExistingParent(burlapHelmet.getId().getPath(), provider.mcLoc("leather_helmet"));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
+	public static void registerColorHandlers(RegisterColorHandlersEvent.Item event)
+	{
+		event.register(new ItemColor() {
+			@Override
+			public int getColor(ItemStack stack, int tintIndex)
 			{
-				return tintIndex > 0 ? -1 : ((ItemArmor) stack.getItem()).getColor(stack);
+				return tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack);
 			}
-		}, burlapHelmet, burlapChestplate, burlapLeggings, burlapBoots);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(burlap);
-		ContentHelper.registerTypicalItemModel(burlapHelmet);
-		ContentHelper.registerTypicalItemModel(burlapChestplate);
-		ContentHelper.registerTypicalItemModel(burlapLeggings);
-		ContentHelper.registerTypicalItemModel(burlapBoots);
+		}, burlapBoots.get(), burlapLeggings.get(), burlapChestplate.get(), burlapHelmet.get());
 	}
 }

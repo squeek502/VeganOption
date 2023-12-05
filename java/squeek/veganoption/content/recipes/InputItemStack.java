@@ -1,114 +1,49 @@
 package squeek.veganoption.content.recipes;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+// todo: create a proper ingredient that works with json.
 public class InputItemStack
 {
-	public ItemStack wrappedItemStack = null;
-	public List<ItemStack> oreDictItemStacks = null;
-	protected int oreDictStackSize = 1;
+	private Ingredient ingredient;
+	private int count;
 
-	public InputItemStack(String oredict, int stackSize)
+	public InputItemStack(Ingredient ingredient, int count)
 	{
-		this(oredict);
-		this.oreDictStackSize = stackSize;
+		this.ingredient = ingredient;
+		this.count = count;
 	}
 
 	public InputItemStack(ItemStack itemStack)
 	{
-		this((Object) itemStack);
+		this(Ingredient.of(itemStack), itemStack.getCount());
 	}
 
 	public InputItemStack(Item item)
 	{
-		this((Object) item);
+		this(Ingredient.of(item), 1);
 	}
 
-	public InputItemStack(Block block)
+	public InputItemStack(TagKey<Item> tag)
 	{
-		this((Object) block);
+		this(tag, 1);
 	}
 
-	@SuppressWarnings("unchecked")
-	public InputItemStack(Object object)
+	public InputItemStack(TagKey<Item> tag, int count)
 	{
-		if (object instanceof String)
-			oreDictItemStacks = OreDictionary.getOres((String) object);
-		else if (object instanceof ArrayList)
-			oreDictItemStacks = (List<ItemStack>) object;
-		else if (object instanceof ItemStack)
-			wrappedItemStack = (ItemStack) object;
-		else if (object instanceof Block)
-			wrappedItemStack = new ItemStack((Block) object, 1, OreDictionary.WILDCARD_VALUE);
-		else if (object instanceof Item)
-			wrappedItemStack = new ItemStack((Item) object, 1, OreDictionary.WILDCARD_VALUE);
-		else
-			throw new RuntimeException("Unsupported InputItemStack input: " + object);
-	}
-
-	protected InputItemStack(List<ItemStack> itemStacks)
-	{
-		this.oreDictItemStacks = itemStacks;
+		this(Ingredient.of(tag), count);
 	}
 
 	public boolean matches(ItemStack input)
 	{
-		return matches(input, false);
+		return ingredient.test(input) && getCount() == input.getCount();
 	}
 
-	public boolean matches(ItemStack input, boolean strict)
+	public int getCount()
 	{
-		if (wrappedItemStack != null)
-			return OreDictionary.itemMatches(wrappedItemStack, input, strict);
-		else if (oreDictItemStacks != null)
-		{
-			for (ItemStack oreDictItemStack : oreDictItemStacks)
-			{
-				if (OreDictionary.itemMatches(oreDictItemStack, input, strict))
-					return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * @return A list of all possible inputs for JEI usage
-	 */
-	public List<ItemStack> getItemStackList()
-	{
-		if (wrappedItemStack != null)
-			return Collections.singletonList(wrappedItemStack);
-		else if (oreDictItemStacks != null)
-		{
-			// need to modify the stacksize of each itemstack without touching the
-			// underlying oredict itemstacks, so deep copy the list
-			List<ItemStack> sizedOreDictItemStacks = new ArrayList<ItemStack>();
-			for (ItemStack stack : oreDictItemStacks)
-			{
-				ItemStack sizedStack = stack.copy();
-				sizedStack.stackSize = stackSize();
-				sizedOreDictItemStacks.add(sizedStack);
-			}
-			return sizedOreDictItemStacks;
-		}
-		else
-			return Collections.emptyList();
-	}
-
-	public int stackSize()
-	{
-		return wrappedItemStack != null ? wrappedItemStack.stackSize : (oreDictItemStacks != null ? oreDictStackSize : 0);
-	}
-
-	public boolean isOreDict()
-	{
-		return oreDictItemStacks != null;
+		return count;
 	}
 }

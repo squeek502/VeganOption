@@ -1,75 +1,68 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
+
 public class Bioplastic implements IContentModule
 {
-	public static Item bioplastic;
-	public static Item plasticRod;
+	public static RegistryObject<Item> bioplastic;
+	public static RegistryObject<Item> plasticRod;
 
 	@Override
 	public void create()
 	{
-		bioplastic = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".bioplastic")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "bioplastic");
-		GameRegistry.register(bioplastic);
-
-		plasticRod = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".plasticRod")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "plastic_rod");
-		GameRegistry.register(plasticRod);
+		bioplastic = REGISTER_ITEMS.register("bioplastic", () -> new Item(new Item.Properties()));
+		plasticRod = REGISTER_ITEMS.register("plastic_rod", () -> new Item(new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.plasticOreDict, bioplastic);
-		OreDictionary.registerOre(ContentHelper.plasticRodOreDict, plasticRod);
+		provider.tagW(ContentHelper.ItemTags.PLASTIC_SHEET).add(bioplastic.get());
+		provider.tagW(ContentHelper.ItemTags.PLASTIC_ROD).add(plasticRod.get());
+		provider.tagW(ContentHelper.ItemTags.RODS).addTag(ContentHelper.ItemTags.PLASTIC_ROD);
 	}
 
 	@Override
-	public void recipes()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		ContentHelper.addOreSmelting(ContentHelper.starchOreDict, new ItemStack(bioplastic, 2), 0.35f);
+		// todo: investigate balance here. vanilla made it so we cant output more than 1 item. originally this produced 2 bioplastic sheets.
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.STARCH), RecipeCategory.MISC, bioplastic.get(), 0.35f, ContentHelper.DEFAULT_SMELT_TIME);
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(plasticRod, 4), "p", "p", 'p', ContentHelper.plasticOreDict));
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, plasticRod.get(), 4)
+			.pattern("p")
+			.pattern("p")
+			.define('p', ContentHelper.ItemTags.PLASTIC_SHEET)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) // todo
+			.save(output);
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.BLAZE_ROD), ContentHelper.plasticRodOreDict, ContentHelper.rosinOreDict, ContentHelper.waxOreDict, new ItemStack(Items.FLINT_AND_STEEL, 1, OreDictionary.WILDCARD_VALUE)));
-		Modifiers.crafting.addInputsToKeepForOutput(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.FLINT_AND_STEEL, 1, OreDictionary.WILDCARD_VALUE));
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.BREWING, Items.BLAZE_ROD) // Brewing... I think?
+			.requires(ContentHelper.ItemTags.PLASTIC_ROD)
+			.requires(ContentHelper.ItemTags.ROSIN)
+			.requires(ContentHelper.ItemTags.WAX)
+			.requires(Items.FLINT_AND_STEEL) // todo: test. may need its own recipe type for some stupid reason.
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) // todo
+			.save(output);
+
+		// todo: kinda hacky implementation here
+		Modifiers.crafting.addInputsToKeepForOutput(Items.BLAZE_ROD, Items.FLINT_AND_STEEL);
 	}
 
 	@Override
-	public void finish()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(bioplastic);
-		ContentHelper.registerTypicalItemModel(plasticRod);
+		provider.basicItem(bioplastic.get());
+		provider.basicItem(plasticRod.get());
 	}
 }

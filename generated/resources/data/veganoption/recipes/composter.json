@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "/": {
+      "tag": "forge:rods/wooden"
+    },
+    "c": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "/c/",
+    "/ /",
+    " / "
+  ],
+  "result": {
+    "item": "veganoption:composter"
+  },
+  "show_notification": true
+}

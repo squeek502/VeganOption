@@ -1,7 +1,7 @@
 package squeek.veganoption.helpers;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class TemperatureHelper
 {
@@ -12,9 +12,9 @@ public class TemperatureHelper
 
 	public static final float FLOAT_TEMP_TO_CELSIUS = 20f;
 
-	public static float getBiomeTemperature(World world, BlockPos pos)
+	public static float getBiomeTemperature(Level level, BlockPos pos)
 	{
-		return world.getBiomeGenForCoords(pos).getFloatTemperature(pos) * FLOAT_TEMP_TO_CELSIUS;
+		return level.getBiome(pos).get().getBaseTemperature() * FLOAT_TEMP_TO_CELSIUS;
 	}
 
 	public static float celsiusToFahrenheit(float celsius)

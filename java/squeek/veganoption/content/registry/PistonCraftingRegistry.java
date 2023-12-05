@@ -1,7 +1,7 @@
 package squeek.veganoption.content.registry;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.helpers.FluidHelper;
@@ -25,10 +25,10 @@ public class PistonCraftingRegistry
 
 	public static List<PistonCraftingRecipe> getSubsetByInput(ItemStack search)
 	{
-		List<PistonCraftingRecipe> matchingRecipes = new ArrayList<PistonCraftingRecipe>();
+		List<PistonCraftingRecipe> matchingRecipes = new ArrayList<>();
 		for (PistonCraftingRecipe recipe : getRecipes())
 		{
-			if (recipe.fluidInput != null && recipe.fluidInput.isFluidEqual(FluidHelper.fromItemStack(search)))
+			if (recipe.fluidInput != FluidStack.EMPTY && recipe.fluidInput.isFluidEqual(FluidHelper.fromItemStack(search)))
 				matchingRecipes.add(recipe);
 			else
 			{
@@ -55,13 +55,13 @@ public class PistonCraftingRegistry
 		List<PistonCraftingRecipe> matchingRecipes = new ArrayList<PistonCraftingRecipe>();
 		for (PistonCraftingRecipe recipe : getRecipes())
 		{
-			if (recipe.fluidOutput != null && recipe.fluidOutput.isFluidEqual(FluidHelper.fromItemStack(search)))
+			if (recipe.fluidOutput != FluidStack.EMPTY && recipe.fluidOutput.isFluidEqual(FluidHelper.fromItemStack(search)))
 				matchingRecipes.add(recipe);
 			else
 			{
 				for (ItemStack recipeOutput : recipe.itemOutputs)
 				{
-					if (recipeOutput.isItemEqual(search))
+					if (recipeOutput.is(search.getItem()))
 					{
 						matchingRecipes.add(recipe);
 						break;

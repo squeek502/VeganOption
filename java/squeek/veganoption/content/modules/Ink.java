@@ -1,143 +1,140 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 
+import static squeek.veganoption.VeganOption.*;
+
+// todo: white ink can be removed as vanilla has added the Lily of the Valley which is used to make White Dye
 public class Ink implements IContentModule
 {
-	public static Item blackVegetableOilInk;
-	public static Item whiteVegetableOilInk;
-	public static Item waxVegetable;
-	public static Fluid blackInkFluid;
-	public static Fluid whiteInkFluid;
-	public static Block blackInk;
-	public static Block whiteInk;
+	public static RegistryObject<Item> blackVegetableOilInk;
+	public static RegistryObject<Item> whiteVegetableOilInk;
+	public static RegistryObject<Item> waxVegetable;
+	public static RegistryObject<FluidType> blackInkFluidType;
+	public static RegistryObject<FluidType> whiteInkFluidType;
+	public static RegistryObject<Fluid> blackInkFluidStill;
+	public static RegistryObject<Fluid> whiteInkFluidStill;
+	public static RegistryObject<Fluid> blackInkFluidFlowing;
+	public static RegistryObject<Fluid> whiteInkFluidFlowing;
+	public static RegistryObject<Block> blackInk;
+	public static RegistryObject<Block> whiteInk;
+	public static RegistryObject<Item> blackInkBlockItem;
+	public static RegistryObject<Item> whiteInkBlockItem;
 
 	@Override
 	public void create()
 	{
-		waxVegetable = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".waxVegetable")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "waxVegetable");
-		GameRegistry.register(waxVegetable);
+		waxVegetable = REGISTER_ITEMS.register("vegetable_wax", () -> new Item(new Item.Properties()));
 
-		blackVegetableOilInk = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".inkVegetableOilBlack")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "inkVegetableOilBlack")
-			.setContainerItem(Items.GLASS_BOTTLE);
-		GameRegistry.register(blackVegetableOilInk);
+		BaseFlowingFluid.Properties blackInkProperties = new BaseFlowingFluid.Properties(() -> blackInkFluidType.get(), () -> blackInkFluidStill.get(), () -> blackInkFluidFlowing.get())
+			.block(() -> (LiquidBlock) blackInk.get())
+			.bucket(() -> blackVegetableOilInk.get());
+		blackVegetableOilInk = REGISTER_ITEMS.register("vegetable_oil_ink_black", () -> new Item(new Item.Properties().craftRemainder(Items.GLASS_BOTTLE)));
+		blackInkFluidType = REGISTER_FLUIDTYPES.register("black_ink", () -> new FluidType(FluidType.Properties.create()));
+		blackInkFluidStill = REGISTER_FLUIDS.register("black_ink", () -> new BaseFlowingFluid.Source(blackInkProperties));
+		blackInkFluidFlowing = REGISTER_FLUIDS.register("black_ink_flowing", () -> new BaseFlowingFluid.Flowing(blackInkProperties));
+		blackInk = REGISTER_BLOCKS.register("black_ink", () -> new LiquidBlock(() -> (FlowingFluid) blackInkFluidStill.get(), BlockBehaviour.Properties.of().noLootTable()));
+		blackInkBlockItem = REGISTER_ITEMS.register("black_ink", () -> new BlockItem(blackInk.get(), new Item.Properties()));
 
-		blackInkFluid = new Fluid("ink_black", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/black_ink_flow"));
-		FluidRegistry.registerFluid(blackInkFluid);
-		blackInk = new BlockFluidClassic(blackInkFluid, Material.WATER)
-			.setUnlocalizedName(ModInfo.MODID + ".inkBlack")
-			.setRegistryName(ModInfo.MODID_LOWER, "inkBlack");
-		blackInkFluid.setBlock(blackInk);
-		blackInkFluid.setUnlocalizedName(blackInk.getUnlocalizedName());
-		GameRegistry.register(blackInk);
-		GameRegistry.register(new ItemBlock(blackInk).setRegistryName(blackInk.getRegistryName()));
-
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(blackInkFluid, Fluid.BUCKET_VOLUME), new ItemStack(blackVegetableOilInk), new ItemStack(blackVegetableOilInk.getContainerItem()));
-
-		whiteVegetableOilInk = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".inkVegetableOilWhite")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "inkVegetableOilWhite")
-			.setContainerItem(Items.GLASS_BOTTLE);
-		GameRegistry.register(whiteVegetableOilInk);
-
-		whiteInkFluid = new Fluid("ink_white", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/white_ink_flow"));
-		FluidRegistry.registerFluid(whiteInkFluid);
-		whiteInk = new BlockFluidClassic(whiteInkFluid, Material.WATER)
-			.setUnlocalizedName(ModInfo.MODID + ".inkWhite")
-			.setRegistryName(ModInfo.MODID_LOWER, "inkWhite");
-		whiteInkFluid.setBlock(whiteInk);
-		whiteInkFluid.setUnlocalizedName(whiteInk.getUnlocalizedName());
-		GameRegistry.register(whiteInk);
-		GameRegistry.register(new ItemBlock(whiteInk).setRegistryName(whiteInk.getRegistryName()));
-
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(whiteInkFluid, Fluid.BUCKET_VOLUME), new ItemStack(whiteVegetableOilInk), new ItemStack(whiteVegetableOilInk.getContainerItem()));
+		BaseFlowingFluid.Properties whiteInkProperties = new BaseFlowingFluid.Properties(() -> whiteInkFluidType.get(), () -> whiteInkFluidStill.get(), () -> whiteInkFluidFlowing.get())
+			.block(() -> (LiquidBlock) whiteInk.get())
+			.bucket(() -> whiteVegetableOilInk.get());
+		whiteVegetableOilInk = REGISTER_ITEMS.register("vegetable_oil_ink_white", () -> new Item(new Item.Properties().craftRemainder(Items.GLASS_BOTTLE)));
+		whiteInkFluidType = REGISTER_FLUIDTYPES.register("white_ink", () -> new FluidType(FluidType.Properties.create()));
+		whiteInkFluidStill = REGISTER_FLUIDS.register("white_ink", () -> new BaseFlowingFluid.Source(whiteInkProperties));
+		whiteInkFluidFlowing = REGISTER_FLUIDS.register("white_ink_flowing", () -> new BaseFlowingFluid.Flowing(whiteInkProperties));
+		whiteInk = REGISTER_BLOCKS.register("white_ink", () -> new LiquidBlock(() -> (FlowingFluid) whiteInkFluidStill.get(), BlockBehaviour.Properties.of().noLootTable()));
+		whiteInkBlockItem = REGISTER_ITEMS.register("white_ink", () -> new BlockItem(whiteInk.get(), new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.blackInkOreDict, ContentHelper.inkSac.copy());
+		provider.tagW(ContentHelper.ItemTags.DYES_BLACK).add(blackVegetableOilInk.get());
+		provider.tagW(ContentHelper.ItemTags.DYES_WHITE).add(whiteVegetableOilInk.get());
 
-		OreDictionary.registerOre(ContentHelper.blackPigmentOreDict, ContentHelper.charcoal.copy());
-		OreDictionary.registerOre(ContentHelper.whitePigmentOreDict, Items.QUARTZ);
-		OreDictionary.registerOre(ContentHelper.blackDyeOreDict, blackVegetableOilInk);
-		OreDictionary.registerOre(ContentHelper.blackInkOreDict, blackVegetableOilInk);
-		OreDictionary.registerOre(ContentHelper.whiteDyeOreDict, whiteVegetableOilInk);
-		OreDictionary.registerOre(ContentHelper.whiteInkOreDict, whiteVegetableOilInk);
-		OreDictionary.registerOre(ContentHelper.waxOreDict, new ItemStack(waxVegetable));
-		OreDictionary.registerOre(ContentHelper.waxOreDictForestry, new ItemStack(waxVegetable));
-		OreDictionary.registerOre(ContentHelper.waxOreDictHarvestCraft, new ItemStack(waxVegetable));
+		provider.tagW(ContentHelper.ItemTags.PIGMENT_BLACK).add(Items.CHARCOAL);
+		provider.tagW(ContentHelper.ItemTags.PIGMENT_WHITE).add(Items.QUARTZ);
+
+		provider.tagW(ContentHelper.ItemTags.INK_BLACK)
+			.add(Items.INK_SAC)
+			.add(blackVegetableOilInk.get());
+
+		provider.tagW(ContentHelper.ItemTags.WAX).add(waxVegetable.get());
 	}
 
 	@Override
-	public void recipes()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		Modifiers.recipes.convertInput(ContentHelper.inkSac.copy(), ContentHelper.blackInkOreDict);
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.VEGETABLE_OIL), RecipeCategory.MISC, waxVegetable.get(), 0.2f, ContentHelper.DEFAULT_SMELT_TIME);
 
-		ContentHelper.addOreSmelting(ContentHelper.vegetableOilOreDict, new ItemStack(waxVegetable), 0.2f);
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, blackVegetableOilInk.get())
+			.requires(ContentHelper.ItemTags.VEGETABLE_OIL)
+			.requires(ContentHelper.ItemTags.WAX)
+			.requires(ContentHelper.ItemTags.ROSIN)
+			.requires(ContentHelper.ItemTags.PIGMENT_BLACK)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output);
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(blackVegetableOilInk, ContentHelper.vegetableOilOreDict, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.blackPigmentOreDict));
-		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(blackVegetableOilInk), ContentHelper.vegetableOilOreDict);
-
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(blackInkFluid, VegetableOil.fluidVegetableOil, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.blackPigmentOreDict));
-
-		GameRegistry.addRecipe(new ShapelessOreRecipe(whiteVegetableOilInk, ContentHelper.vegetableOilOreDict, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.whitePigmentOreDict));
-		Modifiers.crafting.addInputsToRemoveForOutput(new ItemStack(whiteVegetableOilInk), ContentHelper.vegetableOilOreDict);
-
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(whiteInkFluid, VegetableOil.fluidVegetableOil, ContentHelper.waxOreDict, ContentHelper.rosinOreDict, ContentHelper.whitePigmentOreDict));
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, whiteVegetableOilInk.get())
+			.requires(ContentHelper.ItemTags.VEGETABLE_OIL)
+			.requires(ContentHelper.ItemTags.WAX)
+			.requires(ContentHelper.ItemTags.ROSIN)
+			.requires(ContentHelper.ItemTags.PIGMENT_WHITE)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output);
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(whiteVegetableOilInk), new ItemStack(whiteInk));
-		RelationshipRegistry.addRelationship(new ItemStack(whiteInk), new ItemStack(whiteVegetableOilInk));
-		RelationshipRegistry.addRelationship(new ItemStack(blackVegetableOilInk), new ItemStack(blackInk));
-		RelationshipRegistry.addRelationship(new ItemStack(blackInk), new ItemStack(blackVegetableOilInk));
+		Modifiers.recipes.convertInput(Ingredient.of(Items.INK_SAC), Ingredient.of(ContentHelper.ItemTags.INK_BLACK));
+
+		Modifiers.crafting.addInputsToRemoveForOutput(blackVegetableOilInk.get(), ContentHelper.ItemTags.VEGETABLE_OIL);
+
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(blackInkFluidStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(VegetableOil.fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.WAX), new InputItemStack(ContentHelper.ItemTags.ROSIN), new InputItemStack(ContentHelper.ItemTags.PIGMENT_BLACK)));
+
+		Modifiers.crafting.addInputsToRemoveForOutput(whiteVegetableOilInk.get(), ContentHelper.ItemTags.VEGETABLE_OIL);
+
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(whiteInkFluidStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(VegetableOil.fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.WAX), new InputItemStack(ContentHelper.ItemTags.ROSIN), new InputItemStack(ContentHelper.ItemTags.PIGMENT_WHITE)));
+
+		RelationshipRegistry.addRelationship(whiteVegetableOilInk.get(), whiteInkBlockItem.get());
+		RelationshipRegistry.addRelationship(whiteInkBlockItem.get(), whiteVegetableOilInk.get());
+		RelationshipRegistry.addRelationship(blackVegetableOilInk.get(), blackInkBlockItem.get());
+		RelationshipRegistry.addRelationship(blackInkBlockItem.get(), blackVegetableOilInk.get());
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePost()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
+		provider.basicItem(blackVegetableOilInk.get());
+		provider.basicItem(whiteVegetableOilInk.get());
+		provider.basicItem(waxVegetable.get());
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(blackVegetableOilInk);
-		ContentHelper.registerTypicalItemModel(whiteVegetableOilInk);
-		ContentHelper.registerTypicalItemModel(waxVegetable);
-		ContentHelper.registerFluidMapperAndMeshDef(blackInk, "ink_black");
-		ContentHelper.registerFluidMapperAndMeshDef(whiteInk, "ink_white");
-	}
-
 }

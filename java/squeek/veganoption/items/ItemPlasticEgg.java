@@ -1,10 +1,13 @@
 package squeek.veganoption.items;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import squeek.veganoption.entities.EntityPlasticEgg;
 import squeek.veganoption.helpers.LangHelper;
 
@@ -14,39 +17,44 @@ public class ItemPlasticEgg extends ItemThrowableGeneric
 {
 	public ItemPlasticEgg()
 	{
-		super(EntityPlasticEgg.class);
+		super();
 	}
 
 	@Override
-	public EntityThrowable getNewThrownEntity(ItemStack thrownItem, World world, EntityLivingBase thrower)
+	public ThrowableItemProjectile getNewProjectile(ItemStack thrownItem, Level level, Player thrower)
 	{
-		if (thrownItem.hasTagCompound() && thrownItem.getTagCompound().hasKey("ContainedItem"))
-			return new EntityPlasticEgg(getContainedItem(thrownItem), world, thrower);
+		if (hasItem(thrownItem))
+			return new EntityPlasticEgg(getContainedItem(thrownItem), thrower, level);
 
-		return super.getNewThrownEntity(thrownItem, world, thrower);
+		return new EntityPlasticEgg(null, thrower, level);
 	}
 
 	@Override
-	public EntityThrowable getNewThrownEntity(ItemStack thrownItem, World world, double x, double y, double z)
+	public ThrowableItemProjectile getNewProjectile(ItemStack thrownItem, Level level, double x, double y, double z)
 	{
-		if (thrownItem.hasTagCompound() && thrownItem.getTagCompound().hasKey("ContainedItem"))
-			return new EntityPlasticEgg(getContainedItem(thrownItem), world, x, y, z);
+		if (hasItem(thrownItem))
+			return new EntityPlasticEgg(getContainedItem(thrownItem), x, y, z, level);
 
-		return super.getNewThrownEntity(thrownItem, world, x, y, z);
+		return new EntityPlasticEgg(null, x, y, z, level);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag advanced)
 	{
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("ContainedItem"))
+		if (hasItem(stack))
 		{
-			ItemStack containedItem = getContainedItem(stack);
-			tooltip.add(LangHelper.translateRaw(getUnlocalizedName() + ".tooltip", LangHelper.translateRaw(containedItem.getItem().getUnlocalizedName(containedItem) + ".name")));
+			Item containedItem = getContainedItem(stack);
+			tooltip.add(Component.literal(LangHelper.translateRaw(getDescriptionId() + ".tooltip", LangHelper.translateRaw(containedItem.getDescriptionId() + ".name"))));
 		}
 	}
 
-	private ItemStack getContainedItem(ItemStack self)
+	private Item getContainedItem(ItemStack self)
 	{
-		return ItemStack.loadItemStackFromNBT(self.getTagCompound().getCompoundTag("ContainedItem"));
+		return ItemStack.of(self.getTag().getCompound("ContainedItem")).getItem();
+	}
+
+	private boolean hasItem(ItemStack self)
+	{
+		return self.hasTag() && self.getTag().contains("ContainedItem");
 	}
 }

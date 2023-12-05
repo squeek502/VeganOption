@@ -1,13 +1,12 @@
 package squeek.veganoption.content.modules.compat;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.content.modules.FrozenBubble;
@@ -15,40 +14,24 @@ import squeek.veganoption.content.registry.RelationshipRegistry;
 
 public class CompatEnderBubble implements IContentModule
 {
-
 	@Override
 	public void create()
 	{
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(Ender.fluidRawEnder, Fluid.BUCKET_VOLUME), new ItemStack(Items.ENDER_PEARL), new ItemStack(FrozenBubble.frozenBubble));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-	}
-
-	@Override
-	public void recipes()
-	{
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.ENDER_PEARL), new ItemStack(FrozenBubble.frozenBubble), Ender.bucketRawEnder.copy());
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.ENDER_PEARL)
+			.requires(Ingredient.of(FrozenBubble.frozenBubble.get()))
+			.requires(Ingredient.of(Ender.rawEnderBucket.get()))
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.save(output);
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(FrozenBubble.frozenBubble, 1, 1), new ItemStack(Ender.rawEnder));
+		RelationshipRegistry.addRelationship(FrozenBubble.frozenBubble.get(), Ender.rawEnderBucket.get());
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-	}
-
 }

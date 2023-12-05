@@ -1,50 +1,64 @@
 package squeek.veganoption.content.recipes;
 
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 import squeek.veganoption.content.modules.Egg;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
-public class EggRecipe implements IRecipe
+public class EggRecipe extends CustomRecipe
 {
-	@Override
-	public boolean matches(InventoryCrafting inv, World worldIn)
+	public EggRecipe(CraftingBookCategory category)
 	{
-		return getItemToEgg(inv) != null;
+		super(category);
 	}
 
-	@Nullable
 	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inv)
+	public boolean matches(CraftingContainer inv, Level worldIn)
 	{
-		ItemStack toEgg = getItemToEgg(inv);
-		if (toEgg != null)
+		return !getItemToEgg(inv).isEmpty();
+	}
+
+	@Override
+	public ItemStack getResultItem(RegistryAccess access)
+	{
+		return new ItemStack(Egg.plasticEgg.get());
+	}
+
+	@Override
+	public ItemStack assemble(CraftingContainer container, RegistryAccess access)
+	{
+		ItemStack toEgg = getItemToEgg(container);
+		if (!toEgg.isEmpty())
 		{
-			ItemStack eggStack = new ItemStack(Egg.plasticEgg, 1);
-			NBTTagCompound nbt = new NBTTagCompound();
-			NBTTagCompound egg = toEgg.writeToNBT(new NBTTagCompound());
-			nbt.setTag("ContainedItem", egg);
-			eggStack.setTagCompound(nbt);
+			ItemStack eggStack = new ItemStack(Egg.plasticEgg.get());
+			CompoundTag nbt = new CompoundTag();
+			CompoundTag egg = toEgg.serializeNBT();
+			nbt.put("ContainedItem", egg);
+			eggStack.setTag(nbt);
 			return eggStack;
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
-	@Nullable
-	private ItemStack getItemToEgg(InventoryCrafting inv)
+	@Nonnull
+	private ItemStack getItemToEgg(Container container)
 	{
 		ItemStack output = null;
 		int eggs = 0;
 		int nonEggs = 0;
-		for (int i = 0; i < inv.getSizeInventory(); i++)
+		for (int i = 0; i < container.getContainerSize(); i++)
 		{
-			ItemStack itemStack = inv.getStackInSlot(i);
-			if (itemStack != null) {
-				if (itemStack.getItem() == Egg.plasticEgg)
+			ItemStack itemStack = container.getItem(i);
+			if (!itemStack.isEmpty()) {
+				if (itemStack.getItem() == Egg.plasticEgg.get())
 					eggs++;
 				else
 				{
@@ -55,25 +69,18 @@ public class EggRecipe implements IRecipe
 			}
 		}
 
-		return eggs == 1 && nonEggs == 1 ? output : null;
+		return eggs == 1 && nonEggs == 1 ? output : ItemStack.EMPTY;
 	}
 
 	@Override
-	public int getRecipeSize()
+	public boolean canCraftInDimensions(int width, int height)
 	{
-		return 2;
+		return width > 1 || height > 1;
 	}
 
-	@Nullable
 	@Override
-	public ItemStack getRecipeOutput()
+	public RecipeSerializer<?> getSerializer()
 	{
 		return null;
-	}
-
-	@Override
-	public ItemStack[] getRemainingItems(InventoryCrafting inv)
-	{
-		return new ItemStack[inv.getSizeInventory()];
 	}
 }

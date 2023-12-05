@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "veganoption:fluffy_material"
+    },
+    {
+      "tag": "forge:rods/plastic"
+    }
+  ],
+  "result": {
+    "item": "veganoption:faux_feather"
+  }
+}

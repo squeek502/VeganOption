@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "veganoption:frozen_bubble_packed_ice"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "unlock_right_away": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "unlock_right_away"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "veganoption:frozen_bubble_packed_ice"
+    ]
+  },
+  "sends_telemetry_event": false
+}

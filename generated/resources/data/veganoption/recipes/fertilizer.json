@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "veganoption:compost"
+    },
+    {
+      "tag": "forge:dusts/saltpeter"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "item": "veganoption:fertilizer"
+  }
+}

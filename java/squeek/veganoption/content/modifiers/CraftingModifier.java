@@ -1,90 +1,99 @@
 package squeek.veganoption.content.modifiers;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.oredict.OreDictionary;
-import squeek.veganoption.helpers.RandomHelper;
+import com.google.common.collect.Iterables;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.tags.ITag;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.*;
 
 public class CraftingModifier
 {
-	public HashMap<ItemStack, ItemStack[]> inputsToRemoveForOutput = new HashMap<ItemStack, ItemStack[]>();
-	public HashMap<ItemStack, ItemStack[]> inputsToKeepForOutput = new HashMap<ItemStack, ItemStack[]>();
+	public HashMap<Item, Item[]> inputsToRemoveForOutput = new HashMap<>();
+	public HashMap<Item, Item[]> inputsToKeepForOutput = new HashMap<>();
 
 	public CraftingModifier()
 	{
-		MinecraftForge.EVENT_BUS.register(this);
+		NeoForge.EVENT_BUS.register(this);
 	}
 
-	public void addInputsToRemoveForOutput(ItemStack output, ItemStack... inputs)
+	public void addInputsToRemoveForOutput(Item output, Item... inputs)
 	{
 		inputsToRemoveForOutput.put(output, inputs);
 	}
 
-	public void addInputsToRemoveForOutput(ItemStack output, String... inputOreDicts)
+	public void addInputsToRemoveForOutput(Item output, ITag<Item> inputs)
 	{
-		for (String inputOreDict : inputOreDicts)
+		addInputsToRemoveForOutput(output, Iterables.toArray(inputs, Item.class));
+	}
+
+	public void addInputsToRemoveForOutput(Item output, TagKey<Item>... inputs)
+	{
+		for (TagKey<Item> tag : inputs)
 		{
-			List<ItemStack> oreStacks = OreDictionary.getOres(inputOreDict);
-			if (oreStacks.size() > 0)
-				addInputsToRemoveForOutput(output.copy(), oreStacks.toArray(new ItemStack[oreStacks.size()]));
+			addInputsToRemoveForOutput(output, ForgeRegistries.ITEMS.tags().getTag(tag));
 		}
 	}
 
-	public void addInputsToKeepForOutput(ItemStack output, ItemStack... inputs)
+	public void addInputsToKeepForOutput(Item output, Item... inputs)
 	{
 		inputsToKeepForOutput.put(output, inputs);
 	}
 
-	public void addInputsToKeepForOutput(ItemStack output, String... inputOreDicts)
+	public void addInputsToKeepForOutput(Item output, ITag<Item> inputs)
 	{
-		for (String inputOreDict : inputOreDicts)
+		addInputsToKeepForOutput(output, Iterables.toArray(inputs, Item.class));
+	}
+
+	public void addInputsToKeepForOutput(Item output, TagKey<Item>... inputs)
+	{
+		for (TagKey<Item> tag : inputs)
 		{
-			List<ItemStack> oreStacks = OreDictionary.getOres(inputOreDict);
-			if (oreStacks.size() > 0)
-				addInputsToKeepForOutput(output.copy(), oreStacks.toArray(new ItemStack[oreStacks.size()]));
+			addInputsToKeepForOutput(output, ForgeRegistries.ITEMS.tags().getTag(tag));
 		}
 	}
 
 	@SubscribeEvent
 	public void onItemCrafted(PlayerEvent.ItemCraftedEvent event)
 	{
-		List<ItemStack> inputsToRemove = getInputsToRemoveForOutput(event.crafting);
-		List<ItemStack> inputsToKeep = getInputsToKeepForOutput(event.crafting);
+		List<Item> inputsToRemove = getInputsToRemoveForOutput(event.getCrafting().getItem());
+		List<Item> inputsToKeep = getInputsToKeepForOutput(event.getCrafting().getItem());
 
 		if (inputsToRemove.isEmpty() && inputsToKeep.isEmpty())
 			return;
 
-		for (int i = 0; i < event.craftMatrix.getSizeInventory(); i++)
+		for (int i = 0; i < event.getInventory().getContainerSize(); i++)
 		{
-			ItemStack stackInSlot = event.craftMatrix.getStackInSlot(i);
-			if (stackInSlot != null)
+			ItemStack stackInSlot = event.getInventory().getItem(i);
+			if (!stackInSlot.isEmpty())
 			{
-				for (ItemStack inputToRemove : inputsToRemove)
+				for (Item inputToRemove : inputsToRemove)
 				{
-					if (OreDictionary.itemMatches(inputToRemove, stackInSlot, false))
+					if (inputToRemove == stackInSlot.getItem())
 					{
-						stackInSlot.stackSize -= inputToRemove.stackSize;
-						if (stackInSlot.stackSize <= 0)
-							event.craftMatrix.setInventorySlotContents(i, null);
+						stackInSlot.shrink(1);
+						if (stackInSlot.getCount() <= 0)
+							event.getInventory().setItem(i, ItemStack.EMPTY);
 						break;
 					}
 				}
-				for (ItemStack inputToKeep : inputsToKeep)
+				for (Item inputToKeep : inputsToKeep)
 				{
-					if (OreDictionary.itemMatches(inputToKeep, stackInSlot, false))
+					if (inputToKeep == stackInSlot.getItem())
 					{
-						stackInSlot.stackSize += inputToKeep.stackSize;
-						if (stackInSlot.isItemStackDamageable() && stackInSlot.attemptDamageItem(inputToKeep.stackSize, RandomHelper.random))
+						stackInSlot.grow(stackInSlot.getCount());
+						Player player = event.getEntity();
+						ServerPlayer serverPlayer = player instanceof ServerPlayer ? (ServerPlayer) player : null;
+ 						if (stackInSlot.isDamageableItem() && stackInSlot.hurt(1, event.getEntity().getRandom(), serverPlayer))
 						{
-							stackInSlot.stackSize--;
+							stackInSlot.shrink(1);
 						}
 						break;
 					}
@@ -93,12 +102,12 @@ public class CraftingModifier
 		}
 	}
 
-	public List<ItemStack> getInputsToRemoveForOutput(ItemStack output)
+	public List<Item> getInputsToRemoveForOutput(Item output)
 	{
-		List<ItemStack> inputsToRemove = new ArrayList<ItemStack>();
-		for (Entry<ItemStack, ItemStack[]> entry : inputsToRemoveForOutput.entrySet())
+		List<Item> inputsToRemove = new ArrayList<>();
+		for (Map.Entry<Item, Item[]> entry : inputsToRemoveForOutput.entrySet())
 		{
-			if (OreDictionary.itemMatches(entry.getKey(), output, false))
+			if (entry.getKey() == output)
 			{
 				inputsToRemove.addAll(Arrays.asList(entry.getValue()));
 			}
@@ -106,12 +115,12 @@ public class CraftingModifier
 		return inputsToRemove;
 	}
 
-	public List<ItemStack> getInputsToKeepForOutput(ItemStack output)
+	public List<Item> getInputsToKeepForOutput(Item output)
 	{
-		List<ItemStack> inputsToKeep = new ArrayList<ItemStack>();
-		for (Entry<ItemStack, ItemStack[]> entry : inputsToKeepForOutput.entrySet())
+		List<Item> inputsToKeep = new ArrayList<>();
+		for (Map.Entry<Item, Item[]> entry : inputsToKeepForOutput.entrySet())
 		{
-			if (OreDictionary.itemMatches(entry.getKey(), output, false))
+			if (entry.getKey() == output)
 			{
 				inputsToKeep.addAll(Arrays.asList(entry.getValue()));
 			}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "/": {
+      "item": "veganoption:jute_stalk"
+    }
+  },
+  "pattern": [
+    "///",
+    "///",
+    "///"
+  ],
+  "result": {
+    "item": "veganoption:bundled_jute"
+  },
+  "show_notification": true
+}

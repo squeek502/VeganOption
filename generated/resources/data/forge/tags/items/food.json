@@ -1,0 +1,8 @@
+{
+  "values": [
+    "#forge:food/cooked_fish",
+    "#forge:food/raw_fish",
+    "#forge:food/cooked_meat",
+    "#forge:food/raw_meat"
+  ]
+}

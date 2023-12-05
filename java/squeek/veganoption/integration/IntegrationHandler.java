@@ -1,6 +1,7 @@
 package squeek.veganoption.integration;
 
-import net.minecraftforge.fml.common.Loader;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,38 +12,23 @@ public class IntegrationHandler extends IntegrationBase
 
 	static
 	{
-		tryIntegration(MODID_HARVESTCRAFT, "pams", "HarvestCraft");
-		tryIntegration(MODID_TINKERS_CONSTRUCT, "tic");
-		tryIntegration(MODID_WAILA, "waila");
-		tryIntegration(MODID_BIOMES_O_PLENTY, "bop");
-		tryIntegration(MODID_JEI, "jei");
-		tryIntegration(MODID_THERMAL_EXPANSION, "cofh", "ThermalExpansion");
-		tryIntegration(MODID_THERMAL_FOUNDATION, "cofh", "ThermalFoundation");
-		tryIntegration(MODID_IMMERSIVE_ENGINEERING, "ie", "ImmersiveEngineering");
-	}
-
-	public static void preInit()
-	{
-		for (IntegratorBase integrator : integrators.values())
-		{
-			integrator.preInit();
-		}
+		// todo: reimplement mod integration
 	}
 
 	public static void init()
 	{
-		for (IntegratorBase integrator : integrators.values())
-		{
-			integrator.init();
-		}
+		integrators.values().forEach(IntegratorBase::create);
 	}
 
-	public static void postInit()
+	@SubscribeEvent
+	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{
-		for (IntegratorBase integrator : integrators.values())
-		{
-			integrator.postInit();
-		}
+		integrators.values().forEach(module -> module.registerRenderers(event));
+	}
+
+	public static void finish()
+	{
+		integrators.values().forEach(IntegratorBase::finish);
 	}
 
 	public static boolean tryIntegration(String modID, String packageName)
@@ -52,7 +38,7 @@ public class IntegrationHandler extends IntegrationBase
 
 	public static boolean tryIntegration(String modID, String packageName, String className)
 	{
-		if (Loader.isModLoaded(modID))
+		if (IntegrationBase.modExists(modID))
 		{
 			try
 			{

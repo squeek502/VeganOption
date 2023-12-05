@@ -1,22 +1,25 @@
 package squeek.veganoption.helpers;
 
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.List;
 
 public class WorldHelper
 {
-	public static List<EntityItem> getItemEntitiesWithin(World world, BlockPos pos)
+	public static final AABB FULL_BLOCK_AABB = Shapes.block().bounds();
+
+	public static List<ItemEntity> getItemEntitiesWithin(Level level, BlockPos pos)
 	{
-		return getItemEntitiesWithin(world, new AxisAlignedBB(pos));
+		return getItemEntitiesWithin(level, new AABB(pos));
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<EntityItem> getItemEntitiesWithin(World world, AxisAlignedBB aabb)
+	public static List<ItemEntity> getItemEntitiesWithin(Level level, AABB aabb)
 	{
-		return world.getEntitiesWithinAABB(EntityItem.class, aabb);
+		return level.getEntitiesOfClass(ItemEntity.class, aabb);
 	}
 }

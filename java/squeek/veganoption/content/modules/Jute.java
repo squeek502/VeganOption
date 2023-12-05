@@ -1,47 +1,62 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoublePlant;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemShears;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.EnumPlantType;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.IntRange;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.LimitCount;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.blocks.BlockJutePlant;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.GenericBlockLootSubProvider;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
-import squeek.veganoption.items.ItemBlockJutePlant;
-import squeek.veganoption.items.ItemSeedsGeneric;
 
+import java.util.List;
+
+import static squeek.veganoption.ModInfo.MODID_LOWER;
+import static squeek.veganoption.VeganOption.REGISTER_BLOCKS;
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
+
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER)
 public class Jute implements IContentModule
 {
-	public static BlockRettable juteBundled;
-	public static Block jutePlant;
-	public static Item juteStalk;
-	public static Item juteFibre;
-	public static Item juteSeeds;
-	public static DropSpecifier juteDrops;
+	public static RegistryObject<Block> juteBundled;
+	public static RegistryObject<Item> juteBundledItem;
+	public static RegistryObject<Block> jutePlant;
+	public static RegistryObject<Item> juteSeeds;
+	public static RegistryObject<Item> juteStalk;
+	public static RegistryObject<Item> juteFibre;
 
 	public static final int JUTE_BASE_COLOR = 0x67ce0c;
 	public static final int JUTE_RETTED_COLOR = 0xbfb57e;
@@ -49,136 +64,140 @@ public class Jute implements IContentModule
 	@Override
 	public void create()
 	{
-		juteFibre = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".juteFibre")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "juteFibre");
-		GameRegistry.register(juteFibre);
-
-		juteStalk = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".juteStalk")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "juteStalk");
-		GameRegistry.register(juteStalk);
-
-		juteBundled = (BlockRettable) new BlockRettable(juteFibre, 8, 15)
-			.setHardness(0.5F)
-			.setUnlocalizedName(ModInfo.MODID + ".juteBundled")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "juteBundled");
-		juteBundled.setHarvestLevel("axe", 0);
-		GameRegistry.register(juteBundled);
-		GameRegistry.register(new ItemBlock(juteBundled).setRegistryName(juteBundled.getRegistryName()));
-
-		jutePlant = new BlockJutePlant()
-			.setUnlocalizedName(ModInfo.MODID + ".jutePlant")
-			.setRegistryName(ModInfo.MODID_LOWER, "jutePlant");
-		GameRegistry.register(jutePlant);
-		GameRegistry.register(new ItemBlockJutePlant(jutePlant).setRegistryName(jutePlant.getRegistryName()));
-
-		juteSeeds = new ItemSeedsGeneric(jutePlant, EnumPlantType.Plains)
-			.setUnlocalizedName(ModInfo.MODID + ".juteSeeds")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "juteSeeds");
-		GameRegistry.register(juteSeeds);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-		ContentHelper.registerSharedColorHandler(new BlockRettable.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR), juteBundled);
-		ContentHelper.registerSharedColorHandler(new BlockJutePlant.ColorHandler(), jutePlant);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(juteStalk);
-		ContentHelper.registerTypicalItemModel(juteFibre);
-		ContentHelper.registerTypicalItemModel(juteSeeds);
-
-		// TODO: this seems kinda wasteful, not familiar enough with the model system to know if a
-		// separate model needs to be registered for each meta of each item or if a single item
-		// could use a single model regardless of meta
-		//
-		// each blockstate variation being registered seems to allow waila to render
-		// each blockstate variation in the waila tooltip; otherwise it shows black/purple checkers
-		ContentHelper.registerTypicalBlockItemModels(juteBundled, juteBundled.getRegistryName().toString());
-		ContentHelper.registerTypicalBlockItemModels(jutePlant, jutePlant.getRegistryName().toString());
+		juteFibre = REGISTER_ITEMS.register("jute_fibre", () -> new Item(new Item.Properties()));
+		juteStalk = REGISTER_ITEMS.register("jute_stalk", () -> new Item(new Item.Properties()));
+		juteBundled = REGISTER_BLOCKS.register("bundled_jute", () -> new BlockRettable(juteFibre, 8, 15));
+		juteBundledItem = REGISTER_ITEMS.register("bundled_jute", () -> new BlockItem(juteBundled.get(), new Item.Properties()));
+		jutePlant = REGISTER_BLOCKS.register("jute_plant", BlockJutePlant::new);
+		juteSeeds = REGISTER_ITEMS.register("jute_seeds", () -> new BlockItem(jutePlant.get(), new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenBlockTags(DataGenProviders.BlockTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.bastFibreOreDict, new ItemStack(juteFibre));
+		provider.tagW(BlockTags.MINEABLE_WITH_AXE).add(juteBundled.get());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
+	public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event)
+	{
+		event.register(new BlockRettable.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR), juteBundledItem.get());
+		event.register(new BlockJutePlant.ColorHandler(), juteSeeds.get());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
+	public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event)
+	{
+		event.register(new BlockRettable.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR), juteBundled.get());
+		event.register(new BlockJutePlant.ColorHandler(), jutePlant.get());
 	}
 
 	@Override
-	public void recipes()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-		GameRegistry.addShapedRecipe(new ItemStack(juteBundled), "///", "///", "///", '/', new ItemStack(juteStalk));
+		provider.basicItem(juteStalk.get());
+		provider.basicItem(juteFibre.get());
+		provider.basicItem(juteSeeds.get());
+		provider.withExistingParent(juteBundledItem.getId().toString(), provider.modLoc(juteBundled.getId().getPath()));
+	}
 
-		DropsModifier.NEIBlockSpecifier juteBundledBlockSpecifier = new DropsModifier.NEIBlockSpecifier(juteBundled.getDefaultState(), new ItemStack(juteBundled, 1, BlockRettable.NUM_RETTING_STAGES));
-		DropsModifier.NEIDropSpecifier juteDropSpecifier = new DropsModifier.NEIDropSpecifier(new ItemStack(juteBundled.rettedItem), 1f, juteBundled.minRettedItemDrops, juteBundled.maxRettedItemDrops);
-		Modifiers.drops.addDropsToBlock(juteBundledBlockSpecifier, juteDropSpecifier);
+	@Override
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
+	{
+		provider.tagW(ContentHelper.ItemTags.FIBRES).add(juteFibre.get());
+	}
 
-		BlockSpecifier doubleFernSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT.getDefaultState().withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.FERN), BlockDoublePlant.VARIANT);
-		juteDrops = new DropSpecifier(new ItemStack(juteStalk), 1, 3);
-		Modifiers.drops.addDropsToBlock(doubleFernSpecifier, juteDrops);
+	@Override
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
+	{
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, juteBundledItem.get())
+			.pattern("///")
+			.pattern("///")
+			.pattern("///")
+			.define('/', juteStalk.get())
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output);
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, juteSeeds.get())
+			.requires(juteStalk.get())
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output);
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STRING)
+			.pattern("~~")
+			.define('~', ContentHelper.ItemTags.FIBRES)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output);
+	}
 
-		// need to catch the top of the fern breaking really early, as it bypasses the harvest event
-		// so register this as an event handler and handle it in onBlockBreak (see onFernTopBreak function below)
-		MinecraftForge.EVENT_BUS.register(this);
+	@Override
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
+	{
+		provider.add(
+			"large_fern_jute_stalk",
+			new SimpleBlockDropLootModifier(
+				Blocks.LARGE_FERN,
+				juteStalk.get(),
+				ConstantValue.exactly(1),
+				UniformGenerator.between(1, 3)
+			)
+		);
+	}
 
-		GameRegistry.addShapelessRecipe(new ItemStack(juteSeeds), new ItemStack(juteStalk));
+	@Override
+	public BlockLootSubProvider getBlockLootProvider()
+	{
+		return new GenericBlockLootSubProvider()
+		{
+			@Override
+			protected void generate()
+			{
+				// jute plants (partially grown ferns) top block drop jute seeds, but fully grown ferns only drop jute stalks
+				LootPool.Builder jutePlantPool = LootPool.lootPool()
+					.name("jute_plant")
+					.setRolls(ConstantValue.exactly(1));
+				for (int stage = 0; stage <= BlockJutePlant.NUM_GROWTH_STAGES; stage++)
+				{
+					if (BlockJutePlant.isTop(stage))
+					{
+						jutePlantPool
+							.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Jute.jutePlant.get())
+									  .setProperties(StatePropertiesPredicate.Builder.properties()
+														 .hasProperty(BlockJutePlant.GROWTH_STAGE, stage)))
+							.apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+							.add(LootItem.lootTableItem(juteSeeds.get()));
+					}
+				}
+				add(jutePlant.get(), LootTable.lootTable().withPool(jutePlantPool));
+
+				LootItemCondition.Builder rettedCondition = LootItemBlockStatePropertyCondition.hasBlockStateProperties(juteBundled.get())
+					.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(BlockRettable.STAGE, BlockRettable.MAX_RETTING_STAGES));
+
+				// if retting stage = max, drop ret item (jute fibre), else drop self
+				LootPool.Builder rettedJutePool = LootPool.lootPool()
+					.name("bundled_jute")
+					.setRolls(ConstantValue.exactly(1))
+					.add(LootItem.lootTableItem(((BlockRettable) juteBundled.get()).getRettedItem()))
+					.when(rettedCondition)
+					.apply(LimitCount.limitCount(IntRange.range(((BlockRettable) juteBundled.get()).getMinRettedItemDrops(), ((BlockRettable) juteBundled.get()).getMaxRettedItemDrops())))
+					.add(LootItem.lootTableItem(juteBundledItem.get()))
+					.when(InvertedLootItemCondition.invert(rettedCondition))
+					.apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)));
+				add(juteBundled.get(), LootTable.lootTable().withPool(rettedJutePool));
+			}
+
+			@Override
+			protected Iterable<Block> getKnownBlocks()
+			{
+				return List.of(jutePlant.get(), juteBundled.get());
+			}
+		};
 	}
 
 	@Override
 	public void finish()
 	{
-		CompostRegistry.addGreen(Jute.juteStalk);
-		RelationshipRegistry.addRelationship(new ItemStack(juteFibre), new ItemStack(juteBundled));
-		RelationshipRegistry.addRelationship(new ItemStack(jutePlant), new ItemStack(juteSeeds));
-	}
-
-	/**
-	 * Catch the top of a fern being broken and do the drops manually
-	 * In the double plant code, it forces the blocks to air and bypasses
-	 * the harvest drops event, so we need to catch it early and do some
-	 * less than ideal checks
-	 */
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public void onFernTopBreak(BlockEvent.BreakEvent event)
-	{
-		if (event.isCanceled())
-			return;
-
-		IBlockState state = event.getState();
-		Block block = state.getBlock();
-		if (block != Blocks.DOUBLE_PLANT)
-			return;
-
-		if (state.getValue(BlockDoublePlant.HALF) == BlockDoublePlant.EnumBlockHalf.LOWER)
-			return;
-
-		World world = event.getWorld();
-		BlockPos posBelow = event.getPos().down();
-		IBlockState stateBelow = world.getBlockState(event.getPos().down());
-		Block blockBelow = stateBelow.getBlock();
-		if (blockBelow != block)
-			return;
-
-		if (stateBelow.getValue(BlockDoublePlant.VARIANT) != BlockDoublePlant.EnumPlantType.FERN)
-			return;
-
-		if (event.getPlayer().getHeldItemMainhand() != null && event.getPlayer().getHeldItemMainhand().getItem() instanceof ItemShears)
-			return;
-
-		for (ItemStack drop : juteDrops.getDrops(event.getPlayer(), squeek.veganoption.helpers.EnchantmentHelper.getFortuneModifier(event.getPlayer()), squeek.veganoption.helpers.EnchantmentHelper.getSilkTouchModifier(event.getPlayer())))
-		{
-			Block.spawnAsEntity(event.getWorld(), event.getPos().down(), drop);
-		}
+		CompostRegistry.addGreen(Jute.juteStalk.get());
+		RelationshipRegistry.addRelationship(juteFibre.get(), juteBundledItem.get());
 	}
 }

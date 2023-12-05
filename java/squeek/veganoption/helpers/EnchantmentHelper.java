@@ -1,19 +1,19 @@
 package squeek.veganoption.helpers;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Enchantments;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.enchantment.Enchantments;
 
-import static net.minecraft.enchantment.EnchantmentHelper.getMaxEnchantmentLevel;
+import static net.minecraft.world.item.enchantment.EnchantmentHelper.getEnchantmentLevel;
 
 public class EnchantmentHelper
 {
-	public static int getFortuneModifier(EntityLivingBase elb)
+	public static int getFortuneModifier(LivingEntity entity)
 	{
-		return getMaxEnchantmentLevel(Enchantments.FORTUNE, elb);
+		return getEnchantmentLevel(Enchantments.BLOCK_FORTUNE, entity);
 	}
 
-	public static boolean getSilkTouchModifier(EntityLivingBase elb)
+	public static boolean getSilkTouchModifier(LivingEntity entity)
 	{
-		return getMaxEnchantmentLevel(Enchantments.SILK_TOUCH, elb) > 0;
+		return getEnchantmentLevel(Enchantments.SILK_TOUCH, entity) > 0;
 	}
 }

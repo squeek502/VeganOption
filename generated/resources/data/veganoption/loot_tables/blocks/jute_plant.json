@@ -1,0 +1,97 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "veganoption:jute_plant",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "growth": "6"
+          }
+        },
+        {
+          "block": "veganoption:jute_plant",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "growth": "7"
+          }
+        },
+        {
+          "block": "veganoption:jute_plant",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "growth": "8"
+          }
+        },
+        {
+          "block": "veganoption:jute_plant",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "growth": "9"
+          }
+        },
+        {
+          "block": "veganoption:jute_plant",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "growth": "10"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:jute_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:jute_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:jute_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:jute_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:jute_seeds"
+        }
+      ],
+      "functions": [
+        {
+          "add": false,
+          "count": 1.0,
+          "function": "minecraft:set_count"
+        },
+        {
+          "add": false,
+          "count": 1.0,
+          "function": "minecraft:set_count"
+        },
+        {
+          "add": false,
+          "count": 1.0,
+          "function": "minecraft:set_count"
+        },
+        {
+          "add": false,
+          "count": 1.0,
+          "function": "minecraft:set_count"
+        },
+        {
+          "add": false,
+          "count": 1.0,
+          "function": "minecraft:set_count"
+        }
+      ],
+      "name": "jute_plant",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "veganoption:blocks/jute_plant"
+}

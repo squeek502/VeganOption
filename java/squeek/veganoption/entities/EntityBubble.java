@@ -1,26 +1,28 @@
 package squeek.veganoption.entities;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import squeek.veganoption.content.modules.FrozenBubble;
 import squeek.veganoption.helpers.BlockHelper;
+import squeek.veganoption.helpers.EffectsHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.helpers.TemperatureHelper;
-import squeek.veganoption.network.MessageFX;
-import squeek.veganoption.network.NetworkHandler;
 
-public class EntityBubble extends EntityThrowable
+public class EntityBubble extends ThrowableItemProjectile
 {
+	private static final byte EVENT_ID = 7;
 	public static final int LIFETIME_BASE = 40;
 	public static final int LIFETIME_MAX = 80;
 	public static final float FREEZING_TEMPERATURE = -15;
@@ -29,33 +31,31 @@ public class EntityBubble extends EntityThrowable
 	public int lifetime = RandomHelper.getRandomIntFromRange(LIFETIME_BASE, LIFETIME_MAX);
 	public float temperature;
 
-	public EntityBubble(World world)
+	public EntityBubble(Level level, Player player)
 	{
-		super(world);
+		super(FrozenBubble.bubbleEntityType.get(), player, level);
 	}
 
-	public EntityBubble(World world, EntityLivingBase entity)
+	public EntityBubble(Level level, double x, double y, double z)
 	{
-		super(world, entity);
+		super(FrozenBubble.bubbleEntityType.get(), x, y, z, level);
 	}
 
-	public EntityBubble(World world, double x, double y, double z)
+	public EntityBubble(EntityType<? extends EntityBubble> type, Level level)
 	{
-		super(world, x, y, z);
+		super(type, level);
+	}
+
+	private void setTemperature()
+	{
+		this.temperature = TemperatureHelper.getBiomeTemperature(level(), blockPosition());
 	}
 
 	@Override
-	protected void entityInit()
-	{
-		super.entityInit();
-		this.temperature = TemperatureHelper.getBiomeTemperature(worldObj, new BlockPos((int) posX, (int) posY, (int) posZ));
-	}
-
-	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount)
+	public boolean hurt(DamageSource source, float amount)
 	{
 		pop();
-		return super.attackEntityFrom(source, amount);
+		return super.hurt(source, amount);
 	}
 
 	@Override
@@ -65,83 +65,96 @@ public class EntityBubble extends EntityThrowable
 	}
 
 	@Override
-	public void onUpdate()
+	public void tick()
 	{
-		if (!this.worldObj.isRemote && (ticksExisted >= lifetime || this.isInWater()))
+		if (firstTick)
+			setTemperature();
+
+		if (!level().isClientSide() && (tickCount >= lifetime || this.isInWater()))
 		{
 			pop();
 			return;
 		}
 
-		float surroundingTemp = getSurroundingAirTemperature(worldObj, new BlockPos(posX, posY, posZ));
+		float surroundingTemp = getSurroundingAirTemperature(level(), blockPosition());
 		temperature += (surroundingTemp - temperature) * 0.05f;
 
-		if (!this.worldObj.isRemote && temperature <= FREEZING_TEMPERATURE)
+		if (!level().isClientSide() && temperature <= FREEZING_TEMPERATURE)
 		{
 			freeze();
 			return;
 		}
 
-		if (!this.worldObj.isRemote && ticksExisted % 10 == 0)
+		if (!level().isClientSide() && tickCount % 10 == 0)
 		{
-			this.motionX += 0.1F * (RandomHelper.random.nextFloat() - 0.5F);
-			this.motionY += 0.1F * (RandomHelper.random.nextFloat() - 0.5F);
-			this.motionZ += 0.1F * (RandomHelper.random.nextFloat() - 0.5F);
+			Vec3 motion = getDeltaMovement();
+			double motionX = motion.x + 0.1d * (RandomHelper.random.nextDouble() - 0.5d);
+			double motionY = motion.y + 0.1d * (RandomHelper.random.nextDouble() - 0.5d);
+			double motionZ = motion.z + 0.1d * (RandomHelper.random.nextDouble() - 0.5d);
+			setDeltaMovement(motionX, motionY, motionZ);
 		}
 
-		super.onUpdate();
+		super.tick();
 
+		Vec3 motion = getDeltaMovement();
 		// this check helps avoid low velocities which minecraft seems to struggle with? (visually stutters)
 		// have not looked into the cause; this is basically an ugly/fast workaround
-		if (motionX * motionX + motionY * motionY + motionZ * motionZ > 0.025f)
-		{
-			this.motionX *= 0.9F;
-			this.motionY *= 0.9F;
-			this.motionZ *= 0.9F;
-		}
+		// todo: check if still a problem
+		if (motion.x * motion.x + motion.y * motion.y + motion.z * motion.z > 0.025f)
+			setDeltaMovement(motion.x * 0.9d, motion.y * 0.9d, motion.z * 0.9);
 	}
 
 	@Override
-	protected float getGravityVelocity()
+	protected float getGravity()
 	{
 		return 0.0F;
 	}
 
 	public void pop()
 	{
-		if (!this.worldObj.isRemote)
+		if (!level().isClientSide())
 		{
-			NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, 80);
-			NetworkHandler.channel.sendToAllAround(new MessageFX(posX, posY, posZ, MessageFX.FX.BUBBLE_POP), target);
-			this.setDead();
+			level().broadcastEntityEvent(this, EVENT_ID);
+			discard();
 		}
 	}
 
 	public void freeze()
 	{
-		if (!this.worldObj.isRemote)
+		if (!level().isClientSide())
 		{
-			EntityItem frozenBubble = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(FrozenBubble.frozenBubble));
-			worldObj.spawnEntityInWorld(frozenBubble);
-			this.setDead();
+			ItemEntity frozenBubble = new ItemEntity(level(), getX(), getY(), getZ(), new ItemStack(FrozenBubble.frozenBubble.get()));
+			level().addFreshEntity(frozenBubble);
+			discard();
 		}
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult rayTraceResult)
+	protected void onHit(HitResult result)
 	{
+		super.onHit(result);
 		pop();
 	}
 
-	public static float getSurroundingAirTemperature(World world, BlockPos pos)
+	@Override
+	public void handleEntityEvent(byte id)
 	{
-		float airTemperature = TemperatureHelper.getBiomeTemperature(world, pos);
+		super.handleEntityEvent(id);
+		if (id == EVENT_ID)
+		{
+			EffectsHelper.doEntityBreakParticles(level(), getX(), getY(), getZ(), getDefaultItem());
+		}
+	}
+
+	public static float getSurroundingAirTemperature(Level level, BlockPos pos)
+	{
+		float airTemperature = TemperatureHelper.getBiomeTemperature(level, pos);
 
 		BlockPos[] surroundingBlocks = BlockHelper.getBlocksInRadiusAround(pos, TEMPERATURE_CHECK_RADIUS);
 
 		for (BlockPos blockPos : surroundingBlocks)
 		{
-			Block block = world.getBlockState(blockPos).getBlock();
+			Block block = level.getBlockState(blockPos).getBlock();
 			if (block == Blocks.AIR)
 				airTemperature -= 0.01f;
 			else if (block == Blocks.SNOW)
@@ -160,20 +173,25 @@ public class EntityBubble extends EntityThrowable
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound tag)
+	public void deserializeNBT(CompoundTag nbt)
 	{
-		super.readEntityFromNBT(tag);
-
-		temperature = tag.getFloat("temperature");
-		lifetime = tag.getInteger("lifetime");
+		super.deserializeNBT(nbt);
+		temperature = nbt.getFloat("temperature");
+		lifetime = nbt.getInt("lifetime");
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound tag)
+	public CompoundTag serializeNBT()
 	{
-		super.writeEntityToNBT(tag);
+		CompoundTag nbt = super.serializeNBT();
+		nbt.putFloat("temperature", temperature);
+		nbt.putInt("lifetime", lifetime);
+		return nbt;
+	}
 
-		tag.setFloat("temperature", temperature);
-		tag.setInteger("lifetime", lifetime);
+	@Override
+	protected Item getDefaultItem()
+	{
+		return FrozenBubble.soapSolution.get();
 	}
 }

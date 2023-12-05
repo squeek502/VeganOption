@@ -1,42 +1,32 @@
 package squeek.veganoption.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import squeek.veganoption.inventory.ContainerComposter;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.simple.SimpleMessage;
+import squeek.veganoption.gui.ComposterMenu;
 
-public class MessageComposterTumble implements IMessage, IMessageHandler<MessageComposterTumble, IMessage>
+public class MessageComposterTumble implements SimpleMessage
 {
-
-	public MessageComposterTumble()
+	public MessageComposterTumble(FriendlyByteBuf buf)
 	{
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf)
+	public void encode(FriendlyByteBuf buf)
 	{
 	}
 
-	@Override
-	public void fromBytes(ByteBuf buf)
+	public static void onMessage(MessageComposterTumble message, NetworkEvent.Context ctx)
 	{
-	}
-
-	@Override
-	public IMessage onMessage(MessageComposterTumble message, MessageContext ctx)
-	{
-		EntityPlayer player = ctx.getServerHandler().playerEntity;
-		if (player.openContainer != null && player.openContainer instanceof ContainerComposter)
+		Player player = ctx.getSender();
+		if (player.hasContainerOpen() && player.containerMenu instanceof ComposterMenu)
 		{
-			ContainerComposter container = (ContainerComposter) player.openContainer;
+			ComposterMenu container = (ComposterMenu) player.containerMenu;
 			if (!container.composter.isAerating())
 			{
 				container.composter.aerate();
 			}
 		}
-
-		return null;
 	}
 }

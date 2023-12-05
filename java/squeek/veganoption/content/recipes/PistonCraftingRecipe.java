@@ -1,15 +1,12 @@
 package squeek.veganoption.content.recipes;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import squeek.veganoption.content.crafting.PistonCraftingHandler;
 import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.helpers.WorldHelper;
@@ -17,12 +14,13 @@ import squeek.veganoption.helpers.WorldHelper;
 import java.util.*;
 import java.util.Map.Entry;
 
+// todo: json
 public class PistonCraftingRecipe
 {
-	public List<InputItemStack> itemInputs = new ArrayList<InputItemStack>();
-	public FluidStack fluidInput = null;
-	public List<ItemStack> itemOutputs = new ArrayList<ItemStack>();
-	public FluidStack fluidOutput = null;
+	public List<InputItemStack> itemInputs = new ArrayList<>();
+	public FluidStack fluidInput = FluidStack.EMPTY;
+	public List<ItemStack> itemOutputs = new ArrayList<>();
+	public FluidStack fluidOutput = FluidStack.EMPTY;
 	protected Random rand = new Random();
 
 	public PistonCraftingRecipe(Object output, Object... inputs)
@@ -30,58 +28,49 @@ public class PistonCraftingRecipe
 		this(new Object[]{output}, inputs);
 	}
 
+	/**
+	 * @param outputs Outputs must be either of type ItemStack or FluidStack
+	 * @param inputs Inputs must be either of type InputItemStack or FluidStack
+	 */
 	public PistonCraftingRecipe(Object[] outputs, Object[] inputs)
 	{
 		for (Object input : inputs)
 		{
 			if (input instanceof InputItemStack)
 				itemInputs.add((InputItemStack) input);
-			else if (input instanceof String || input instanceof Item || input instanceof Block || input instanceof ItemStack)
-				itemInputs.add(new InputItemStack(input));
-			else if (input instanceof Fluid)
-				fluidInput = new FluidStack((Fluid) input, Fluid.BUCKET_VOLUME);
-			else if (input instanceof FluidStack)
-				fluidInput = (FluidStack) input;
+			else if (input instanceof FluidStack fluidStack)
+				fluidInput = fluidStack;
 			else
 				throw new RuntimeException("Unsupported PistonCraftingRecipe input: " + input);
 		}
 		for (Object output : outputs)
 		{
-			if (output instanceof Item)
-				itemOutputs.add(new ItemStack((Item) output));
-			else if (output instanceof Block)
-				itemOutputs.add(new ItemStack((Block) output));
-			else if (output instanceof ItemStack)
-				itemOutputs.add((ItemStack) output);
-			else if (output instanceof Fluid)
-				fluidOutput = new FluidStack((Fluid) output, Fluid.BUCKET_VOLUME);
-			else if (output instanceof FluidStack)
-				fluidOutput = (FluidStack) output;
+			if (output instanceof ItemStack stack)
+				itemOutputs.add(stack);
+			else if (output instanceof FluidStack fluidStack)
+				fluidOutput = fluidStack;
 			else
 				throw new RuntimeException("Unsupported PistonCraftingRecipe output: " + output);
 		}
 	}
 
-	// TODO: This probably doesn't work right for multiple overlapping OreDict inputs.
-	// It will likely think that the recipe works but it might use the same EntityItem
-	// for multiple  different OreDict inputs, and bug out when it starts consuming stuff
-	public boolean tryCraft(World world, BlockPos pos)
+	public boolean tryCraft(Level level, BlockPos pos)
 	{
-		IFluidHandler fluidHandler = getOutputFluidHandler(world, pos);
+		IFluidHandler fluidHandler = getOutputFluidHandler(level, pos);
 
 		if (!canOutputFluid(fluidHandler))
 			return false;
 
-		PistonCraftingHandler.WorldPosition displacedPos = new PistonCraftingHandler.WorldPosition(world, pos);
+		PistonCraftingHandler.WorldPosition displacedPos = new PistonCraftingHandler.WorldPosition(level, pos);
 		FluidStack displacedFluid = PistonCraftingHandler.displacedLiquids.get(displacedPos);
 
 		if (!fluidInputMatches(displacedFluid))
 			return false;
 
-		List<EntityItem> entityItemsWithin = WorldHelper.getItemEntitiesWithin(displacedPos.world, displacedPos.pos);
-		Map<InputItemStack, List<EntityItem>> entityItemsByInput = getEntityItemsByInput(itemInputs, entityItemsWithin);
+		List<ItemEntity> itemEntitiesWithin = WorldHelper.getItemEntitiesWithin(displacedPos.level, displacedPos.pos);
+		Map<InputItemStack, List<ItemEntity>> itemEntitiesByInput = getItemEntitiesByInput(itemInputs, itemEntitiesWithin);
 
-		if (!itemInputMatches(entityItemsByInput))
+		if (!itemInputMatches(itemEntitiesByInput))
 			return false;
 
 		boolean isReplacementPossible = itemInputs.size() == itemOutputs.size() && fluidOutput == null;
@@ -89,37 +78,37 @@ public class PistonCraftingRecipe
 		if (isReplacementPossible)
 		{
 			int i = 0;
-			for (Entry<InputItemStack, List<EntityItem>> entry : entityItemsByInput.entrySet())
+			for (Entry<InputItemStack, List<ItemEntity>> entry : itemEntitiesByInput.entrySet())
 			{
 				ItemStack output = itemOutputs.get(i);
-				for (EntityItem inputEntity : entry.getValue())
+				for (ItemEntity inputEntity : entry.getValue())
 				{
-					ItemStack inputStack = inputEntity.getEntityItem();
+					ItemStack inputStack = inputEntity.getItem();
 					ItemStack newItemStack = output.copy();
-					newItemStack.stackSize = (int) (inputStack.stackSize * ((float) output.stackSize / entry.getKey().stackSize()));
-					inputEntity.setEntityItemStack(newItemStack);
+					newItemStack.setCount((int) (inputStack.getCount() * ((float) output.getCount() / entry.getKey().getCount())));
+					inputEntity.setItem(newItemStack);
 				}
 				i++;
 			}
 		}
 		else
 		{
-			Map<ItemStack, EntityItem> entityItemsByOutput = new HashMap<ItemStack, EntityItem>();
+			Map<ItemStack, ItemEntity> itemEntitiesByOutput = new HashMap<>();
 			for (ItemStack itemOutput : itemOutputs)
 			{
-				List<EntityItem> randomReferenceEntityList = entityItemsByInput.get(itemInputs.get(rand.nextInt(itemInputs.size())));
-				EntityItem randomReferenceEntity = randomReferenceEntityList.get(rand.nextInt(randomReferenceEntityList.size()));
-				EntityItem outputEntity = new EntityItem(world, randomReferenceEntity.posX, randomReferenceEntity.posY, randomReferenceEntity.posZ, itemOutput.copy());
-				outputEntity.getEntityItem().stackSize = 0;
-				entityItemsByOutput.put(itemOutput, outputEntity);
+				List<ItemEntity> randomReferenceEntityList = itemEntitiesByInput.get(itemInputs.get(rand.nextInt(itemInputs.size())));
+				ItemEntity randomReferenceEntity = randomReferenceEntityList.get(rand.nextInt(randomReferenceEntityList.size()));
+				ItemEntity outputEntity = new ItemEntity(level, randomReferenceEntity.getX(), randomReferenceEntity.getY(), randomReferenceEntity.getZ(), itemOutput.copy());
+				outputEntity.getItem().setCount(0);
+				itemEntitiesByOutput.put(itemOutput, outputEntity);
 			}
 
 			do
 			{
 				if (fluidInput != null && displacedFluid != null)
 				{
-					displacedFluid.amount -= fluidInput.amount;
-					if (displacedFluid.amount <= 0)
+					displacedFluid.setAmount(displacedFluid.getAmount() - fluidInput.getAmount());
+					if (displacedFluid.getAmount() <= 0)
 					{
 						PistonCraftingHandler.displacedLiquids.remove(displacedPos);
 						displacedFluid = null;
@@ -127,45 +116,45 @@ public class PistonCraftingRecipe
 				}
 				if (fluidOutput != null && fluidHandler != null)
 				{
-					fluidHandler.fill(fluidOutput, true);
+					fluidHandler.fill(fluidOutput, IFluidHandler.FluidAction.EXECUTE);
 				}
-				for (Entry<InputItemStack, List<EntityItem>> inputEntry : entityItemsByInput.entrySet())
+				for (Entry<InputItemStack, List<ItemEntity>> inputEntry : itemEntitiesByInput.entrySet())
 				{
-					int numRequired = inputEntry.getKey().stackSize();
+					int numRequired = inputEntry.getKey().getCount();
 					int numConsumed = 0;
-					for (EntityItem inputEntity : inputEntry.getValue())
+					for (ItemEntity inputEntity : inputEntry.getValue())
 					{
-						ItemStack inputStack = inputEntity.getEntityItem();
-						int numToConsume = Math.min(inputStack.stackSize, numRequired - numConsumed);
-						inputStack.stackSize -= numToConsume;
+						ItemStack inputStack = inputEntity.getItem();
+						int numToConsume = Math.min(inputStack.getCount(), numRequired - numConsumed);
+						inputStack.shrink(numToConsume);
 						numConsumed += numToConsume;
 
 						if (numConsumed >= numRequired)
 							break;
 					}
 				}
-				for (Entry<ItemStack, EntityItem> entry : entityItemsByOutput.entrySet())
+				for (Entry<ItemStack, ItemEntity> entry : itemEntitiesByOutput.entrySet())
 				{
-					entry.getValue().getEntityItem().stackSize += entry.getKey().stackSize;
+					entry.getValue().getItem().grow(entry.getKey().getCount());
 				}
 			}
-			while (fluidInputMatches(displacedFluid) && itemInputMatches(entityItemsByInput) && canOutputFluid(fluidHandler));
+			while (fluidInputMatches(displacedFluid) && itemInputMatches(itemEntitiesByInput) && canOutputFluid(fluidHandler));
 
-			for (Entry<ItemStack, EntityItem> entry : entityItemsByOutput.entrySet())
+			for (Entry<ItemStack, ItemEntity> entry : itemEntitiesByOutput.entrySet())
 			{
-				world.spawnEntityInWorld(entry.getValue());
+				level.addFreshEntity(entry.getValue());
 			}
 		}
 
 		return true;
 	}
 
-	public boolean canOutputFluid(World world, BlockPos pos)
+	public boolean canOutputFluid(Level level, BlockPos pos)
 	{
 		if (fluidOutput == null)
 			return true;
 
-		return canOutputFluid(getOutputFluidHandler(world, pos));
+		return canOutputFluid(getOutputFluidHandler(level, pos));
 	}
 
 	public boolean canOutputFluid(IFluidHandler fluidHandler)
@@ -176,79 +165,79 @@ public class PistonCraftingRecipe
 		if (fluidHandler == null)
 			return false;
 
-		return fluidHandler.fill(fluidOutput, false) == fluidOutput.amount;
+		return fluidHandler.fill(fluidOutput, IFluidHandler.FluidAction.SIMULATE) == fluidOutput.getAmount();
 	}
 
-	public IFluidHandler getOutputFluidHandler(World world, BlockPos pos)
+	public IFluidHandler getOutputFluidHandler(Level world, BlockPos pos)
 	{
 		if (fluidOutput == null)
 			return null;
 
-		return FluidHelper.getFluidHandlerAt(world, pos.down(), EnumFacing.UP);
+		return FluidHelper.getFluidHandlerAt(world, pos.below(), Direction.UP);
 	}
 
-	public boolean itemInputMatches(World world, BlockPos pos)
+	public boolean itemInputMatches(Level level, BlockPos pos)
 	{
 		if (itemInputs.isEmpty())
 			return true;
 
-		return itemInputMatches(WorldHelper.getItemEntitiesWithin(world, pos));
+		return itemInputMatches(WorldHelper.getItemEntitiesWithin(level, pos));
 	}
 
-	public boolean itemInputMatches(List<EntityItem> entityItems)
+	public boolean itemInputMatches(List<ItemEntity> itemEntities)
 	{
 		if (itemInputs.isEmpty())
 			return true;
 
-		return itemInputMatches(getEntityItemsByInput(itemInputs, entityItems));
+		return itemInputMatches(getItemEntitiesByInput(itemInputs, itemEntities));
 	}
 
-	public boolean itemInputMatches(Map<InputItemStack, List<EntityItem>> entityItemsByInput)
+	public boolean itemInputMatches(Map<InputItemStack, List<ItemEntity>> itemEntitiesByInput)
 	{
 		if (itemInputs.isEmpty())
 			return true;
 
-		for (Entry<InputItemStack, List<EntityItem>> entityItemsByInputEntry : entityItemsByInput.entrySet())
+		for (Entry<InputItemStack, List<ItemEntity>> itemEntitiesByInputEntry : itemEntitiesByInput.entrySet())
 		{
-			if (getStackSizeOfEntityItems(entityItemsByInputEntry.getValue()) < entityItemsByInputEntry.getKey().stackSize())
+			if (getStackSizeOfItemEntities(itemEntitiesByInputEntry.getValue()) < itemEntitiesByInputEntry.getKey().getCount())
 				return false;
 		}
 		return true;
 	}
 
-	public static Map<InputItemStack, List<EntityItem>> getEntityItemsByInput(Collection<InputItemStack> targets, Collection<EntityItem> entityItems)
+	public static Map<InputItemStack, List<ItemEntity>> getItemEntitiesByInput(Collection<InputItemStack> targets, Collection<ItemEntity> itemEntities)
 	{
-		Map<InputItemStack, List<EntityItem>> entityItemsByItemStack = new HashMap<InputItemStack, List<EntityItem>>();
+		Map<InputItemStack, List<ItemEntity>> itemEntitiesByItemStack = new HashMap<>();
 		for (InputItemStack target : targets)
 		{
-			entityItemsByItemStack.put(target, getMatchingEntityItems(target, entityItems));
+			itemEntitiesByItemStack.put(target, getMatchingItemEntities(target, itemEntities));
 		}
-		return entityItemsByItemStack;
+		return itemEntitiesByItemStack;
 	}
 
-	public static List<EntityItem> getMatchingEntityItems(InputItemStack target, Collection<EntityItem> entityItems)
+	public static List<ItemEntity> getMatchingItemEntities(InputItemStack target, Collection<ItemEntity> itemEntities)
 	{
-		List<EntityItem> matchingEntities = new ArrayList<EntityItem>();
-		for (EntityItem entityItem : entityItems)
+		List<ItemEntity> matchingEntities = new ArrayList<>();
+		for (ItemEntity itemEntity : itemEntities)
 		{
-			if (target.matches(entityItem.getEntityItem()))
+			if (target.matches(itemEntity.getItem()))
 			{
-				matchingEntities.add(entityItem);
+				matchingEntities.add(itemEntity);
 			}
 		}
-		if (!matchingEntities.isEmpty() && target.isOreDict() && target.stackSize() > 1)
+		if (!matchingEntities.isEmpty() && target.getCount() > 1)
 		{
-			List<EntityItem> entitiesOfOneTypeWithLargestStackSize = null;
+			List<ItemEntity> entitiesOfOneTypeWithLargestStackSize = null;
 			int largestStackSize = 0;
-			for (EntityItem entityItem : matchingEntities)
+			for (ItemEntity itemEntity : matchingEntities)
 			{
-				if (entitiesOfOneTypeWithLargestStackSize != null && entitiesOfOneTypeWithLargestStackSize.get(0).getEntityItem().isItemEqual(entityItem.getEntityItem()))
+				if (entitiesOfOneTypeWithLargestStackSize != null && entitiesOfOneTypeWithLargestStackSize.get(0).getItem().getItem().equals(itemEntity.getItem().getItem()))
 					continue;
 
-				List<EntityItem> exactMatches = getMatchingEntityItems(new InputItemStack(entityItem.getEntityItem()), matchingEntities);
-				int exactMatchesStackSize = getStackSizeOfEntityItems(exactMatches);
+				List<ItemEntity> exactMatches = getMatchingItemEntities(new InputItemStack(itemEntity.getItem()), matchingEntities);
+				int exactMatchesStackSize = getStackSizeOfItemEntities(exactMatches);
 
-				if (exactMatchesStackSize >= target.stackSize())
+				if (exactMatchesStackSize >= target.getCount())
 					return exactMatches;
 
 				if (exactMatchesStackSize > largestStackSize)
@@ -262,17 +251,17 @@ public class PistonCraftingRecipe
 		return matchingEntities;
 	}
 
-	public static int getStackSizeOfEntityItems(Collection<EntityItem> entityItems)
+	public static int getStackSizeOfItemEntities(Collection<ItemEntity> itemEntities)
 	{
 		int stackSize = 0;
-		for (EntityItem entityItem : entityItems)
+		for (ItemEntity itemEntity : itemEntities)
 		{
-			stackSize += entityItem.getEntityItem().stackSize;
+			stackSize += itemEntity.getItem().getCount();
 		}
 		return stackSize;
 	}
 
-	public boolean fluidInputMatches(World world, BlockPos pos)
+	public boolean fluidInputMatches(Level world, BlockPos pos)
 	{
 		return fluidInputMatches(PistonCraftingHandler.displacedLiquids.get(new PistonCraftingHandler.WorldPosition(world, pos)));
 	}
@@ -282,6 +271,6 @@ public class PistonCraftingRecipe
 		if (fluidStack == null)
 			return fluidInput == null;
 		else
-			return fluidStack.isFluidEqual(fluidInput) && fluidStack.amount >= fluidInput.amount;
+			return fluidStack.isFluidEqual(fluidInput) && fluidStack.getAmount() >= fluidInput.getAmount();
 	}
 }

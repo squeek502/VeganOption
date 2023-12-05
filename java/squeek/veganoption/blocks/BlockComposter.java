@@ -1,150 +1,145 @@
 package squeek.veganoption.blocks;
 
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoAccessor;
-import mcjty.theoneprobe.api.ProbeMode;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
-import squeek.veganoption.helpers.DirectionHelper;
+import squeek.veganoption.content.modules.Composting;
+import squeek.veganoption.gui.ComposterMenu;
 import squeek.veganoption.helpers.LangHelper;
 
-@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockComposter extends Block implements IProbeInfoAccessor
+public class BlockComposter extends HorizontalDirectionalBlock implements EntityBlock
 {
-	public static final AxisAlignedBB COMPOSTER_AABB = new AxisAlignedBB(0.0625F, 0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
-	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+	public static final VoxelShape SHAPE = Shapes.box(1, 0, 1, 15, 14, 15);
+	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
 	public BlockComposter()
 	{
-		super(Material.WOOD);
-		setSoundType(SoundType.WOOD);
+		super(BlockBehaviour.Properties.of()
+			.strength(2.5f)
+			.sound(SoundType.WOOD)
+			.mapColor(MapColor.WOOD)
+			.ignitedByLava()
+			.pushReaction(PushReaction.DESTROY));
+		registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
 	}
 
 	@Override
-	public boolean hasTileEntity(IBlockState state)
+	public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context)
+	{
+		return SHAPE;
+	}
+
+	@Override
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
+	{
+		BlockEntity tile = level.getBlockEntity(pos);
+		if (tile instanceof TileEntityComposter composter)
+		{
+			return composter.onActivated(player, state) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+		}
+		return super.use(state, level, pos, player, hand, hit);
+	}
+
+	@Override
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston)
+	{
+		BlockEntity tile = level.getBlockEntity(pos);
+		if (tile instanceof TileEntityComposter composter)
+		{
+			composter.onBlockBroken();
+		}
+		super.onRemove(state, level, pos, newState, movedByPiston);
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
+	{
+		builder.add(FACING);
+	}
+
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context)
+	{
+		return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+	}
+
+	@Override
+	public boolean hasAnalogOutputSignal(BlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
+	public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
 	{
-		return new TileEntityComposter();
-	}
-
-	@Override
-	public BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, FACING);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(FACING).getHorizontalIndex();
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
-	}
-
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-	{
-		return COMPOSTER_AABB;
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		TileEntity tile = world.getTileEntity(pos);
-		if (tile != null && tile instanceof TileEntityComposter)
-		{
-			return ((TileEntityComposter) tile).onActivated(player, side, hitX, hitY, hitZ);
-		}
-		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
-	}
-
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
-	{
-		TileEntity tile = world.getTileEntity(pos);
-		if (tile != null && tile instanceof TileEntityComposter)
-		{
-			((TileEntityComposter) tile).onBlockBroken();
-		}
-		super.breakBlock(world, pos, state);
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack)
-	{
-		EnumFacing rotation = DirectionHelper.getDirectionFromYaw(placer);
-		world.setBlockState(pos, state.withProperty(FACING, rotation));
-
-		super.onBlockPlacedBy(world, pos, state, placer, itemStack);
-	}
-
-	@Override
-	public boolean hasComparatorInputOverride(IBlockState state)
-	{
-		return true;
-	}
-
-	@Override
-	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos)
-	{
-		TileEntity tile = world.getTileEntity(pos);
+		BlockEntity tile = level.getBlockEntity(pos);
 		if (tile != null && tile instanceof TileEntityComposter)
 		{
 			return ((TileEntityComposter) tile).getComparatorSignalStrength();
 		}
-		return super.getComparatorInputOverride(state, world, pos);
+		return super.getAnalogOutputSignal(state, level, pos);
 	}
 
+	@Nullable
 	@Override
-	public boolean isOpaqueCube(IBlockState state)
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{
-		return false;
+		return new TileEntityComposter(pos, state);
 	}
 
+	@Nullable
 	@Override
-	public boolean isFullCube(IBlockState state)
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
 	{
-		return false;
+		return type == Composting.composterEntityType.get() ? TileEntityComposter::onTick : null;
 	}
 
+	@Nullable
 	@Override
-	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data)
+	public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos)
 	{
-		TileEntityComposter composter = (TileEntityComposter) world.getTileEntity(data.getPos());
-		if (composter == null)
-			return;
+		return new MenuProvider() {
+			@Override
+			public Component getDisplayName()
+			{
+				return Component.translatable(LangHelper.prependModId("block.composter.name"));
+			}
 
-		if (composter.isComposting())
-			probeInfo.text(LangHelper.contextString("top", "composting", Math.round(composter.getCompostingPercent() * 100F)))
-				.text(LangHelper.contextString("top", "temperature", (int) Math.floor(composter.getCompostTemperature())));
-		else
-			probeInfo.text(LangHelper.translate("info.composter.empty"));
+			@Nullable
+			@Override
+			public AbstractContainerMenu createMenu(int containerID, Inventory playerInv, Player player)
+			{
+				return new ComposterMenu(containerID, playerInv, pos);
+			}
+		};
 	}
 }

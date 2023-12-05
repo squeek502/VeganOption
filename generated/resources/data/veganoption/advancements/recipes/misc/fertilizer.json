@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_compost": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veganoption:compost"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "veganoption:fertilizer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_compost"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "veganoption:fertilizer"
+    ]
+  },
+  "sends_telemetry_event": false
+}

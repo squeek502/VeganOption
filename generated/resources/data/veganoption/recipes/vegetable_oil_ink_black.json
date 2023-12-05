@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "forge:food/vegetable_oil"
+    },
+    {
+      "tag": "forge:wax"
+    },
+    {
+      "tag": "veganoption:rosin"
+    },
+    {
+      "tag": "veganoption:pigments/black"
+    }
+  ],
+  "result": {
+    "item": "veganoption:vegetable_oil_ink_black"
+  }
+}

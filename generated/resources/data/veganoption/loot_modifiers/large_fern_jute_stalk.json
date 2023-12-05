@@ -1,0 +1,16 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 1.0,
+  "conditions": [
+    {
+      "block": "minecraft:large_fern",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "drop": "veganoption:jute_stalk",
+  "num": {
+    "type": "minecraft:uniform",
+    "max": 3.0,
+    "min": 1.0
+  }
+}

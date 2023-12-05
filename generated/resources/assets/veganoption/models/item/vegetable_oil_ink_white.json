@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "veganoption:item/vegetable_oil_ink_white"
+  }
+}

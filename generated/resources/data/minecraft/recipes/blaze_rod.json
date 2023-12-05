@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "forge:rods/plastic"
+    },
+    {
+      "tag": "veganoption:rosin"
+    },
+    {
+      "tag": "forge:wax"
+    },
+    {
+      "item": "minecraft:flint_and_steel"
+    }
+  ],
+  "result": {
+    "item": "minecraft:blaze_rod"
+  }
+}

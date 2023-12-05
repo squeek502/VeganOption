@@ -1,125 +1,109 @@
 package squeek.veganoption.blocks.renderers;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.model.ModelChest;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.joml.Quaternionf;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.BlockComposter;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
-import squeek.veganoption.content.modules.Composting;
 
 import java.util.Calendar;
 
-@SideOnly(Side.CLIENT)
-public class RenderComposter extends TileEntitySpecialRenderer<TileEntityComposter>
+@OnlyIn(Dist.CLIENT)
+public class RenderComposter implements BlockEntityRenderer<TileEntityComposter>
 {
-	private static final ResourceLocation TEXTURE_CHRISTMAS = new ResourceLocation("textures/entity/chest/christmas.png");
-	private static final ResourceLocation TEXTURE_NORMAL = new ResourceLocation("textures/entity/chest/normal.png");
-	private static final ResourceLocation[] TEXTURE_TEMPERATURE_OVERLAYS = new ResourceLocation[]{
-		new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_blue.png"),
-		new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_yellow.png"),
-		new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_orange.png"),
-		new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_red.png")
-	};
-	private ModelChest modelChest = new ModelChest();
-	private boolean isChristmas;
+	private static final ResourceLocation OVERLAY_BLUE = new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_blue.png");
+	private static final ResourceLocation OVERLAY_YELLOW = new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_yellow.png");
+	private static final ResourceLocation OVERLAY_ORANGE = new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_orange.png");
+	private static final ResourceLocation OVERLAY_RED = new ResourceLocation(ModInfo.MODID_LOWER, "textures/entity/composter/temperature_overlay_red.png");
 
-	protected enum Axis
-	{
-		X, Y
-	}
+	private final boolean isChristmas;
+	private static final String BOTTOM = "bottom";
+	private static final String LID = "lid";
+	private static final String LOCK = "lock";
+	private final ModelPart lid;
+	private final ModelPart bottom;
+	private final ModelPart lock;
 
-	public RenderComposter()
+	public RenderComposter(BlockEntityRendererProvider.Context context)
 	{
 		Calendar calendar = Calendar.getInstance();
+		int today = calendar.get(Calendar.DAY_OF_MONTH);
+		isChristmas = calendar.get(Calendar.MONTH) == Calendar.DECEMBER && today >= 24 && today <= 26;
 
-		if (calendar.get(2) + 1 == 12 && calendar.get(5) >= 24 && calendar.get(5) <= 26)
-		{
-			isChristmas = true;
-		}
+		ModelPart modelpart = context.bakeLayer(ModelLayers.CHEST);
+		bottom = modelpart.getChild(BOTTOM);
+		lid = modelpart.getChild(LID);
+		lock = modelpart.getChild(LOCK);
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntityComposter tile, double x, double y, double z, float partialTickTime, int destroyStage)
+	public void render(TileEntityComposter tile, float partialTickTime, PoseStack pose, MultiBufferSource buffer, int packedLight, int packedOverlay)
 	{
-		EnumFacing side = EnumFacing.WEST;
-		if (tile.hasWorldObj())
-		{
-			IBlockState stateInTilePos = tile.getWorld().getBlockState(tile.getPos());
-			if (stateInTilePos.getBlock() == Composting.composter)
-				side = stateInTilePos.getValue(BlockComposter.FACING);
-		}
+		BlockState state = tile.getBlockState();
+		Direction dir = state.getValue(BlockComposter.FACING);
+		Direction.Axis axis = dir.getAxis();
 
-		short rotation = 0;
-		switch (side)
-		{
-			case NORTH:
-				rotation = 0;
-				break;
-			case SOUTH:
-				rotation = 180;
-				break;
-			case EAST:
-				rotation = 90;
-				break;
-			case WEST:
-				rotation = -90;
-				break;
-		}
+		pose.popPose();
+		pose.translate((axis == Direction.Axis.X ? 0.1F : 0F), 1F, (axis == Direction.Axis.X ? 1F : 0.9F));
+		pose.mulPose(Axis.YP.rotationDegrees(-dir.toYRot()));
+		pose.translate(0.5f, 0.5f, 0.5f);
 
-		Axis axis = Math.abs(rotation) == 90 ? Axis.X : Axis.Y;
-
-		ModelChest modelchest = modelChest;
-
-		if (MinecraftForgeClient.getRenderPass() <= 0)
-		{
-			bindTexture(isChristmas ? TEXTURE_CHRISTMAS : TEXTURE_NORMAL);
-		}
-		else
-			bindTexture(TEXTURE_TEMPERATURE_OVERLAYS[getOverlayIndexFromTemperature(tile.getCompostTemperature())]);
-
-		GlStateManager.pushMatrix();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-
-		GlStateManager.translate(x + (axis == Axis.X ? 0.1F : 0F), y + 1F, z + (axis == Axis.X ? 1F : 0.9F));
-		GlStateManager.scale(axis == Axis.X ? 0.8F : 1F, -0.8F, axis == Axis.X ? -1F : -0.8F);
-		GlStateManager.translate(0.5F, 0.5F, 0.5F);
-
-		if (tile.hasWorldObj() && tile.isAerating())
+		if (tile.isAerating())
 		{
 			final int num_turns = 3;
-			GlStateManager.rotate(-(tile.getAeratingPercent() * 360F * num_turns), axis == Axis.X ? 0F : 1F, 0F, axis == Axis.X ? 1F : 0F);
+			pose.mulPose(new Quaternionf(axis == Direction.Axis.X ? 0F : 1F, 0F, axis == Direction.Axis.X ? 1F : 0F, -(tile.getAeratingPercent() * 360F * num_turns)));
 		}
 
-		GlStateManager.rotate(rotation, 0F, 1F, 0F);
-		GlStateManager.translate(-0.5F, -0.5F, -0.5F);
-		float f1 = tile.prevLidAngle + (tile.lidAngle - tile.prevLidAngle) * partialTickTime;
+		float openness = tile.getLidOpenness(partialTickTime);
+		openness = 1.0F - openness;
+		openness = 1.0F - openness * openness * openness;
 
-		f1 = 1.0F - f1;
-		f1 = 1.0F - f1 * f1 * f1;
-		modelchest.chestLid.rotateAngleX = -(f1 * (float) Math.PI / 2.0F);
-		modelchest.renderAll();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.popMatrix();
+		Material material = isChristmas ? Sheets.CHEST_XMAS_LOCATION : Sheets.CHEST_LOCATION;
+		VertexConsumer consumer = material.buffer(buffer, RenderType::entityCutout);
+
+		lid.xRot = -(openness * (float) (Math.PI / 2));
+		lock.xRot = lid.xRot;
+		lid.render(pose, consumer, packedLight, packedOverlay);
+		lock.render(pose, consumer, packedLight, packedOverlay);
+		bottom.render(pose, consumer, packedLight, packedOverlay);
+
+		// idk...
+		AbstractTexture overlay = Minecraft.getInstance().getTextureManager().getTexture(getOverlayTextureFromTemperature(tile.getCompostTemperature()));
+		RenderSystem.setShaderTexture(0, overlay.getId());
+		overlay.bind();
+
+		pose.popPose();
 	}
 
-	public int getOverlayIndexFromTemperature(float temperature)
+	public ResourceLocation getOverlayTextureFromTemperature(float temperature)
 	{
 		temperature = Math.round(temperature);
 
 		if (temperature >= TileEntityComposter.MAX_COMPOST_TEMPERATURE)
-			return 3;
+			return OVERLAY_RED;
 		else if (temperature >= TileEntityComposter.THERMOPHILIC_RANGE_START)
-			return 2;
+			return OVERLAY_ORANGE;
 		else if (temperature >= TileEntityComposter.MESOPHILIC_RANGE_START)
-			return 1;
+			return OVERLAY_YELLOW;
 		else
-			return 0;
+			return OVERLAY_BLUE;
 	}
 }

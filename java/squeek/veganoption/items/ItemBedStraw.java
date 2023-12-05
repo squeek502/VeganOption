@@ -1,30 +1,28 @@
 package squeek.veganoption.items;
 
-import net.minecraft.block.BlockBed;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import squeek.veganoption.helpers.LangHelper;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BedItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BedBlock;
+import org.jetbrains.annotations.Nullable;
+import squeek.veganoption.ModInfo;
 
 import java.util.List;
 
-public class ItemBedStraw extends ItemBedGeneric
+public class ItemBedStraw extends BedItem
 {
-
-	public ItemBedStraw(BlockBed bed)
+	public ItemBedStraw(BedBlock bed)
 	{
-		super(bed);
+		super(bed, new Item.Properties().stacksTo(1));
 	}
 
-	@SuppressWarnings("unchecked")
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> toolTip, boolean advanced)
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag advanced)
 	{
-		toolTip.add(LangHelper.translateRaw(this.getUnlocalizedName() + ".tooltip"));
-
-		super.addInformation(itemStack, player, toolTip, advanced);
+		tooltip.add(Component.translatable(ModInfo.MODID_LOWER + ".straw_bed.tooltip"));
+		super.appendHoverText(stack, level, tooltip, advanced);
 	}
-
 }

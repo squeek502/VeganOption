@@ -1,162 +1,113 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoublePlant;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.common.loot.LootTableIdCondition;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.ObjectHolder;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.ReplaceLootModifier;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
-import squeek.veganoption.content.registry.RelationshipRegistry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static squeek.veganoption.VeganOption.*;
 
 public class VegetableOil implements IContentModule
 {
-	public static Item seedSunflower;
-	public static Item oilVegetable;
-	public static Fluid fluidVegetableOil;
-	public static Block fluidBlockVegetableOil;
+	public static RegistryObject<Item> seedSunflower;
+	public static RegistryObject<Item> oilVegetable;
+	public static RegistryObject<FluidType> fluidTypeVegetableOil;
+	public static RegistryObject<Fluid> fluidVegetableOilStill;
+	public static RegistryObject<Fluid> fluidVegetableOilFlowing;
+	public static RegistryObject<Block> fluidBlockVegetableOil;
 
-	public static ItemStack oilPresser;
+	@ObjectHolder(registryName = "minecraft:item", value = "minecraft:heavy_weighted_pressure_plate")
+	public static Item oilPresser;
 
 	@Override
 	public void create()
 	{
-		oilPresser = new ItemStack(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
+		seedSunflower = REGISTER_ITEMS.register("sunflower_seeds", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(1).saturationMod(0.05f).build())));
 
-		seedSunflower = new ItemFood(1, 0.05f, false)
-			.setUnlocalizedName(ModInfo.MODID + ".seedSunflower")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "seedsSunflower");
-		GameRegistry.register(seedSunflower);
-
-		fluidVegetableOil = new Fluid("fluid_oil_vegetable", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/vegetable_oil_flow"));
-		FluidRegistry.registerFluid(fluidVegetableOil);
-		fluidBlockVegetableOil = new BlockFluidClassic(fluidVegetableOil, Material.WATER)
-			.setUnlocalizedName(ModInfo.MODID + ".fluidOilVegetable")
-			.setRegistryName(ModInfo.MODID_LOWER, "fluidOilVegetable");
-		fluidVegetableOil.setBlock(fluidBlockVegetableOil);
-		fluidVegetableOil.setUnlocalizedName(fluidBlockVegetableOil.getUnlocalizedName());
-		GameRegistry.register(fluidBlockVegetableOil);
-		GameRegistry.register(new ItemBlock(fluidBlockVegetableOil).setRegistryName(fluidBlockVegetableOil.getRegistryName()));
-
-		oilVegetable = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".oilVegetable")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "oilVegetable")
-			.setContainerItem(Items.GLASS_BOTTLE);
-		GameRegistry.register(oilVegetable);
-
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(fluidVegetableOil, Fluid.BUCKET_VOLUME), new ItemStack(oilVegetable), new ItemStack(oilVegetable.getContainerItem()));
+		BaseFlowingFluid.Properties fluidProperties = new BaseFlowingFluid.Properties(() -> fluidTypeVegetableOil.get(), () -> fluidVegetableOilStill.get(), () -> fluidVegetableOilFlowing.get())
+			.block(() -> (LiquidBlock) fluidBlockVegetableOil.get())
+			.bucket(() -> oilVegetable.get());
+		oilVegetable = REGISTER_ITEMS.register("vegetable_oil", () -> new Item(new Item.Properties().craftRemainder(Items.GLASS_BOTTLE)));
+		fluidTypeVegetableOil = REGISTER_FLUIDTYPES.register("vegetable_oil", () -> new FluidType(FluidType.Properties.create()));
+		fluidVegetableOilStill = REGISTER_FLUIDS.register("vegetable_oil", () -> new BaseFlowingFluid.Source(fluidProperties));
+		fluidVegetableOilFlowing = REGISTER_FLUIDS.register("vegetable_oil_flowing", () -> new BaseFlowingFluid.Flowing(fluidProperties));
+		fluidBlockVegetableOil = REGISTER_BLOCKS.register("vegetable_oil", () -> new LiquidBlock(() -> (FlowingFluid) fluidVegetableOilStill.get(), BlockBehaviour.Properties.of().noLootTable()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.oilPresserOreDict, oilPresser.copy());
-		OreDictionary.registerOre(ContentHelper.sunflowerSeedOreDict, new ItemStack(seedSunflower));
-		OreDictionary.registerOre(ContentHelper.vegetableOilOreDict, new ItemStack(oilVegetable));
+		provider.tagW(ContentHelper.ItemTags.OIL_PRESSERS).add(oilPresser);
+		provider.tagW(ContentHelper.ItemTags.SEEDS_SUNFLOWER).add(seedSunflower.get());
+		provider.tagW(ContentHelper.ItemTags.SEEDS).addTag(ContentHelper.ItemTags.SEEDS_SUNFLOWER);
+		provider.tagW(ContentHelper.ItemTags.VEGETABLE_OIL).add(oilVegetable.get());
+		provider.tagW(ContentHelper.ItemTags.VEGETABLE_OIL_SOURCES).add(seedSunflower.get());
 	}
 
 	@Override
-	public void recipes()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		ContentHelper.remapOre(ContentHelper.sunflowerSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.grapeSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.soybeanOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.cottonSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.coconutOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.oliveOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.cornOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.nutOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.teaSeedOreDict, ContentHelper.vegetableOilSourceOreDict);
-		ContentHelper.remapOre(ContentHelper.avocadoOreDict, ContentHelper.vegetableOilSourceOreDict);
-
-		BlockSpecifier sunflowerTopSpecifier = new BlockSpecifier(Blocks.DOUBLE_PLANT.getDefaultState().withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.SUNFLOWER), BlockDoublePlant.VARIANT);
-		DropSpecifier sunflowerDropSpecifier = new DropSpecifier(new ItemStack(seedSunflower))
-		{
-			@Override
-			public void modifyDrops(List<ItemStack> drops, EntityPlayer harvester, int fortuneLevel, boolean isSilkTouching)
-			{
-				// harvester is null when breaking the top block because
-				// the bottom breaks on its own once there is no longer a top
-				if (harvester == null)
-				{
-					List<ItemStack> dropsToRemove = new ArrayList<ItemStack>();
-					for (ItemStack drop : drops)
-					{
-						if (drop.getItem() == Item.getItemFromBlock(Blocks.DOUBLE_PLANT) && drop.getItemDamage() == BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta())
-							dropsToRemove.add(drop);
-					}
-					drops.removeAll(dropsToRemove);
-
-					super.modifyDrops(drops, null, fortuneLevel, isSilkTouching);
-				}
-			}
-		};
-		Modifiers.drops.addDropsToBlock(sunflowerTopSpecifier, sunflowerDropSpecifier);
-
-		addOilRecipe(new ItemStack(oilVegetable), ContentHelper.vegetableOilSourceOreDict);
-
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(fluidVegetableOil, ContentHelper.vegetableOilSourceOreDict));
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, oilVegetable.get())
+			.requires(ContentHelper.ItemTags.OIL_PRESSERS)
+			.requires(ContentHelper.ItemTags.VEGETABLE_OIL_SOURCES)
+			.requires(Items.GLASS_BOTTLE)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.save(output);
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(fluidBlockVegetableOil), new ItemStack(oilVegetable));
-		RelationshipRegistry.addRelationship(new ItemStack(oilVegetable), new ItemStack(fluidBlockVegetableOil));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), Ingredient.of(ContentHelper.ItemTags.VEGETABLE_OIL_SOURCES)));
+
+		Modifiers.crafting.addInputsToKeepForOutput(oilVegetable.get(), oilPresser);
 	}
 
-	public static void addOilRecipe(ItemStack output, Object... inputs)
-	{
-		List<Object> recipeInputs = new ArrayList<Object>(Arrays.asList(inputs));
-		recipeInputs.add(0, ContentHelper.oilPresserOreDict);
-		if (output.getItem().hasContainerItem(output))
-		{
-			recipeInputs.add(output.getItem().getContainerItem(output));
-		}
-		GameRegistry.addRecipe(new ShapelessOreRecipe(output, recipeInputs.toArray(new Object[recipeInputs.size()])));
-		if (!oilPresser.getItem().hasContainerItem(oilPresser))
-		{
-			Modifiers.crafting.addInputsToKeepForOutput(output, oilPresser);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePost()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
+		provider.basicItem(seedSunflower.get());
+		provider.basicItem(oilVegetable.get());
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePre()
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
 	{
-		ContentHelper.registerTypicalItemModel(seedSunflower);
-		ContentHelper.registerTypicalItemModel(oilVegetable);
-		ContentHelper.registerFluidMapperAndMeshDef(fluidBlockVegetableOil, "fluid_oil_vegetable");
+		provider.add("sunflower_seeds", new ReplaceLootModifier(
+			new LootItemCondition[] {
+				new InvertedLootItemCondition(MatchTool.toolMatches(ItemPredicate.Builder.item().of(Items.SHEARS)).build()),
+				new LootTableIdCondition.Builder(Tags.Blocks.STONE.location()).build()
+			},
+			Items.SUNFLOWER,
+			seedSunflower.get()));
 	}
 }

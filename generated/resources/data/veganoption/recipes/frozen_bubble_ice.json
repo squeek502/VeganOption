@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": {
+      "item": "minecraft:ice"
+    },
+    "s": {
+      "item": "veganoption:soap_solution"
+    }
+  },
+  "pattern": [
+    "iii",
+    "isi",
+    "iii"
+  ],
+  "result": {
+    "item": "veganoption:frozen_bubble"
+  },
+  "show_notification": true
+}

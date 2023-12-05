@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "veganoption:lye_water_bucket"
+    },
+    {
+      "tag": "forge:food/vegetable_oil"
+    },
+    {
+      "tag": "veganoption:rosin"
+    }
+  ],
+  "result": {
+    "item": "veganoption:soap"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:packed_ice"
+    },
+    {
+      "item": "veganoption:soap_solution"
+    }
+  ],
+  "result": {
+    "item": "veganoption:frozen_bubble"
+  }
+}

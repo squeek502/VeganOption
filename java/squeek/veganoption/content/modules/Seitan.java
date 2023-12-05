@@ -1,114 +1,78 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.registries.ObjectHolder;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.items.ItemWashableWheat;
 
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
+
 // TODO: Tooltips, usage, and recipe text
 public class Seitan implements IContentModule
 {
-	public static Item washableWheat;
-	public static Item seitanCooked;
-	public static ItemStack seitanRawStack;
-	public static ItemStack seitanUnwashedStack;
-	public static ItemStack wheatFlourStack;
-	public static ItemStack wheatDoughStack;
+	public static RegistryObject<Item> wheatFlour;
+	public static RegistryObject<Item> wheatDough;
+	public static RegistryObject<Item> seitanUnwashed;
+	public static RegistryObject<Item> seitanRaw;
+	public static RegistryObject<Item> seitanCooked;
 
-	public static final ItemStack wheatCrusher = new ItemStack(Blocks.PISTON);
+	@ObjectHolder(registryName = "minecraft:item", value = "minecraft:piston")
+	public static Item wheatCrusher;
 
 	@Override
 	public void create()
 	{
-		washableWheat = new ItemWashableWheat()
-			.setUnlocalizedName(ModInfo.MODID)
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "washableWheat");
-		GameRegistry.register(washableWheat);
-		wheatFlourStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_FLOUR);
-		wheatDoughStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_DOUGH);
-		seitanUnwashedStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_UNWASHED_START);
-		seitanRawStack = new ItemStack(washableWheat, 1, ItemWashableWheat.META_RAW);
-
-		seitanCooked = new ItemFood(8, 0.8f, false)
-			.setUnlocalizedName(ModInfo.MODID + ".seitanCooked")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "seitanCooked");
-		GameRegistry.register(seitanCooked);
+		wheatFlour = REGISTER_ITEMS.register("wheat_flour", ItemWashableWheat::new);
+		wheatDough = REGISTER_ITEMS.register("wheat_dough", ItemWashableWheat::new);
+		seitanUnwashed = REGISTER_ITEMS.register("seitan_unwashed", ItemWashableWheat::new);
+		seitanRaw = REGISTER_ITEMS.register("seitan_raw", () -> new Item(new Item.Properties()));
+		seitanCooked = REGISTER_ITEMS.register("seitan_cooked", () -> new Item(new Item.Properties()
+			.food(new FoodProperties.Builder().nutrition(8).saturationMod(0.8f).build())));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.wheatFlourOreDict, wheatFlourStack.copy());
-		OreDictionary.registerOre(ContentHelper.wheatDoughOreDict, wheatDoughStack.copy());
-		OreDictionary.registerOre(ContentHelper.rawSeitanOreDict, seitanRawStack.copy());
+		provider.tagW(ContentHelper.ItemTags.WHEAT_FLOUR).add(wheatFlour.get());
+		provider.tagW(ContentHelper.ItemTags.WHEAT_DOUGH).add(wheatDough.get());
+		provider.tagW(ContentHelper.ItemTags.RAW_SEITAN).add(seitanRaw.get());
 
-		// cooked seitan works as a raw/cooked meat substitute, a la HarvestCraft tofu
-		for (String oreDict : ContentHelper.harvestCraftRawMeatOreDicts)
-			OreDictionary.registerOre(oreDict, new ItemStack(seitanCooked));
-		for (String oreDict : ContentHelper.harvestCraftCookedMeatOreDicts)
-			OreDictionary.registerOre(oreDict, new ItemStack(seitanCooked));
+		// todo: cooked seitan as meat alternative.
 	}
 
 	@Override
-	public void recipes()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		ContentHelper.addOreSmelting(ContentHelper.rawSeitanOreDict, new ItemStack(seitanCooked), 0.35f);
-
-		GameRegistry.addShapelessRecipe(wheatFlourStack.copy(), wheatCrusher, new ItemStack(Items.WHEAT));
-		Modifiers.crafting.addInputsToKeepForOutput(wheatFlourStack.copy(), wheatCrusher);
-
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(wheatFlourStack.copy(), Items.WHEAT));
-
-		GameRegistry.addRecipe(new ShapelessOreRecipe(wheatDoughStack.copy(), new ItemStack(Items.WATER_BUCKET), ContentHelper.wheatFlourOreDict));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanUnwashedStack.copy(), new ItemStack(Items.WATER_BUCKET), ContentHelper.wheatDoughOreDict));
-		for (int outputMeta = ItemWashableWheat.META_UNWASHED_START + 1; outputMeta < ItemWashableWheat.META_UNWASHED_END; outputMeta++)
-		{
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(washableWheat, 1, outputMeta), new ItemStack(Items.WATER_BUCKET), new ItemStack(washableWheat, 1, outputMeta - 1)));
-		}
-		GameRegistry.addRecipe(new ShapelessOreRecipe(seitanRawStack.copy(), new ItemStack(Items.WATER_BUCKET), new ItemStack(washableWheat, 1, ItemWashableWheat.META_RAW - 1)));
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.RAW_SEITAN), RecipeCategory.FOOD, seitanCooked.get(), 0.35f, ContentHelper.DEFAULT_SMELT_TIME);
 	}
 
 	@Override
 	public void finish()
 	{
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new ItemStack(wheatFlour.get()), new InputItemStack(Items.WHEAT)));
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePost()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(seitanCooked);
-		ContentHelper.registerTypicalItemStackModel(seitanRawStack, ModInfo.MODID_LOWER + ":seitan_raw");
-		ContentHelper.registerTypicalItemStackModel(wheatFlourStack, ModInfo.MODID_LOWER + ":wheat_flour");
-		ContentHelper.registerTypicalItemStackModel(wheatDoughStack, ModInfo.MODID_LOWER + ":wheat_dough");
-
-		for (int meta = ItemWashableWheat.META_UNWASHED_START; meta < ItemWashableWheat.META_UNWASHED_END; meta++)
-		{
-			ModelLoader.setCustomModelResourceLocation(washableWheat, meta, new ModelResourceLocation(ModInfo.MODID_LOWER + ":seitan_unwashed", "inventory"));
-		}
+		provider.basicItem(seitanCooked.get());
+		provider.basicItem(seitanRaw.get());
+		provider.basicItem(seitanUnwashed.get());
+		provider.basicItem(wheatDough.get());
+		provider.basicItem(wheatFlour.get());
 	}
 }

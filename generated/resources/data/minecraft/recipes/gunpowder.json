@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:charcoal"
+    },
+    {
+      "tag": "forge:dusts/sulfur"
+    },
+    {
+      "tag": "forge:dusts/saltpeter"
+    }
+  ],
+  "result": {
+    "item": "minecraft:gunpowder"
+  }
+}

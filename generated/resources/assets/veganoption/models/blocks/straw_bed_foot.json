@@ -1,0 +1,228 @@
+{
+  "elements": [
+    {
+      "faces": {
+        "east": {
+          "texture": "veganoption:blocks/straw_bed_foot_side",
+          "uv": [
+            16.0,
+            7.0,
+            0.0,
+            16.0
+          ]
+        },
+        "north": {
+          "texture": "veganoption:blocks/straw_bed_foot_end"
+        },
+        "up": {
+          "rotation": 90,
+          "texture": "veganoption:blocks/straw_bed_foot_top",
+          "uv": [
+            0.0,
+            16.0,
+            16.0,
+            0.0
+          ]
+        },
+        "west": {
+          "texture": "veganoption:blocks/straw_bed_foot_side"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "minecraft:blocks/planks_oak"
+        }
+      },
+      "from": [
+        0,
+        3,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "east": {
+          "texture": "veganoption:blocks/straw_bed_foot_side",
+          "uv": [
+            16.0,
+            7.0,
+            0.0,
+            16.0
+          ]
+        },
+        "north": {
+          "texture": "veganoption:blocks/straw_bed_foot_end"
+        },
+        "up": {
+          "rotation": 90,
+          "texture": "veganoption:blocks/straw_bed_foot_top",
+          "uv": [
+            0.0,
+            16.0,
+            16.0,
+            0.0
+          ]
+        },
+        "west": {
+          "texture": "veganoption:blocks/straw_bed_foot_side"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "minecraft:blocks/planks_oak"
+        }
+      },
+      "from": [
+        0,
+        3,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "east": {
+          "texture": "veganoption:blocks/straw_bed_foot_side",
+          "uv": [
+            16.0,
+            7.0,
+            0.0,
+            16.0
+          ]
+        },
+        "north": {
+          "texture": "veganoption:blocks/straw_bed_foot_end"
+        },
+        "up": {
+          "rotation": 90,
+          "texture": "veganoption:blocks/straw_bed_foot_top",
+          "uv": [
+            0.0,
+            16.0,
+            16.0,
+            0.0
+          ]
+        },
+        "west": {
+          "texture": "veganoption:blocks/straw_bed_foot_side"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "minecraft:blocks/planks_oak"
+        }
+      },
+      "from": [
+        0,
+        3,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "east": {
+          "texture": "veganoption:blocks/straw_bed_foot_side",
+          "uv": [
+            16.0,
+            7.0,
+            0.0,
+            16.0
+          ]
+        },
+        "north": {
+          "texture": "veganoption:blocks/straw_bed_foot_end"
+        },
+        "up": {
+          "rotation": 90,
+          "texture": "veganoption:blocks/straw_bed_foot_top",
+          "uv": [
+            0.0,
+            16.0,
+            16.0,
+            0.0
+          ]
+        },
+        "west": {
+          "texture": "veganoption:blocks/straw_bed_foot_side"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "minecraft:blocks/planks_oak"
+        }
+      },
+      "from": [
+        0,
+        3,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ]
+    }
+  ]
+}

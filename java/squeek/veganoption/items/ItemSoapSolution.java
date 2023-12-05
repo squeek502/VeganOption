@@ -1,20 +1,18 @@
 package squeek.veganoption.items;
 
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.dispenser.BehaviorProjectileDispense;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.IPosition;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IProjectile;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import squeek.veganoption.entities.EntityBubble;
-import squeek.veganoption.helpers.RandomHelper;
 
 public class ItemSoapSolution extends Item
 {
@@ -22,82 +20,72 @@ public class ItemSoapSolution extends Item
 
 	public ItemSoapSolution()
 	{
-		super();
-		setMaxStackSize(1);
-		setMaxDamage(15); // 16 uses
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemSoapSolution.DispenserBehavior());
-		setNoRepair();
+		super(new Item.Properties().durability(15).setNoRepair());
+		DispenserBlock.registerBehavior(this, new ItemSoapSolution.DispenserBehavior());
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack itemStack)
+	public UseAnim getUseAnimation(ItemStack stack)
 	{
-		return EnumAction.DRINK;
+		return UseAnim.DRINK;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack itemStack)
+	public int getUseDuration(ItemStack stack)
 	{
 		return 16;
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityLivingBase player)
+	public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity entity)
 	{
-		if (!world.isRemote)
+		if (!level.isClientSide() && entity instanceof Player player)
 		{
-			EntityBubble bubble = new EntityBubble(world, player);
-			bubble.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, BUBBLE_INITIAL_VELOCITY, 1.0F);
-			world.spawnEntityInWorld(bubble);
+			EntityBubble bubble = new EntityBubble(level, player);
+			bubble.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, BUBBLE_INITIAL_VELOCITY, 1.0F);
+			level.addFreshEntity(bubble);
 		}
 
-		itemStack.damageItem(1, player);
+		ServerPlayer sp = entity instanceof ServerPlayer ? (ServerPlayer) entity : null;
+		itemStack.hurt(1, entity.getRandom(), sp);
 
-		if (itemStack.stackSize == 0 && getContainerItem() != null)
+		if (itemStack.getCount() == 0 && !getCraftingRemainingItem(itemStack).isEmpty())
 		{
-			return new ItemStack(getContainerItem());
+			return getCraftingRemainingItem(itemStack);
 		}
 
-		return super.onItemUseFinish(itemStack, world, player);
+		return super.finishUsingItem(itemStack, level, entity);
 	}
 
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
-	{
-		player.setActiveHand(hand);
-		return super.onItemRightClick(itemStack, world, player, hand);
-	}
-
-	public static class DispenserBehavior extends BehaviorProjectileDispense
+	public static class DispenserBehavior extends AbstractProjectileDispenseBehavior
 	{
 		@Override
-		protected IProjectile getProjectileEntity(World world, IPosition iPosition, ItemStack stack)
+		protected Projectile getProjectile(Level level, Position pos, ItemStack stack)
 		{
-			return new EntityBubble(world, iPosition.getX(), iPosition.getY(), iPosition.getZ());
+			return new EntityBubble(level, pos.x(), pos.y(), pos.z());
 		}
 
 		@Override
-		public ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
+		public ItemStack execute(BlockSource blockSource, ItemStack itemStack)
 		{
-			// counteract the splitStack in super.dispenseStack
-			itemStack.stackSize++;
-			super.dispenseStack(blockSource, itemStack);
+			// counteract the shrink in super.execute
+			itemStack.grow(1);
+			super.execute(blockSource, itemStack);
 
-			itemStack.attemptDamageItem(1, RandomHelper.random);
-			if (itemStack.getItemDamage() >= itemStack.getMaxDamage())
+			itemStack.hurt(1, blockSource.level().getRandom(), null);
+			if (itemStack.getDamageValue() >= itemStack.getMaxDamage())
 			{
-				itemStack.stackSize = 0;
+				itemStack.setCount(0);
 			}
-			if (itemStack.stackSize == 0 && itemStack.getItem().getContainerItem() != null)
+			if (itemStack.getCount() == 0 && !itemStack.getCraftingRemainingItem().isEmpty())
 			{
-				return new ItemStack(itemStack.getItem().getContainerItem());
+				return itemStack.getCraftingRemainingItem();
 			}
 			return itemStack;
 		}
 
-		// projectile velocity
 		@Override
-		protected float getProjectileVelocity()
+		protected float getPower()
 		{
 			return 0.5f;
 		}

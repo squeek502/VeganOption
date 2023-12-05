@@ -1,27 +1,44 @@
 package squeek.veganoption.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import squeek.veganoption.ModInfo;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
+import squeek.veganoption.content.modules.StrawBed;
 
-import java.lang.reflect.Field;
+import static squeek.veganoption.ModInfo.MODID_LOWER;
 
-public class BlockBedStraw extends BlockBedGeneric
+public class BlockBedStraw extends BedBlock
 {
-	public static final DamageSource itchyDamageSource = new DamageSource(ModInfo.MODID + ".itchyBed");
+	private static final ResourceKey<DamageType> ITCHY_DAMAGE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID_LOWER, "itchy_bed"));
 	public static final int ITCH_DAMAGE = 1;
-	public static final Field playerSleepingField = ReflectionHelper.findField(EntityPlayer.class, "sleeping", "field_71083_bS", "bA");
+//	public static final Field playerSleepingField = ReflectionHelper.findField(EntityPlayer.class, "sleeping", "field_71083_bS", "bA");
 
 	public BlockBedStraw()
 	{
-		super();
-		MinecraftForge.EVENT_BUS.register(this);
+		super(DyeColor.GREEN, BlockBehaviour.Properties.of()
+			.mapColor(state -> state.getValue(BedBlock.PART) == BedPart.FOOT ? DyeColor.GREEN.getMapColor() : MapColor.WOOL)
+			.sound(SoundType.WOOD)
+			.strength(0.2F)
+			.noOcclusion()
+			.ignitedByLava()
+			.pushReaction(PushReaction.DESTROY));
+		NeoForge.EVENT_BUS.register(this);
 	}
 
 	@SubscribeEvent
@@ -29,20 +46,18 @@ public class BlockBedStraw extends BlockBedGeneric
 	{
 		// this flag combination should only be set when the sleep was successful
 		// and the server is waking all sleeping players
-		boolean wokenByWakeAllPlayers = event.shouldSetSpawn() && !event.updateWorld();
+		boolean wokenByWakeAllPlayers = !event.wakeImmediately() && !event.updateLevel();
 		if (!wokenByWakeAllPlayers)
 			return;
 
-		BlockPos pos = event.getEntityPlayer().playerLocation;
+		BlockPos pos = event.getEntity().blockPosition();
 
-		if (pos == null)
+		Block block = event.getEntity().level().getBlockState(pos).getBlock();
+
+		if (block != StrawBed.bedStrawBlock.get())
 			return;
 
-		Block block = event.getEntityPlayer().worldObj.getBlockState(pos).getBlock();
-
-		if (block != this)
-			return;
-
+		/*
 		// The player's sleeping bool must be set to false before calling 
 		// attackEntityFrom; otherwise, an infinite loop would be created due to 
 		// the wakeUpPlayer call in attackEntityFrom
@@ -55,5 +70,19 @@ public class BlockBedStraw extends BlockBedGeneric
 		{
 			e.printStackTrace();
 		}
+		*/
+		// lets try without, as there is no sleeping bool in player anymore.
+		if (!event.getEntity().level().isClientSide())
+		{
+			DamageSource itchyDamageSource = new DamageSource(event.getEntity().level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ITCHY_DAMAGE_TYPE));
+			event.getEntity().hurt(itchyDamageSource, ITCH_DAMAGE);
+		}
+	}
+
+	@Override
+	public RenderShape getRenderShape(BlockState state)
+	{
+		// The vanilla bed uses a BlockEntityRenderer in order to render the colors. The straw bed can't be dyed, so we can just use a json model.
+		return RenderShape.MODEL;
 	}
 }

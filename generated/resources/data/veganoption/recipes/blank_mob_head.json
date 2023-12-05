@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "/": {
+      "item": "veganoption:papier_mache"
+    },
+    "m": {
+      "item": "minecraft:melon"
+    }
+  },
+  "pattern": [
+    "///",
+    "/m/",
+    "///"
+  ],
+  "result": {
+    "item": "veganoption:blank_mob_head"
+  },
+  "show_notification": true
+}

@@ -1,28 +1,31 @@
 package squeek.veganoption.helpers;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import squeek.veganoption.content.modules.CreativeTabProxy;
 
-import java.util.HashMap;
-import java.util.Map;
+import static squeek.veganoption.ModInfo.MODID_LOWER;
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class CreativeTabHelper
 {
-	public static final Map<String, Item> creativeTabIconItemMap = new HashMap<String, Item>();
+	private static final DeferredRegister<CreativeModeTab> REGISTER_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID_LOWER);
+	public static final DeferredRegister<Item> FAKE_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID_LOWER);
 
-	public static CreativeTabs createTab(final String name, Item item)
+	public static void createTab(IEventBus bus)
 	{
-		creativeTabIconItemMap.put(name, item);
-		return new CreativeTabs(name)
-		{
-			@Override
-			@SideOnly(Side.CLIENT)
-			public Item getTabIconItem()
-			{
-				return creativeTabIconItemMap.get(name);
-			}
-		};
+		FAKE_ITEMS.register(bus);
+		REGISTER_TAB.register(MODID_LOWER, () -> CreativeModeTab.builder()
+			.title(Component.translatable("itemGroup." + MODID_LOWER))
+			.icon(() -> new ItemStack(CreativeTabProxy.proxyItem.get()))
+			.displayItems((enabledFeatures, entries) -> entries.acceptAll(REGISTER_ITEMS.getEntries().stream().map(i -> new ItemStack(i.get())).toList()))
+			.build());
+		REGISTER_TAB.register(bus);
 	}
 }

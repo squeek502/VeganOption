@@ -1,117 +1,121 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeModContainer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.UniversalBucket;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.blocks.BlockEncrustedObsidian;
 import squeek.veganoption.blocks.BlockEnderRift;
 import squeek.veganoption.blocks.BlockRawEnder;
-import squeek.veganoption.blocks.renderers.RenderEnderRift;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
-import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.GenericBlockLootSubProvider;
 import squeek.veganoption.content.registry.RelationshipRegistry;
+import squeek.veganoption.fluids.RawEnderFluid;
+
+import java.util.List;
+
+import static squeek.veganoption.VeganOption.*;
 
 public class Ender implements IContentModule
 {
-	public static Block encrustedObsidian;
-	public static Block enderRift;
-	public static Fluid fluidRawEnder;
-	public static Block rawEnder;
-	public static ItemStack bucketRawEnder;
-	public static int RAW_ENDER_PER_PEARL = Fluid.BUCKET_VOLUME;
+	public static RegistryObject<Block> encrustedObsidian;
+	public static RegistryObject<Item> encrustedObsidianItem;
+	public static RegistryObject<Block> enderRift;
+	public static RegistryObject<Item> enderRiftItem;
+	public static RegistryObject<BlockEntityType<TileEntityEnderRift>> enderRiftType;
+	public static RegistryObject<FluidType> rawEnderFluidType;
+	public static RegistryObject<Fluid> rawEnderStill;
+	public static RegistryObject<Fluid> rawEnderFlowing;
+	public static RegistryObject<Block> rawEnderBlock;
+	public static RegistryObject<Item> rawEnderBucket;
+	public static final int RAW_ENDER_PER_PEARL = FluidType.BUCKET_VOLUME;
 
 	@Override
 	public void create()
 	{
-		encrustedObsidian = new BlockEncrustedObsidian()
-			.setHardness(50.0F)
-			.setResistance(2000.0F)
-			.setUnlocalizedName(ModInfo.MODID + ".encrustedObsidian")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "encrustedObsidian");
-		GameRegistry.register(encrustedObsidian);
-		GameRegistry.register(new ItemBlock(encrustedObsidian).setRegistryName(encrustedObsidian.getRegistryName()));
-		encrustedObsidian.setHarvestLevel("pickaxe", 3);
+		encrustedObsidian = REGISTER_BLOCKS.register("encrusted_obsidian", BlockEncrustedObsidian::new);
+		encrustedObsidianItem = REGISTER_ITEMS.register("encrusted_obsidian", () -> new BlockItem(encrustedObsidian.get(), new Item.Properties()));
 
-		enderRift = new BlockEnderRift()
-			.setHardness(-1.0F)
-			.setResistance(6000000.0F)
-			.setUnlocalizedName(ModInfo.MODID + ".enderRift")
-			.setRegistryName(ModInfo.MODID_LOWER, "enderRift");
-		GameRegistry.register(enderRift);
-		GameRegistry.register(new ItemBlock(enderRift).setRegistryName(enderRift.getRegistryName()));
-		GameRegistry.registerTileEntity(TileEntityEnderRift.class, ModInfo.MODID + ".enderRift");
+		enderRift = REGISTER_BLOCKS.register("ender_rift", BlockEnderRift::new);
+		enderRiftType = REGISTER_BLOCKENTITIES.register("ender_rift", () -> BlockEntityType.Builder.of(TileEntityEnderRift::new, enderRift.get()).build(null));
+		enderRiftItem = REGISTER_ITEMS.register("ender_rift", () -> new BlockItem(enderRift.get(), new Item.Properties()));
 
-		fluidRawEnder = new Fluid("raw_ender", new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_still"), new ResourceLocation(ModInfo.MODID_LOWER, "blocks/raw_ender_flow"))
-			.setLuminosity(3)
-			.setViscosity(3000)
-			.setDensity(4000);
-		FluidRegistry.registerFluid(fluidRawEnder);
-		rawEnder = new BlockRawEnder(fluidRawEnder)
-			.setUnlocalizedName(ModInfo.MODID + ".rawEnder")
-			.setRegistryName(ModInfo.MODID_LOWER, "rawEnder");
-		fluidRawEnder.setBlock(rawEnder);
-		fluidRawEnder.setUnlocalizedName(rawEnder.getUnlocalizedName());
-		GameRegistry.register(rawEnder);
-		GameRegistry.register(new ItemBlock(rawEnder).setRegistryName(rawEnder.getRegistryName()));
-
-		FluidRegistry.addBucketForFluid(fluidRawEnder);
-
-		UniversalBucket bucket = ForgeModContainer.getInstance().universalBucket;
-		bucketRawEnder = new ItemStack(bucket);
-		bucket.fill(bucketRawEnder, new FluidStack(fluidRawEnder, Fluid.BUCKET_VOLUME), true);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnderRift.class, new RenderEnderRift());
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(encrustedObsidian));
-		ContentHelper.registerFluidMapperAndMeshDef(rawEnder, "raw_ender");
-		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(enderRift));
+		rawEnderFluidType = REGISTER_FLUIDTYPES.register("raw_ender", () -> new FluidType(FluidType.Properties.create().lightLevel(3).viscosity(3000).density(4000)));
+		rawEnderStill = REGISTER_FLUIDS.register("raw_ender", RawEnderFluid.Still::new);
+		rawEnderFlowing = REGISTER_FLUIDS.register("raw_ender_flowing", RawEnderFluid.Flowing::new);
+		rawEnderBlock = REGISTER_BLOCKS.register("raw_ender", BlockRawEnder::new);
+		rawEnderBucket = REGISTER_ITEMS.register("raw_ender_bucket", () -> new BucketItem(() -> rawEnderStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenBlockTags(DataGenProviders.BlockTags provider)
 	{
+		provider.tagW(BlockTags.MINEABLE_WITH_PICKAXE).add(encrustedObsidian.get());
+		provider.tagW(BlockTags.NEEDS_DIAMOND_TOOL).add(encrustedObsidian.get());
 	}
 
 	@Override
-	public void recipes()
+	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{
-		GameRegistry.addShapelessRecipe(new ItemStack(encrustedObsidian, 2), Items.DIAMOND, Blocks.OBSIDIAN, Blocks.OBSIDIAN, Items.EMERALD);
+		event.registerBlockEntityRenderer(enderRiftType.get(), TheEndPortalRenderer::new);
+	}
+
+	@Override
+	public void datagenItemModels(ItemModelProvider provider)
+	{
+		provider.withExistingParent(encrustedObsidian.getId().getPath(), provider.modLoc("encrusted_obsidian"));
+		provider.basicItem(rawEnderBucket.get());
+	}
+
+	@Override
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
+	{
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, encrustedObsidianItem.get(), 2)
+			.requires(Items.DIAMOND)
+			.requires(Items.OBSIDIAN).requires(Items.OBSIDIAN)
+			.requires(Items.EMERALD)
+			.unlockedBy("has_obsidian", provider.hasW(Items.OBSIDIAN))
+			.save(output);
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(bucketRawEnder.copy(), new ItemStack(rawEnder));
-		RelationshipRegistry.addRelationship(new ItemStack(rawEnder), bucketRawEnder.copy());
-		RelationshipRegistry.addRelationship(new ItemStack(rawEnder), new ItemStack(enderRift));
-		RelationshipRegistry.addRelationship(new ItemStack(enderRift), new ItemStack(encrustedObsidian));
+		// todo: consolidate jei wiki entries
+		RelationshipRegistry.addRelationship(rawEnderBucket.get(), enderRiftItem.get());
+		RelationshipRegistry.addRelationship(enderRiftItem.get(), encrustedObsidianItem.get());
 	}
 
+	@Override
+	public BlockLootSubProvider getBlockLootProvider()
+	{
+		return new GenericBlockLootSubProvider() {
+			@Override
+			protected void generate()
+			{
+				dropSelf(encrustedObsidian.get());
+			}
+
+			@Override
+			protected Iterable<Block> getKnownBlocks()
+			{
+				return List.of(encrustedObsidian.get());
+			}
+		};
+	}
 }

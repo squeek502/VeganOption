@@ -1,83 +1,74 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.BlockOldLog;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class Resin implements IContentModule
 {
-	public static Item resin;
-	public static Item rosin;
+	public static RegistryObject<Item> resin;
+	public static RegistryObject<Item> rosin;
 
 	@Override
 	public void create()
 	{
-		resin = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".resin")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "resin");
-		GameRegistry.register(resin);
-
-		rosin = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".rosin")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "rosin");
-		GameRegistry.register(rosin);
+		resin = REGISTER_ITEMS.register("resin", () -> new Item(new Item.Properties()));
+		rosin = REGISTER_ITEMS.register("rosin", () -> new Item(new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.slimeballOreDict, new ItemStack(Items.SLIME_BALL));
-		OreDictionary.registerOre(ContentHelper.slimeballOreDict, new ItemStack(resin));
-		OreDictionary.registerOre(ContentHelper.resinOreDict, new ItemStack(resin));
-		OreDictionary.registerOre(ContentHelper.resinMaterialOreDict, new ItemStack(resin));
-		OreDictionary.registerOre(ContentHelper.rosinOreDict, new ItemStack(rosin));
-		OreDictionary.registerOre(ContentHelper.rosinMaterialOreDict, new ItemStack(rosin));
+		provider.tagW(ContentHelper.ItemTags.ROSIN).add(rosin.get());
+		provider.tagW(ContentHelper.ItemTags.RESIN).add(resin.get());
+		provider.tagW(ContentHelper.ItemTags.SLIMEBALLS).add(resin.get());
 	}
 
 	@Override
-	public void recipes()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.SLIME_BALL), ContentHelper.slimeballOreDict);
+		provider.basicItem(resin.get());
+		provider.basicItem(rosin.get());
+	}
 
-		BlockSpecifier spruceLogSpecifier = new BlockSpecifier(Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), BlockOldLog.VARIANT);
-		Modifiers.drops.addDropsToBlock(spruceLogSpecifier, new DropSpecifier(new ItemStack(resin), 0.1f));
+	@Override
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
+	{
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(resin.get()), RecipeCategory.MISC, rosin.get(), 0.2f, ContentHelper.DEFAULT_SMELT_TIME);
+	}
 
-		GameRegistry.addSmelting(resin, new ItemStack(rosin), 0.2f);
+	@Override
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
+	{
+		provider.add(
+			"spruce_log_resin",
+			new SimpleBlockDropLootModifier(
+				Blocks.SPRUCE_LOG,
+				resin.get(),
+				ConstantValue.exactly(0.01f),
+				ConstantValue.exactly(1)
+			)
+		);
 	}
 
 	@Override
 	public void finish()
 	{
+		Modifiers.recipes.convertInput(Ingredient.of(Items.SLIME_BALL), Ingredient.of(ContentHelper.ItemTags.SLIMEBALLS));
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(resin);
-		ContentHelper.registerTypicalItemModel(rosin);
-	}
-
 }

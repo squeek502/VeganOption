@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "p": {
+      "tag": "forge:sheets/plastic"
+    }
+  },
+  "pattern": [
+    "p",
+    "p"
+  ],
+  "result": {
+    "count": 4,
+    "item": "veganoption:plastic_rod"
+  },
+  "show_notification": true
+}

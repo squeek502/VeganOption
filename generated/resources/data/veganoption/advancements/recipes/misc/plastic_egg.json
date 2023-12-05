@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "veganoption:plastic_egg"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "unlock_right_away": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "unlock_right_away"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "veganoption:plastic_egg"
+    ]
+  },
+  "sends_telemetry_event": false
+}

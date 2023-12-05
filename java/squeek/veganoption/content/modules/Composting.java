@@ -1,20 +1,28 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.*;
-import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
 import squeek.veganoption.blocks.BlockCompost;
 import squeek.veganoption.blocks.BlockComposter;
 import squeek.veganoption.blocks.renderers.RenderComposter;
@@ -22,114 +30,152 @@ import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.GenericBlockLootSubProvider;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.content.registry.RelationshipRegistry;
-import squeek.veganoption.items.ItemFertilizer;
+import squeek.veganoption.gui.ComposterMenu;
+
+import java.util.List;
+
+import static squeek.veganoption.VeganOption.*;
 
 public class Composting implements IContentModule
 {
-	public static Block composter;
-	public static Item rottenPlants;
-	public static Block compost;
-	public static Item fertilizer;
+	public static RegistryObject<Block> composter;
+	public static RegistryObject<Item> composterItem;
+	public static RegistryObject<BlockEntityType<TileEntityComposter>> composterEntityType;
+	public static RegistryObject<MenuType<ComposterMenu>> composterMenuType;
+	public static RegistryObject<Item> rottenPlants;
+	public static RegistryObject<Block> compost;
+	public static RegistryObject<Item> compostItem;
+	public static RegistryObject<Item> fertilizer;
+
+	private static final String TEXTURE = ModInfo.MODID_LOWER + ":/entity/composter_legs";
+
+	private static final FoodProperties ROTTEN_PLANTS_FOOD = new FoodProperties.Builder()
+		.nutrition(4)
+		.saturationMod(0.1f)
+		.effect(() -> new MobEffectInstance(MobEffects.HUNGER, 600, 0), 0.8F)
+		.meat()
+		.build();
 
 	@Override
 	public void create()
 	{
-		composter = new BlockComposter()
-			.setHardness(2.5F)
-			.setUnlocalizedName(ModInfo.MODID + ".composter")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "composter");
-		GameRegistry.register(composter);
-		GameRegistry.register(new ItemBlock(composter).setRegistryName(composter.getRegistryName()));
-		GameRegistry.registerTileEntity(TileEntityComposter.class, ModInfo.MODID + ".composter");
+		composter = REGISTER_BLOCKS.register("composter", BlockComposter::new);
+		composterItem = REGISTER_ITEMS.register("composter", () -> new BlockItem(composter.get(), new Item.Properties()));
+		composterEntityType = REGISTER_BLOCKENTITIES.register("composter", () -> BlockEntityType.Builder.of(TileEntityComposter::new, composter.get()).build(null));
+		composterMenuType = REGISTER_MENUS.register("composter", () -> IMenuTypeExtension.create((id, inv, data) -> new ComposterMenu(id, inv, data.readBlockPos())));
 
-		rottenPlants = new ItemFood(4, 0.1F, true)
-			.setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F)
-			.setUnlocalizedName(ModInfo.MODID + ".rottenPlants")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "rottenPlants");
-		GameRegistry.register(rottenPlants);
+		rottenPlants = REGISTER_ITEMS.register("rotten_plants", () -> new Item(new Item.Properties().food(ROTTEN_PLANTS_FOOD)));
+		fertilizer = REGISTER_ITEMS.register("fertilizer", () -> new BoneMealItem(new Item.Properties()));
 
-		fertilizer = new ItemFertilizer()
-			.setUnlocalizedName(ModInfo.MODID + ".fertilizer")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "fertilizer");
-		GameRegistry.register(fertilizer);
-
-		compost = new BlockCompost()
-			.setHardness(0.5F)
-			.setUnlocalizedName(ModInfo.MODID + ".compost")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "compost");
-		GameRegistry.register(compost);
-		GameRegistry.register(new ItemBlock(compost).setRegistryName(compost.getRegistryName()));
+		compost = REGISTER_BLOCKS.register("compost", BlockCompost::new);
+		compostItem = REGISTER_ITEMS.register("compost", () -> new BlockItem(compost.get(), new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.rottenOreDict, new ItemStack(Items.ROTTEN_FLESH));
-		OreDictionary.registerOre(ContentHelper.rottenOreDict, rottenPlants);
-		OreDictionary.registerOre(ContentHelper.fertilizerOreDict, fertilizer);
-		OreDictionary.registerOre(ContentHelper.brownDyeOreDict, fertilizer);
+		provider.tagW(ContentHelper.ItemTags.ROTTEN_MATERIAL)
+			.add(Items.ROTTEN_FLESH)
+			.add(rottenPlants.get());
+		provider.tagW(ContentHelper.ItemTags.DYES_BROWN).add(fertilizer.get());
+
+		// Presently, no tags for fish or meat. Hopefully after Neoforged/Neoforge#135 there will be.
+		provider.tagW(ContentHelper.ItemTags.FOOD_COOKED_FISH)
+			.add(Items.COOKED_COD)
+			.add(Items.COOKED_SALMON);
+		provider.tagW(ContentHelper.ItemTags.FOOD_RAW_FISH)
+			.add(Items.COD)
+			.add(Items.SALMON)
+			.add(Items.PUFFERFISH);
+
+		provider.tagW(ContentHelper.ItemTags.FOOD_COOKED_MEAT)
+			.add(Items.COOKED_BEEF)
+			.add(Items.COOKED_CHICKEN)
+			.add(Items.COOKED_MUTTON)
+			.add(Items.COOKED_PORKCHOP)
+			.add(Items.COOKED_RABBIT);
+		provider.tagW(ContentHelper.ItemTags.FOOD_RAW_MEAT)
+			.add(Items.BEEF)
+			.add(Items.CHICKEN)
+			.add(Items.MUTTON)
+			.add(Items.PORKCHOP)
+			.add(Items.RABBIT);
+
+		provider.tagW(ContentHelper.ItemTags.FOOD)
+			.addTag(ContentHelper.ItemTags.FOOD_COOKED_FISH)
+			.addTag(ContentHelper.ItemTags.FOOD_RAW_FISH)
+			.addTag(ContentHelper.ItemTags.FOOD_COOKED_MEAT)
+			.addTag(ContentHelper.ItemTags.FOOD_RAW_MEAT);
 	}
 
 	@Override
-	public void recipes()
+	public void datagenBlockTags(DataGenProviders.BlockTags provider)
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.ROTTEN_FLESH), ContentHelper.rottenOreDict);
+		provider.tagW(BlockTags.MINEABLE_WITH_SHOVEL).add(compost.get());
+	}
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(composter), "/c/", "/ /", '/', ContentHelper.stickOreDict, 'c', new ItemStack(Blocks.CHEST)));
+	@Override
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
+	{
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, composterItem.get())
+			.pattern("/c/")
+			.pattern("/ /")
+			.pattern(" / ")
+			.define('/', ContentHelper.ItemTags.STICKS)
+			.define('c', Items.CHEST)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.save(output);
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(fertilizer, 8), new ItemStack(compost), ContentHelper.saltpeterOreDict));
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, fertilizer.get(), 8)
+			.requires(compostItem.get())
+			.requires(ContentHelper.ItemTags.SALTPETER)
+			.unlockedBy("has_compost", provider.hasW(compostItem.get()))
+			.save(output);
 	}
 
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(new ItemStack(compost), new ItemStack(composter));
-		RelationshipRegistry.addRelationship(new ItemStack(rottenPlants), new ItemStack(composter));
+		Modifiers.recipes.convertInput(Ingredient.of(Items.ROTTEN_FLESH), Ingredient.of(ContentHelper.ItemTags.ROTTEN_MATERIAL));
+		RelationshipRegistry.addRelationship(compostItem.get(), composterItem.get());
+		RelationshipRegistry.addRelationship(rottenPlants.get(), composterItem.get());
 
-		CompostRegistry.addBrown(ContentHelper.stickOreDict);
+		CompostRegistry.addBrown(ContentHelper.ItemTags.STICKS);
 		CompostRegistry.addBrown(Items.PAPER);
-		CompostRegistry.addBrown(ContentHelper.bastFibreOreDict);
-		CompostRegistry.addBrown(ContentHelper.woodAshOreDict);
-		CompostRegistry.addBrown(Blocks.DEADBUSH);
-		CompostRegistry.addBrown(ContentHelper.sawDustOreDict);
-		CompostRegistry.addBrown(ContentHelper.sawDustAltOreDict);
+		CompostRegistry.addBrown(ContentHelper.ItemTags.FIBRES);
+		CompostRegistry.addBrown(ContentHelper.ItemTags.DUST_WOOD);
+		CompostRegistry.addBrown(Items.DEAD_BUSH);
 
-		CompostRegistry.addGreen(ContentHelper.saplingOreDict);
-		CompostRegistry.addGreen(rottenPlants);
-		CompostRegistry.addGreen(Blocks.TALLGRASS);
-		CompostRegistry.addGreen(Blocks.DOUBLE_PLANT);
-		CompostRegistry.addGreen(ContentHelper.leavesOreDict);
-		CompostRegistry.addGreen(Blocks.PUMPKIN);
-		CompostRegistry.addGreen(Blocks.MELON_BLOCK);
-		CompostRegistry.addGreen(Blocks.VINE);
-		CompostRegistry.addGreen(Blocks.YELLOW_FLOWER);
-		CompostRegistry.addGreen(Blocks.RED_FLOWER);
-		CompostRegistry.addGreen(Blocks.BROWN_MUSHROOM);
-		CompostRegistry.addGreen(Blocks.RED_MUSHROOM);
+		CompostRegistry.addGreen(ContentHelper.ItemTags.SAPLINGS);
+		CompostRegistry.addGreen(rottenPlants.get());
+		CompostRegistry.addGreen(Items.TALL_GRASS);
+		CompostRegistry.addGreen(Items.FERN);
+		CompostRegistry.addGreen(Items.LARGE_FERN);
+		CompostRegistry.addGreen(ContentHelper.ItemTags.LEAVES);
+		CompostRegistry.addGreen(Items.PUMPKIN);
+		CompostRegistry.addGreen(Items.MELON);
+		CompostRegistry.addGreen(Items.VINE);
+		CompostRegistry.addGreen(ContentHelper.ItemTags.FLOWERS);
+		CompostRegistry.addGreen(Items.BROWN_MUSHROOM);
+		CompostRegistry.addGreen(Items.RED_MUSHROOM);
 
 		CompostRegistry.blacklist(new FoodSpecifier()
 		{
 			@Override
 			public boolean matches(ItemStack itemStack)
 			{
-				// meat is bad for composting
-				if (itemStack.getItem() instanceof ItemFood && ((ItemFood) itemStack.getItem()).isWolfsFavoriteMeat())
-					return true;
-				else if (itemStack.getItem() instanceof ItemFishFood)
-					return true;
-
-				int[] oreIDs = OreDictionary.getOreIDs(itemStack);
-				for (int oreID : oreIDs)
+				if (itemStack.isEdible())
 				{
-					String oreName = OreDictionary.getOreName(oreID);
-					if (oreName.startsWith("listAllmeat") || oreName.contains("Meat"))
+					if (itemStack.getFoodProperties(null).isMeat())
+						return true;
+					if (ContentHelper.isItemTaggedAs(itemStack.getItem(), ContentHelper.ItemTags.FOOD_RAW_FISH) || ContentHelper.isItemTaggedAs(itemStack.getItem(), ContentHelper.ItemTags.FOOD_COOKED_FISH))
+						return true;
+					if (ContentHelper.isItemTaggedAs(itemStack.getItem(), ContentHelper.ItemTags.FOOD_RAW_MEAT) || ContentHelper.isItemTaggedAs(itemStack.getItem(), ContentHelper.ItemTags.FOOD_COOKED_MEAT))
 						return true;
 				}
 
@@ -140,21 +186,44 @@ public class Composting implements IContentModule
 		CompostRegistry.registerAllFoods();
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePost()
+	public void datagenBlockStatesAndModels(BlockStateProvider provider)
 	{
-		RenderComposter composterRenderer = new RenderComposter();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityComposter.class, composterRenderer);
+		provider.simpleBlock(compost.get());
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePre()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-		ContentHelper.registerTypicalItemModel(rottenPlants);
-		ContentHelper.registerTypicalItemModel(fertilizer);
-		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(compost));
-		ContentHelper.registerTypicalItemModel(Item.getItemFromBlock(composter));
+		provider.withExistingParent("composter", provider.modLoc("composter"));
+		provider.basicItem(rottenPlants.get());
+		provider.basicItem(fertilizer.get());
+		provider.withExistingParent("compost", provider.modLoc("compost"));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
+	{
+		event.registerBlockEntityRenderer(composterEntityType.get(), RenderComposter::new);
+	}
+
+	@Override
+	public BlockLootSubProvider getBlockLootProvider()
+	{
+		return new GenericBlockLootSubProvider() {
+			@Override
+			protected void generate()
+			{
+				dropSelf(compost.get());
+				dropSelf(composter.get());
+			}
+
+			@Override
+			protected Iterable<Block> getKnownBlocks()
+			{
+				return List.of(compost.get(), composter.get());
+			}
+		};
 	}
 }

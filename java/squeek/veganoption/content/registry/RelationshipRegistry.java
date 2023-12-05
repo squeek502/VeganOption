@@ -1,40 +1,37 @@
 package squeek.veganoption.content.registry;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
 import squeek.veganoption.helpers.MiscHelper;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class RelationshipRegistry
 {
-	public static final HashMap<ItemStack, List<ItemStack>> parentToChildren = new HashMap<ItemStack, List<ItemStack>>();
-	public static final HashMap<ItemStack, List<ItemStack>> childToParents = new HashMap<ItemStack, List<ItemStack>>();
+	public static final Map<Item, List<Item>> parentToChildren = new HashMap<>();
+	public static final Map<Item, List<Item>> childToParents = new HashMap<>();
 
 	@Nonnull
-	public static List<ItemStack> getParents(ItemStack child)
+	public static List<Item> getParents(Item child)
 	{
-		child = MiscHelper.getMatchingItemStackFromList(childToParents.keySet(), child);
-		return child != null ? childToParents.get(child) : Collections.<ItemStack>emptyList();
+		child = MiscHelper.getMatchingItemFromList(childToParents.keySet(), child);
+		return child != null ? childToParents.get(child) : Collections.emptyList();
 	}
 
 	@Nonnull
-	public static List<ItemStack> getChildren(ItemStack parent)
+	public static List<Item> getChildren(Item parent)
 	{
-		parent = MiscHelper.getMatchingItemStackFromList(parentToChildren.keySet(), parent);
-		return parent != null ? parentToChildren.get(parent) : Collections.<ItemStack>emptyList();
+		parent = MiscHelper.getMatchingItemFromList(parentToChildren.keySet(), parent);
+		return parent != null ? parentToChildren.get(parent) : Collections.emptyList();
 	}
 
-	public static void addRelationship(ItemStack child, ItemStack parent)
+	public static void addRelationship(Item child, Item parent)
 	{
-		ItemStack matchingChild = MiscHelper.getMatchingItemStackFromList(childToParents.keySet(), child);
-		ItemStack matchingParent = MiscHelper.getMatchingItemStackFromList(parentToChildren.keySet(), parent);
+		Item matchingChild = MiscHelper.getMatchingItemFromList(childToParents.keySet(), child);
+		Item matchingParent = MiscHelper.getMatchingItemFromList(parentToChildren.keySet(), parent);
 
-		List<ItemStack> parentsOfChild = matchingChild != null ? childToParents.get(matchingChild) : new ArrayList<ItemStack>();
-		List<ItemStack> childrenOfParent = matchingParent != null ? parentToChildren.get(matchingParent) : new ArrayList<ItemStack>();
+		List<Item> parentsOfChild = matchingChild != null ? childToParents.get(matchingChild) : new ArrayList<>();
+		List<Item> childrenOfParent = matchingParent != null ? parentToChildren.get(matchingParent) : new ArrayList<>();
 
 		childrenOfParent.add(matchingChild != null ? matchingChild : child);
 		parentsOfChild.add(matchingParent != null ? matchingParent : parent);

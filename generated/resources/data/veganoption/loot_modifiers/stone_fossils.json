@@ -1,0 +1,16 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 0.01,
+  "conditions": [
+    {
+      "block": "minecraft:stone",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "drop": "minecraft:bone",
+  "num": {
+    "type": "minecraft:uniform",
+    "max": 2.0,
+    "min": 1.0
+  }
+}

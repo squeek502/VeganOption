@@ -1,11 +1,13 @@
 eclipse
 run
+runs/
 libs
 media
 classes
 *.bat
 builds
 sources
+generated/resources/.cache/
 
 # Created by https://www.gitignore.io/api/gradle,intellij,eclipse,windows,osx,linux
 

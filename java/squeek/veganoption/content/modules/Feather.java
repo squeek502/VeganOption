@@ -1,64 +1,57 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 // currently depends on Kapok
 public class Feather implements IContentModule
 {
-	public static Item fauxFeather;
+	public static RegistryObject<Item> fauxFeather;
 
 	@Override
 	public void create()
 	{
-		fauxFeather = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".fauxFeather")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "fauxFeather");
-		GameRegistry.register(fauxFeather);
+		fauxFeather = REGISTER_ITEMS.register("faux_feather", () -> new Item(new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.featherOreDict, new ItemStack(fauxFeather));
+		provider.tagW(ContentHelper.ItemTags.FEATHERS).add(fauxFeather.get());
 	}
 
 	@Override
-	public void recipes()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		Modifiers.recipes.convertInput(new ItemStack(Items.FEATHER), ContentHelper.featherOreDict);
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, fauxFeather.get())
+			.requires(ContentHelper.ItemTags.FLUFFY_MATERIAL)
+			.requires(ContentHelper.ItemTags.PLASTIC_ROD)
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.save(output);
+	}
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(fauxFeather), ContentHelper.kapokOreDict, ContentHelper.plasticRodOreDict));
+	@Override
+	public void datagenItemModels(ItemModelProvider provider)
+	{
+		provider.withExistingParent(fauxFeather.getId().getPath(), provider.mcLoc("feather"));
 	}
 
 	@Override
 	public void finish()
 	{
+		Modifiers.recipes.convertInput(Ingredient.of(Items.FEATHER), Ingredient.of(ContentHelper.ItemTags.FEATHERS));
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(fauxFeather);
-	}
-
 }

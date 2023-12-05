@@ -1,80 +1,87 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.PotionTypes;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class ProofOfSuffering implements IContentModule
 {
-	public static Item fragmentOfSuffering;
-	public static Item proofOfSuffering;
+	public static RegistryObject<Item> fragmentOfSuffering;
+	public static RegistryObject<Item> proofOfSuffering;
 
 	@Override
 	public void create()
 	{
-		fragmentOfSuffering = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".sufferingFragment")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "sufferingFragment");
-		GameRegistry.register(fragmentOfSuffering);
-
-		proofOfSuffering = new Item()
-			.setUnlocalizedName(ModInfo.MODID + ".sufferingProof")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "sufferingProof");
-		GameRegistry.register(proofOfSuffering);
+		fragmentOfSuffering = REGISTER_ITEMS.register("suffering_fragment", () -> new Item(new Item.Properties()));
+		proofOfSuffering = REGISTER_ITEMS.register("suffering_proof", () -> new Item(new Item.Properties()));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.tearOreDict, new ItemStack(Items.GHAST_TEAR));
-		OreDictionary.registerOre(ContentHelper.tearOreDict, new ItemStack(proofOfSuffering));
+		provider.tagW(ContentHelper.ItemTags.REAGENT_TEAR)
+			.add(Items.GHAST_TEAR)
+			.add(proofOfSuffering.get());
 	}
 
 	@Override
-	public void recipes()
+	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		PotionHelper.registerPotionTypeConversion(PotionTypes.AWKWARD, new PotionHelper.ItemPredicateInstance(proofOfSuffering), PotionTypes.REGENERATION);
+		ShapedRecipeBuilder.shaped(RecipeCategory.BREWING, proofOfSuffering.get())
+			.pattern("xxx")
+			.pattern("x*x")
+			.pattern("xxx")
+			.define('x', fragmentOfSuffering.get())
+			.define('*', Items.GOLD_NUGGET) // todo: tag
+			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) // todo
+			.save(output);
+	}
 
-		Modifiers.recipes.convertInput(new ItemStack(Items.GHAST_TEAR), ContentHelper.tearOreDict);
+	@Override
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
+	{
+		provider.add(
+			"soul_sand_fragment_of_suffering",
+			new SimpleBlockDropLootModifier(
+				Blocks.SOUL_SAND,
+				fragmentOfSuffering.get(),
+				ConstantValue.exactly(0.05f),
+				UniformGenerator.between(1, 3)
+			)
+		);
+	}
 
-		Modifiers.drops.addDropsToBlock(new BlockSpecifier(Blocks.SOUL_SAND.getDefaultState()), new DropSpecifier(new ItemStack(fragmentOfSuffering), 0.05f, 1, 3));
-
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(proofOfSuffering), "xxx", "x*x", "xxx", 'x', fragmentOfSuffering, '*', Items.GOLD_NUGGET));
+	@Override
+	public void datagenItemModels(ItemModelProvider provider)
+	{
+		provider.basicItem(fragmentOfSuffering.get());
+		provider.basicItem(proofOfSuffering.get());
 	}
 
 	@Override
 	public void finish()
 	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePost()
-	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(fragmentOfSuffering);
-		ContentHelper.registerTypicalItemModel(proofOfSuffering);
+		Modifiers.recipes.convertInput(Ingredient.of(Items.GHAST_TEAR), Ingredient.of(ContentHelper.ItemTags.REAGENT_TEAR));
+		PotionBrewing.addMix(Potions.AWKWARD, proofOfSuffering.get(), Potions.REGENERATION);
+		PotionBrewing.addMix(Potions.WATER, proofOfSuffering.get(), Potions.MUNDANE);
 	}
 }

@@ -1,0 +1,12 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 0.02,
+  "conditions": [
+    {
+      "block": "minecraft:netherrack",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "drop": "veganoption:sulfur",
+  "num": 1.0
+}

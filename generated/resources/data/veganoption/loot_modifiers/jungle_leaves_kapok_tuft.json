@@ -1,0 +1,16 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 0.07,
+  "conditions": [
+    {
+      "block": "minecraft:jungle_leaves",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "drop": "veganoption:kapok_tuft",
+  "num": {
+    "type": "minecraft:uniform",
+    "max": 2.0,
+    "min": 1.0
+  }
+}

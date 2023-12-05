@@ -1,21 +1,25 @@
 package squeek.veganoption.content;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.modules.*;
 import squeek.veganoption.content.modules.compat.CompatEnderBubble;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
- * Modules should only depend on eachother through the OreDictionary. If modules are more intertwined,
+ * Modules should only depend on eachother through the use of tags. If modules are more intertwined,
  * then only the intertwined parts should be put in compatModules instead
- *
- * This forces consistent and tested use of the OreDictionary for maximum compatibility with other mods
+ * <br/>
+ * This forces consistent and tested use of tags for maximum compatibility with other mods
  * and for potential configurable modularity down the line
  */
+@Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER)
 public class ContentModuleHandler
 {
 	private static Map<String, IContentModule> modules = new LinkedHashMap<String, IContentModule>();
@@ -24,7 +28,6 @@ public class ContentModuleHandler
 
 	static
 	{
-		// CreativeTabProxy must be first.
 		modules.put("CreativeTab", new CreativeTabProxy());
 		modules.put("Bioplastic", new Bioplastic());
 		modules.put("Burlap", new Burlap());
@@ -53,60 +56,24 @@ public class ContentModuleHandler
 		compatModules.put("EnderBubble", new CompatEnderBubble());
 	}
 
-	public static void preInit()
+	/**
+	 * Iterates over all modules, regular and compat, and performs the passed function on them.
+	 * @param consumer passes an {@link IContentModule}
+	 */
+	public static void iterateOverModules(Consumer<IContentModule> consumer)
 	{
-		boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
-		for (IContentModule module : modules.values())
-		{
-			module.create();
-			module.oredict();
-			if (isClient)
-			{
-				module.clientSidePre();
-			}
-		}
-		for (IContentModule compatModule : compatModules.values())
-		{
-			compatModule.create();
-			compatModule.oredict();
-			if (isClient)
-			{
-				compatModule.clientSidePre();
-			}
-		}
+		modules.values().forEach(consumer);
+		compatModules.values().forEach(consumer);
 	}
 
 	public static void init()
 	{
-		for (IContentModule module : modules.values())
-		{
-			module.recipes();
-		}
-		for (IContentModule compatModule : compatModules.values())
-		{
-			compatModule.recipes();
-		}
+		iterateOverModules(IContentModule::create);
 	}
 
-	public static void postInit()
+	@SubscribeEvent
+	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{
-		boolean isClient = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
-		for (IContentModule module : modules.values())
-		{
-			if (isClient)
-			{
-				module.clientSidePost();
-			}
-			module.finish();
-		}
-		for (IContentModule compatModule : compatModules.values())
-		{
-			if (isClient)
-			{
-				compatModule.clientSidePost();
-			}
-			compatModule.finish();
-		}
+		iterateOverModules(module -> module.registerRenderers(event));
 	}
-
 }

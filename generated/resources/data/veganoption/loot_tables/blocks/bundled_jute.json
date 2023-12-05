@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "veganoption:bundled_jute",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "retting_stage": "3"
+          }
+        },
+        {
+          "condition": "minecraft:inverted",
+          "term": {
+            "block": "veganoption:bundled_jute",
+            "condition": "minecraft:block_state_property",
+            "properties": {
+              "retting_stage": "3"
+            }
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:jute_fibre"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:bundled_jute"
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:limit_count",
+          "limit": {
+            "max": 15.0,
+            "min": 8.0
+          }
+        },
+        {
+          "add": false,
+          "count": 1.0,
+          "function": "minecraft:set_count"
+        }
+      ],
+      "name": "bundled_jute",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "veganoption:blocks/bundled_jute"
+}

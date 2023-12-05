@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "tag": "forge:wood_ash"
+    },
+    {
+      "tag": "forge:wood_ash"
+    },
+    {
+      "tag": "forge:wood_ash"
+    }
+  ],
+  "result": {
+    "item": "veganoption:lye_water_bucket"
+  }
+}

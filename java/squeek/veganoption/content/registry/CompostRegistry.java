@@ -1,28 +1,28 @@
 package squeek.veganoption.content.registry;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.BowlFoodItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import squeek.veganoption.VeganOption;
-import squeek.veganoption.helpers.MiscHelper;
+import squeek.veganoption.content.ContentHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompostRegistry
 {
-	public static List<ItemStack> browns = new ArrayList<ItemStack>();
-	public static List<ItemStack> greens = new ArrayList<ItemStack>();
-	public static List<FoodSpecifier> uncompostableFoods = new ArrayList<FoodSpecifier>();
+	public static List<Item> browns = new ArrayList<>();
+	public static List<Item> greens = new ArrayList<>();
+	public static List<FoodSpecifier> uncompostableFoods = new ArrayList<>();
 
 	public static void registerAllFoods()
 	{
 		long millisecondsStart = System.currentTimeMillis();
 		int numRegistered = 0;
 
-		for (Item item : Item.REGISTRY)
+		for (Item item : ForgeRegistries.ITEMS)
 		{
 			if (item == null)
 				continue;
@@ -44,25 +44,25 @@ public class CompostRegistry
 		public abstract boolean matches(ItemStack itemStack);
 	}
 
-	public static boolean isCompostable(ItemStack itemStack)
+	public static boolean isCompostable(Item item)
 	{
-		return isGreen(itemStack) || isBrown(itemStack);
+		return isGreen(item) || isBrown(item);
 	}
 
-	public static boolean isBrown(ItemStack itemStack)
+	public static boolean isBrown(Item item)
 	{
-		return MiscHelper.isItemStackInList(browns, itemStack);
+		return browns.contains(item);
 	}
 
-	public static boolean isGreen(ItemStack itemStack)
+	public static boolean isGreen(Item item)
 	{
-		return MiscHelper.isItemStackInList(greens, itemStack);
+		return greens.contains(item);
 	}
 
 	public static boolean isCompostableFood(ItemStack itemStack)
 	{
 		// TODO: optionally use AppleCore's method?
-		if (itemStack != null && itemStack.getItem() instanceof ItemFood && !itemStack.getItem().hasContainerItem(itemStack))
+		if (itemStack != null && itemStack.isEdible() && (!(itemStack.getItem() instanceof BowlFoodItem) || itemStack.hasCraftingRemainingItem()))
 		{
 			for (FoodSpecifier uncompostableFood : uncompostableFoods)
 			{
@@ -76,42 +76,22 @@ public class CompostRegistry
 
 	public static void addBrown(Item item)
 	{
-		addBrown(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
+		browns.add(item);
 	}
 
-	public static void addBrown(Block block)
+	public static void addBrown(TagKey<Item> tag)
 	{
-		addBrown(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
-	}
-
-	public static void addBrown(ItemStack itemStack)
-	{
-		browns.add(itemStack);
-	}
-
-	public static void addBrown(String oredictName)
-	{
-		browns.addAll(OreDictionary.getOres(oredictName));
+		browns.addAll(ForgeRegistries.ITEMS.getValues().stream().filter(i -> ContentHelper.isItemTaggedAs(i, tag)).toList());
 	}
 
 	public static void addGreen(Item item)
 	{
-		addGreen(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
+		greens.add(item);
 	}
 
-	public static void addGreen(Block block)
+	public static void addGreen(TagKey<Item> tag)
 	{
-		addGreen(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
-	}
-
-	public static void addGreen(ItemStack itemStack)
-	{
-		greens.add(itemStack);
-	}
-
-	public static void addGreen(String oredictName)
-	{
-		greens.addAll(OreDictionary.getOres(oredictName));
+		greens.addAll(ForgeRegistries.ITEMS.getValues().stream().filter(i -> ContentHelper.isItemTaggedAs(i, tag)).toList());
 	}
 
 	public static void blacklist(FoodSpecifier foodSpecifier)

@@ -1,43 +1,32 @@
 package squeek.veganoption.content.registry;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.helpers.LangHelper;
-import squeek.veganoption.helpers.MiscHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DescriptionRegistry
 {
-	public static List<ItemStack> itemStacksWithUsageDescriptions = new ArrayList<ItemStack>();
-	public static List<ItemStack> itemStacksWithCraftingDescriptions = new ArrayList<ItemStack>();
-	public static Map<ItemStack, String> itemStacksWithCustomUsageDescriptions = new HashMap<ItemStack, String>();
-	public static Map<ItemStack, String> itemStacksWithCustomCraftingDescriptions = new HashMap<ItemStack, String>();
+	public static List<Item> itemsWithUsageDescriptions = new ArrayList<>();
+	public static List<Item> itemsWithCraftingDescriptions = new ArrayList<>();
+	public static Map<Item, String> itemsWithCustomUsageDescriptions = new HashMap<>();
+	public static Map<Item, String> itemsWithCustomCraftingDescriptions = new HashMap<>();
 
+	//todo: jei integration.
 	public static void registerAllDescriptions()
 	{
 		long millisecondsStart = System.currentTimeMillis();
 		int numRegistered = 0;
 
-		for (Item item : Item.REGISTRY)
+		for (Item item : ForgeRegistries.ITEMS)
 		{
-			if (item == null || item.getRegistryName() == null)
-				continue;
-
-			numRegistered += tryRegisterItemAndSubtypes(item);
-		}
-
-		for (Block block : Block.REGISTRY)
-		{
-			if (block == null || block.getRegistryName() == null)
-				continue;
-
-			if (Item.getItemFromBlock(block) == null)
-				continue;
-
-			numRegistered += tryRegisterItemAndSubtypes(Item.getItemFromBlock(block));
+			if (tryRegisterItem(item))
+				numRegistered++;
 		}
 
 		long timeSpentInMilliseconds = System.currentTimeMillis() - millisecondsStart;
@@ -45,63 +34,41 @@ public class DescriptionRegistry
 		VeganOption.Log.info("Found and registered " + numRegistered + " items/blocks with description text (" + timeTakenString + ")");
 	}
 
-	public static int tryRegisterItemAndSubtypes(Item item)
-	{
-		int numRegistered = 0;
-
-		List<ItemStack> stacks;
-		if (item.getHasSubtypes())
-		{
-			stacks = new ArrayList<ItemStack>();
-			item.getSubItems(item, null, stacks);
-		}
-		else
-			stacks = Collections.singletonList(new ItemStack(item));
-
-		for (ItemStack stack : stacks)
-		{
-			if (tryRegisterDescriptions(stack))
-				numRegistered++;
-		}
-
-		return numRegistered;
-	}
-
-	public static boolean tryRegisterDescriptions(ItemStack itemStack)
+	public static boolean tryRegisterItem(Item item)
 	{
 		boolean didRegister = false;
-		if (hasUsageText(itemStack) && !MiscHelper.isItemStackInList(itemStacksWithUsageDescriptions, itemStack))
+		if (hasUsageText(item) && !itemsWithUsageDescriptions.contains(item))
 		{
-			itemStacksWithUsageDescriptions.add(itemStack);
+			itemsWithUsageDescriptions.add(item);
 			didRegister = true;
 		}
-		if (hasCraftingText(itemStack) && !MiscHelper.isItemStackInList(itemStacksWithCraftingDescriptions, itemStack))
+		if (hasCraftingText(item) && !itemsWithCraftingDescriptions.contains(item))
 		{
-			itemStacksWithCraftingDescriptions.add(itemStack);
+			itemsWithCraftingDescriptions.add(item);
 			didRegister = true;
 		}
 		return didRegister;
 	}
 
-	public static boolean hasUsageText(ItemStack itemStack)
+	public static boolean hasUsageText(Item item)
 	{
-		return LangHelper.existsRaw(itemStack.getUnlocalizedName() + ".vowiki.usage") || !RelationshipRegistry.getChildren(itemStack).isEmpty();
+		return LangHelper.existsRaw(item.getDescriptionId() + ".vowiki.usage") || !RelationshipRegistry.getChildren(item).isEmpty();
 	}
 
-	public static boolean hasCraftingText(ItemStack itemStack)
+	public static boolean hasCraftingText(Item item)
 	{
-		return LangHelper.existsRaw(itemStack.getUnlocalizedName() + ".vowiki.crafting") || !RelationshipRegistry.getParents(itemStack).isEmpty();
+		return LangHelper.existsRaw(item.getDescriptionId() + ".vowiki.crafting") || !RelationshipRegistry.getParents(item).isEmpty();
 	}
 
-	public static void registerCustomUsageText(ItemStack itemStack, String unlocalizedUsageText)
+	public static void registerCustomUsageText(Item item, String unlocalizedUsageText)
 	{
-		itemStacksWithCustomUsageDescriptions.put(itemStack, unlocalizedUsageText);
-		itemStacksWithUsageDescriptions.add(itemStack);
+		itemsWithCustomUsageDescriptions.put(item, unlocalizedUsageText);
+		itemsWithUsageDescriptions.add(item);
 	}
 
-	public static void registerCustomCraftingText(ItemStack itemStack, String unlocalizedCraftingText)
+	public static void registerCustomCraftingText(Item item, String unlocalizedCraftingText)
 	{
-		itemStacksWithCustomCraftingDescriptions.put(itemStack, unlocalizedCraftingText);
-		itemStacksWithCraftingDescriptions.add(itemStack);
+		itemsWithCustomCraftingDescriptions.put(item, unlocalizedCraftingText);
+		itemsWithCraftingDescriptions.add(item);
 	}
 }

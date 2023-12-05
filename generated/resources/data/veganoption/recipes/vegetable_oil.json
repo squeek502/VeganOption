@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "veganoption:oil_pressers"
+    },
+    {
+      "tag": "veganoption:vegetable_oil_sources"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "result": {
+    "item": "veganoption:vegetable_oil"
+  }
+}

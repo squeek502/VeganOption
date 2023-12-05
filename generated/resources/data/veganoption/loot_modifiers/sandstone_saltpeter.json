@@ -1,0 +1,16 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 0.02,
+  "conditions": [
+    {
+      "block": "minecraft:sandstone",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "drop": "veganoption:saltpeter",
+  "num": {
+    "type": "minecraft:uniform",
+    "max": 3.0,
+    "min": 1.0
+  }
+}

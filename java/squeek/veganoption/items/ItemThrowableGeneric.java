@@ -1,124 +1,77 @@
 package squeek.veganoption.items;
 
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.dispenser.BehaviorProjectileDispense;
-import net.minecraft.dispenser.IPosition;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IProjectile;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.world.World;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import squeek.veganoption.helpers.RandomHelper;
 
-import java.lang.reflect.Constructor;
-
-public class ItemThrowableGeneric extends Item
+public abstract class ItemThrowableGeneric extends Item
 {
 	public static final float DEFAULT_THROWSPEED = 1.5F;
 
-	public Constructor<? extends EntityThrowable> thrownEntityThrowerConstructor = null;
-	public Constructor<? extends EntityThrowable> thrownEntityCoordinatesConstructor = null;
-	public Class<? extends EntityThrowable> thrownEntityClass;
 	public SoundEvent throwSound;
 	public float throwSpeed;
 
-	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass)
+	public ItemThrowableGeneric()
 	{
-		this(thrownEntityClass, DEFAULT_THROWSPEED);
+		this(DEFAULT_THROWSPEED);
 	}
 
-	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass, float throwSpeed)
+	public ItemThrowableGeneric(float throwSpeed)
 	{
-		this(thrownEntityClass, SoundEvents.ENTITY_ARROW_SHOOT, throwSpeed);
+		this(SoundEvents.ARROW_SHOOT, throwSpeed);
 	}
 
-	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass, SoundEvent throwSound)
+	public ItemThrowableGeneric(SoundEvent throwSound)
 	{
-		this(thrownEntityClass, throwSound, DEFAULT_THROWSPEED);
+		this(throwSound, DEFAULT_THROWSPEED);
 	}
 
-	public ItemThrowableGeneric(Class<? extends EntityThrowable> thrownEntityClass, SoundEvent throwSound, float throwSpeed)
+	public ItemThrowableGeneric(SoundEvent throwSound, float throwSpeed)
 	{
-		super();
-		this.thrownEntityClass = thrownEntityClass;
+		super(new Item.Properties());
 		this.throwSound = throwSound;
 		this.throwSpeed = throwSpeed;
 
-		try
-		{
-			thrownEntityThrowerConstructor = this.thrownEntityClass.getDeclaredConstructor(World.class, EntityLivingBase.class);
-			thrownEntityCoordinatesConstructor = this.thrownEntityClass.getDeclaredConstructor(World.class, double.class, double.class, double.class);
-		}
-		catch (NoSuchMethodException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (SecurityException e)
-		{
-			throw new RuntimeException(e);
-		}
-
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemThrowableGeneric.DispenserBehavior(this));
+		DispenserBlock.registerBehavior(this, new ItemThrowableGeneric.DispenserBehavior(this));
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
 	{
-		if (!player.capabilities.isCreativeMode)
+		ItemStack inHand = player.getItemInHand(hand);
+		if (!player.isCreative())
 		{
-			--itemStack.stackSize;
+			inHand.shrink(1);
 		}
 
 		player.playSound(throwSound, 0.5F, 0.4F / (RandomHelper.random.nextFloat() * 0.4F + 0.8F));
 
-		if (!world.isRemote)
+		if (!level.isClientSide())
 		{
-			EntityThrowable entity = getNewThrownEntity(itemStack, world, player);
-			entity.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, throwSpeed, 1.0F);
-			world.spawnEntityInWorld(entity);
+			ThrowableItemProjectile entity = getNewProjectile(inHand, level, player);
+			entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, throwSpeed, 1.0F);
+			level.addFreshEntity(entity);
 		}
 
-		return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
+		return InteractionResultHolder.success(inHand);
 	}
 
-	public EntityThrowable getNewThrownEntity(ItemStack thrownItem, World world, EntityLivingBase thrower)
-	{
-		try
-		{
-			return thrownEntityThrowerConstructor.newInstance(world, thrower);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
+	public abstract ThrowableItemProjectile getNewProjectile(ItemStack thrownItem, Level level, Player thrower);
 
-	public EntityThrowable getNewThrownEntity(ItemStack thrownItem, World world, double x, double y, double z)
-	{
-		try
-		{
-			return thrownEntityCoordinatesConstructor.newInstance(world, x, y, z);
-		}
-		catch (RuntimeException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
+	public abstract ThrowableItemProjectile getNewProjectile(ItemStack thrownItem, Level level, double x, double y, double z);
 
-	public static class DispenserBehavior extends BehaviorProjectileDispense
+	public static class DispenserBehavior extends AbstractProjectileDispenseBehavior
 	{
 		public ItemThrowableGeneric itemThrowableGeneric;
 
@@ -129,9 +82,9 @@ public class ItemThrowableGeneric extends Item
 		}
 
 		@Override
-		protected IProjectile getProjectileEntity(World world, IPosition position, ItemStack stack)
+		protected Projectile getProjectile(Level level, Position pos, ItemStack stack)
 		{
-			return itemThrowableGeneric.getNewThrownEntity(stack, world, position.getX(), position.getY(), position.getZ());
+			return itemThrowableGeneric.getNewProjectile(stack, level, pos.x(), pos.y(), pos.z());
 		}
 	}
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "~": {
+      "tag": "forge:fibres"
+    }
+  },
+  "pattern": [
+    "~~",
+    "~~"
+  ],
+  "result": {
+    "item": "veganoption:burlap"
+  },
+  "show_notification": true
+}

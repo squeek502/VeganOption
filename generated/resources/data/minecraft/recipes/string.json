@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "~": {
+      "tag": "forge:fibres"
+    }
+  },
+  "pattern": [
+    "~~"
+  ],
+  "result": {
+    "item": "minecraft:string"
+  },
+  "show_notification": true
+}

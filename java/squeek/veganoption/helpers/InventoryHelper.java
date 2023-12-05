@@ -1,41 +1,26 @@
 package squeek.veganoption.helpers;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 
 public class InventoryHelper
 {
-	public static IInventory getInventoryAtLocation(World world, int x, int y, int z)
+	public static float getPercentInventoryFilled(Container container)
 	{
-		return TileEntityHopper.getInventoryAtPosition(world, x, y, z);
-	}
-
-	public static ItemStack insertStackIntoInventory(ItemStack itemStack, IInventory inventory)
-	{
-		return TileEntityHopper.putStackInInventoryAllSlots(inventory, itemStack, EnumFacing.DOWN);
-	}
-
-	public static float getPercentInventoryFilled(IInventory inventory)
-	{
-		if (inventory == null || inventory.getSizeInventory() == 0)
+		if (container == null || container.getContainerSize() == 0)
 			return 0;
 
 		float filledPercent = 0.0F;
 
-		for (int slotNum = 0; slotNum < inventory.getSizeInventory(); ++slotNum)
+		for (int slotNum = 0; slotNum < container.getContainerSize(); ++slotNum)
 		{
-			ItemStack itemstack = inventory.getStackInSlot(slotNum);
+			ItemStack itemstack = container.getItem(slotNum);
 
-			if (itemstack != null)
-			{
-				filledPercent += (float) itemstack.stackSize / (float) Math.min(inventory.getInventoryStackLimit(), itemstack.getMaxStackSize());
-			}
+			if (!itemstack.isEmpty())
+				filledPercent += (float) itemstack.getCount() / (float) Math.min(container.getMaxStackSize(), itemstack.getMaxStackSize());
 		}
 
-		filledPercent /= inventory.getSizeInventory();
+		filledPercent /= container.getContainerSize();
 		return filledPercent;
 	}
 }

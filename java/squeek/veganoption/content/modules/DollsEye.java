@@ -1,93 +1,82 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.block.BlockTallGrass;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.PotionTypes;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import squeek.veganoption.ModInfo;
-import squeek.veganoption.VeganOption;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.modifiers.DropsModifier.BlockSpecifier;
-import squeek.veganoption.content.modifiers.DropsModifier.DropSpecifier;
+import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+
+import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class DollsEye implements IContentModule
 {
-	public static Item dollsEye;
+	public static final FoodProperties FOOD_PROPERTIES = new FoodProperties.Builder()
+		.nutrition(2)
+		.saturationMod(0.8f)
+		.effect(() -> new MobEffectInstance(MobEffects.POISON, 5, 0), 1f)
+		.build();
+
+	public static RegistryObject<Item> dollsEye;
 
 	@Override
 	public void create()
 	{
-		dollsEye = new ItemFood(2, 0.8F, false)
-			.setPotionEffect(new PotionEffect(MobEffects.POISON, 5, 0), 1F)
-			.setUnlocalizedName(ModInfo.MODID + ".dollsEye")
-			.setCreativeTab(VeganOption.creativeTab)
-			.setRegistryName(ModInfo.MODID_LOWER, "dollsEye");
-		GameRegistry.register(dollsEye);
+		dollsEye = REGISTER_ITEMS.register("dolls_eye", () -> new Item(new Item.Properties().food(FOOD_PROPERTIES)));
 	}
 
 	@Override
-	public void oredict()
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		OreDictionary.registerOre(ContentHelper.poisonousOreDict, dollsEye);
+		// Spider Eye crafting replacement is handled in ToxicMushroom (False Morel)
+		provider.tagW(ContentHelper.ItemTags.REAGENT_POISONOUS).add(dollsEye.get());
 	}
 
 	@Override
-	public void recipes()
+	public void datagenLootModifiers(GlobalLootModifierProvider provider)
 	{
-		PotionHelper.registerPotionTypeConversion(PotionTypes.AWKWARD, new PotionHelper.ItemPredicateInstance(dollsEye), PotionTypes.POISON);
-
-		BlockSpecifier forestGrass = new BlockSpecifier(Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS), BlockTallGrass.TYPE)
-		{
-			@Override
-			public boolean matches(IBlockAccess world, BlockPos pos, IBlockState state)
-			{
-				boolean matches = super.matches(world, pos, state);
-
-				if (!matches || !(world instanceof World))
-					return false;
-
-				Biome biome = ((World) world).provider.getBiomeForCoords(pos);
-
-				boolean isForest = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.FOREST);
-
-				return isForest && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.CONIFEROUS) && !BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.JUNGLE);
-			}
-		};
-		Modifiers.drops.addDropsToBlock(forestGrass, new DropSpecifier(new ItemStack(dollsEye), 0.01f, 1, 2));
+		provider.add(
+			"forest_tall_grass_dolls_eye",
+			new SimpleBlockDropLootModifier(
+				new LootItemCondition[] {
+					new LootItemBlockStatePropertyCondition.Builder(Blocks.TALL_GRASS).build(),
+					LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Biomes.FOREST))
+						.or(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Biomes.BIRCH_FOREST)))
+						.or(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Biomes.DARK_FOREST)))
+						.or(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Biomes.SWAMP)))
+						.or(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Biomes.MANGROVE_SWAMP))).build()
+				},
+				dollsEye.get(),
+				ConstantValue.exactly(0.01f),
+				UniformGenerator.between(1, 2)
+			));
 	}
 
 	@Override
 	public void finish()
 	{
+		PotionBrewing.addMix(Potions.AWKWARD, dollsEye.get(), Potions.POISON);
+		PotionBrewing.addMix(Potions.WATER, dollsEye.get(), Potions.MUNDANE);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void clientSidePost()
+	public void datagenItemModels(ItemModelProvider provider)
 	{
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void clientSidePre()
-	{
-		ContentHelper.registerTypicalItemModel(dollsEye);
+		provider.basicItem(dollsEye.get());
 	}
 }

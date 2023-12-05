@@ -1,33 +1,49 @@
 package squeek.veganoption.blocks;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidClassic;
-import net.minecraftforge.fluids.Fluid;
-import squeek.veganoption.ModInfo;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
+import squeek.veganoption.content.modules.Soap;
 
-public class BlockLyeWater extends BlockFluidClassic
+import static squeek.veganoption.ModInfo.MODID_LOWER;
+
+public class BlockLyeWater extends LiquidBlock
 {
-	public static final DamageSource lyeDamage = new DamageSource(ModInfo.MODID + ".lyeWater");
-	public static Material lyeMaterial = Material.WATER;
+	private static final ResourceKey<DamageType> LYE_DAMAGE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID_LOWER, "lye_water"));
 
-	public BlockLyeWater(Fluid fluid)
+	public BlockLyeWater()
 	{
-		super(fluid, lyeMaterial);
+		super((FlowingFluid) Soap.fluidLyeWaterStill.get(), BlockBehaviour.Properties.of()
+			.mapColor(MapColor.COLOR_BROWN)
+			.replaceable()
+			.noCollission()
+			.pushReaction(PushReaction.DESTROY)
+			.noLootTable()
+			.liquid()
+			.sound(SoundType.EMPTY));
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity collidedEntity)
+	public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
 	{
-		if (collidedEntity instanceof EntityLivingBase)
+		if (entity instanceof LivingEntity)
 		{
-			collidedEntity.attackEntityFrom(lyeDamage, 0.25f);
+			DamageSource source = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(LYE_DAMAGE_TYPE));
+			entity.hurt(source, 0.25f);
 		}
-		super.onEntityCollidedWithBlock(world, pos, state, collidedEntity);
+		super.entityInside(state, level, pos, entity);
 	}
 }

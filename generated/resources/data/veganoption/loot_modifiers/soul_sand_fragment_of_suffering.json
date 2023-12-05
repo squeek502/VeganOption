@@ -1,0 +1,16 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 0.05,
+  "conditions": [
+    {
+      "block": "minecraft:soul_sand",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "drop": "veganoption:suffering_fragment",
+  "num": {
+    "type": "minecraft:uniform",
+    "max": 3.0,
+    "min": 1.0
+  }
+}

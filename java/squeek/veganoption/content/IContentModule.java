@@ -1,7 +1,16 @@
 package squeek.veganoption.content;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+
+import javax.annotation.Nullable;
 
 public interface IContentModule
 {
@@ -11,29 +20,64 @@ public interface IContentModule
 	void create();
 
 	/**
-	 * Register things with the OreDictionary
+	 * Handle anything else (called from common setup)
 	 */
-	void oredict();
+	default void finish() {}
 
 	/**
-	 * Add recipes
+	 * Called on the mod event bus on the register renderers event.
 	 */
-	void recipes();
+	@OnlyIn(Dist.CLIENT)
+	default void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {}
+
+	// Datagen
 
 	/**
-	 * Handle anything else (called from postInit)
+	 * Generate recipes
 	 */
-	void finish();
+	default void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider) {}
 
 	/**
-	 * Handle client-side postInit registration (called before finish()).
+	 * Generate blockstates and models
 	 */
-	@SideOnly(Side.CLIENT)
-	void clientSidePost();
+	default void datagenBlockStatesAndModels(BlockStateProvider provider) {}
 
 	/**
-	 * Handle client-side preInit registration (called after create() and oredict()).
+	 * Register block tags during data generation
 	 */
-	@SideOnly(Side.CLIENT)
-	void clientSidePre();
+	default void datagenBlockTags(DataGenProviders.BlockTags provider) {}
+
+	/**
+	 * Generate fluid tags
+	 */
+	default void datagenFluidTags(DataGenProviders.FluidTags provider) {}
+
+	/**
+	 * Generate entity type tags
+	 */
+	default void datagenEntityTypeTags(EntityTypeTagsProvider provider) {}
+
+	/**
+	 * Generate item models
+	 */
+	default void datagenItemModels(ItemModelProvider provider) {}
+
+	/**
+	 * Generate item tags
+	 */
+	default void datagenItemTags(DataGenProviders.ItemTags provider) {}
+
+	/**
+	 * @return null if this module does not have any loot tables.
+	 */
+	@Nullable
+	default BlockLootSubProvider getBlockLootProvider()
+	{
+		return null;
+	}
+
+	/**
+	 * Generate loot modifiers
+	 */
+	default void datagenLootModifiers(GlobalLootModifierProvider provider) {}
 }

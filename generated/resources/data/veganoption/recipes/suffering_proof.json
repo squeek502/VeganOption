@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "*": {
+      "item": "minecraft:gold_nugget"
+    },
+    "x": {
+      "item": "veganoption:suffering_fragment"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "x*x",
+    "xxx"
+  ],
+  "result": {
+    "item": "veganoption:suffering_proof"
+  },
+  "show_notification": true
+}

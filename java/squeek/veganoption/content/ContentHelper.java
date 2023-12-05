@@ -1,234 +1,132 @@
 package squeek.veganoption.content;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import squeek.veganoption.ModInfo;
+
+import java.util.Map;
+import java.util.Objects;
 
 public class ContentHelper
 {
-	// entity ids; mod-specific, don't need to be universally unique
-	public static final int ENTITYID_BUBBLE = 0;
-	public static final int ENTITYID_PLASTIC_EGG = 1;
-
-	// helper itemstacks for vanilla stuff
-	public static final ItemStack charcoal = new ItemStack(Items.COAL, 1, 1);
-	public static final ItemStack inkSac = new ItemStack(Items.DYE, 1, 0);
-	public static final ItemStack boneMeal = new ItemStack(Items.DYE, 1, 15);
-
-	// oredict
-	public static final String leatherOreDict = "leather"; // Forge's oredict entry
-	public static final String woolOreDict = "materialBedding";
-	public static final String featherOreDict = "feather"; // Forge's oredict entry
-	public static final String bastFibreOreDict = "materialFiber";
-	public static final String milkOreDict = "listAllmilk"; // HarvestCraft's oredict entry
-	public static final String eggForgeOreDict = "egg"; // Forge's oredict entry
-	public static final String eggObjectOreDict = "objectEgg"; // not for food equivalents
-	public static final String eggBakingOreDict = "bakingEgg";
-	public static final String eggFoodOreDict = "listAllegg"; // HarvestCraft's oredict entry
-	public static final String slimeballOreDict = "slimeball"; // Forge's oredict entry
-	public static final String resinOreDict = "resin";
-	public static final String resinMaterialOreDict = "materialResin"; // ElectricalAge's oredict entry
-	public static final String rosinOreDict = "rosin";
-	public static final String rosinMaterialOreDict = "materialRosin";
-	public static final String vegetableOilOreDict = "foodOliveoil"; // HarvestCraft's oredict entry
-	public static final String waxOreDict = "materialWax";
-	public static final String waxOreDictForestry = "itemBeeswax"; // Forestry's oredict entry
-	public static final String waxOreDictHarvestCraft = "materialPressedwax"; // HarvestCraft's oredict entry
-	public static final String blackDyeOreDict = "dyeBlack"; // Forge's oredict entry
-	public static final String blackInkOreDict = "inkBlack";
-	public static final String whiteDyeOreDict = "dyeWhite"; // Forge's oredict entry
-	public static final String whiteInkOreDict = "inkWhite";
-	public static final String brownDyeOreDict = "dyeBrown"; // Forge's oredict entry
-	public static final String plasticOreDict = "sheetPlastic"; // MFR's oredict entry
-	public static final String plasticRodOreDict = "stickPlastic";
-	public static final String rottenOreDict = "materialRotten";
-	public static final String fertilizerOreDict = "fertilizerOrganic"; // IC2's oredict entry
-	public static final String pufferFishOreDict = "reagentWaterBreathing";
-	public static final String soapOreDict = "soap";
-	public static final String poisonousOreDict = "reagentPoisonous";
-	public static final String fermentedOreDict = "reagentFermented";
-	public static final String sulfurOreDict = "dustSulfur"; // This is what other mods use
-	public static final String saltpeterOreDict = "dustSaltpeter"; // This is what other mods use
-	public static final String stickOreDict = "stickWood"; // Forge's oredict entry
-	public static final String leavesOreDict = "treeLeaves"; // Forge's oredict entry
-	public static final String saplingOreDict = "treeSapling"; // Forge's oredict entry
-	public static final String sawDustOreDict = "pulpWood"; // Mekanism's oredict entry
-	public static final String sawDustAltOreDict = "dustWood"; // TE's oredict entry
-	public static final String woodAshOreDict = "ashWood";
-	public static final String blackPigmentOreDict = "pigmentBlack";
-	public static final String whitePigmentOreDict = "pigmentWhite";
-	public static final String woodPlankOreDict = "plankWood"; // Forge's oredict entry
-	public static final String starchOreDict = "starch";
-	public static final String kapokOreDict = "materialFluffy";
-	public static final String sunflowerSeedOreDict = "cropSunflower"; // HarvestCraft's oredict entry
-	public static final String oilPresserOreDict = "presserOil";
-	public static final String vegetableOilSourceOreDict = "sourceVegetableOil";
-	public static final String tearOreDict = "reagentTear";
-	public static final String goldNuggetOreDict = "nuggetGold"; // Forge's oredict entry
-	public static final String plantMilkSourceOreDict = "sourcePlantMilk";
-	public static final String bbqSauceOreDict = "foodBBQSauce";
-	public static final String wheatFlourOreDict = "flourWheat";
-	public static final String wheatDoughOreDict = "doughWheat";
-	public static final String rawSeitanOreDict = "seitanRaw";
-	public static final String leatherBootsOreDict = "bootsLeather";
-	public static final String leatherLeggingsOreDict = "leggingsLeather";
-	public static final String leatherChestplateOreDict = "chestplateLeather";
-	public static final String leatherHelmetOreDict = "helmetLeather";
-
-	// raw and cooked meats from HarvestCraft
-	public static final String rawMeatOreDict = "listAllmeatraw";
-	public static final String cookedMeatOreDict = "listAllmeatcooked";
-	public static final String rawBeefOreDict = "listAllbeefraw";
-	public static final String cookedBeefOreDict = "listAllbeefcooked";
-	public static final String rawChickenOreDict = "listAllchickenraw";
-	public static final String cookedChickenOreDict = "listAllchickencooked";
-	public static final String rawFishOreDict = "listAllfishraw";
-	public static final String cookedFishOreDict = "listAllfishcooked";
-	public static final String rawMuttonOreDict = "listAllmuttonraw";
-	public static final String cookedMuttonOreDict = "listAllmuttoncooked";
-	public static final String rawPorkOreDict = "listAllporkraw";
-	public static final String cookedPorkOreDict = "listAllporkcooked";
-	public static final String rawRabbitOreDict = "listAllrabbitraw";
-	public static final String cookedRabbitOreDict = "listAllrabbitcooked";
-	public static final String rawTurkeyOreDict = "listAllturkeyraw";
-	public static final String cookedTurkeyOreDict = "listAllturkeycooked";
-	public static final String rawVenisonOreDict = "listAllvenisonraw";
-	public static final String cookedVenisonOreDict = "listAllvenisoncooked";
-
-	public static final String[] harvestCraftRawMeatOreDicts = new String[]{
-		rawMeatOreDict, rawBeefOreDict, rawChickenOreDict, rawFishOreDict, rawMuttonOreDict,
-		rawPorkOreDict, rawRabbitOreDict, rawTurkeyOreDict, rawVenisonOreDict
-	};
-	public static final String[] harvestCraftCookedMeatOreDicts = new String[]{
-		cookedMeatOreDict, cookedBeefOreDict, cookedChickenOreDict, cookedFishOreDict, cookedMuttonOreDict,
-		cookedPorkOreDict, cookedRabbitOreDict, cookedTurkeyOreDict, cookedVenisonOreDict
-	};
-
-	// various vegetable oil sources from other mods
-	public static final String grapeSeedOreDict = "seedGrape";
-	public static final String soybeanOreDict = "cropSoybean";
-	public static final String cottonSeedOreDict = "seedCotton";
-	public static final String coconutOreDict = "cropCoconut";
-	public static final String oliveOreDict = "cropOlive";
-	public static final String cornOreDict = "cropCorn";
-	public static final String nutOreDict = "listAllnut";
-	public static final String teaSeedOreDict = "seedTea";
-	public static final String avocadoOreDict = "cropAvocado";
-
-	// various plant milk sources from other mods
-	public static final String almondOreDict = "cropAlmond";
-	public static final String oatOreDict = "cropOats";
-	public static final String riceOreDict = "cropRice";
-
-	public static void addOreSmelting(String inputOreName, ItemStack output, float xp)
-	{
-		for (ItemStack ore : OreDictionary.getOres(inputOreName))
-		{
-			GameRegistry.addSmelting(ore.copy(), output, xp);
-		}
-	}
-
-	public static void addOreSmelting(String inputOreName, ItemStack output)
-	{
-		addOreSmelting(inputOreName, output, 0.2F);
-	}
-
-	public static void remapOre(String from, String to)
-	{
-		for (ItemStack ore : OreDictionary.getOres(from))
-		{
-			OreDictionary.registerOre(to, ore.copy());
-		}
-	}
+	/** default smelt time in vanilla */
+	public static final int DEFAULT_SMELT_TIME = 200;
 
 	/**
-	 * Registers a typical (no meta, no special inventory variant or anything) item model.
-	 *
 	 * @param item The item
+	 * @param tag The tag
+	 * @return true if the given item is in the given tag.
 	 */
-	@SideOnly(Side.CLIENT)
-	public static void registerTypicalItemModel(Item item)
+	public static boolean isItemTaggedAs(Item item, TagKey<Item> tag)
 	{
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		return Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tag).contains(item);
 	}
 
-	/**
-	 * Registers a model with a specific name for the given ItemStack
-	 *
-	 * @param stack The itemstack
-	 * @param name The specific name
-	 */
-	@SideOnly(Side.CLIENT)
-	public static void registerTypicalItemStackModel(ItemStack stack, String name)
+	public static class ItemTags
 	{
-		ModelLoader.setCustomModelResourceLocation(stack.getItem(), stack.getItemDamage(), new ModelResourceLocation(name, "inventory"));
-	}
-
-	/**
-	 * Registers an ItemStack for each valid state of the block
-	 */
-	@SideOnly(Side.CLIENT)
-	public static void registerTypicalBlockItemModels(Block block, String name)
-	{
-		for (IBlockState state : block.getBlockState().getValidStates())
+		private ItemTags()
 		{
-			int meta = block.getMetaFromState(state);
-			registerTypicalItemStackModel(new ItemStack(block, 1, meta), name);
+		}
+
+		public static final TagKey<Item> ARMOR_BOOTS = Tags.Items.ARMORS_BOOTS;
+		public static final TagKey<Item> ARMOR_LEGGINGS = Tags.Items.ARMORS_LEGGINGS;
+		public static final TagKey<Item> ARMOR_CHESTPLATES = Tags.Items.ARMORS_CHESTPLATES;
+		public static final TagKey<Item> ARMOR_HELMETS = Tags.Items.ARMORS_HELMETS;
+		public static final TagKey<Item> BEDDING_MATERIALS = veganoptionTag("bedding_materials");
+		public static final Map<DyeColor, TagKey<Item>> BEDDING_MATERIALS_BY_COLOR;
+		public static final TagKey<Item> DUST_WOOD = forgeTag("dusts/wood");
+		public static final TagKey<Item> DYES_BLACK = Tags.Items.DYES_BLACK;
+		public static final TagKey<Item> DYES_BROWN = Tags.Items.DYES_BROWN;
+		public static final TagKey<Item> DYES_GREEN = Tags.Items.DYES_GREEN;
+		public static final TagKey<Item> DYES_LIGHT_GRAY = Tags.Items.DYES_LIGHT_GRAY;
+		public static final TagKey<Item> DYES_LIME = Tags.Items.DYES_LIME;
+		public static final TagKey<Item> DYES_WHITE = Tags.Items.DYES_WHITE;
+		public static final TagKey<Item> EGGS = Tags.Items.EGGS;
+		public static final TagKey<Item> EGG_OBJECT = veganoptionTag("eggs/object");
+		public static final TagKey<Item> EGG_BAKING = veganoptionTag("eggs/baking");
+		public static final TagKey<Item> FEATHERS = Tags.Items.FEATHERS;
+		public static final TagKey<Item> FIBRES = forgeTag("fibres");
+		public static final TagKey<Item> FLOWERS = net.minecraft.tags.ItemTags.FLOWERS;
+		public static final TagKey<Item> FLUFFY_MATERIAL = veganoptionTag("fluffy_material");
+		public static final TagKey<Item> FOOD = forgeTag("food");
+		public static final TagKey<Item> FOOD_COOKED_FISH = forgeTag("food/cooked_fish");
+		public static final TagKey<Item> FOOD_COOKED_MEAT = forgeTag("food/cooked_meat");
+		public static final TagKey<Item> FOOD_RAW_FISH = forgeTag("food/raw_fish");
+		public static final TagKey<Item> FOOD_RAW_MEAT = forgeTag("food/raw_meat");
+		public static final TagKey<Item> INK_BLACK = forgeTag("ink/black");
+		public static final TagKey<Item> INK_WHITE = forgeTag("ink/white");
+		public static final TagKey<Item> LEATHER = Tags.Items.LEATHER;
+		public static final TagKey<Item> LEATHER_BOOTS = veganoptionTag("boots/leather");
+		public static final TagKey<Item> LEATHER_LEGGINGS = veganoptionTag("leggings/leather");
+		public static final TagKey<Item> LEATHER_CHESTPLATES = veganoptionTag("chestplates/leather");
+		public static final TagKey<Item> LEATHER_HELMETS = veganoptionTag("helmets/leather");
+		public static final TagKey<Item> LEAVES = net.minecraft.tags.ItemTags.LEAVES;
+		public static final TagKey<Item> MILK = forgeTag("milk");
+		public static final TagKey<Item> OIL_PRESSERS = veganoptionTag("oil_pressers");
+		public static final TagKey<Item> PIGMENT_BLACK = veganoptionTag("pigments/black");
+		public static final TagKey<Item> PIGMENT_WHITE = veganoptionTag("pigments/white");
+		public static final TagKey<Item> PLANT_MILK_SOURCES = veganoptionTag("plant_milk_sources");
+		public static final TagKey<Item> PLASTIC_SHEET = forgeTag("sheets/plastic");
+		public static final TagKey<Item> PLASTIC_ROD = forgeTag("rods/plastic");
+		public static final TagKey<Item> RAW_SEITAN = veganoptionTag("raw_seitan");
+		public static final TagKey<Item> REAGENT_FERMENTED = veganoptionTag("reagents/fermented");
+		public static final TagKey<Item> REAGENT_POISONOUS = veganoptionTag("reagents/poisonous");
+		public static final TagKey<Item> REAGENT_TEAR = veganoptionTag("reagents/tear");
+		public static final TagKey<Item> REAGENT_WATERBREATHING = veganoptionTag("reagents/waterbreathing");
+		public static final TagKey<Item> RESIN = veganoptionTag("resin");
+		public static final TagKey<Item> RODS = Tags.Items.RODS;
+		public static final TagKey<Item> ROSIN = veganoptionTag("rosin");
+		public static final TagKey<Item> ROTTEN_MATERIAL = veganoptionTag("rotten_material");
+		public static final TagKey<Item> SALTPETER = forgeTag("dusts/saltpeter");
+		public static final TagKey<Item> SAPLINGS = net.minecraft.tags.ItemTags.SAPLINGS;
+		public static final TagKey<Item> SEEDS = Tags.Items.SEEDS;
+		public static final TagKey<Item> SEEDS_SUNFLOWER = forgeTag("seeds/sunflower");
+		public static final TagKey<Item> SLIMEBALLS = Tags.Items.SLIMEBALLS;
+		public static final TagKey<Item> SOAP = veganoptionTag("soap");
+		public static final TagKey<Item> STARCH = veganoptionTag("starch");
+		public static final TagKey<Item> STICKS = Tags.Items.RODS_WOODEN;
+		public static final TagKey<Item> SULFUR = forgeTag("dusts/sulfur");
+		public static final TagKey<Item> VEGETABLE_OIL_SOURCES = veganoptionTag("vegetable_oil_sources");
+		public static final TagKey<Item> VEGETABLE_OIL = forgeTag("food/vegetable_oil");
+		public static final TagKey<Item> WAX = forgeTag("wax");
+		public static final TagKey<Item> WHEAT_FLOUR = forgeTag("wheat_flour");
+		public static final TagKey<Item> WHEAT_DOUGH = forgeTag("wheat_dough");
+		public static final TagKey<Item> WOOD_ASH = forgeTag("wood_ash");
+		public static final TagKey<Item> WOOD_PLANKS = net.minecraft.tags.ItemTags.PLANKS;
+
+		static {
+			ImmutableMap.Builder<DyeColor, TagKey<Item>> builder = ImmutableMap.builder();
+			for (DyeColor color : DyeColor.values())
+			{
+				builder.put(color, veganoptionTag("bedding_materials/" + color.getName()));
+			}
+			BEDDING_MATERIALS_BY_COLOR = builder.build();
+		}
+
+
+		private static TagKey<Item> forgeTag(String name)
+		{
+			return net.minecraft.tags.ItemTags.create(new ResourceLocation("forge", name));
+		}
+
+		private static TagKey<Item> veganoptionTag(String name)
+		{
+			return net.minecraft.tags.ItemTags.create(new ResourceLocation(ModInfo.MODID_LOWER, name));
 		}
 	}
 
-	/**
-	 * Registers a ColorHandler for both the block and its item version
-	 */
-	@SideOnly(Side.CLIENT)
-	public static <T extends IBlockColor & IItemColor> void registerSharedColorHandler(T colorHandler, Block block)
+	public static class FluidTags
 	{
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(colorHandler, block);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(colorHandler, block);
-	}
+		private FluidTags()
+		{
+		}
 
-	/**
-	 * Maps the fluid to our custom blockstate for all fluids (fluids.json).
-	 *
-	 * @param fluid The fluid
-	 * @param variantName The variant for the fluid
-	 */
-	@SideOnly(Side.CLIENT)
-	public static void registerFluidMapperAndMeshDef(Block fluid, final String variantName)
-	{
-		final ModelResourceLocation loc = new ModelResourceLocation(ModInfo.MODID_LOWER + ":fluids", variantName);
-		Item itemblock = Item.getItemFromBlock(fluid);
-		ModelBakery.registerItemVariants(itemblock);
-		ModelLoader.setCustomMeshDefinition(itemblock, new ItemMeshDefinition()
-		{
-			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack)
-			{
-				return loc;
-			}
-		});
-		ModelLoader.setCustomStateMapper(fluid, new StateMapperBase()
-		{
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state)
-			{
-				return loc;
-			}
-		});
+		public static final TagKey<Fluid> MILK = Tags.Fluids.MILK;
 	}
 }

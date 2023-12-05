@@ -1,21 +1,17 @@
 package squeek.veganoption.items;
 
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
-import squeek.veganoption.helpers.RandomHelper;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.phys.AABB;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,21 +22,21 @@ public class ItemSoap extends Item
 
 	public ItemSoap()
 	{
-		super();
-		setMaxStackSize(1);
-		setMaxDamage(3); // 4 uses
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new ItemSoap.DispenserBehavior());
-		setNoRepair();
+		super(new Item.Properties()
+			.stacksTo(1)
+			.durability(3)
+			.setNoRepair());
+		DispenserBlock.registerBehavior(this, new ItemSoap.DispenserBehavior());
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack itemStack)
+	public UseAnim getUseAnimation(ItemStack itemStack)
 	{
-		return EnumAction.EAT;
+		return UseAnim.EAT;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack itemStack)
+	public int getUseDuration(ItemStack itemStack)
 	{
 		return 32;
 	}
@@ -48,7 +44,7 @@ public class ItemSoap extends Item
 	/**
 	 * A way to cure only the potion effects that another item is a curative item of
 	 */
-	public static void curePotionEffectsAsItem(EntityLivingBase entity, ItemStack curativeItemToMimic)
+	public static void curePotionEffectsAsItem(LivingEntity entity, ItemStack curativeItemToMimic)
 	{
 		entity.curePotionEffects(curativeItemToMimic);
 	}
@@ -57,70 +53,57 @@ public class ItemSoap extends Item
 	 * A way to cure potion effects without clearing effects that are meant
 	 * to be uncurable (e.g. Thaumcraft warp)
 	 */
-	public static void cureAllCurablePotionEffects(EntityPlayer player)
+	public static void cureAllCurablePotionEffects(Player player)
 	{
-		@SuppressWarnings({"unchecked"})
-		Collection<PotionEffect> activePotionEffects = player.getActivePotionEffects();
-		for (PotionEffect potionEffect : activePotionEffects)
+		Collection<MobEffectInstance> activePotionEffects = player.getActiveEffects();
+		for (MobEffectInstance potionEffect : activePotionEffects)
 		{
-			if (potionEffect.getCurativeItems().size() <= 0)
+			if (potionEffect.getCurativeItems().isEmpty())
 				continue;
 
-			player.removePotionEffect(potionEffect.getPotion());
+			player.removeEffect(potionEffect.getEffect());
 		}
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entityLiving)
+	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity)
 	{
-		if (!world.isRemote)
-		{
-			curePotionEffectsAsItem(entityLiving, milkBucket);
-		}
-
-		stack.damageItem(1, entityLiving);
-
-		return super.onItemUseFinish(stack, world, entityLiving);
+		if (!level.isClientSide())
+			curePotionEffectsAsItem(entity, milkBucket);
+		if (entity instanceof ServerPlayer)
+			stack.hurt(1, level.getRandom(), (ServerPlayer) entity);
+		return super.finishUsingItem(stack, level, entity);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
 	{
-		player.setActiveHand(hand);
-		return super.onItemRightClick(itemStack, world, player, hand);
+		ItemUtils.startUsingInstantly(level, player, hand);
+		return super.use(level, player, hand);
 	}
 
-	public static class DispenserBehavior extends BehaviorDefaultDispenseItem
+	public static class DispenserBehavior extends DefaultDispenseItemBehavior
 	{
 		@Override
-		public ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
+		protected ItemStack execute(BlockSource blockSource, ItemStack itemStack)
 		{
-			EnumFacing enumfacing = blockSource.getWorld().getBlockState(blockSource.getBlockPos()).getValue(BlockDispenser.FACING);
-			int x = (int) blockSource.getX() + enumfacing.getFrontOffsetX();
-			int y = (int) blockSource.getY() + enumfacing.getFrontOffsetY();
-			int z = (int) blockSource.getZ() + enumfacing.getFrontOffsetZ();
-			AxisAlignedBB axisalignedbb = new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1);
+			List<LivingEntity> entitiesInFront = blockSource.level().getEntitiesOfClass(LivingEntity.class, new AABB(blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING))));
 
-			List<EntityLivingBase> entitiesInFront = blockSource.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
-
-			EntityLivingBase mostDirtyEntity = null;
-			for (EntityLivingBase entityInFront : entitiesInFront)
+			LivingEntity mostDirtyEntity = null;
+			for (LivingEntity entityInFront : entitiesInFront)
 			{
-				if (mostDirtyEntity == null || entityInFront.getActivePotionEffects().size() > mostDirtyEntity.getActivePotionEffects().size())
+				if (mostDirtyEntity == null || entityInFront.getActiveEffects().size() > mostDirtyEntity.getActiveEffects().size())
 					mostDirtyEntity = entityInFront;
 			}
 			if (mostDirtyEntity != null)
 			{
 				curePotionEffectsAsItem(mostDirtyEntity, milkBucket);
 
-				itemStack.attemptDamageItem(1, RandomHelper.random);
-				if (itemStack.getItemDamage() >= itemStack.getMaxDamage())
-				{
-					itemStack.stackSize = 0;
-				}
+				if (itemStack.hurt(1, blockSource.level().getRandom(), null))
+					itemStack.setCount(0);
 				return itemStack;
 			}
-			return super.dispenseStack(blockSource, itemStack);
+			return super.execute(blockSource, itemStack);
 		}
 	}
 }

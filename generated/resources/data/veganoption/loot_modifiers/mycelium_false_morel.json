@@ -1,0 +1,12 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 0.15,
+  "conditions": [
+    {
+      "block": "minecraft:mycelium",
+      "condition": "minecraft:block_state_property"
+    }
+  ],
+  "drop": "veganoption:false_morel",
+  "num": 1.0
+}

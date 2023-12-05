@@ -1,0 +1,21 @@
+{
+  "type": "veganoption:crafting_shapeless_matching_tags",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "tag": "veganoption:plant_milk_sources"
+    },
+    {
+      "tag": "veganoption:plant_milk_sources"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "item": "veganoption:plant_milk_bucket"
+  }
+}
