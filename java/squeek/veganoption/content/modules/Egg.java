@@ -11,6 +11,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -30,6 +31,7 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modifiers.EggModifier;
 import squeek.veganoption.content.recipes.EggRecipe;
+import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.entities.EntityPlasticEgg;
@@ -119,7 +121,7 @@ public class Egg implements IContentModule
 	@Override
 	public void finish()
 	{
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(potatoStarch.get(), Items.POTATO));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new ItemStack(potatoStarch.get()), new InputItemStack(Items.POTATO)));
 
 		Modifiers.eggs.addItem(Items.GUNPOWDER, new EggModifier()
 		{

@@ -8,7 +8,6 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -27,12 +26,13 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.ObjectHolder;
 import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.DataGenProviders;
-import squeek.veganoption.loot.ReplaceLootModifier;
+import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
+import squeek.veganoption.loot.ReplaceLootModifier;
 
 import static squeek.veganoption.VeganOption.*;
 
@@ -87,7 +87,7 @@ public class VegetableOil implements IContentModule
 	@Override
 	public void finish()
 	{
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), Ingredient.of(ContentHelper.ItemTags.VEGETABLE_OIL_SOURCES)));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.VEGETABLE_OIL_SOURCES)));
 
 		Modifiers.crafting.addInputsToKeepForOutput(oilVegetable.get(), oilPresser);
 	}
