@@ -83,6 +83,7 @@ public class Kapok implements IContentModule
 				.add(woolBlockItems.get(color).get());
 			genericBeddingTag.addTag(colorTag);
 		}
+		provider.tagW(ContentHelper.ItemTags.FLUFFY_MATERIAL).add(kapokTuft.get());
 	}
 
 	@Override
