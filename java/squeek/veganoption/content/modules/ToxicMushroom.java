@@ -79,8 +79,8 @@ public class ToxicMushroom implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.recipes.convertInput(Ingredient.of(Items.SPIDER_EYE), Ingredient.of(ContentHelper.ItemTags.REAGENT_POISONOUS));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.SPIDER_EYE), () -> Ingredient.of(ContentHelper.ItemTags.REAGENT_POISONOUS));
 		Modifiers.recipes.excludeOutput(Items.FERMENTED_SPIDER_EYE);
-		Modifiers.recipes.convertInput(Ingredient.of(Items.FERMENTED_SPIDER_EYE), Ingredient.of(ContentHelper.ItemTags.REAGENT_FERMENTED));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.FERMENTED_SPIDER_EYE), () -> Ingredient.of(ContentHelper.ItemTags.REAGENT_FERMENTED));
 	}
 }

@@ -86,7 +86,7 @@ public class PlantMilk implements IContentModule
 	{
 		//RelationshipRegistry.addRelationship(bucketPlantMilk.copy(), new ItemStack(plantMilk));
 		//RelationshipRegistry.addRelationship(new ItemStack(plantMilk), bucketPlantMilk.copy());
-		Modifiers.recipes.convertInput(Ingredient.of(Items.MILK_BUCKET), Ingredient.of(ContentHelper.ItemTags.MILK));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.MILK_BUCKET), () -> Ingredient.of(ContentHelper.ItemTags.MILK));
 
 		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(plantMilkStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(Fluids.WATER, FluidType.BUCKET_VOLUME), new InputItemStack(Items.SUGAR), new InputItemStack(ContentHelper.ItemTags.PLANT_MILK_SOURCES, 2)));
 

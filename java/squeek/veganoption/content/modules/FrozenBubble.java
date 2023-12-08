@@ -120,7 +120,7 @@ public class FrozenBubble implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.recipes.convertInput(Ingredient.of(Items.PUFFERFISH), Ingredient.of(ContentHelper.ItemTags.REAGENT_WATERBREATHING));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.PUFFERFISH), () -> Ingredient.of(ContentHelper.ItemTags.REAGENT_WATERBREATHING));
 
 		Modifiers.crafting.addInputsToKeepForOutput(soapSolution.get(), ContentHelper.ItemTags.SOAP);
 

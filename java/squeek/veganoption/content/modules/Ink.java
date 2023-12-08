@@ -114,7 +114,7 @@ public class Ink implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.recipes.convertInput(Ingredient.of(Items.INK_SAC), Ingredient.of(ContentHelper.ItemTags.INK_BLACK));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.INK_SAC), () -> Ingredient.of(ContentHelper.ItemTags.INK_BLACK));
 
 		Modifiers.crafting.addInputsToRemoveForOutput(blackVegetableOilInk.get(), ContentHelper.ItemTags.VEGETABLE_OIL);
 

@@ -69,6 +69,6 @@ public class Resin implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.recipes.convertInput(Ingredient.of(Items.SLIME_BALL), Ingredient.of(ContentHelper.ItemTags.SLIMEBALLS));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.SLIME_BALL), () -> Ingredient.of(ContentHelper.ItemTags.SLIMEBALLS));
 	}
 }

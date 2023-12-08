@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 import squeek.veganoption.content.ContentModuleHandler;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.crafting.PistonCraftingHandler;
 import squeek.veganoption.content.recipes.RecipeRegistration;
 import squeek.veganoption.helpers.CreativeTabHelper;
@@ -31,7 +30,7 @@ import squeek.veganoption.loot.LootRegistration;
 import squeek.veganoption.network.NetworkHandler;
 
 @Mod(ModInfo.MODID_LOWER)
-@Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER)
+@Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VeganOption
 {
 	public static final DeferredRegister<Block> REGISTER_BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ModInfo.MODID_LOWER);
@@ -75,6 +74,5 @@ public class VeganOption
 	{
 		ContentModuleHandler.iterateOverModules(IContentModule::finish);
 		IntegrationHandler.finish();
-		Modifiers.recipes.replaceRecipes();
 	}
 }

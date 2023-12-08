@@ -123,7 +123,7 @@ public class Kapok implements IContentModule
 		for (DyeColor color : DyeColor.values())
 		{
 			// TODO: Any generic uses of wool? Without OreDictionary wildcards, I'm not sure how we'll handle that.
-			Modifiers.recipes.convertInput(Ingredient.of(woolBlockItems.get(color).get()), Ingredient.of(ContentHelper.ItemTags.BEDDING_MATERIALS_BY_COLOR.get(color)));
+			Modifiers.recipes.convertInput(() -> Ingredient.of(woolBlockItems.get(color).get()), () -> Ingredient.of(ContentHelper.ItemTags.BEDDING_MATERIALS_BY_COLOR.get(color)));
 			Modifiers.recipes.excludeOutput(woolBlockItems.get(color).get());
 		}
 	}

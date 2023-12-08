@@ -52,6 +52,6 @@ public class Feather implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.recipes.convertInput(Ingredient.of(Items.FEATHER), Ingredient.of(ContentHelper.ItemTags.FEATHERS));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.FEATHER), () -> Ingredient.of(ContentHelper.ItemTags.FEATHERS));
 	}
 }

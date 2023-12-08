@@ -151,10 +151,10 @@ public class Egg implements IContentModule
 		// todo: compat module
 		Modifiers.eggs.addItem(Composting.fertilizer.get(), growModifier);
 
-		Modifiers.recipes.convertInputForFood(Ingredient.of(Items.EGG), Ingredient.of(ContentHelper.ItemTags.EGG_BAKING));
-		Modifiers.recipes.convertInputForFood(Ingredient.of(ContentHelper.ItemTags.EGGS), Ingredient.of(ContentHelper.ItemTags.EGG_BAKING));
-		Modifiers.recipes.convertInputForNonFood(Ingredient.of(Items.EGG), Ingredient.of(ContentHelper.ItemTags.EGG_OBJECT));
-		Modifiers.recipes.convertInputForNonFood(Ingredient.of(ContentHelper.ItemTags.EGGS), Ingredient.of(ContentHelper.ItemTags.EGG_OBJECT));
+		Modifiers.recipes.convertInputForFood(() -> Ingredient.of(Items.EGG), () -> Ingredient.of(ContentHelper.ItemTags.EGG_BAKING));
+		Modifiers.recipes.convertInputForFood(() -> Ingredient.of(ContentHelper.ItemTags.EGGS), () -> Ingredient.of(ContentHelper.ItemTags.EGG_BAKING));
+		Modifiers.recipes.convertInputForNonFood(() -> Ingredient.of(Items.EGG), () -> Ingredient.of(ContentHelper.ItemTags.EGG_OBJECT));
+		Modifiers.recipes.convertInputForNonFood(() -> Ingredient.of(ContentHelper.ItemTags.EGGS), () -> Ingredient.of(ContentHelper.ItemTags.EGG_OBJECT));
 
 		Modifiers.crafting.addInputsToKeepForOutput(potatoStarch.get(), Items.PISTON);
 	}

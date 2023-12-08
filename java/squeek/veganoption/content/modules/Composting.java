@@ -141,7 +141,7 @@ public class Composting implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.recipes.convertInput(Ingredient.of(Items.ROTTEN_FLESH), Ingredient.of(ContentHelper.ItemTags.ROTTEN_MATERIAL));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.ROTTEN_FLESH), () -> Ingredient.of(ContentHelper.ItemTags.ROTTEN_MATERIAL));
 		RelationshipRegistry.addRelationship(compostItem.get(), composterItem.get());
 		RelationshipRegistry.addRelationship(rottenPlants.get(), composterItem.get());
 

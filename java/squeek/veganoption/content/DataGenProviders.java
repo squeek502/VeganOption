@@ -30,16 +30,12 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.Nullable;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.content.ContentModuleHandler;
-import squeek.veganoption.loot.ReplaceLootModifier;
-import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+import squeek.veganoption.content.recipes.RecipeRegistration;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-
-import static squeek.veganoption.VeganOption.REGISTER_LOOTMODIFIERS;
 
 public class DataGenProviders
 {
@@ -199,6 +195,7 @@ public class DataGenProviders
 		protected void buildRecipes(RecipeOutput output)
 		{
 			ContentModuleHandler.iterateOverModules(module -> module.datagenRecipes(output, this));
+			RecipeRegistration.datagen(output);
 		}
 	}
 

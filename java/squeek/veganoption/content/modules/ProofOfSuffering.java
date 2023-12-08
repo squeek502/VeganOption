@@ -80,7 +80,7 @@ public class ProofOfSuffering implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.recipes.convertInput(Ingredient.of(Items.GHAST_TEAR), Ingredient.of(ContentHelper.ItemTags.REAGENT_TEAR));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.GHAST_TEAR), () -> Ingredient.of(ContentHelper.ItemTags.REAGENT_TEAR));
 		PotionBrewing.addMix(Potions.AWKWARD, proofOfSuffering.get(), Potions.REGENERATION);
 		PotionBrewing.addMix(Potions.WATER, proofOfSuffering.get(), Potions.MUNDANE);
 	}

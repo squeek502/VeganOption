@@ -106,11 +106,11 @@ public class Burlap implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER), Ingredient.of(ContentHelper.ItemTags.LEATHER));
-		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER_BOOTS), Ingredient.of(ContentHelper.ItemTags.LEATHER_BOOTS));
-		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER_LEGGINGS), Ingredient.of(ContentHelper.ItemTags.LEATHER_LEGGINGS));
-		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER_CHESTPLATE), Ingredient.of(ContentHelper.ItemTags.LEATHER_CHESTPLATES));
-		Modifiers.recipes.convertInput(Ingredient.of(Items.LEATHER_HELMET), Ingredient.of(ContentHelper.ItemTags.LEATHER_HELMETS));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.LEATHER), () -> Ingredient.of(ContentHelper.ItemTags.LEATHER));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.LEATHER_BOOTS), () -> Ingredient.of(ContentHelper.ItemTags.LEATHER_BOOTS));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.LEATHER_LEGGINGS), () -> Ingredient.of(ContentHelper.ItemTags.LEATHER_LEGGINGS));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.LEATHER_CHESTPLATE), () ->  Ingredient.of(ContentHelper.ItemTags.LEATHER_CHESTPLATES));
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.LEATHER_HELMET), () -> Ingredient.of(ContentHelper.ItemTags.LEATHER_HELMETS));
 	}
 
 	@Override
