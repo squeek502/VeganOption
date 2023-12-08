@@ -1,14 +1,13 @@
 package squeek.veganoption.blocks;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -26,13 +25,12 @@ import static squeek.veganoption.ModInfo.MODID_LOWER;
 public class BlockBedStraw extends BedBlock
 {
 	private static final ResourceKey<DamageType> ITCHY_DAMAGE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID_LOWER, "itchy_bed"));
-	public static final int ITCH_DAMAGE = 1;
-//	public static final Field playerSleepingField = ReflectionHelper.findField(EntityPlayer.class, "sleeping", "field_71083_bS", "bA");
+	public static final int ITCH_DAMAGE = 2;
 
 	public BlockBedStraw()
 	{
-		super(DyeColor.GREEN, BlockBehaviour.Properties.of()
-			.mapColor(state -> state.getValue(BedBlock.PART) == BedPart.FOOT ? DyeColor.GREEN.getMapColor() : MapColor.WOOL)
+		super(DyeColor.YELLOW, BlockBehaviour.Properties.of()
+			.mapColor(state -> state.getValue(BedBlock.PART) == BedPart.FOOT ? MapColor.COLOR_YELLOW : MapColor.WOOL)
 			.sound(SoundType.WOOD)
 			.strength(0.2F)
 			.noOcclusion()
@@ -50,31 +48,14 @@ public class BlockBedStraw extends BedBlock
 		if (!wokenByWakeAllPlayers)
 			return;
 
-		BlockPos pos = event.getEntity().blockPosition();
+		Level level = event.getEntity().level();
 
-		Block block = event.getEntity().level().getBlockState(pos).getBlock();
-
-		if (block != StrawBed.bedStrawBlock.get())
+		if (!level.getBlockState(event.getEntity().blockPosition()).is(StrawBed.bedStrawBlock.get()))
 			return;
 
-		/*
-		// The player's sleeping bool must be set to false before calling 
-		// attackEntityFrom; otherwise, an infinite loop would be created due to 
-		// the wakeUpPlayer call in attackEntityFrom
-		try
+		if (!level.isClientSide())
 		{
-			playerSleepingField.setBoolean(event.getEntityPlayer(), false);
-			event.getEntityPlayer().attackEntityFrom(itchyDamageSource, ITCH_DAMAGE);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		*/
-		// lets try without, as there is no sleeping bool in player anymore.
-		if (!event.getEntity().level().isClientSide())
-		{
-			DamageSource itchyDamageSource = new DamageSource(event.getEntity().level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ITCHY_DAMAGE_TYPE));
+			DamageSource itchyDamageSource = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ITCHY_DAMAGE_TYPE));
 			event.getEntity().hurt(itchyDamageSource, ITCH_DAMAGE);
 		}
 	}
