@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -29,18 +30,19 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.blocks.BlockJutePlant;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.content.ContentHelper;
-import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.DataGenProviders;
-import squeek.veganoption.loot.GenericBlockLootSubProvider;
-import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
+import squeek.veganoption.loot.GenericBlockLootSubProvider;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 
 import java.util.List;
 
@@ -95,12 +97,18 @@ public class Jute implements IContentModule
 	}
 
 	@Override
+	public void datagenBlockStatesAndModels(BlockStateProvider provider)
+	{
+		provider.axisBlock((RotatedPillarBlock) juteBundled.get());
+	}
+
+	@Override
 	public void datagenItemModels(ItemModelProvider provider)
 	{
 		provider.basicItem(juteStalk.get());
 		provider.basicItem(juteFibre.get());
 		provider.basicItem(juteSeeds.get());
-		provider.withExistingParent(juteBundledItem.getId().toString(), provider.modLoc(juteBundled.getId().getPath()));
+		provider.withExistingParent(juteBundledItem.getId().toString(), provider.modLoc("block/" + juteBundled.getId().getPath()));
 	}
 
 	@Override

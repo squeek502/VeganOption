@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "veganoption:block/bundled_jute_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "veganoption:block/bundled_jute"
+    },
+    "axis=z": {
+      "model": "veganoption:block/bundled_jute_horizontal",
+      "x": 90
+    }
+  }
+}

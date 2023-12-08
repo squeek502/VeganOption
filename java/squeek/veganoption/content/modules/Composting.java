@@ -195,10 +195,9 @@ public class Composting implements IContentModule
 	@Override
 	public void datagenItemModels(ItemModelProvider provider)
 	{
-		provider.withExistingParent("composter", provider.modLoc("composter"));
 		provider.basicItem(rottenPlants.get());
 		provider.basicItem(fertilizer.get());
-		provider.withExistingParent("compost", provider.modLoc("compost"));
+		provider.withExistingParent("compost", provider.modLoc("block/compost"));
 	}
 
 	@OnlyIn(Dist.CLIENT)

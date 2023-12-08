@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.RegistryObject;
@@ -76,9 +77,15 @@ public class Ender implements IContentModule
 	}
 
 	@Override
+	public void datagenBlockStatesAndModels(BlockStateProvider provider)
+	{
+		provider.simpleBlock(encrustedObsidian.get());
+	}
+
+	@Override
 	public void datagenItemModels(ItemModelProvider provider)
 	{
-		provider.withExistingParent(encrustedObsidian.getId().getPath(), provider.modLoc("encrusted_obsidian"));
+		provider.withExistingParent(encrustedObsidian.getId().getPath(), provider.modLoc("block/encrusted_obsidian"));
 		provider.basicItem(rawEnderBucket.get());
 	}
 

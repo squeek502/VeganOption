@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "veganoption:block/bundled_jute_end",
+    "side": "veganoption:block/bundled_jute_side"
+  }
+}

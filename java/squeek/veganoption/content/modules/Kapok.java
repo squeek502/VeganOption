@@ -141,7 +141,7 @@ public class Kapok implements IContentModule
 		for (Map.Entry<DyeColor, RegistryObject<Item>> entry : kapokBlockItems.entrySet())
 		{
 			String color = entry.getKey().getName();
-			provider.withExistingParent(color + "_kapok", provider.modLoc(color + "_kapok"));
+			provider.withExistingParent(color + "_kapok", provider.modLoc("block/" + color + "_kapok"));
 		}
 		provider.basicItem(kapokTuft.get());
 	}
