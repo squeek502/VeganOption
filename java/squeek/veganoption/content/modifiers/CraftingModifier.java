@@ -79,8 +79,6 @@ public class CraftingModifier
 					if (inputToRemove == stackInSlot.getItem())
 					{
 						stackInSlot.shrink(1);
-						if (stackInSlot.getCount() <= 0)
-							event.getInventory().setItem(i, ItemStack.EMPTY);
 						break;
 					}
 				}
@@ -91,10 +89,9 @@ public class CraftingModifier
 						stackInSlot.grow(stackInSlot.getCount());
 						Player player = event.getEntity();
 						ServerPlayer serverPlayer = player instanceof ServerPlayer ? (ServerPlayer) player : null;
- 						if (stackInSlot.isDamageableItem() && stackInSlot.hurt(1, event.getEntity().getRandom(), serverPlayer))
-						{
+ 						if (stackInSlot.hurt(1, event.getEntity().getRandom(), serverPlayer))
 							stackInSlot.shrink(1);
-						}
+						event.getInventory().setItem(i, stackInSlot);
 						break;
 					}
 				}

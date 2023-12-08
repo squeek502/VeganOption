@@ -1,0 +1,13 @@
+{
+  "type": "veganoption:smelting_with_count",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.35,
+  "ingredient": {
+    "tag": "veganoption:starch"
+  },
+  "result": {
+    "count": 2,
+    "item": "veganoption:bioplastic"
+  }
+}
