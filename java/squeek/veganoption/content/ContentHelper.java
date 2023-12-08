@@ -46,7 +46,6 @@ public class ContentHelper
 		public static final TagKey<Item> DYES_GREEN = Tags.Items.DYES_GREEN;
 		public static final TagKey<Item> DYES_LIGHT_GRAY = Tags.Items.DYES_LIGHT_GRAY;
 		public static final TagKey<Item> DYES_LIME = Tags.Items.DYES_LIME;
-		public static final TagKey<Item> DYES_WHITE = Tags.Items.DYES_WHITE;
 		public static final TagKey<Item> EGGS = Tags.Items.EGGS;
 		public static final TagKey<Item> EGG_OBJECT = veganoptionTag("eggs/object");
 		public static final TagKey<Item> EGG_BAKING = veganoptionTag("eggs/baking");
@@ -60,7 +59,6 @@ public class ContentHelper
 		public static final TagKey<Item> FOOD_RAW_FISH = forgeTag("food/raw_fish");
 		public static final TagKey<Item> FOOD_RAW_MEAT = forgeTag("food/raw_meat");
 		public static final TagKey<Item> INK_BLACK = forgeTag("ink/black");
-		public static final TagKey<Item> INK_WHITE = forgeTag("ink/white");
 		public static final TagKey<Item> LEATHER = Tags.Items.LEATHER;
 		public static final TagKey<Item> LEATHER_BOOTS = veganoptionTag("boots/leather");
 		public static final TagKey<Item> LEATHER_LEGGINGS = veganoptionTag("leggings/leather");
