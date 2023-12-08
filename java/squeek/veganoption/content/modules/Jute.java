@@ -2,6 +2,7 @@ package squeek.veganoption.content.modules;
 
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.Direction;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -32,6 +33,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.blocks.BlockJutePlant;
@@ -50,7 +52,7 @@ import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.REGISTER_BLOCKS;
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Jute implements IContentModule
 {
 	public static RegistryObject<Block> juteBundled;
@@ -62,6 +64,8 @@ public class Jute implements IContentModule
 
 	public static final int JUTE_BASE_COLOR = 0x67ce0c;
 	public static final int JUTE_RETTED_COLOR = 0xbfb57e;
+
+	private static final String TINTED_CUBE_COLUMN = "block/tinted_cube_column";
 
 	@Override
 	public void create()
@@ -99,7 +103,18 @@ public class Jute implements IContentModule
 	@Override
 	public void datagenBlockStatesAndModels(BlockStateProvider provider)
 	{
-		provider.axisBlock((RotatedPillarBlock) juteBundled.get());
+		ModelFile model = provider.models().getBuilder("block/" + juteBundled.getId().getPath())
+			.parent(provider.models().getExistingFile(provider.modLoc(TINTED_CUBE_COLUMN)))
+			.texture("side", provider.modLoc("block/" + juteBundled.getId().getPath() + "_side"))
+			.texture("end", provider.modLoc("block/" + juteBundled.getId().getPath() + "_end"));
+
+		provider.getVariantBuilder(juteBundled.get())
+			.partialState().with(RotatedPillarBlock.AXIS, Direction.Axis.X)
+			.modelForState().modelFile(model).rotationX(90).rotationY(90).addModel()
+			.partialState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y)
+			.modelForState().modelFile(model).addModel()
+			.partialState().with(RotatedPillarBlock.AXIS, Direction.Axis.Z)
+			.modelForState().modelFile(model).rotationX(90).addModel();
 	}
 
 	@Override
@@ -108,7 +123,10 @@ public class Jute implements IContentModule
 		provider.basicItem(juteStalk.get());
 		provider.basicItem(juteFibre.get());
 		provider.basicItem(juteSeeds.get());
-		provider.withExistingParent(juteBundledItem.getId().toString(), provider.modLoc("block/" + juteBundled.getId().getPath()));
+
+		provider.withExistingParent(juteBundledItem.getId().toString(), provider.modLoc(TINTED_CUBE_COLUMN))
+			.texture("side", provider.modLoc("block/" + juteBundled.getId().getPath() + "_side"))
+			.texture("end", provider.modLoc("block/" + juteBundled.getId().getPath() + "_end"));
 	}
 
 	@Override

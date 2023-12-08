@@ -22,7 +22,7 @@ import squeek.veganoption.content.Modifiers;
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Burlap implements IContentModule
 {
 	public static RegistryObject<Item> burlap;

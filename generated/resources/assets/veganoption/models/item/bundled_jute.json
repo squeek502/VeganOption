@@ -1,3 +1,7 @@
 {
-  "parent": "veganoption:block/bundled_jute"
+  "parent": "veganoption:block/tinted_cube_column",
+  "textures": {
+    "end": "veganoption:block/bundled_jute_end",
+    "side": "veganoption:block/bundled_jute_side"
+  }
 }
