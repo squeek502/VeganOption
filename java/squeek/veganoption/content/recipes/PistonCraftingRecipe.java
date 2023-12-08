@@ -73,7 +73,7 @@ public class PistonCraftingRecipe
 		if (!itemInputMatches(itemEntitiesByInput))
 			return false;
 
-		boolean isReplacementPossible = itemInputs.size() == itemOutputs.size() && fluidOutput == null;
+		boolean isReplacementPossible = itemInputs.size() == itemOutputs.size() && fluidOutput.isEmpty();
 
 		if (isReplacementPossible)
 		{
@@ -105,7 +105,7 @@ public class PistonCraftingRecipe
 
 			do
 			{
-				if (fluidInput != null && displacedFluid != null)
+				if (!fluidInput.isEmpty() && displacedFluid != null)
 				{
 					displacedFluid.setAmount(displacedFluid.getAmount() - fluidInput.getAmount());
 					if (displacedFluid.getAmount() <= 0)
@@ -114,7 +114,7 @@ public class PistonCraftingRecipe
 						displacedFluid = null;
 					}
 				}
-				if (fluidOutput != null && fluidHandler != null)
+				if (!fluidOutput.isEmpty() && fluidHandler != null)
 				{
 					fluidHandler.fill(fluidOutput, IFluidHandler.FluidAction.EXECUTE);
 				}
@@ -151,7 +151,7 @@ public class PistonCraftingRecipe
 
 	public boolean canOutputFluid(Level level, BlockPos pos)
 	{
-		if (fluidOutput == null)
+		if (fluidOutput.isEmpty())
 			return true;
 
 		return canOutputFluid(getOutputFluidHandler(level, pos));
@@ -159,7 +159,7 @@ public class PistonCraftingRecipe
 
 	public boolean canOutputFluid(IFluidHandler fluidHandler)
 	{
-		if (fluidOutput == null)
+		if (fluidOutput.isEmpty())
 			return true;
 
 		if (fluidHandler == null)
@@ -170,7 +170,7 @@ public class PistonCraftingRecipe
 
 	public IFluidHandler getOutputFluidHandler(Level world, BlockPos pos)
 	{
-		if (fluidOutput == null)
+		if (fluidOutput.isEmpty())
 			return null;
 
 		return FluidHelper.getFluidHandlerAt(world, pos.below(), Direction.UP);
@@ -269,7 +269,7 @@ public class PistonCraftingRecipe
 	public boolean fluidInputMatches(FluidStack fluidStack)
 	{
 		if (fluidStack == null)
-			return fluidInput == null;
+			return fluidInput.isEmpty();
 		else
 			return fluidStack.isFluidEqual(fluidInput) && fluidStack.getAmount() >= fluidInput.getAmount();
 	}
