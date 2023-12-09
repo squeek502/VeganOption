@@ -111,6 +111,11 @@ public class Burlap implements IContentModule
 		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.LEATHER_LEGGINGS), () -> Ingredient.of(ContentHelper.ItemTags.LEATHER_LEGGINGS));
 		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.LEATHER_CHESTPLATE), () ->  Ingredient.of(ContentHelper.ItemTags.LEATHER_CHESTPLATES));
 		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.LEATHER_HELMET), () -> Ingredient.of(ContentHelper.ItemTags.LEATHER_HELMETS));
+
+		Modifiers.recipes.excludeOutput(Items.LEATHER_BOOTS);
+		Modifiers.recipes.excludeOutput(Items.LEATHER_LEGGINGS);
+		Modifiers.recipes.excludeOutput(Items.LEATHER_CHESTPLATE);
+		Modifiers.recipes.excludeOutput(Items.LEATHER_HELMET);
 	}
 
 	@Override
