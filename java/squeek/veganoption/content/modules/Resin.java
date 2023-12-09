@@ -49,7 +49,9 @@ public class Resin implements IContentModule
 	@Override
 	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		SimpleCookingRecipeBuilder.smelting(Ingredient.of(resin.get()), RecipeCategory.MISC, rosin.get(), 0.2f, ContentHelper.DEFAULT_SMELT_TIME);
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(resin.get()), RecipeCategory.MISC, rosin.get(), 0.2f, ContentHelper.DEFAULT_SMELT_TIME)
+			.unlockedBy("has_resin", provider.hasW(resin.get()))
+			.save(output);
 	}
 
 	@Override
