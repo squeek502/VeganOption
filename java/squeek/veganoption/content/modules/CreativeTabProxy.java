@@ -1,6 +1,7 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.helpers.CreativeTabHelper;
@@ -14,5 +15,11 @@ public class CreativeTabProxy implements IContentModule
 	public void create()
 	{
 		proxyItem = CreativeTabHelper.FAKE_ITEMS.register("creative_tab", () -> new Item(new Item.Properties()));
+	}
+
+	@Override
+	public void datagenItemModels(ItemModelProvider provider)
+	{
+		provider.basicItem(proxyItem.get());
 	}
 }
