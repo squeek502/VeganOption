@@ -54,7 +54,7 @@ public class DollsEye implements IContentModule
 			"forest_tall_grass_dolls_eye",
 			new SimpleBlockDropLootModifier(
 				new LootItemCondition[] {
-					new LootItemBlockStatePropertyCondition.Builder(Blocks.TALL_GRASS).build(),
+					new LootItemBlockStatePropertyCondition.Builder(Blocks.GRASS).build(),
 					LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Biomes.FOREST))
 						.or(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Biomes.BIRCH_FOREST)))
 						.or(LocationCheck.checkLocation(LocationPredicate.Builder.inBiome(Biomes.DARK_FOREST)))
