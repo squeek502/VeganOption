@@ -3,7 +3,7 @@
   "chance": 0.01,
   "conditions": [
     {
-      "block": "minecraft:tall_grass",
+      "block": "minecraft:grass",
       "condition": "minecraft:block_state_property"
     },
     {

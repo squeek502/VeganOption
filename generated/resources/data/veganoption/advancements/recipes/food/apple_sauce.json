@@ -1,20 +1,29 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
+    "has_bowl": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:bowl"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "veganoption:apple_sauce"
       },
       "trigger": "minecraft:recipe_unlocked"
-    },
-    "unlock_right_away": {
-      "trigger": "minecraft:tick"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "unlock_right_away"
+      "has_bowl"
     ]
   ],
   "rewards": {

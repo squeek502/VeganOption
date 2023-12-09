@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "*": {
-      "item": "minecraft:gold_nugget"
+      "tag": "forge:nuggets/gold"
     },
     "x": {
       "item": "veganoption:suffering_fragment"
