@@ -9,11 +9,16 @@ import net.neoforged.neoforge.fluids.FluidType;
 import squeek.veganoption.content.modules.Seitan;
 import squeek.veganoption.helpers.FluidHelper;
 
+import java.util.function.Function;
+
 public class ItemWashableWheat extends Item
 {
-	public ItemWashableWheat()
+	private final Stage stage;
+
+	public ItemWashableWheat(Stage stage)
 	{
-		super(new Item.Properties());
+		super(stage.getProperties());
+		this.stage = stage;
 	}
 
 	@Override
@@ -22,39 +27,6 @@ public class ItemWashableWheat extends Item
 		if (tryWash(entity))
 			return true;
 		return super.onEntityItemUpdate(stack, entity);
-	}
-
-	public boolean isUnwashed(ItemStack itemStack)
-	{
-		return itemStack.getItem() == Seitan.seitanUnwashed.get();
-	}
-
-	public ItemStack wash(ItemStack itemStack)
-	{
-		if (itemStack.getItem() == Seitan.wheatFlour.get())
-			return new ItemStack(Seitan.wheatDough.get());
-		if (itemStack.getItem() == Seitan.wheatDough.get())
-			return new ItemStack(Seitan.seitanUnwashed.get());
-		if (itemStack.getItem() == Seitan.seitanUnwashed.get())
-		{
-			itemStack.setDamageValue(itemStack.getDamageValue() + 1);
-			if (itemStack.getDamageValue() == 4)
-				return new ItemStack(Seitan.seitanRaw.get());
-			return itemStack;
-		}
-		return itemStack;
-	}
-
-	@Override
-	public boolean isBarVisible(ItemStack itemStack)
-	{
-		return isUnwashed(itemStack);
-	}
-
-	@Override
-	public int getBarWidth(ItemStack itemStack)
-	{
-		return super.getBarWidth(itemStack);
 	}
 
 	public boolean tryWash(ItemEntity entity)
@@ -77,11 +49,46 @@ public class ItemWashableWheat extends Item
 				entityItemToWash.level().addFreshEntity(entityItemToWash);
 			}
 
-			ItemStack washedItemStack = wash(doughToWash);
+			ItemStack washedItemStack = stage.wash(doughToWash);
 			entityItemToWash.setItem(washedItemStack);
 
 			return true;
 		}
 		return false;
+	}
+
+	public enum Stage
+	{
+		FLOUR(new Item.Properties(), (stack) -> new ItemStack(Seitan.wheatDough.get())),
+		DOUGH(new Item.Properties(), (stack) -> {
+			ItemStack unwashed = new ItemStack(Seitan.seitanUnwashed.get());
+			unwashed.setDamageValue(3);
+			return unwashed;
+		}),
+		UNWASHED(new Item.Properties().durability(3), (stack) -> {
+			stack.setDamageValue(stack.getDamageValue() - 1);
+			if (stack.getDamageValue() == 0)
+				return new ItemStack(Seitan.seitanRaw.get());
+			return stack;
+		});
+
+		private final Item.Properties properties;
+		private final Function<ItemStack, ItemStack> wash;
+
+		Stage(Item.Properties properties, Function<ItemStack, ItemStack> wash)
+		{
+			this.properties = properties;
+			this.wash = wash;
+		}
+
+		public Item.Properties getProperties()
+		{
+			return properties;
+		}
+
+		public ItemStack wash(ItemStack stack)
+		{
+			return wash.apply(stack);
+		}
 	}
 }

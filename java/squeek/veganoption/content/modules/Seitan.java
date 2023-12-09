@@ -3,14 +3,15 @@ package squeek.veganoption.content.modules;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.registries.ObjectHolder;
 import net.neoforged.neoforge.registries.RegistryObject;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -30,15 +31,14 @@ public class Seitan implements IContentModule
 	public static RegistryObject<Item> seitanRaw;
 	public static RegistryObject<Item> seitanCooked;
 
-	@ObjectHolder(registryName = "minecraft:item", value = "minecraft:piston")
-	public static Item wheatCrusher;
+	private static final float COOK_XP = 0.35f;
 
 	@Override
 	public void create()
 	{
-		wheatFlour = REGISTER_ITEMS.register("wheat_flour", ItemWashableWheat::new);
-		wheatDough = REGISTER_ITEMS.register("wheat_dough", ItemWashableWheat::new);
-		seitanUnwashed = REGISTER_ITEMS.register("seitan_unwashed", ItemWashableWheat::new);
+		wheatFlour = REGISTER_ITEMS.register("wheat_flour", () -> new ItemWashableWheat(ItemWashableWheat.Stage.FLOUR));
+		wheatDough = REGISTER_ITEMS.register("wheat_dough", () -> new ItemWashableWheat(ItemWashableWheat.Stage.DOUGH));
+		seitanUnwashed = REGISTER_ITEMS.register("seitan_unwashed", () -> new ItemWashableWheat(ItemWashableWheat.Stage.UNWASHED));
 		seitanRaw = REGISTER_ITEMS.register("seitan_raw", () -> new Item(new Item.Properties()));
 		seitanCooked = REGISTER_ITEMS.register("seitan_cooked", () -> new Item(new Item.Properties()
 			.food(new FoodProperties.Builder().nutrition(8).saturationMod(0.8f).build())));
@@ -57,7 +57,17 @@ public class Seitan implements IContentModule
 	@Override
 	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.RAW_SEITAN), RecipeCategory.FOOD, seitanCooked.get(), 0.35f, ContentHelper.DEFAULT_SMELT_TIME);
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.RAW_SEITAN), RecipeCategory.FOOD, seitanCooked.get(), COOK_XP, ContentHelper.DEFAULT_SMELT_TIME)
+			.unlockedBy("has_wheat", provider.hasW(Items.WHEAT))
+			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "seitan_furnace"));
+
+		SimpleCookingRecipeBuilder.campfireCooking(Ingredient.of(ContentHelper.ItemTags.RAW_SEITAN), RecipeCategory.FOOD, seitanCooked.get(), COOK_XP, ContentHelper.DEFAULT_COOK_TIME)
+			.unlockedBy("has_wheat", provider.hasW(Items.WHEAT))
+			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "seitan_campfire"));
+
+		SimpleCookingRecipeBuilder.smoking(Ingredient.of(ContentHelper.ItemTags.RAW_SEITAN), RecipeCategory.FOOD, seitanCooked.get(), COOK_XP, ContentHelper.DEFAULT_SMOKE_TIME)
+			.unlockedBy("has_wheat", provider.hasW(Items.WHEAT))
+			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "seitan_smoker"));
 	}
 
 	@Override

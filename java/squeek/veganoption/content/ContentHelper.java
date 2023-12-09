@@ -18,6 +18,12 @@ public class ContentHelper
 	/** default smelt time in vanilla */
 	public static final int DEFAULT_SMELT_TIME = 200;
 
+	/** default campfire cooking time in vanilla */
+	public static final int DEFAULT_COOK_TIME = 600;
+
+	/** default smoking time in vanilla */
+	public static final int DEFAULT_SMOKE_TIME = 100;
+
 	/**
 	 * @param item The item
 	 * @param tag The tag
