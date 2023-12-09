@@ -58,6 +58,7 @@ public class ContentHelper
 		public static final TagKey<Item> FOOD_COOKED_MEAT = forgeTag("food/cooked_meat");
 		public static final TagKey<Item> FOOD_RAW_FISH = forgeTag("food/raw_fish");
 		public static final TagKey<Item> FOOD_RAW_MEAT = forgeTag("food/raw_meat");
+		public static final TagKey<Item> GOLD_NUGGETS = Tags.Items.NUGGETS_GOLD;
 		public static final TagKey<Item> INK_BLACK = forgeTag("ink/black");
 		public static final TagKey<Item> LEATHER = Tags.Items.LEATHER;
 		public static final TagKey<Item> LEATHER_BOOTS = veganoptionTag("boots/leather");

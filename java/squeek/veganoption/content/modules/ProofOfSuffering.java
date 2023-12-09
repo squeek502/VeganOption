@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -16,9 +15,9 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
@@ -51,8 +50,8 @@ public class ProofOfSuffering implements IContentModule
 			.pattern("x*x")
 			.pattern("xxx")
 			.define('x', fragmentOfSuffering.get())
-			.define('*', Items.GOLD_NUGGET) // todo: tag
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) // todo
+			.define('*', ContentHelper.ItemTags.GOLD_NUGGETS)
+			.unlockedBy("has_fragment", provider.hasW(fragmentOfSuffering.get()))
 			.save(output);
 	}
 
