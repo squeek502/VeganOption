@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
@@ -78,6 +80,7 @@ public class FrozenBubble implements IContentModule
 		provider.withExistingParent("fluid_soap_solution", provider.modLoc("soap_solution"));
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{

@@ -13,6 +13,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -22,11 +24,11 @@ import squeek.veganoption.blocks.BlockEncrustedObsidian;
 import squeek.veganoption.blocks.BlockEnderRift;
 import squeek.veganoption.blocks.BlockRawEnder;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
-import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.DataGenProviders;
-import squeek.veganoption.loot.GenericBlockLootSubProvider;
+import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.fluids.RawEnderFluid;
+import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
 
@@ -70,6 +72,7 @@ public class Ender implements IContentModule
 		provider.tagW(BlockTags.NEEDS_DIAMOND_TOOL).add(encrustedObsidian.get());
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{

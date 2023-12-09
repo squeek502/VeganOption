@@ -50,11 +50,6 @@ public abstract class ItemThrowableGeneric extends Item
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
 	{
 		ItemStack inHand = player.getItemInHand(hand);
-		if (!player.isCreative())
-		{
-			inHand.shrink(1);
-		}
-
 		player.playSound(throwSound, 0.5F, 0.4F / (RandomHelper.random.nextFloat() * 0.4F + 0.8F));
 
 		if (!level.isClientSide())
@@ -63,6 +58,9 @@ public abstract class ItemThrowableGeneric extends Item
 			entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, throwSpeed, 1.0F);
 			level.addFreshEntity(entity);
 		}
+
+		if (!player.isCreative())
+			inHand.shrink(1);
 
 		return InteractionResultHolder.success(inHand);
 	}

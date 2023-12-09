@@ -1,5 +1,6 @@
 package squeek.veganoption.items;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
@@ -44,7 +45,7 @@ public class ItemPlasticEgg extends ItemThrowableGeneric
 		if (hasItem(stack))
 		{
 			Item containedItem = getContainedItem(stack);
-			tooltip.add(Component.literal(LangHelper.translateRaw(getDescriptionId() + ".tooltip", LangHelper.translateRaw(containedItem.getDescriptionId() + ".name"))));
+			tooltip.add(Component.literal(LangHelper.translateRaw(getDescriptionId() + ".tooltip", LangHelper.translateRaw(containedItem.getDescriptionId()))).withStyle(ChatFormatting.GRAY));
 		}
 	}
 

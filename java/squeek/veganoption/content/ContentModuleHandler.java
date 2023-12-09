@@ -1,5 +1,6 @@
 package squeek.veganoption.content;
 
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
  * This forces consistent and tested use of tags for maximum compatibility with other mods
  * and for potential configurable modularity down the line
  */
-@Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER)
+@Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ContentModuleHandler
 {
 	private static Map<String, IContentModule> modules = new LinkedHashMap<String, IContentModule>();

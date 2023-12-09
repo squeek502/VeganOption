@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.recipes.*;
@@ -22,6 +21,8 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.registries.RegistryObject;
@@ -73,6 +74,7 @@ public class Egg implements IContentModule
 		provider.basicItem(plasticEgg.get());
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{
@@ -98,13 +100,7 @@ public class Egg implements IContentModule
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, appleSauce.get())
 			.requires(Ingredient.of(Items.APPLE))
 			.requires(Ingredient.of(Items.BOWL))
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
-			.save(output);
-
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, potatoStarch.get())
-			.requires(Ingredient.of(Items.POTATO))
-			.requires(Ingredient.of(Items.PISTON))
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.unlockedBy("has_bowl", provider.hasW(Items.BOWL))
 			.save(output);
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, plasticEgg.get())
@@ -112,7 +108,7 @@ public class Egg implements IContentModule
 			.pattern("o o")
 			.pattern(" o ")
 			.define('o', ContentHelper.ItemTags.PLASTIC_SHEET)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_bioplastic", provider.hasW(Bioplastic.bioplastic.get()))
 			.save(output);
 
 		SpecialRecipeBuilder.special(eggRecipeSerializer.get()).save(output, new ResourceLocation(MODID_LOWER, "plastic_egg_storage"));
@@ -155,7 +151,5 @@ public class Egg implements IContentModule
 		Modifiers.recipes.convertInputForFood(() -> Ingredient.of(ContentHelper.ItemTags.EGGS), () -> Ingredient.of(ContentHelper.ItemTags.EGG_BAKING));
 		Modifiers.recipes.convertInputForNonFood(() -> Ingredient.of(Items.EGG), () -> Ingredient.of(ContentHelper.ItemTags.EGG_OBJECT));
 		Modifiers.recipes.convertInputForNonFood(() -> Ingredient.of(ContentHelper.ItemTags.EGGS), () -> Ingredient.of(ContentHelper.ItemTags.EGG_OBJECT));
-
-		Modifiers.crafting.addInputsToKeepForOutput(potatoStarch.get(), Items.PISTON);
 	}
 }
