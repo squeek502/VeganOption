@@ -11,6 +11,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.LimitCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -32,6 +32,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
@@ -66,6 +67,7 @@ public class Jute implements IContentModule
 	public static final int JUTE_RETTED_COLOR = 0xbfb57e;
 
 	private static final String TINTED_CUBE_COLUMN = "block/tinted_cube_column";
+	private static final String TINTED_CROSS = "block/tinted_cross";
 
 	@Override
 	public void create()
@@ -75,7 +77,7 @@ public class Jute implements IContentModule
 		juteBundled = REGISTER_BLOCKS.register("bundled_jute", () -> new BlockRettable(juteFibre, 8, 15));
 		juteBundledItem = REGISTER_ITEMS.register("bundled_jute", () -> new BlockItem(juteBundled.get(), new Item.Properties()));
 		jutePlant = REGISTER_BLOCKS.register("jute_plant", BlockJutePlant::new);
-		juteSeeds = REGISTER_ITEMS.register("jute_seeds", () -> new BlockItem(jutePlant.get(), new Item.Properties()));
+		juteSeeds = REGISTER_ITEMS.register("jute_seeds", () -> new ItemNameBlockItem(jutePlant.get(), new Item.Properties()));
 	}
 
 	@Override
@@ -103,18 +105,34 @@ public class Jute implements IContentModule
 	@Override
 	public void datagenBlockStatesAndModels(BlockStateProvider provider)
 	{
-		ModelFile model = provider.models().getBuilder("block/" + juteBundled.getId().getPath())
+		ModelFile bundledJuteModelFile = provider.models().getBuilder("block/" + juteBundled.getId().getPath())
 			.parent(provider.models().getExistingFile(provider.modLoc(TINTED_CUBE_COLUMN)))
 			.texture("side", provider.modLoc("block/" + juteBundled.getId().getPath() + "_side"))
 			.texture("end", provider.modLoc("block/" + juteBundled.getId().getPath() + "_end"));
 
 		provider.getVariantBuilder(juteBundled.get())
 			.partialState().with(RotatedPillarBlock.AXIS, Direction.Axis.X)
-			.modelForState().modelFile(model).rotationX(90).rotationY(90).addModel()
+			.modelForState().modelFile(bundledJuteModelFile).rotationX(90).rotationY(90).addModel()
 			.partialState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y)
-			.modelForState().modelFile(model).addModel()
+			.modelForState().modelFile(bundledJuteModelFile).addModel()
 			.partialState().with(RotatedPillarBlock.AXIS, Direction.Axis.Z)
-			.modelForState().modelFile(model).rotationX(90).addModel();
+			.modelForState().modelFile(bundledJuteModelFile).rotationX(90).addModel();
+
+		// growth stages 0-5 are for the bottom, and 6-10 are for the top. 11 is a special case for the bottom half when it has a top
+		provider.getVariantBuilder(jutePlant.get()).forAllStates(state -> {
+			int stage = state.getValue(BlockJutePlant.GROWTH_STAGE);
+			int textureIndex = stage;
+			if (stage == 11)
+				textureIndex = 6;
+			else if (stage > 5)
+				textureIndex -= 6;
+			return ConfiguredModel.builder()
+				.modelFile(provider.models().getBuilder("block/" + jutePlant.getId().getPath() + "_" + stage)
+					.parent(provider.models().getExistingFile(provider.mcLoc(TINTED_CROSS)))
+					.texture("cross", provider.modLoc("block/" + jutePlant.getId().getPath() + "_" + textureIndex))
+					.renderType("cutout_mipped"))
+				.build();
+		});
 	}
 
 	@Override
@@ -178,20 +196,20 @@ public class Jute implements IContentModule
 			@Override
 			protected void generate()
 			{
-				// jute plants (partially grown ferns) top block drop jute seeds, but fully grown ferns only drop jute stalks
+				// jute plants (partially grown ferns) bottom block drop jute seeds, but fully grown ferns only drop jute stalks
 				LootPool.Builder jutePlantPool = LootPool.lootPool()
 					.name("jute_plant")
 					.setRolls(ConstantValue.exactly(1));
 				for (int stage = 0; stage <= BlockJutePlant.NUM_GROWTH_STAGES; stage++)
 				{
-					if (BlockJutePlant.isTop(stage))
+					if (!BlockJutePlant.isTop(stage))
 					{
 						jutePlantPool
-							.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Jute.jutePlant.get())
-									  .setProperties(StatePropertiesPredicate.Builder.properties()
-														 .hasProperty(BlockJutePlant.GROWTH_STAGE, stage)))
-							.apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
-							.add(LootItem.lootTableItem(juteSeeds.get()));
+							.add(LootItem.lootTableItem(juteSeeds.get())
+								.apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+								.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Jute.jutePlant.get())
+									.setProperties(StatePropertiesPredicate.Builder.properties()
+										.hasProperty(BlockJutePlant.GROWTH_STAGE, stage))));
 					}
 				}
 				add(jutePlant.get(), LootTable.lootTable().withPool(jutePlantPool));
@@ -199,16 +217,12 @@ public class Jute implements IContentModule
 				LootItemCondition.Builder rettedCondition = LootItemBlockStatePropertyCondition.hasBlockStateProperties(juteBundled.get())
 					.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(BlockRettable.STAGE, BlockRettable.MAX_RETTING_STAGES));
 
-				// if retting stage = max, drop ret item (jute fibre), else drop self
 				LootPool.Builder rettedJutePool = LootPool.lootPool()
 					.name("bundled_jute")
-					.setRolls(ConstantValue.exactly(1))
-					.add(LootItem.lootTableItem(((BlockRettable) juteBundled.get()).getRettedItem()))
-					.when(rettedCondition)
-					.apply(LimitCount.limitCount(IntRange.range(((BlockRettable) juteBundled.get()).getMinRettedItemDrops(), ((BlockRettable) juteBundled.get()).getMaxRettedItemDrops())))
-					.add(LootItem.lootTableItem(juteBundledItem.get()))
-					.when(InvertedLootItemCondition.invert(rettedCondition))
-					.apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)));
+					.add(LootItem.lootTableItem(((BlockRettable) juteBundled.get()).getRettedItem())
+						 .apply(LimitCount.limitCount(IntRange.range(((BlockRettable) juteBundled.get()).getMinRettedItemDrops(), ((BlockRettable) juteBundled.get()).getMaxRettedItemDrops())))
+						 .when(rettedCondition)
+						 .otherwise(LootItem.lootTableItem(juteBundledItem.get())));
 				add(juteBundled.get(), LootTable.lootTable().withPool(rettedJutePool));
 			}
 

@@ -36,7 +36,7 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 	public BlockJutePlant()
 	{
 		super(BlockBehaviour.Properties.of()
-			.mapColor(MapColor.GRASS)
+			.mapColor(MapColor.PLANT)
 			.replaceable()
 			.noCollission()
 			.instabreak()
@@ -50,8 +50,16 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context)
 	{
-		float growthPercent = getGrowthPercent(getter, pos, state);
-		return Block.box(2, 0, 2, 14, 14 * growthPercent, 14);
+		float growthPercent = 1f;
+		if (!hasTop(state))
+		{
+			boolean isTop = isTop(state);
+			int max = (isTop ? NUM_TOP_STAGES : NUM_BOTTOM_STAGES);
+			int stage = state.getValue(GROWTH_STAGE);
+			int individualStage = isTop ? stage - NUM_BOTTOM_STAGES : stage;
+			growthPercent = (float) individualStage / max;
+		}
+		return Block.box(2, 0, 2, 14, 4 + growthPercent * 12, 14);
 	}
 
 	@Override
@@ -77,10 +85,9 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 
 		if (isFullyGrown(newGrowthStage))
 		{
-			// set to air preemptively to avoid canBlockStay shenanigans
-			level.setBlock(pos.below(), Blocks.AIR.defaultBlockState(), 0);
-			level.setBlock(pos, Blocks.AIR.defaultBlockState(), 0);
-			level.setBlockAndUpdate(pos.below(), Blocks.LARGE_FERN.defaultBlockState());
+			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+			level.setBlockAndUpdate(pos.below(), Blocks.AIR.defaultBlockState());
+			DoublePlantBlock.placeAt(level, Blocks.LARGE_FERN.defaultBlockState(), pos.below(), 2);
 		}
 		else
 		{
@@ -138,7 +145,7 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 
 	public static boolean hasTop(@Nonnull BlockState state)
 	{
-		return hasTop(state.getValue(GROWTH_STAGE));
+		return state.hasProperty(GROWTH_STAGE) && hasTop(state.getValue(GROWTH_STAGE));
 	}
 
 	@Override
@@ -159,7 +166,7 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 		if (hasTop(state))
 			return reader.getBlockState(pos.above()).getBlock() == this;
 		if (isTop(state))
-			return reader.getBlockState(pos.above()).getBlock() == this;
+			return reader.getBlockState(pos.below()).getBlock() == this;
 		return super.canSurvive(state, reader, pos);
 	}
 
@@ -194,7 +201,7 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 		public int getColor(BlockState state, @Nullable BlockAndTintGetter getter, @Nullable BlockPos pos, int tintIndex)
 		{
 			if (getter == null || pos == null)
-				return GrassColor.get(0.5d, 1d);
+				return GrassColor.getDefaultColor();
 
 			return BiomeColors.getAverageGrassColor(getter, pos);
 		}
@@ -202,7 +209,7 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 		@Override
 		public int getColor(ItemStack stack, int tintIndex)
 		{
-			return GrassColor.get(0.5d, 1d);
+			return GrassColor.getDefaultColor();
 		}
 	}
 }

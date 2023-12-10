@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "growth=0": {
+      "model": "veganoption:block/jute_plant_0"
+    },
+    "growth=1": {
+      "model": "veganoption:block/jute_plant_1"
+    },
+    "growth=10": {
+      "model": "veganoption:block/jute_plant_10"
+    },
+    "growth=11": {
+      "model": "veganoption:block/jute_plant_11"
+    },
+    "growth=2": {
+      "model": "veganoption:block/jute_plant_2"
+    },
+    "growth=3": {
+      "model": "veganoption:block/jute_plant_3"
+    },
+    "growth=4": {
+      "model": "veganoption:block/jute_plant_4"
+    },
+    "growth=5": {
+      "model": "veganoption:block/jute_plant_5"
+    },
+    "growth=6": {
+      "model": "veganoption:block/jute_plant_6"
+    },
+    "growth=7": {
+      "model": "veganoption:block/jute_plant_7"
+    },
+    "growth=8": {
+      "model": "veganoption:block/jute_plant_8"
+    },
+    "growth=9": {
+      "model": "veganoption:block/jute_plant_9"
+    }
+  }
+}
