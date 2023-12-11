@@ -42,7 +42,7 @@ public class BlockLyeWater extends LiquidBlock
 		if (entity instanceof LivingEntity)
 		{
 			DamageSource source = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(LYE_DAMAGE_TYPE));
-			entity.hurt(source, 0.25f);
+			entity.hurt(source, 0.5f);
 		}
 		super.entityInside(state, level, pos, entity);
 	}

@@ -2,7 +2,6 @@ package squeek.veganoption.items;
 
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,7 +23,7 @@ public class ItemSoap extends Item
 	{
 		super(new Item.Properties()
 			.stacksTo(1)
-			.durability(3)
+			.durability(4)
 			.setNoRepair());
 		DispenserBlock.registerBehavior(this, new ItemSoap.DispenserBehavior());
 	}
@@ -69,9 +68,10 @@ public class ItemSoap extends Item
 	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity)
 	{
 		if (!level.isClientSide())
+		{
 			curePotionEffectsAsItem(entity, milkBucket);
-		if (entity instanceof ServerPlayer)
-			stack.hurt(1, level.getRandom(), (ServerPlayer) entity);
+			stack.hurtAndBreak(1, entity, (entityIn) -> { /* do nothing */});
+		}
 		return super.finishUsingItem(stack, level, entity);
 	}
 

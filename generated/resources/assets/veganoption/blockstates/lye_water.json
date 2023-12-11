@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "level=0": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=1": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=10": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=11": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=12": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=13": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=14": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=15": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=2": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=3": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=4": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=5": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=6": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=7": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=8": {
+      "model": "veganoption:block/lye_water"
+    },
+    "level=9": {
+      "model": "veganoption:block/lye_water"
+    }
+  }
+}
