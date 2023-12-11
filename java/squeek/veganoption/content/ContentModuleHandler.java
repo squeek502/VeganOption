@@ -1,8 +1,10 @@
 package squeek.veganoption.content;
 
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.modules.*;
@@ -72,9 +74,17 @@ public class ContentModuleHandler
 		iterateOverModules(IContentModule::create);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{
 		iterateOverModules(module -> module.registerRenderers(event));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
+	public static void clientSetup(FMLClientSetupEvent event)
+	{
+		event.enqueueWork(() -> iterateOverModules(module -> module.finishClient(event)));
 	}
 }

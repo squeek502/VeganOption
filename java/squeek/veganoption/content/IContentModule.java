@@ -5,6 +5,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -29,6 +30,12 @@ public interface IContentModule
 	 */
 	@OnlyIn(Dist.CLIENT)
 	default void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {}
+
+	/**
+	 * Called on the mod event bus on the client setup event.
+	 */
+	@OnlyIn(Dist.CLIENT)
+	default void finishClient(FMLClientSetupEvent event) {}
 
 	// Datagen
 
