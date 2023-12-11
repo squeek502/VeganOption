@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.*;
@@ -56,18 +57,20 @@ public class BlockHelper
 
 	public static BlockPos followFluidStreamToSourceBlock(Level level, BlockPos blockPos, Fluid fluid, Set<BlockPos> blocksChecked)
 	{
-		if (fluid.isSource(level.getFluidState(blockPos)))
+		FluidState originFluidState = level.getFluidState(blockPos);
+		if (originFluidState.isSourceOfType(fluid))
 			return blockPos;
 
-		List<BlockPos> blocksToCheck = new ArrayList<BlockPos>();
+		List<BlockPos> blocksToCheck = new ArrayList<>();
 		blocksToCheck.add(blockPos.above());
 		blocksToCheck.addAll(Arrays.asList(getBlocksAdjacentTo(blockPos)));
 
 		for (BlockPos blockToCheck : blocksToCheck)
 		{
-			if (FluidHelper.getFluidTypeOfBlock(level.getBlockState(blockToCheck)) == fluid && !blocksChecked.contains(blockToCheck))
+			FluidState fluidStateToCheck = level.getFluidState(blockToCheck);
+			if (fluidStateToCheck.getFluidType() == fluid.getFluidType() && !blocksChecked.contains(blockToCheck))
 			{
-				if (fluid.isSource(level.getFluidState(blockToCheck)))
+				if (fluidStateToCheck.isSource())
 					return blockToCheck;
 				else
 				{

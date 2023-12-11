@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "is_open=false": {
+      "model": "veganoption:block/basin_closed"
+    },
+    "is_open=true": {
+      "model": "veganoption:block/basin_open"
+    }
+  }
+}

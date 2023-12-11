@@ -7,6 +7,9 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,15 +20,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.*;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import squeek.veganoption.blocks.BlockBasin;
@@ -39,15 +39,12 @@ import java.util.List;
 public class TileEntityBasin extends BlockEntity
 {
 	public FluidTank fluidTank = new BasinTank(FluidType.BUCKET_VOLUME);
-	protected boolean isPowered = false;
 	protected boolean fluidConsumeStopped = true;
 	protected int ticksUntilNextFluidConsume = FLUID_CONSUME_TICK_PERIOD;
 	protected int ticksUntilNextContainerFill = CONTAINER_FILL_TICK_PERIOD;
 
 	public static int FLUID_CONSUME_TICK_PERIOD = MiscHelper.TICKS_PER_SEC;
 	public static int CONTAINER_FILL_TICK_PERIOD = MiscHelper.TICKS_PER_SEC;
-
-
 
 	public TileEntityBasin(BlockPos pos, BlockState state)
 	{
@@ -57,9 +54,9 @@ public class TileEntityBasin extends BlockEntity
 	/*
 	 * Updating
 	 */
-	public static <T extends BlockEntity> void onTick(Level level, BlockPos blockPos, BlockState blockState, T t)
+	public static <T extends BlockEntity> void onServerTick(Level level, BlockPos blockPos, BlockState blockState, T t)
 	{
-		if (EffectiveSide.get().isClient() || !(t instanceof TileEntityBasin te))
+		if (!(t instanceof TileEntityBasin te))
 			return;
 
 		if (te.shouldConsumeFluid())
@@ -69,13 +66,15 @@ public class TileEntityBasin extends BlockEntity
 				te.scheduleFluidConsume();
 			else
 				te.endFluidConsume();
+			te.markDirty();
 		}
 		else
 			te.ticksUntilNextFluidConsume = Math.max(0, te.ticksUntilNextFluidConsume - 1);
 
 		if (te.shouldFillContainers())
 		{
-			te.tryFillContainersInside();
+			if (te.tryFillContainersInside())
+				te.markDirty();
 			te.scheduleFillContainers();
 		}
 		else
@@ -97,28 +96,31 @@ public class TileEntityBasin extends BlockEntity
 
 	public boolean tryFillContainersInside()
 	{
-		if (level == null || EffectiveSide.get().isClient() || !couldFillContainers())
+		if (level == null || !couldFillContainers())
 			return false;
 
 		List<ItemEntity> entityItemsWithin = WorldHelper.getItemEntitiesWithin(level, ((BlockBasin) Basin.basin.get()).getInnerBoundingBox(getBlockPos()));
 
 		for (ItemEntity entityItemWithin : entityItemsWithin)
 		{
-			if (FluidUtil.getFluidContained(entityItemWithin.getItem()).isPresent())
-				continue;
+			// We have to copy the stack in order to prevent invalid/failed items from disappearing
+			ItemStack containerToFill = entityItemWithin.getItem().copy().split(1);
 
-			ItemEntity entityItemToFill = entityItemWithin;
-			ItemStack containerToFill = entityItemWithin.getItem().split(1);
-			IFluidHandlerItem fluidHandlerToFill = FluidUtil.getFluidHandler(containerToFill).orElse(null);
-			FluidUtil.tryFluidTransfer(fluidHandlerToFill, fluidTank, fluidTank.getFluid(), true);
+			SoundEvent soundevent = fluidTank.getFluid().getFluid().getFluidType().getSound(SoundActions.BUCKET_FILL);
+			FluidActionResult result = FluidUtil.tryFillContainer(containerToFill, fluidTank, fluidTank.getFluidAmount(), null, true);
 
-			if (FluidUtil.getFluidContained(containerToFill).isPresent())
+			if (result.isSuccess())
 			{
-				entityItemToFill = new ItemEntity(entityItemToFill.level(), entityItemToFill.blockPosition().getX(), entityItemToFill.blockPosition().getY(), entityItemToFill.blockPosition().getZ(), containerToFill);
-				entityItemToFill.setPickUpDelay(10);
-				level.addFreshEntity(entityItemToFill);
+				if (soundevent != null)
+					level.playSound(null, worldPosition, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
+
+				ItemEntity newEntity = new ItemEntity(level, entityItemWithin.getX(), entityItemWithin.getY(), entityItemWithin.getZ(), result.getResult());
+				newEntity.setPickUpDelay(10);
+				level.addFreshEntity(newEntity);
+				entityItemWithin.discard();
+				return true;
 			}
-			return true;
+			return false;
 		}
 
 		return false;
@@ -198,12 +200,12 @@ public class TileEntityBasin extends BlockEntity
 	 */
 	public boolean isOpen()
 	{
-		return isPowered();
+		return level != null && isOpen(level.getBlockState(worldPosition));
 	}
 
-	public boolean isClosed()
+	public boolean isOpen(BlockState state)
 	{
-		return !isOpen();
+		return state.getValue(BlockBasin.IS_OPEN);
 	}
 
 	public void onOpen()
@@ -221,68 +223,12 @@ public class TileEntityBasin extends BlockEntity
 	 */
 	public boolean onBlockActivated(Player player, InteractionHand hand, Direction side, Vec3 location)
 	{
-		return FluidUtil.interactWithFluidHandler(player, hand, fluidTank);
-	}
-
-	/**
-	 * Attempts to add an item to the player's inventory in the following order:
-	 * 1. Their current hand if there is no held item, or the held item has a stack size of 0
-	 * 2. The first open slot in their inventory
-	 * 3. Dropped in the world, if there is no free slot in the inventory.
-	 */
-	private void tryAddItemToInventory(Player player, InteractionHand hand, ItemStack newItem)
-	{
-		ItemStack heldItem = player.getItemInHand(hand);
-		if (heldItem.isEmpty())
+		if (level != null && FluidUtil.interactWithFluidHandler(player, hand, fluidTank))
 		{
-			player.setItemInHand(hand, newItem);
-			return;
+			markDirty();
+			return true;
 		}
-		if (!player.addItem(newItem))
-			player.drop(newItem, true);
-	}
-
-	/*
-	 * Redstone Power Handling
-	 */
-	public void setPowered(boolean isPowered)
-	{
-		if (isPowered != isPowered())
-		{
-			this.isPowered = isPowered;
-
-			if (isPowered)
-				onPowered();
-			else
-				onUnpowered();
-
-			if (level != null)
-			{
-				level.setBlock(worldPosition, level.getBlockState(worldPosition).setValue(BlockBasin.IS_OPEN, isPowered), 0);
-				level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 0);
-			}
-		}
-	}
-
-	public boolean isPowered()
-	{
-		return isPowered;
-	}
-
-	public void onPowered()
-	{
-		if (level != null)
-			level.updateNeighborsAt(worldPosition, Basin.basin.get());
-
-		onOpen();
-	}
-
-	public void onUnpowered()
-	{
-		if (level != null)
-			level.updateNeighborsAt(worldPosition, Basin.basin.get());
-
-		onClose();
+		return false;
 	}
 
 	/*
@@ -292,9 +238,11 @@ public class TileEntityBasin extends BlockEntity
 	{
 		if (level != null)
 		{
-			level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 0);;
-			level.updateNeighborsAt(worldPosition, Basin.basin.get());
 			scheduleFluidConsume();
+			BlockState state = getBlockState();
+			markDirty();
+			level.sendBlockUpdated(worldPosition, state, state, 0);
+			level.updateNeighborsAt(worldPosition, Basin.basin.get());
 		}
 	}
 
@@ -303,27 +251,14 @@ public class TileEntityBasin extends BlockEntity
 	 */
 	public void readSyncedNBT(CompoundTag compound)
 	{
-		if (compound.contains("Fluid"))
-			fluidTank.setFluid(FluidStack.loadFluidStackFromNBT(compound.getCompound("Fluid")));
-		else
-			fluidTank.setFluid(null);
-
-		setPowered(compound.getBoolean("Powered"));
+		fluidTank.setFluid(FluidStack.loadFluidStackFromNBT(compound.getCompound("Fluid")));
 	}
 
 	public void writeSyncedNBT(CompoundTag compound)
 	{
-		if (!fluidTank.getFluid().isEmpty())
-		{
-			CompoundTag fluidTag = new CompoundTag();
-			fluidTank.getFluid().writeToNBT(fluidTag);
-			compound.put("Fluid", fluidTag);
-		}
-
-		if (isPowered())
-		{
-			compound.putBoolean("Powered", isPowered());
-		}
+		CompoundTag fluidTag = new CompoundTag();
+		fluidTank.getFluid().writeToNBT(fluidTag);
+		compound.put("Fluid", fluidTag);
 	}
 
 	@Override
@@ -353,12 +288,12 @@ public class TileEntityBasin extends BlockEntity
 	}
 
 	/*
-			 * Save data
-			 */
+	 * Save data
+	 */
 	@Override
-	public void deserializeNBT(CompoundTag compound)
+	public void load(CompoundTag compound)
 	{
-		super.deserializeNBT(compound);
+		super.load(compound);
 
 		readSyncedNBT(compound);
 
@@ -373,9 +308,9 @@ public class TileEntityBasin extends BlockEntity
 	}
 
 	@Override
-	public CompoundTag serializeNBT()
+	public void saveAdditional(CompoundTag compound)
 	{
-		CompoundTag compound = super.serializeNBT();
+		super.saveAdditional(compound);
 
 		writeSyncedNBT(compound);
 
@@ -383,8 +318,13 @@ public class TileEntityBasin extends BlockEntity
 		{
 			compound.putInt("NextConsume", ticksUntilNextFluidConsume);
 		}
+	}
 
-		return compound;
+	private void markDirty()
+	{
+		setChanged();
+		if (level instanceof ServerLevel serverLevel)
+			serverLevel.getChunkSource().blockChanged(worldPosition);
 	}
 
 	@Override
@@ -392,8 +332,6 @@ public class TileEntityBasin extends BlockEntity
 	{
 		return capability == Capabilities.FLUID_HANDLER ? LazyOptional.of(() -> (T) fluidTank) : super.getCapability(capability, facing);
 	}
-
-
 
 	private class BasinTank extends FluidTank
 	{
@@ -420,7 +358,7 @@ public class TileEntityBasin extends BlockEntity
 		public FluidStack drain(FluidStack resource, FluidAction action)
 		{
 			if (resource.isEmpty() || !resource.isFluidEqual(fluid))
-				return null;
+				return FluidStack.EMPTY;
 
 			return drain(resource.getAmount(), action);
 		}
@@ -439,7 +377,7 @@ public class TileEntityBasin extends BlockEntity
 		@Override
 		public boolean isFluidValid(FluidStack fluid)
 		{
-			return this.fluid.getFluid() == null || this.fluid.getFluid() == fluid.getFluid();
+			return this.fluid.isEmpty() || this.fluid.getFluid() == fluid.getFluid();
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package squeek.veganoption.blocks.renderers;
 
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -24,18 +24,17 @@ public class RenderBasin implements BlockEntityRenderer<TileEntityBasin>
 		if (tank.isEmpty())
 			return;
 		poseStack.pushPose();
-		Tesselator tess = Tesselator.getInstance();
-		BufferBuilder builder = tess.getBuilder();
-		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 
-		int brightness = basin.getLevel().getRawBrightness(basin.getBlockPos(), tank.getFluid().getFluid().getFluidType().getLightLevel());
+		int fluidLight = tank.getFluid().getFluid().getFluidType().getLightLevel();
+		int luminosity = Math.max((packedLight >> 4) & 0xF, fluidLight);
+		int brightness = (packedLight & 0xF00000) | luminosity << 4;
+
 		float percentFull = (float) tank.getFluidAmount() / tank.getCapacity();
 		double fluidTop = SIDE_WIDTH + (percentFull * (1f - SIDE_WIDTH - SIDE_WIDTH));
 		AABB bounds = new AABB(SIDE_WIDTH, SIDE_WIDTH, SIDE_WIDTH, 1d - SIDE_WIDTH, fluidTop, 1d - SIDE_WIDTH);
 
-		RenderHelper.putStillFluidCube(tank.getFluid(), bounds, brightness, buffer.getBuffer(RenderType.translucent()));
+		RenderHelper.putStillFluidCube(tank.getFluid(), bounds, brightness, buffer.getBuffer(RenderType.translucent()), poseStack);
 
-		tess.end();
 		poseStack.popPose();
 	}
 }

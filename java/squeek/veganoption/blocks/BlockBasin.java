@@ -31,7 +31,7 @@ public class BlockBasin extends Block implements EntityBlock
 	public static final double SIDE_WIDTH = 0.125D;
 	private static final VoxelShape OPEN_SHAPE = Shapes.join(
 		Shapes.block(),
-		Shapes.box(2, 2, 2, 14, 14, 14),
+		Shapes.or(box(2, 2, 2, 14, 16, 14)),
 		BooleanOp.ONLY_FIRST
 	);
 
@@ -56,34 +56,42 @@ public class BlockBasin extends Block implements EntityBlock
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
 	{
-		return type == Basin.basinType.get() ? TileEntityBasin::onTick : null;
+		return !level.isClientSide() && type == Basin.basinType.get() ? TileEntityBasin::onServerTick : null;
 	}
 
 	/*
 	 * Events
 	 */
-	private void update(Level level, BlockPos pos)
+	private void update(BlockState state, Level level, BlockPos pos)
 	{
 		BlockEntity be = level.getBlockEntity(pos);
-		if (be instanceof TileEntityBasin)
+		if (be instanceof TileEntityBasin entity)
 		{
-			((TileEntityBasin) be).setPowered(level.hasNeighborSignal(pos));
-			((TileEntityBasin) be).scheduleFluidConsume();
+			boolean isPowered = level.hasNeighborSignal(pos);
+			if (isPowered != state.getValue(IS_OPEN))
+			{
+				level.setBlockAndUpdate(pos, state.setValue(IS_OPEN, isPowered));
+				if (isPowered)
+					entity.onOpen();
+				else
+					entity.onClose();
+			}
+			entity.scheduleFluidConsume();
 		}
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level level, BlockPos myPos, Block block, BlockPos pos2, boolean unknown)
+	public void neighborChanged(BlockState state, Level level, BlockPos myPos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston)
 	{
-		super.neighborChanged(state, level, myPos, block, pos2, unknown);
-		update(level, myPos);
+		super.neighborChanged(state, level, myPos, neighborBlock, neighborPos, movedByPiston);
+		update(state, level, myPos);
 	}
 
 	@Override
-	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState state2, boolean unknown)
+	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston)
 	{
-		super.onPlace(state, level, pos, state2, unknown);
-		update(level, pos);
+		super.onPlace(state, level, pos, oldState, movedByPiston);
+		update(state, level, pos);
 	}
 
 	@Override
@@ -96,7 +104,7 @@ public class BlockBasin extends Block implements EntityBlock
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context)
+	public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context)
 	{
 		return state.getValue(IS_OPEN) ? OPEN_SHAPE : Shapes.block();
 	}
