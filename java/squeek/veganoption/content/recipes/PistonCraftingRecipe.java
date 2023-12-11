@@ -225,29 +225,6 @@ public class PistonCraftingRecipe
 				matchingEntities.add(itemEntity);
 			}
 		}
-		if (!matchingEntities.isEmpty() && target.getCount() > 1)
-		{
-			List<ItemEntity> entitiesOfOneTypeWithLargestStackSize = null;
-			int largestStackSize = 0;
-			for (ItemEntity itemEntity : matchingEntities)
-			{
-				if (entitiesOfOneTypeWithLargestStackSize != null && entitiesOfOneTypeWithLargestStackSize.get(0).getItem().getItem().equals(itemEntity.getItem().getItem()))
-					continue;
-
-				List<ItemEntity> exactMatches = getMatchingItemEntities(new InputItemStack(itemEntity.getItem()), matchingEntities);
-				int exactMatchesStackSize = getStackSizeOfItemEntities(exactMatches);
-
-				if (exactMatchesStackSize >= target.getCount())
-					return exactMatches;
-
-				if (exactMatchesStackSize > largestStackSize)
-				{
-					entitiesOfOneTypeWithLargestStackSize = exactMatches;
-					largestStackSize = exactMatchesStackSize;
-				}
-			}
-			matchingEntities = entitiesOfOneTypeWithLargestStackSize;
-		}
 		return matchingEntities;
 	}
 
