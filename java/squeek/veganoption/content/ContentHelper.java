@@ -73,7 +73,6 @@ public class ContentHelper
 		public static final TagKey<Item> LEATHER_HELMETS = veganoptionTag("helmets/leather");
 		public static final TagKey<Item> LEAVES = net.minecraft.tags.ItemTags.LEAVES;
 		public static final TagKey<Item> MILK = forgeTag("milk");
-		public static final TagKey<Item> OIL_PRESSERS = veganoptionTag("oil_pressers");
 		public static final TagKey<Item> PIGMENT_BLACK = veganoptionTag("pigments/black");
 		public static final TagKey<Item> PIGMENT_WHITE = veganoptionTag("pigments/white");
 		public static final TagKey<Item> PLANT_MILK_SOURCES = veganoptionTag("plant_milk_sources");
@@ -133,5 +132,11 @@ public class ContentHelper
 		}
 
 		public static final TagKey<Fluid> MILK = Tags.Fluids.MILK;
+		public static final TagKey<Fluid> VEGETABLE_OIL = forgeTag("vegetable_oil");
+
+		public static TagKey<Fluid> forgeTag(String name)
+		{
+			return net.minecraft.tags.FluidTags.create(new ResourceLocation("forge", name));
+		}
 	}
 }

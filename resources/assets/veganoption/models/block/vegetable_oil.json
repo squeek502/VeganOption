@@ -1,0 +1,6 @@
+{
+	"render_type": "translucent",
+	"textures": {
+		"particle": "veganoption:block/vegetable_oil_still"
+	}
+}

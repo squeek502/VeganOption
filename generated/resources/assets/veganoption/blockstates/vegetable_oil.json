@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "level=0": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=1": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=10": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=11": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=12": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=13": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=14": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=15": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=2": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=3": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=4": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=5": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=6": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=7": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=8": {
+      "model": "veganoption:block/vegetable_oil"
+    },
+    "level=9": {
+      "model": "veganoption:block/vegetable_oil"
+    }
+  }
+}
