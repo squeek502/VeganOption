@@ -7,14 +7,23 @@
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "unlock_right_away": {
-      "trigger": "minecraft:tick"
+    "has_vegetable_oil": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veganoption:vegetable_oil"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "unlock_right_away"
+      "has_vegetable_oil"
     ]
   ],
   "rewards": {

@@ -133,6 +133,7 @@ public class ContentHelper
 
 		public static final TagKey<Fluid> MILK = Tags.Fluids.MILK;
 		public static final TagKey<Fluid> VEGETABLE_OIL = forgeTag("vegetable_oil");
+		public static final TagKey<Fluid> BLACK_INK = forgeTag("black_ink");
 
 		public static TagKey<Fluid> forgeTag(String name)
 		{

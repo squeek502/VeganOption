@@ -1,12 +1,15 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
@@ -14,7 +17,10 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -26,20 +32,21 @@ import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
-import squeek.veganoption.content.registry.RelationshipRegistry;
+import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
+
+import java.util.function.Consumer;
 
 import static squeek.veganoption.VeganOption.*;
 
-// todo: white ink can be removed as vanilla has added the Lily of the Valley which is used to make White Dye
 public class Ink implements IContentModule
 {
 	public static RegistryObject<Item> blackVegetableOilInk;
+	public static RegistryObject<Item> blackVegetableOilInkBucket;
 	public static RegistryObject<Item> waxVegetable;
 	public static RegistryObject<FluidType> blackInkFluidType;
 	public static RegistryObject<Fluid> blackInkFluidStill;
 	public static RegistryObject<Fluid> blackInkFluidFlowing;
 	public static RegistryObject<Block> blackInk;
-	public static RegistryObject<Item> blackInkBlockItem;
 
 	@Override
 	public void create()
@@ -48,13 +55,24 @@ public class Ink implements IContentModule
 
 		BaseFlowingFluid.Properties blackInkProperties = new BaseFlowingFluid.Properties(() -> blackInkFluidType.get(), () -> blackInkFluidStill.get(), () -> blackInkFluidFlowing.get())
 			.block(() -> (LiquidBlock) blackInk.get())
-			.bucket(() -> blackVegetableOilInk.get());
+			.bucket(() -> blackVegetableOilInkBucket.get());
 		blackVegetableOilInk = REGISTER_ITEMS.register("vegetable_oil_ink_black", () -> new Item(new Item.Properties().craftRemainder(Items.GLASS_BOTTLE)));
-		blackInkFluidType = REGISTER_FLUIDTYPES.register("black_ink", () -> new FluidType(FluidType.Properties.create()));
+		blackInkFluidType = REGISTER_FLUIDTYPES.register("black_ink", () ->
+			new FluidType(FluidType.Properties.create()
+				.density(900)
+				.viscosity(1100)
+				.sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
+				.sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)) {
+				@Override
+				public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer)
+				{
+					consumer.accept(new GenericFluidTypeRenderProperties("black_ink", 0xEFC600));
+				}
+		});
 		blackInkFluidStill = REGISTER_FLUIDS.register("black_ink", () -> new BaseFlowingFluid.Source(blackInkProperties));
 		blackInkFluidFlowing = REGISTER_FLUIDS.register("black_ink_flowing", () -> new BaseFlowingFluid.Flowing(blackInkProperties));
 		blackInk = REGISTER_BLOCKS.register("black_ink", () -> new LiquidBlock(() -> (FlowingFluid) blackInkFluidStill.get(), BlockBehaviour.Properties.of().noLootTable()));
-		blackInkBlockItem = REGISTER_ITEMS.register("black_ink", () -> new BlockItem(blackInk.get(), new Item.Properties()));
+		blackVegetableOilInkBucket = REGISTER_ITEMS.register("vegetable_oil_ink_black_bucket", () -> new BucketItem(() -> blackInkFluidStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 	}
 
 	@Override
@@ -73,6 +91,14 @@ public class Ink implements IContentModule
 	}
 
 	@Override
+	public void datagenFluidTags(DataGenProviders.FluidTags provider)
+	{
+		provider.tagW(ContentHelper.FluidTags.BLACK_INK)
+			.add(blackInkFluidStill.get())
+			.add(blackInkFluidFlowing.get());
+	}
+
+	@Override
 	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
 		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.VEGETABLE_OIL), RecipeCategory.MISC, waxVegetable.get(), 0.2f, ContentHelper.DEFAULT_SMELT_TIME);
@@ -82,7 +108,7 @@ public class Ink implements IContentModule
 			.requires(ContentHelper.ItemTags.WAX)
 			.requires(ContentHelper.ItemTags.ROSIN)
 			.requires(ContentHelper.ItemTags.PIGMENT_BLACK)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_vegetable_oil", provider.hasW(VegetableOil.vegetableOilBottle.get()))
 			.save(output);
 	}
 
@@ -91,12 +117,18 @@ public class Ink implements IContentModule
 	{
 		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.INK_SAC), () -> Ingredient.of(ContentHelper.ItemTags.INK_BLACK));
 
-		Modifiers.crafting.addInputsToRemoveForOutput(blackVegetableOilInk.get(), ContentHelper.ItemTags.VEGETABLE_OIL);
+		Modifiers.crafting.addInputsToRemoveForOutput(blackVegetableOilInk.get(), () -> new Ingredient[] { Ingredient.of(ContentHelper.ItemTags.VEGETABLE_OIL) });
 
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(blackInkFluidStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(VegetableOil.fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.WAX), new InputItemStack(ContentHelper.ItemTags.ROSIN), new InputItemStack(ContentHelper.ItemTags.PIGMENT_BLACK)));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(blackInkFluidStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(VegetableOil.fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.WAX, 8), new InputItemStack(ContentHelper.ItemTags.ROSIN, 8), new InputItemStack(ContentHelper.ItemTags.PIGMENT_BLACK, 8)));
 
-		RelationshipRegistry.addRelationship(blackVegetableOilInk.get(), blackInkBlockItem.get());
-		RelationshipRegistry.addRelationship(blackInkBlockItem.get(), blackVegetableOilInk.get());
+		Modifiers.bottles.registerCustomBottleHandler(ContentHelper.FluidTags.BLACK_INK, () -> new ItemStack(blackVegetableOilInk.get()), (stack) -> stack.getItem() == blackVegetableOilInk.get(), blackInkFluidStill);
+	}
+
+	@Override
+	public void finishClient(FMLClientSetupEvent event)
+	{
+		ItemBlockRenderTypes.setRenderLayer(blackInkFluidStill.get(), RenderType.translucent());
+		ItemBlockRenderTypes.setRenderLayer(blackInkFluidFlowing.get(), RenderType.translucent());
 	}
 
 	@Override
@@ -104,5 +136,6 @@ public class Ink implements IContentModule
 	{
 		provider.basicItem(blackVegetableOilInk.get());
 		provider.basicItem(waxVegetable.get());
+		provider.basicItem(blackVegetableOilInkBucket.get());
 	}
 }
