@@ -14,10 +14,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.common.SoundActions;
@@ -29,8 +31,10 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import squeek.veganoption.blocks.BlockBasin;
+import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modules.Basin;
 import squeek.veganoption.helpers.FluidHelper;
+import squeek.veganoption.helpers.InventoryHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.WorldHelper;
 
@@ -223,9 +227,46 @@ public class TileEntityBasin extends BlockEntity
 	 */
 	public boolean onBlockActivated(Player player, InteractionHand hand, Direction side, Vec3 location)
 	{
-		if (level != null && FluidUtil.interactWithFluidHandler(player, hand, fluidTank))
+		if (level != null)
 		{
-			markDirty();
+			if (FluidUtil.interactWithFluidHandler(player, hand, fluidTank))
+			{
+				markDirty();
+				return true;
+			}
+			if (handleBottleInteraction(player, hand))
+			{
+				markDirty();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if there was a change to the basin's tank and should be marked dirty.
+	 */
+	private boolean handleBottleInteraction(Player player, InteractionHand hand)
+	{
+		ItemStack held = player.getItemInHand(hand);
+		Fluid fluidInTank = fluidTank.getFluid().getFluid();
+		// empty tank into bottle
+		if (fluidTank.getFluidAmount() >= FluidHelper.FLUID_MB_PER_AMOUNT && held.getItem() == Items.GLASS_BOTTLE)
+		{
+			ItemStack bottled = Modifiers.bottles.getNewBottleStack(fluidInTank);
+			if (!bottled.isEmpty())
+			{
+				InventoryHelper.shrinkItemAndReplace(player, held, bottled);
+				fluidTank.drain(FluidHelper.FLUID_MB_PER_AMOUNT, IFluidHandler.FluidAction.EXECUTE);
+				return true;
+			}
+		}
+		// empty bottle into tank
+		Fluid fluidFromHeldItem = Modifiers.bottles.stackShouldEmptyAs(held);
+		if (fluidTank.isEmpty() && fluidFromHeldItem != Fluids.EMPTY || (fluidFromHeldItem == fluidInTank && fluidTank.getCapacity() - fluidTank.getFluidAmount() >= FluidHelper.FLUID_MB_PER_AMOUNT))
+		{
+			InventoryHelper.shrinkItemAndReplace(player, held, new ItemStack(Items.GLASS_BOTTLE));
+			fluidTank.fill(new FluidStack(fluidFromHeldItem, FluidHelper.FLUID_MB_PER_AMOUNT), IFluidHandler.FluidAction.EXECUTE);
 			return true;
 		}
 		return false;

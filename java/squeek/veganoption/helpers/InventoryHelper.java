@@ -1,6 +1,7 @@
 package squeek.veganoption.helpers;
 
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryHelper
@@ -22,5 +23,13 @@ public class InventoryHelper
 
 		filledPercent /= container.getContainerSize();
 		return filledPercent;
+	}
+
+	public static void shrinkItemAndReplace(Player player, ItemStack oldItem, ItemStack newItem)
+	{
+		oldItem.shrink(1);
+		if (!player.getInventory().add(newItem)) {
+			player.drop(newItem, false);
+		}
 	}
 }
