@@ -54,6 +54,7 @@ public class DataGenProviders
 		generator.addProvider(server, blockTagsProvider);
 		generator.addProvider(server, new ItemTags(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), ModInfo.MODID_LOWER, fileHelper));
 		generator.addProvider(server, new EntityTypeTags(packOutput, lookupProvider));
+		generator.addProvider(server, new FluidTags(packOutput, lookupProvider, ModInfo.MODID_LOWER, fileHelper));
 		generator.addProvider(server, new Recipes(packOutput, lookupProvider));
 
 		List<LootTableProvider.SubProviderEntry> subProviders = Lists.newArrayList();
