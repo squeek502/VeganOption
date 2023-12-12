@@ -60,7 +60,7 @@ public class Soap implements IContentModule
 			@Override
 			public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer)
 			{
-				consumer.accept(new GenericFluidTypeRenderProperties("lye_water"));
+				consumer.accept(new GenericFluidTypeRenderProperties("lye_water", 0x575047));
 			}
 		});
 		fluidLyeWaterStill = REGISTER_FLUIDS.register("lye_water", () -> new BaseFlowingFluid.Source(fluidProperties));

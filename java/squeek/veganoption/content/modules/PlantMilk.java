@@ -69,7 +69,7 @@ public class PlantMilk implements IContentModule
 					@Override
 					public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer)
 					{
-						consumer.accept(new GenericFluidTypeRenderProperties("plant_milk"));
+						consumer.accept(new GenericFluidTypeRenderProperties("plant_milk", 0xFFFFFF));
 					}
 		});
 		plantMilkStill = REGISTER_FLUIDS.register("plant_milk", () -> new BaseFlowingFluid.Source(fluidProperties));
