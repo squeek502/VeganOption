@@ -110,7 +110,7 @@ public class VegetableOil implements IContentModule
 	@Override
 	public void finish()
 	{
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(fluidVegetableOilStill.get(), FluidHelper.FLUID_MB_PER_AMOUNT), new InputItemStack(ContentHelper.ItemTags.VEGETABLE_OIL_SOURCES)));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(fluidVegetableOilStill.get(), FluidHelper.MB_PER_BOTTLE), new InputItemStack(ContentHelper.ItemTags.VEGETABLE_OIL_SOURCES)));
 
 		Modifiers.bottles.registerCustomBottleHandler(ContentHelper.FluidTags.VEGETABLE_OIL, () -> new ItemStack(vegetableOilBottle.get()), (stack) -> stack.getItem() == vegetableOilBottle.get(), fluidVegetableOilStill);
 	}

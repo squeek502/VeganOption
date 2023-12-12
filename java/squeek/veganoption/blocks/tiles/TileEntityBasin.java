@@ -251,22 +251,22 @@ public class TileEntityBasin extends BlockEntity
 		ItemStack held = player.getItemInHand(hand);
 		Fluid fluidInTank = fluidTank.getFluid().getFluid();
 		// empty tank into bottle
-		if (fluidTank.getFluidAmount() >= FluidHelper.FLUID_MB_PER_AMOUNT && held.getItem() == Items.GLASS_BOTTLE)
+		if (fluidTank.getFluidAmount() >= FluidHelper.MB_PER_BOTTLE && held.getItem() == Items.GLASS_BOTTLE)
 		{
 			ItemStack bottled = Modifiers.bottles.getNewBottleStack(fluidInTank);
 			if (!bottled.isEmpty())
 			{
 				InventoryHelper.shrinkItemAndReplace(player, held, bottled);
-				fluidTank.drain(FluidHelper.FLUID_MB_PER_AMOUNT, IFluidHandler.FluidAction.EXECUTE);
+				fluidTank.drain(FluidHelper.MB_PER_BOTTLE, IFluidHandler.FluidAction.EXECUTE);
 				return true;
 			}
 		}
 		// empty bottle into tank
 		Fluid fluidFromHeldItem = Modifiers.bottles.stackShouldEmptyAs(held);
-		if (fluidTank.isEmpty() && fluidFromHeldItem != Fluids.EMPTY || (fluidFromHeldItem == fluidInTank && fluidTank.getCapacity() - fluidTank.getFluidAmount() >= FluidHelper.FLUID_MB_PER_AMOUNT))
+		if (fluidTank.isEmpty() && fluidFromHeldItem != Fluids.EMPTY || (fluidFromHeldItem == fluidInTank && fluidTank.getCapacity() - fluidTank.getFluidAmount() >= FluidHelper.MB_PER_BOTTLE))
 		{
 			InventoryHelper.shrinkItemAndReplace(player, held, new ItemStack(Items.GLASS_BOTTLE));
-			fluidTank.fill(new FluidStack(fluidFromHeldItem, FluidHelper.FLUID_MB_PER_AMOUNT), IFluidHandler.FluidAction.EXECUTE);
+			fluidTank.fill(new FluidStack(fluidFromHeldItem, FluidHelper.MB_PER_BOTTLE), IFluidHandler.FluidAction.EXECUTE);
 			return true;
 		}
 		return false;

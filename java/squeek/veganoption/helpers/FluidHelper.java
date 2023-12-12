@@ -23,7 +23,11 @@ import javax.annotation.Nonnull;
 public class FluidHelper
 {
 	// source amount is 8, bucket volume / 8 = 125
-	public static final int FLUID_MB_PER_AMOUNT = (int) (0.125f * FluidType.BUCKET_VOLUME);
+	public static final int MB_PER_LEVEL = (int) (0.125f * FluidType.BUCKET_VOLUME);
+
+	// based on balance from existing mods, is sort of close to vanilla (vanilla: bottle = 333.333 mB)
+	public static final int BOTTLES_PER_BUCKET = 4;
+	public static final int MB_PER_BOTTLE = FluidType.BUCKET_VOLUME / BOTTLES_PER_BUCKET;
 
 	public static ItemStack toItemStack(Fluid fluid)
 	{
@@ -146,14 +150,14 @@ public class FluidHelper
 		if (level.isClientSide())
 			return null;
 
-		int deltaMeta = -(maxAmount / FLUID_MB_PER_AMOUNT);
+		int deltaMeta = -(maxAmount / MB_PER_LEVEL);
 		int newMeta = getFluidLevel(level, fluidBlockPos) + deltaMeta;
 
 		if (deltaMeta == 0)
 			return null;
 
 		FluidStack fluidConsumed = fullFluidStack.copy();
-		fluidConsumed.setAmount(Math.abs(deltaMeta) * FLUID_MB_PER_AMOUNT);
+		fluidConsumed.setAmount(Math.abs(deltaMeta) * MB_PER_LEVEL);
 
 		if (newMeta >= 0)
 			level.setBlockAndUpdate(fluidBlockPos, level.getBlockState(fluidBlockPos).setValue(FlowingFluid.LEVEL, newMeta));

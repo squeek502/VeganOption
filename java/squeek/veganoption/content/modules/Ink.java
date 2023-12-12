@@ -33,6 +33,7 @@ import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
+import squeek.veganoption.helpers.FluidHelper;
 
 import java.util.function.Consumer;
 
@@ -119,7 +120,7 @@ public class Ink implements IContentModule
 
 		Modifiers.crafting.addInputsToRemoveForOutput(blackVegetableOilInk.get(), () -> new Ingredient[] { Ingredient.of(ContentHelper.ItemTags.VEGETABLE_OIL) });
 
-		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(blackInkFluidStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(VegetableOil.fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.WAX, 8), new InputItemStack(ContentHelper.ItemTags.ROSIN, 8), new InputItemStack(ContentHelper.ItemTags.PIGMENT_BLACK, 8)));
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(blackInkFluidStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(VegetableOil.fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.WAX, FluidHelper.BOTTLES_PER_BUCKET), new InputItemStack(ContentHelper.ItemTags.ROSIN, FluidHelper.BOTTLES_PER_BUCKET), new InputItemStack(ContentHelper.ItemTags.PIGMENT_BLACK, FluidHelper.BOTTLES_PER_BUCKET)));
 
 		Modifiers.bottles.registerCustomBottleHandler(ContentHelper.FluidTags.BLACK_INK, () -> new ItemStack(blackVegetableOilInk.get()), (stack) -> stack.getItem() == blackVegetableOilInk.get(), blackInkFluidStill);
 	}

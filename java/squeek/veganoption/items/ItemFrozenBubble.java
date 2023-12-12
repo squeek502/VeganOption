@@ -63,7 +63,7 @@ public class ItemFrozenBubble extends Item
 		if (!isFull(itemEntity.getItem()))
 		{
 			BlockPos fluidBlockPos = new BlockPos(Mth.floor(itemEntity.getX()), Mth.floor(itemEntity.getY()), Mth.floor(itemEntity.getZ()));
-			FluidStack consumedFluid = FluidHelper.consumeExactFluid(itemEntity.level(), fluidBlockPos, Ender.rawEnderStill.get(), FluidHelper.FLUID_MB_PER_AMOUNT);
+			FluidStack consumedFluid = FluidHelper.consumeExactFluid(itemEntity.level(), fluidBlockPos, Ender.rawEnderStill.get(), FluidHelper.MB_PER_LEVEL);
 
 			if (consumedFluid != null)
 			{
