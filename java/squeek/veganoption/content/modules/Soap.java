@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.Fluid;
@@ -91,7 +92,7 @@ public class Soap implements IContentModule
 	@Override
 	public void finish()
 	{
-		Modifiers.crafting.addInputsToRemoveForOutput(bucketLyeWater.get(), Items.WATER_BUCKET);
+		Modifiers.crafting.addInputsToRemoveForOutput(bucketLyeWater.get(), () -> new Ingredient[] { Ingredient.of(Items.WATER_BUCKET) });
 
 		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(fluidLyeWaterStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(Fluids.WATER, FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.WOOD_ASH, 3)));
 	}

@@ -3,7 +3,6 @@ package squeek.veganoption.content.modules;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -12,8 +11,8 @@ import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.recipes.CookingRecipeWithCountBuilder;
+import squeek.veganoption.content.recipes.ShapelessDamageItemRecipeBuilder;
 
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
@@ -51,7 +50,7 @@ public class Bioplastic implements IContentModule
 			.unlockedBy("has_plastic_sheet", provider.hasW(bioplastic.get()))
 			.save(output);
 
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.BREWING, Items.BLAZE_ROD)
+		ShapelessDamageItemRecipeBuilder.shapeless(RecipeCategory.BREWING, Items.BLAZE_ROD)
 			.requires(ContentHelper.ItemTags.PLASTIC_ROD)
 			.requires(ContentHelper.ItemTags.ROSIN)
 			.requires(ContentHelper.ItemTags.WAX)
@@ -65,12 +64,5 @@ public class Bioplastic implements IContentModule
 	{
 		provider.basicItem(bioplastic.get());
 		provider.basicItem(plasticRod.get());
-	}
-
-	@Override
-	public void finish()
-	{
-		// todo: kinda hacky implementation here
-		Modifiers.crafting.addInputsToKeepForOutput(Items.BLAZE_ROD, Items.FLINT_AND_STEEL);
 	}
 }

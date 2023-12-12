@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "veganoption:crafting_shapeless_damage_item",
   "category": "misc",
   "ingredients": [
     {

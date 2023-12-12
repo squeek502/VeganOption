@@ -1,72 +1,49 @@
 package squeek.veganoption.content.modifiers;
 
-import com.google.common.collect.Iterables;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.registries.ForgeRegistries;
-import net.neoforged.neoforge.registries.tags.ITag;
+import squeek.veganoption.content.recipes.ShapelessDamageItemRecipe;
+import squeek.veganoption.content.recipes.ShapelessDamageItemRecipeBuilder;
 
 import java.util.*;
+import java.util.function.Supplier;
 
+/**
+ * Use this modifier to override an item's craftRemainder for a given recipe output. For example, forcing the consumption of a bucket
+ * rather than just the water inside the bucket, when crafting Item A.
+ * <br/>
+ * The 1.10 and earlier system included adding new craftRemainders with this modifier. That is now handled by {@link ShapelessDamageItemRecipe},
+ * which serves the same purpose the old system served -- we only used this to damage soap and flint and steels when used in our recipes.
+ * <br/>
+ * Use the {@link ShapelessDamageItemRecipeBuilder} during datagen to create such recipes.
+ * <br/>
+ * TODO: We may consider in the future creating a new recipe type for craft remainder overrides rather than using this brute-force method.
+ * For now, this works fine, albeit a bit needlessly hacky given the new APIs.
+ */
 public class CraftingModifier
 {
-	public HashMap<Item, Item[]> inputsToRemoveForOutput = new HashMap<>();
-	public HashMap<Item, Item[]> inputsToKeepForOutput = new HashMap<>();
+	public HashMap<Item, Supplier<Ingredient[]>> craftRemainderOverrides = new HashMap<>();
 
 	public CraftingModifier()
 	{
 		NeoForge.EVENT_BUS.register(this);
 	}
 
-	public void addInputsToRemoveForOutput(Item output, Item... inputs)
+	public void addInputsToRemoveForOutput(Item output, Supplier<Ingredient[]> inputs)
 	{
-		inputsToRemoveForOutput.put(output, inputs);
-	}
-
-	public void addInputsToRemoveForOutput(Item output, ITag<Item> inputs)
-	{
-		addInputsToRemoveForOutput(output, Iterables.toArray(inputs, Item.class));
-	}
-
-	public void addInputsToRemoveForOutput(Item output, TagKey<Item>... inputs)
-	{
-		for (TagKey<Item> tag : inputs)
-		{
-			addInputsToRemoveForOutput(output, ForgeRegistries.ITEMS.tags().getTag(tag));
-		}
-	}
-
-	public void addInputsToKeepForOutput(Item output, Item... inputs)
-	{
-		inputsToKeepForOutput.put(output, inputs);
-	}
-
-	public void addInputsToKeepForOutput(Item output, ITag<Item> inputs)
-	{
-		addInputsToKeepForOutput(output, Iterables.toArray(inputs, Item.class));
-	}
-
-	public void addInputsToKeepForOutput(Item output, TagKey<Item>... inputs)
-	{
-		for (TagKey<Item> tag : inputs)
-		{
-			addInputsToKeepForOutput(output, ForgeRegistries.ITEMS.tags().getTag(tag));
-		}
+		craftRemainderOverrides.put(output, inputs);
 	}
 
 	@SubscribeEvent
 	public void onItemCrafted(PlayerEvent.ItemCraftedEvent event)
 	{
-		List<Item> inputsToRemove = getInputsToRemoveForOutput(event.getCrafting().getItem());
-		List<Item> inputsToKeep = getInputsToKeepForOutput(event.getCrafting().getItem());
+		List<Ingredient> inputsToRemove = getInputsToRemoveForOutput(event.getCrafting().getItem());
 
-		if (inputsToRemove.isEmpty() && inputsToKeep.isEmpty())
+		if (inputsToRemove.isEmpty())
 			return;
 
 		for (int i = 0; i < event.getInventory().getContainerSize(); i++)
@@ -74,54 +51,28 @@ public class CraftingModifier
 			ItemStack stackInSlot = event.getInventory().getItem(i);
 			if (!stackInSlot.isEmpty())
 			{
-				for (Item inputToRemove : inputsToRemove)
+				for (Ingredient inputToRemove : inputsToRemove)
 				{
-					if (inputToRemove == stackInSlot.getItem())
+					if (inputToRemove.test(stackInSlot))
 					{
 						stackInSlot.shrink(1);
 						break;
 					}
 				}
-				for (Item inputToKeep : inputsToKeep)
-				{
-					if (inputToKeep == stackInSlot.getItem())
-					{
-						stackInSlot.grow(stackInSlot.getCount());
-						Player player = event.getEntity();
-						ServerPlayer serverPlayer = player instanceof ServerPlayer ? (ServerPlayer) player : null;
- 						if (stackInSlot.hurt(1, event.getEntity().getRandom(), serverPlayer))
-							stackInSlot.shrink(1);
-						event.getInventory().setItem(i, stackInSlot);
-						break;
-					}
-				}
 			}
 		}
 	}
 
-	public List<Item> getInputsToRemoveForOutput(Item output)
+	public List<Ingredient> getInputsToRemoveForOutput(Item output)
 	{
-		List<Item> inputsToRemove = new ArrayList<>();
-		for (Map.Entry<Item, Item[]> entry : inputsToRemoveForOutput.entrySet())
+		List<Ingredient> inputsToRemove = new ArrayList<>();
+		for (Map.Entry<Item, Supplier<Ingredient[]>> entry : craftRemainderOverrides.entrySet())
 		{
 			if (entry.getKey() == output)
 			{
-				inputsToRemove.addAll(Arrays.asList(entry.getValue()));
+				inputsToRemove.addAll(Arrays.asList(entry.getValue().get()));
 			}
 		}
 		return inputsToRemove;
-	}
-
-	public List<Item> getInputsToKeepForOutput(Item output)
-	{
-		List<Item> inputsToKeep = new ArrayList<>();
-		for (Map.Entry<Item, Item[]> entry : inputsToKeepForOutput.entrySet())
-		{
-			if (entry.getKey() == output)
-			{
-				inputsToKeep.addAll(Arrays.asList(entry.getValue()));
-			}
-		}
-		return inputsToKeep;
 	}
 }

@@ -16,15 +16,18 @@ public class RecipeRegistration
 {
 	public static RegistryObject<RecipeSerializer<ShapelessMatchingTagRecipe>> TAG_MATCH_SHAPELESS_SERIALIZER;
 	public static RegistryObject<RecipeSerializer<ConversionRecipe>> CONVERSION_RECIPE_SERIALIZER;
+	public static RegistryObject<RecipeSerializer<ShapelessDamageItemRecipe>> DAMAGE_ITEM_SHAPELESS_SERIALIZER;
 	public static RegistryObject<RecipeSerializer<SmeltingRecipeWithCount>> SMELTING_COUNT_SERIALIZER;
 	public static final String TAG_MATCH_SHAPELESS_NAME = "crafting_shapeless_matching_tags";
 	public static final String CONVERSION_RECIPE_NAME = "conversion";
+	public static final String DAMAGE_ITEM_SHAPELESS_NAME = "crafting_shapeless_damage_item";
 	public static final String SMELTING_COUNT_NAME = "smelting_with_count";
 
 	public static void init()
 	{
 		TAG_MATCH_SHAPELESS_SERIALIZER = REGISTER_RECIPESERIALIZERS.register(TAG_MATCH_SHAPELESS_NAME, ShapelessMatchingTagRecipe.Serializer::new);
 		CONVERSION_RECIPE_SERIALIZER = REGISTER_RECIPESERIALIZERS.register(CONVERSION_RECIPE_NAME, () -> new SimpleCraftingRecipeSerializer<>(ConversionRecipe::new));
+		DAMAGE_ITEM_SHAPELESS_SERIALIZER = REGISTER_RECIPESERIALIZERS.register(DAMAGE_ITEM_SHAPELESS_NAME, ShapelessDamageItemRecipe.Serializer::new);
 		SMELTING_COUNT_SERIALIZER = REGISTER_RECIPESERIALIZERS.register(SMELTING_COUNT_NAME, SmeltingRecipeWithCount.Serializer::new);
 
 		NeoForge.EVENT_BUS.register(Modifiers.recipes);

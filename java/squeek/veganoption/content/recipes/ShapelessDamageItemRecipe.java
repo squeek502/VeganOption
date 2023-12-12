@@ -9,25 +9,16 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.level.Level;
 import squeek.veganoption.ModInfo;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import squeek.veganoption.helpers.RandomHelper;
 
 /**
- * A shapeless recipe in which all tag ingredients must match each other.
- *
- * For example, ShapelessMatchingTagRecipe(output, "slimeball", "slimeball") would
- * require both inputs to be the same item (both Resin or both Slimeball, for example);
- * a mixture (1 Resin, 1 Slimeball) would not work
+ * A variation of the ShapelessRecipe which damages damageable items in the recipe rather than deleting them.
  */
-public class ShapelessMatchingTagRecipe extends ShapelessRecipe
+public class ShapelessDamageItemRecipe extends ShapelessRecipe
 {
 	private static final int CRAFTING_TABLE_DIM = 3;
 
-	public Map<Ingredient, Integer> requiredMatchingIngredients = new HashMap<>();
 	final String group;
 	final CraftingBookCategory category;
 	final ItemStack result;
@@ -35,7 +26,7 @@ public class ShapelessMatchingTagRecipe extends ShapelessRecipe
 	final boolean isSimple;
 
 	@SuppressWarnings("unchecked")
-	public ShapelessMatchingTagRecipe(String group, CraftingBookCategory category, ItemStack result, NonNullList<Ingredient> ingredients)
+	public ShapelessDamageItemRecipe(String group, CraftingBookCategory category, ItemStack result, NonNullList<Ingredient> ingredients)
 	{
 		super(group, category, result, ingredients);
 		this.group = group;
@@ -43,52 +34,34 @@ public class ShapelessMatchingTagRecipe extends ShapelessRecipe
 		this.result = result;
 		this.ingredients = ingredients;
 		this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
-
-		for (Ingredient ingredient : ingredients)
-		{
-			int requiredMatches = 1;
-			for (Ingredient ingredient1 : ingredients)
-			{
-				if (ingredient.equals(ingredient1))
-					requiredMatches++;
-			}
-			if (requiredMatches > 1)
-				requiredMatchingIngredients.put(ingredient, requiredMatches);
-		}
 	}
 
 	@Override
-	public boolean matches(CraftingContainer craftingContainer, Level level)
+	public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv)
 	{
-		if (!super.matches(craftingContainer, level))
-			return false;
-
-		for (Entry<Ingredient, Integer> entry : requiredMatchingIngredients.entrySet())
+		NonNullList<ItemStack> craftRemainders = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+		for (int i = 0; i < inv.getContainerSize(); i++)
 		{
-			Ingredient ingredient = entry.getKey();
-			int requiredMatches = entry.getValue();
-
-			for (ItemStack inputItem : craftingContainer.getItems())
+			ItemStack stackInSlot = inv.getItem(i);
+			if (stackInSlot.hasCraftingRemainingItem())
 			{
-				if (!ingredient.test(inputItem))
-					continue;
-				int matches = 0;
-				for (ItemStack possibleStack : ingredient.getItems())
-				{
-					if (inputItem.getItem() == possibleStack.getItem())
-						matches++;
-				}
-				if (requiredMatches != matches)
-					return false;
+				craftRemainders.set(i, stackInSlot.getCraftingRemainingItem());
+			}
+			else if (stackInSlot.isDamageableItem())
+			{
+				ItemStack copy = stackInSlot.copy();
+				if (copy.hurt(1, RandomHelper.randomSource, null))
+					copy.shrink(1);
+				craftRemainders.set(i, copy);
 			}
 		}
-		return true;
+		return craftRemainders;
 	}
 
 	@Override
 	public RecipeSerializer<?> getSerializer()
 	{
-		return RecipeRegistration.TAG_MATCH_SHAPELESS_SERIALIZER.get();
+		return RecipeRegistration.DAMAGE_ITEM_SHAPELESS_SERIALIZER.get();
 	}
 
 	@Override
@@ -98,9 +71,9 @@ public class ShapelessMatchingTagRecipe extends ShapelessRecipe
 	}
 
 	// ugly copy of ShapelessRecipe.Serializer
-	public static class Serializer implements RecipeSerializer<ShapelessMatchingTagRecipe> {
+	public static class Serializer implements RecipeSerializer<ShapelessDamageItemRecipe> {
 		private static final net.minecraft.resources.ResourceLocation NAME = new net.minecraft.resources.ResourceLocation(ModInfo.MODID_LOWER, RecipeRegistration.TAG_MATCH_SHAPELESS_NAME);
-		private static final Codec<ShapelessMatchingTagRecipe> CODEC = RecordCodecBuilder.create(
+		private static final Codec<ShapelessDamageItemRecipe> CODEC = RecordCodecBuilder.create(
 			recipe -> recipe.group(
 					ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(recipe1 -> recipe1.group),
 					CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(recipe1 -> recipe1.category),
@@ -124,16 +97,16 @@ public class ShapelessMatchingTagRecipe extends ShapelessRecipe
 						)
 						.forGetter(recipe1 -> recipe1.ingredients)
 				)
-				.apply(recipe, ShapelessMatchingTagRecipe::new)
+				.apply(recipe, ShapelessDamageItemRecipe::new)
 		);
 
 		@Override
-		public Codec<ShapelessMatchingTagRecipe> codec() {
+		public Codec<ShapelessDamageItemRecipe> codec() {
 			return CODEC;
 		}
 
 		@Override
-		public ShapelessMatchingTagRecipe fromNetwork(FriendlyByteBuf buffer) {
+		public ShapelessDamageItemRecipe fromNetwork(FriendlyByteBuf buffer) {
 			String s = buffer.readUtf();
 			CraftingBookCategory craftingbookcategory = buffer.readEnum(CraftingBookCategory.class);
 			int i = buffer.readVarInt();
@@ -144,11 +117,11 @@ public class ShapelessMatchingTagRecipe extends ShapelessRecipe
 			}
 
 			ItemStack itemstack = buffer.readItem();
-			return new ShapelessMatchingTagRecipe(s, craftingbookcategory, itemstack, nonnulllist);
+			return new ShapelessDamageItemRecipe(s, craftingbookcategory, itemstack, nonnulllist);
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, ShapelessMatchingTagRecipe recipe) {
+		public void toNetwork(FriendlyByteBuf buffer, ShapelessDamageItemRecipe recipe) {
 			buffer.writeUtf(recipe.group);
 			buffer.writeEnum(recipe.category);
 			buffer.writeVarInt(recipe.ingredients.size());

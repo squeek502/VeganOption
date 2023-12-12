@@ -30,6 +30,7 @@ import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.ShapelessDamageItemRecipeBuilder;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.items.ItemFrozenBubble;
@@ -98,7 +99,7 @@ public class FrozenBubble implements IContentModule
 	@Override
 	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, soapSolution.get())
+		ShapelessDamageItemRecipeBuilder.shapeless(RecipeCategory.MISC, soapSolution.get())
 			.requires(ContentHelper.ItemTags.SOAP)
 			.requires(Items.WATER_BUCKET)
 			.requires(Items.SUGAR)
@@ -124,8 +125,6 @@ public class FrozenBubble implements IContentModule
 	public void finish()
 	{
 		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.PUFFERFISH), () -> Ingredient.of(ContentHelper.ItemTags.REAGENT_WATERBREATHING));
-
-		Modifiers.crafting.addInputsToKeepForOutput(soapSolution.get(), ContentHelper.ItemTags.SOAP);
 
 		RelationshipRegistry.addRelationship(frozenBubble.get(), soapSolution.get());
 		RelationshipRegistry.addRelationship(Items.ENDER_PEARL, frozenBubble.get());

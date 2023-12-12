@@ -6,7 +6,10 @@ import com.google.gson.JsonObject;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.CraftingRecipeBuilder;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -21,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 // Ugly copy of ShapelessRecipeBuilder.
-public class ShapelessMatchingTagRecipeBuilder extends CraftingRecipeBuilder implements RecipeBuilder
+public class ShapelessDamageItemRecipeBuilder extends CraftingRecipeBuilder implements RecipeBuilder
 {
 	private final RecipeCategory category;
 	private final Item result;
@@ -31,34 +34,34 @@ public class ShapelessMatchingTagRecipeBuilder extends CraftingRecipeBuilder imp
 	@Nullable
 	private String group;
 
-	public ShapelessMatchingTagRecipeBuilder(RecipeCategory category, ItemLike result, int count)
+	public ShapelessDamageItemRecipeBuilder(RecipeCategory category, ItemLike result, int count)
 	{
 		this.category = category;
 		this.result = result.asItem();
 		this.count = count;
 	}
 
-	public static ShapelessMatchingTagRecipeBuilder shapeless(RecipeCategory category, ItemLike result)
+	public static ShapelessDamageItemRecipeBuilder shapeless(RecipeCategory category, ItemLike result)
 	{
-		return new ShapelessMatchingTagRecipeBuilder(category, result, 1);
+		return new ShapelessDamageItemRecipeBuilder(category, result, 1);
 	}
 
-	public static ShapelessMatchingTagRecipeBuilder shapeless(RecipeCategory category, ItemLike result, int count)
+	public static ShapelessDamageItemRecipeBuilder shapeless(RecipeCategory category, ItemLike result, int count)
 	{
-		return new ShapelessMatchingTagRecipeBuilder(category, result, count);
+		return new ShapelessDamageItemRecipeBuilder(category, result, count);
 	}
 
-	public ShapelessMatchingTagRecipeBuilder requires(TagKey<Item> tag)
+	public ShapelessDamageItemRecipeBuilder requires(TagKey<Item> tag)
 	{
 		return this.requires(Ingredient.of(tag));
 	}
 
-	public ShapelessMatchingTagRecipeBuilder requires(ItemLike itemLike)
+	public ShapelessDamageItemRecipeBuilder requires(ItemLike itemLike)
 	{
 		return this.requires(itemLike, 1);
 	}
 
-	public ShapelessMatchingTagRecipeBuilder requires(ItemLike itemLike, int count)
+	public ShapelessDamageItemRecipeBuilder requires(ItemLike itemLike, int count)
 	{
 		for (int i = 0; i < count; ++i)
 		{
@@ -68,12 +71,12 @@ public class ShapelessMatchingTagRecipeBuilder extends CraftingRecipeBuilder imp
 		return this;
 	}
 
-	public ShapelessMatchingTagRecipeBuilder requires(Ingredient ingredient)
+	public ShapelessDamageItemRecipeBuilder requires(Ingredient ingredient)
 	{
 		return this.requires(ingredient, 1);
 	}
 
-	public ShapelessMatchingTagRecipeBuilder requires(Ingredient ingredient, int count)
+	public ShapelessDamageItemRecipeBuilder requires(Ingredient ingredient, int count)
 	{
 		for (int i = 0; i < count; ++i)
 		{
@@ -83,13 +86,13 @@ public class ShapelessMatchingTagRecipeBuilder extends CraftingRecipeBuilder imp
 		return this;
 	}
 
-	public ShapelessMatchingTagRecipeBuilder unlockedBy(String name, Criterion<?> predicate)
+	public ShapelessDamageItemRecipeBuilder unlockedBy(String name, Criterion<?> predicate)
 	{
 		this.criteria.put(name, predicate);
 		return this;
 	}
 
-	public ShapelessMatchingTagRecipeBuilder group(@Nullable String group)
+	public ShapelessDamageItemRecipeBuilder group(@Nullable String group)
 	{
 		this.group = group;
 		return this;
@@ -111,7 +114,7 @@ public class ShapelessMatchingTagRecipeBuilder extends CraftingRecipeBuilder imp
 			.requirements(AdvancementRequirements.Strategy.OR);
 		this.criteria.forEach(advancement$builder::addCriterion);
 		output.accept(
-			new ShapelessMatchingTagRecipeBuilder.Result(
+			new ShapelessDamageItemRecipeBuilder.Result(
 				id,
 				this.result,
 				this.count,
@@ -189,7 +192,7 @@ public class ShapelessMatchingTagRecipeBuilder extends CraftingRecipeBuilder imp
 		@Override
 		public RecipeSerializer<?> type()
 		{
-			return RecipeRegistration.TAG_MATCH_SHAPELESS_SERIALIZER.get();
+			return RecipeRegistration.DAMAGE_ITEM_SHAPELESS_SERIALIZER.get();
 		}
 
 		@Override

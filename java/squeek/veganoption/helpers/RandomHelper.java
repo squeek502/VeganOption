@@ -1,10 +1,13 @@
 package squeek.veganoption.helpers;
 
+import net.minecraft.util.RandomSource;
+
 import java.util.Random;
 
 public class RandomHelper
 {
 	public static final Random random = new Random();
+	public static final RandomSource randomSource = RandomSource.create();
 
 	public static int getRandomIntFromRange(int min, int max)
 	{
