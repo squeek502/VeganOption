@@ -104,12 +104,9 @@
     "_comment": "Vegetable Oil Ink",
     "item.veganoption.vegetable_oil_ink_black": "Black Vegetable Oil Ink",
     "item.veganoption.vegetable_oil_ink_black.vowiki.usage": "%1$s is an [[minecraft:black_dye]] dye alternative.",
+    "item.veganoption.vegetable_oil_ink_black_bucket": "Black Vegetable Oil Ink Bucket",
     "fluid.block.veganoption.black_ink": "Black Vegetable Oil Ink",
     "block.veganoption.black_ink": "Black Vegetable Oil Ink",
-    "item.veganoption.vegetable_oil_ink_white": "White Vegetable Oil Ink",
-    "item.veganoption.vegetable_oil_ink_white.vowiki.usage": "%1$s is a [[minecraft:white_dye]] dye alternative.",
-    "fluid.block.veganoption.white_ink": "White Vegetable Oil Ink",
-    "block.veganoption.white_ink": "White Vegetable Oil Ink",
     "item.veganoption.vegetable_wax": "Vegetable Wax",
     "item.veganoption.rosin": "Rosin",
 
