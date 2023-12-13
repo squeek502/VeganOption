@@ -263,7 +263,9 @@ public class TileEntityBasin extends BlockEntity
 		}
 		// empty bottle into tank
 		Fluid fluidFromHeldItem = Modifiers.bottles.stackShouldEmptyAs(held);
-		if (fluidTank.isEmpty() && fluidFromHeldItem != Fluids.EMPTY || (fluidFromHeldItem == fluidInTank && fluidTank.getCapacity() - fluidTank.getFluidAmount() >= FluidHelper.MB_PER_BOTTLE))
+		if (fluidFromHeldItem == Fluids.EMPTY)
+			return false;
+		if (fluidTank.isEmpty() || (fluidFromHeldItem == fluidInTank && fluidTank.getCapacity() - fluidTank.getFluidAmount() >= FluidHelper.MB_PER_BOTTLE))
 		{
 			InventoryHelper.shrinkItemAndReplace(player, held, new ItemStack(Items.GLASS_BOTTLE));
 			fluidTank.fill(new FluidStack(fluidFromHeldItem, FluidHelper.MB_PER_BOTTLE), IFluidHandler.FluidAction.EXECUTE);

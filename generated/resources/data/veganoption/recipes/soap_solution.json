@@ -6,13 +6,15 @@
       "tag": "veganoption:soap"
     },
     {
-      "item": "minecraft:water_bucket"
-    },
-    {
       "item": "minecraft:sugar"
     },
     {
-      "item": "minecraft:glass_bottle"
+      "type": "neoforge:nbt",
+      "Count": 1,
+      "id": "minecraft:potion",
+      "tag": {
+        "Potion": "minecraft:water"
+      }
     }
   ],
   "result": {

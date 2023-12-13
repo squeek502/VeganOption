@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "veganoption:soap_solution"
+        "recipe": "veganoption:soap_solution_bucket"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "veganoption:soap_solution"
+      "veganoption:soap_solution_bucket"
     ]
   },
   "sends_telemetry_event": false

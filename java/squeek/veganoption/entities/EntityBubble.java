@@ -34,16 +34,19 @@ public class EntityBubble extends ThrowableItemProjectile
 	public EntityBubble(Level level, Player player)
 	{
 		super(FrozenBubble.bubbleEntityType.get(), player, level);
+		setItem(new ItemStack(FrozenBubble.frozenBubble.get()));
 	}
 
 	public EntityBubble(Level level, double x, double y, double z)
 	{
 		super(FrozenBubble.bubbleEntityType.get(), x, y, z, level);
+		setItem(new ItemStack(FrozenBubble.frozenBubble.get()));
 	}
 
 	public EntityBubble(EntityType<? extends EntityBubble> type, Level level)
 	{
 		super(type, level);
+		setItem(new ItemStack(FrozenBubble.frozenBubble.get()));
 	}
 
 	private void setTemperature()
@@ -56,12 +59,6 @@ public class EntityBubble extends ThrowableItemProjectile
 	{
 		pop();
 		return super.hurt(source, amount);
-	}
-
-	@Override
-	public boolean canBeCollidedWith()
-	{
-		return true;
 	}
 
 	@Override
@@ -85,7 +82,7 @@ public class EntityBubble extends ThrowableItemProjectile
 			return;
 		}
 
-		if (!level().isClientSide() && tickCount % 10 == 0)
+		if (tickCount % 10 == 0)
 		{
 			Vec3 motion = getDeltaMovement();
 			double motionX = motion.x + 0.1d * (RandomHelper.random.nextDouble() - 0.5d);
@@ -95,13 +92,6 @@ public class EntityBubble extends ThrowableItemProjectile
 		}
 
 		super.tick();
-
-		Vec3 motion = getDeltaMovement();
-		// this check helps avoid low velocities which minecraft seems to struggle with? (visually stutters)
-		// have not looked into the cause; this is basically an ugly/fast workaround
-		// todo: check if still a problem
-		if (motion.x * motion.x + motion.y * motion.y + motion.z * motion.z > 0.025f)
-			setDeltaMovement(motion.x * 0.9d, motion.y * 0.9d, motion.z * 0.9);
 	}
 
 	@Override
@@ -192,6 +182,6 @@ public class EntityBubble extends ThrowableItemProjectile
 	@Override
 	protected Item getDefaultItem()
 	{
-		return FrozenBubble.soapSolution.get();
+		return FrozenBubble.frozenBubble.get();
 	}
 }

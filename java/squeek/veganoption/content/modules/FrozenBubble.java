@@ -1,28 +1,41 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.common.crafting.StrictNBTIngredient;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.ModInfo;
@@ -30,11 +43,17 @@ import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.content.recipes.InputItemStack;
+import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.recipes.ShapelessDamageItemRecipeBuilder;
+import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.entities.EntityBubble;
+import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.items.ItemFrozenBubble;
 import squeek.veganoption.items.ItemSoapSolution;
+
+import java.util.function.Consumer;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.*;
@@ -42,28 +61,34 @@ import static squeek.veganoption.VeganOption.*;
 public class FrozenBubble implements IContentModule
 {
 	public static RegistryObject<Item> soapSolution;
+	public static RegistryObject<Item> soapSolutionBucket;
 	public static RegistryObject<Item> frozenBubble;
 	public static RegistryObject<EntityType<EntityBubble>> bubbleEntityType;
 	public static RegistryObject<FluidType> soapSolutionFluidType;
 	public static RegistryObject<Fluid> soapSolutionStill;
 	public static RegistryObject<Fluid> soapSolutionFlowing;
 	public static RegistryObject<Block> soapSolutionBlock;
-	public static RegistryObject<Item> soapSolutionBlockItem;
 
 	@Override
 	public void create()
 	{
 		BaseFlowingFluid.Properties fluidProperties = new BaseFlowingFluid.Properties(() -> soapSolutionFluidType.get(), () -> soapSolutionStill.get(), () -> soapSolutionFlowing.get())
 			.block(() -> (LiquidBlock) soapSolutionBlock.get())
-			.bucket(() -> soapSolution.get());
+			.bucket(() -> soapSolutionBucket.get());
 
-		soapSolutionFluidType = REGISTER_FLUIDTYPES.register("soap_solution", () -> new FluidType(FluidType.Properties.create()));
+		soapSolutionFluidType = REGISTER_FLUIDTYPES.register("soap_solution", () -> new FluidType(FluidType.Properties.create().sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)) {
+			@Override
+			public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer)
+			{
+				consumer.accept(new GenericFluidTypeRenderProperties("soap_solution", 0x1f55ff));
+			}
+		});
 		soapSolutionStill = REGISTER_FLUIDS.register("soap_solution", () -> new BaseFlowingFluid.Source(fluidProperties));
 		soapSolutionFlowing = REGISTER_FLUIDS.register("soap_solution_flowing", () -> new BaseFlowingFluid.Flowing(fluidProperties));
 		soapSolutionBlock = REGISTER_BLOCKS.register("soap_solution", () -> new LiquidBlock(() -> (FlowingFluid) soapSolutionStill.get(), BlockBehaviour.Properties.of().noLootTable()));
-		soapSolutionBlockItem = REGISTER_ITEMS.register("fluid_soap_solution", () -> new BlockItem(soapSolutionBlock.get(), new Item.Properties()));
 
 		soapSolution = REGISTER_ITEMS.register("soap_solution", ItemSoapSolution::new);
+		soapSolutionBucket = REGISTER_ITEMS.register("soap_solution_bucket", () -> new BucketItem(() -> soapSolutionStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 		frozenBubble = REGISTER_ITEMS.register("frozen_bubble", ItemFrozenBubble::new);
 		bubbleEntityType = REGISTER_ENTITIES.register("bubble", () -> EntityType.Builder.<EntityBubble>of(EntityBubble::new, MobCategory.MISC)
@@ -78,7 +103,7 @@ public class FrozenBubble implements IContentModule
 	{
 		provider.basicItem(soapSolution.get());
 		provider.basicItem(frozenBubble.get());
-		provider.withExistingParent("fluid_soap_solution", provider.modLoc("soap_solution"));
+		provider.basicItem(soapSolutionBucket.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -97,15 +122,32 @@ public class FrozenBubble implements IContentModule
 	}
 
 	@Override
+	public void datagenFluidTags(DataGenProviders.FluidTags provider)
+	{
+		provider.tagW(ContentHelper.FluidTags.SOAP_SOLUTION)
+			.add(soapSolutionStill.get())
+			.add(soapSolutionFlowing.get());
+	}
+
+	@Override
 	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
 		ShapelessDamageItemRecipeBuilder.shapeless(RecipeCategory.MISC, soapSolution.get())
 			.requires(ContentHelper.ItemTags.SOAP)
-			.requires(Items.WATER_BUCKET)
 			.requires(Items.SUGAR)
-			.requires(Items.GLASS_BOTTLE)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.requires(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)))
+			.unlockedBy("has_soap", provider.hasW(Soap.soap.get()))
 			.save(output);
+		// the following bulk recipe must be done with an undamaged soap.
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, soapSolutionBucket.get())
+				.requires(StrictNBTIngredient.of(new ItemStack(Soap.soap.get())))
+				.requires(Items.SUGAR)
+				.requires(Items.SUGAR)
+				.requires(Items.SUGAR)
+				.requires(Items.SUGAR)
+				.requires(Items.WATER_BUCKET)
+				.unlockedBy("has_soap", provider.hasW(Soap.soap.get()))
+				.save(output);
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, frozenBubble.get())
 			.pattern("iii")
 			.pattern("isi")
@@ -126,10 +168,22 @@ public class FrozenBubble implements IContentModule
 	{
 		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.PUFFERFISH), () -> Ingredient.of(ContentHelper.ItemTags.REAGENT_WATERBREATHING));
 
+		Modifiers.crafting.addInputsToRemoveForOutput(soapSolutionBucket.get(), () -> new Ingredient[] { Ingredient.of(Items.WATER_BUCKET) });
+
+		Modifiers.bottles.registerCustomBottleHandler(ContentHelper.FluidTags.SOAP_SOLUTION, () -> new ItemStack(soapSolution.get()), (stack) -> stack.getItem() == soapSolution.get() && !stack.isDamaged(), () -> soapSolutionStill.get());
+
+		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(soapSolutionStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(Fluids.WATER, FluidType.BUCKET_VOLUME), new InputItemStack(new ItemStack(Items.SUGAR, 4)), new InputItemStack(ContentHelper.ItemTags.SOAP)));
+
 		RelationshipRegistry.addRelationship(frozenBubble.get(), soapSolution.get());
 		RelationshipRegistry.addRelationship(Items.ENDER_PEARL, frozenBubble.get());
-		RelationshipRegistry.addRelationship(soapSolution.get(), soapSolutionBlockItem.get());
-		RelationshipRegistry.addRelationship(soapSolutionBlockItem.get(), soapSolution.get());
+
+		PotionBrewing.addMix(Potions.AWKWARD, frozenBubble.get(), Potions.WATER_BREATHING);
 	}
 
+	@Override
+	public void finishClient(FMLClientSetupEvent event)
+	{
+		ItemBlockRenderTypes.setRenderLayer(soapSolutionStill.get(), RenderType.translucent());
+		ItemBlockRenderTypes.setRenderLayer(soapSolutionFlowing.get(), RenderType.translucent());
+	}
 }

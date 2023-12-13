@@ -3,13 +3,12 @@ package squeek.veganoption.items;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import squeek.veganoption.entities.EntityBubble;
@@ -20,7 +19,7 @@ public class ItemSoapSolution extends Item
 
 	public ItemSoapSolution()
 	{
-		super(new Item.Properties().durability(15).setNoRepair());
+		super(new Item.Properties().durability(15).setNoRepair().craftRemainder(Items.GLASS_BOTTLE));
 		DispenserBlock.registerBehavior(this, new ItemSoapSolution.DispenserBehavior());
 	}
 
@@ -46,15 +45,19 @@ public class ItemSoapSolution extends Item
 			level.addFreshEntity(bubble);
 		}
 
-		ServerPlayer sp = entity instanceof ServerPlayer ? (ServerPlayer) entity : null;
-		itemStack.hurt(1, entity.getRandom(), sp);
+		itemStack.hurtAndBreak(1, entity, (e) -> { /* do nothing */});
 
-		if (itemStack.getCount() == 0 && !getCraftingRemainingItem(itemStack).isEmpty())
+		if (itemStack.getCount() == 0 && hasCraftingRemainingItem(itemStack))
 		{
 			return getCraftingRemainingItem(itemStack);
 		}
 
 		return super.finishUsingItem(itemStack, level, entity);
+	}
+
+	@Override
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+		return ItemUtils.startUsingInstantly(level, player, hand);
 	}
 
 	public static class DispenserBehavior extends AbstractProjectileDispenseBehavior

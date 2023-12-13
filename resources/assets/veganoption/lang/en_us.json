@@ -139,6 +139,7 @@
     "item.veganoption.soap": "Soap",
     "item.veganoption.soap.vowiki.usage": "When %1$s is used, it will remove all status effects from the player.",
     "item.veganoption.soap_solution": "Soap Solution",
+    "item.veganoption.soap_solution_bucket": "Soapy Bucket",
     "item.veganoption.soap_solution.vowiki.usage": "%1$s can be used to create a {entity.veganoption.bubble.name}. It can be used by either a player or a [[minecraft:dispenser]].",
     "fluid.block.veganoption.soap_solution": "Soap Solution",
     "block.veganoption.soap_solution": "Soap Solution",
