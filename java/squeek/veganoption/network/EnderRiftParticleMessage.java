@@ -1,5 +1,6 @@
 package squeek.veganoption.network;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -35,7 +36,7 @@ public class EnderRiftParticleMessage implements SimpleMessage
 	@OnlyIn(Dist.CLIENT)
 	public static void onMessage(EnderRiftParticleMessage message, NetworkEvent.Context ctx)
 	{
-		ctx.enqueueWork(() -> BlockEnderRift.spawnBlockTeleportFX(ctx.getSender().serverLevel(), message.x, message.y, message.z, RandomHelper.random));
+		ctx.enqueueWork(() -> BlockEnderRift.spawnBlockTeleportFX(Minecraft.getInstance().level, message.x, message.y, message.z, RandomHelper.random));
 		ctx.setPacketHandled(true);
 	}
 }

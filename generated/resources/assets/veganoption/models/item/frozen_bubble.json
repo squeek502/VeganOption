@@ -1,5 +1,19 @@
 {
   "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "veganoption:item/frozen_bubble",
+      "predicate": {
+        "minecraft:damaged": 0.0
+      }
+    },
+    {
+      "model": "veganoption:item/frozen_bubble_filled",
+      "predicate": {
+        "minecraft:damaged": 1.0
+      }
+    }
+  ],
   "textures": {
     "layer0": "veganoption:item/frozen_bubble"
   }

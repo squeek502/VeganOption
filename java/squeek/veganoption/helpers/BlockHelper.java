@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -12,10 +11,11 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class BlockHelper
 {
-	public static final float BLOCK_HARDNESS_UNBREAKABLE = -1.0f;
+	public static final float BLOCK_HARDNESS_UNBREAKABLE = Blocks.BEDROCK.defaultDestroyTime();
 
 	public static BlockPos[] getBlocksAdjacentTo(BlockPos blockPos)
 	{
@@ -117,31 +117,32 @@ public class BlockHelper
 		return blocks.toArray(new BlockPos[0]);
 	}
 
-	public static BlockPos[] filterBlockListToBreakableBlocks(Level level, BlockPos... blocks)
+	/**
+	 * Filters the provided array of BlockPos to those which match the predicate
+	 */
+	public static BlockPos[] filterBlockList(Predicate<BlockState> predicate, Level level, BlockPos... blocks)
 	{
 		List<BlockPos> filteredBlocks = new ArrayList<>();
 		for (BlockPos blockPos : blocks)
 		{
 			BlockState state = level.getBlockState(blockPos);
-			Block block = state.getBlock();
-
-			if (state.isAir())
-				continue;
-
-			if (isBlockUnbreakable(level, blockPos))
-				continue;
-
-			if (!state.getFluidState().isEmpty())
-				continue;
-
-			filteredBlocks.add(blockPos);
+			if (predicate.test(state))
+				filteredBlocks.add(blockPos);
 		}
 		return filteredBlocks.toArray(new BlockPos[0]);
 	}
 
-	public static boolean isBlockUnbreakable(Level level, BlockPos pos)
+	/**
+	 * Filters the provided array of BlockPos to those which can be broken, i.e., are not air, liquid, or tagged as unbreakable (bedrock)
+	 */
+	public static BlockPos[] filterBlockListToBreakable(Level level, BlockPos... blocks)
 	{
-		return level.getBlockState(pos).getBlock().defaultDestroyTime() == BLOCK_HARDNESS_UNBREAKABLE;
+		return filterBlockList((state) -> !state.isAir() && state.getFluidState().isEmpty() && !isBlockUnbreakable(state), level, blocks);
+	}
+
+	public static boolean isBlockUnbreakable(BlockState state)
+	{
+		return state.getBlock().defaultDestroyTime() == BLOCK_HARDNESS_UNBREAKABLE;
 	}
 
 	public static void setBlockToAir(Level level, BlockPos pos)

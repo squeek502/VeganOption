@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules.compat;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
@@ -25,7 +24,7 @@ public class CompatEnderBubble implements IContentModule
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.ENDER_PEARL)
 			.requires(Ingredient.of(FrozenBubble.frozenBubble.get()))
 			.requires(Ingredient.of(Ender.rawEnderBucket.get()))
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.unlockedBy("has_raw_ender", provider.hasW(Ender.rawEnderBucket.get()))
 			.save(output);
 	}
 

@@ -1,15 +1,28 @@
 package squeek.veganoption.blocks;
 
+import com.google.common.collect.Lists;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import squeek.veganoption.content.modules.Ender;
 
+import java.util.List;
+
 public class BlockRawEnder extends LiquidBlock
 {
+	public static final BooleanProperty IS_SOURCE = BooleanProperty.create("is_source");
+	private final List<FluidState> sourceStatesCache;
+	private final List<FluidState> flowingStatesCache;
+	private boolean fluidStateCachesInitialized = false;
+
 	public BlockRawEnder()
 	{
 		super(() -> (FlowingFluid) Ender.rawEnderStill.get(), BlockBehaviour.Properties.of()
@@ -23,6 +36,40 @@ public class BlockRawEnder extends LiquidBlock
 			.noLootTable()
 			.liquid()
 			.sound(SoundType.EMPTY));
-		registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
+		registerDefaultState(getStateDefinition().any().setValue(IS_SOURCE, true).setValue(LEVEL, 0));
+		sourceStatesCache = Lists.newArrayList();
+		flowingStatesCache = Lists.newArrayList();
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
+	{
+		builder.add(LEVEL);
+		builder.add(IS_SOURCE);
+	}
+
+	@Override
+	public FluidState getFluidState(BlockState blockState)
+	{
+		int level = blockState.getValue(LEVEL);
+		boolean isSource = blockState.getValue(IS_SOURCE);
+
+		if (!fluidStateCachesInitialized) initFluidStateCache();
+
+		return isSource ? sourceStatesCache.get(Math.min(level, 7)) : flowingStatesCache.get(Math.min(level, 7));
+	}
+
+	@Override
+	protected synchronized void initFluidStateCache()
+	{
+		if (!fluidStateCachesInitialized) {
+			for (int i = 1; i < 9; i++)
+			{
+				flowingStatesCache.add(getFluid().getFlowing(9 - i, i == 1));
+				sourceStatesCache.add(getFluid().getSource().defaultFluidState().setValue(FlowingFluid.LEVEL, 9 - i).setValue(FlowingFluid.FALLING, false));
+			}
+
+			fluidStateCachesInitialized = true;
+		}
 	}
 }

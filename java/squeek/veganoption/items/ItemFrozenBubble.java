@@ -46,13 +46,24 @@ public class ItemFrozenBubble extends Item
 
 	public static float getPercentFilled(ItemStack itemStack)
 	{
-		return itemStack.getDamageValue() / 8f;
+		return itemStack.getDamageValue() / (float) itemStack.getMaxDamage();
+	}
+
+	public static int getMbPerFill(ItemStack itemStack)
+	{
+		return Ender.RAW_ENDER_PER_PEARL / itemStack.getMaxDamage();
 	}
 
 	@Override
 	public boolean isBarVisible(ItemStack stack)
 	{
 		return !isEmpty(stack);
+	}
+
+	@Override
+	public int getBarWidth(ItemStack stack)
+	{
+		return Math.round(getPercentFilled(stack) * 13f);
 	}
 
 	public static boolean tryFillWithRawEnderFromWorld(ItemEntity itemEntity)
@@ -63,7 +74,7 @@ public class ItemFrozenBubble extends Item
 		if (!isFull(itemEntity.getItem()))
 		{
 			BlockPos fluidBlockPos = new BlockPos(Mth.floor(itemEntity.getX()), Mth.floor(itemEntity.getY()), Mth.floor(itemEntity.getZ()));
-			FluidStack consumedFluid = FluidHelper.consumeExactFluid(itemEntity.level(), fluidBlockPos, Ender.rawEnderStill.get(), FluidHelper.MB_PER_LEVEL);
+			FluidStack consumedFluid = FluidHelper.consumeExactFluid(itemEntity.level(), fluidBlockPos, Ender.rawEnderStill.get(), getMbPerFill(itemEntity.getItem()));
 
 			if (consumedFluid != null)
 			{
@@ -87,10 +98,9 @@ public class ItemFrozenBubble extends Item
 		return false;
 	}
 
-//	todo
-//	@Override
-//	public String getUnlocalizedName(ItemStack itemStack)
-//	{
-//		return super.getUnlocalizedName(itemStack) + (!isEmpty(itemStack) ? "Filled" : "");
-//	}
+	@Override
+	public String getDescriptionId(ItemStack itemStack)
+	{
+		return super.getDescriptionId(itemStack) + (!isEmpty(itemStack) ? "_filled" : "");
+	}
 }

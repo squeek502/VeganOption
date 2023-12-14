@@ -31,6 +31,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.common.crafting.StrictNBTIngredient;
@@ -102,8 +103,21 @@ public class FrozenBubble implements IContentModule
 	public void datagenItemModels(ItemModelProvider provider)
 	{
 		provider.basicItem(soapSolution.get());
-		provider.basicItem(frozenBubble.get());
 		provider.basicItem(soapSolutionBucket.get());
+
+		ResourceLocation damagedPredicate = new ResourceLocation("damaged");
+		ItemModelBuilder emptyModel = provider.basicItem(frozenBubble.get());
+		ItemModelBuilder partiallyFilledModel = provider.basicItem(provider.modLoc(frozenBubble.getId().getPath() + "_filled"));
+		// todo: maybe make it gradually fill up
+		emptyModel
+			.override()
+			.predicate(damagedPredicate, 0)
+			.model(emptyModel)
+			.end()
+			.override()
+			.predicate(damagedPredicate, 1)
+			.model(partiallyFilledModel)
+			.end();
 	}
 
 	@OnlyIn(Dist.CLIENT)

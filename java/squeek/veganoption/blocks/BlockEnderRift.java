@@ -15,10 +15,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EndPortalBlock;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -78,12 +78,17 @@ public class BlockEnderRift extends EndPortalBlock implements IFluidFlowHandler
 
 				if (!level.isDay())
 				{
-					level.setBlockAndUpdate(belowBlockPos, Ender.rawEnderBlock.get().defaultBlockState().setValue(LiquidBlock.LEVEL, 7));
+					int enderLevel = 1;
+					if (level.getFluidState(belowBlockPos).is(Ender.rawEnderStill.get()))
+					{
+						enderLevel = Math.min(enderLevel + level.getFluidState(belowBlockPos).getValue(FlowingFluid.LEVEL), 8);
+					}
+					level.setBlockAndUpdate(belowBlockPos, Ender.rawEnderStill.get().defaultFluidState().setValue(FlowingFluid.LEVEL, enderLevel).createLegacyBlock());
 				}
 				else
 				{
 					BlockPos[] blocksInRadius = BlockHelper.getBlocksInRadiusAround(pos, BLOCK_TELEPORT_RADIUS);
-					blocksInRadius = BlockHelper.filterBlockListToBreakableBlocks(level, blocksInRadius);
+					blocksInRadius = BlockHelper.filterBlockListToBreakable(level, blocksInRadius);
 					if (blocksInRadius.length > 0)
 					{
 						// TODO: teleport block to the end?

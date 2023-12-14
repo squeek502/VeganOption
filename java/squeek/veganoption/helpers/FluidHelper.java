@@ -63,14 +63,24 @@ public class FluidHelper
 		return fluidState.isEmpty() ? null : fluidState.getType();
 	}
 
-	public static int getFluidLevel(Level level, BlockPos pos)
+	public static int getBlockStateFluidLevel(Level level, BlockPos pos)
 	{
-		return getFluidLevel(level.getBlockState(pos));
+		return getBlockStateFluidLevel(level.getBlockState(pos));
 	}
 
-	public static int getFluidLevel(BlockState state)
+	public static int getBlockStateFluidLevel(BlockState state)
 	{
 		return state.getValue(LiquidBlock.LEVEL);
+	}
+
+	public static int getFluidStateFluidLevel(FluidState state)
+	{
+		return state.getValue(FlowingFluid.LEVEL);
+	}
+
+	public static int getFluidStateFluidLevel(Level level, BlockPos pos)
+	{
+		return getFluidStateFluidLevel(level.getFluidState(pos));
 	}
 
 	public static FluidStack getFluidStackFromBlock(Level level, BlockPos pos)
@@ -78,12 +88,13 @@ public class FluidHelper
 		return getFluidStackFromBlock(level.getBlockState(pos));
 	}
 
-	public static FluidStack getFluidStackFromBlock(BlockState state)
+	public static FluidStack getFluidStackFromBlock(BlockState blockState)
 	{
-		Fluid fluid = getFluidTypeOfBlock(state);
-		if (fluid != null && state.getFluidState().isSource())
+		Fluid fluid = getFluidTypeOfBlock(blockState);
+		FluidState fluidState = blockState.getFluidState();
+		if (fluid != null && fluidState.isSource())
 		{
-			return new FluidStack(fluid, FluidType.BUCKET_VOLUME);
+			return new FluidStack(fluid, fluidState.getAmount() * MB_PER_LEVEL);
 		}
 		return null;
 	}
@@ -151,7 +162,7 @@ public class FluidHelper
 			return null;
 
 		int deltaMeta = -(maxAmount / MB_PER_LEVEL);
-		int newMeta = getFluidLevel(level, fluidBlockPos) + deltaMeta;
+		int newMeta = getFluidStateFluidLevel(level, fluidBlockPos) + deltaMeta;
 
 		if (deltaMeta == 0)
 			return null;
@@ -159,8 +170,8 @@ public class FluidHelper
 		FluidStack fluidConsumed = fullFluidStack.copy();
 		fluidConsumed.setAmount(Math.abs(deltaMeta) * MB_PER_LEVEL);
 
-		if (newMeta >= 0)
-			level.setBlockAndUpdate(fluidBlockPos, level.getBlockState(fluidBlockPos).setValue(FlowingFluid.LEVEL, newMeta));
+		if (newMeta < 8 && newMeta > 0)
+			level.setBlockAndUpdate(fluidBlockPos, level.getFluidState(fluidBlockPos).setValue(FlowingFluid.LEVEL, newMeta).createLegacyBlock());
 		else
 			BlockHelper.setBlockToAir(level, fluidBlockPos);
 

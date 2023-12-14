@@ -17,7 +17,7 @@ import squeek.veganoption.blocks.IFluidFlowHandler;
 @Mixin(FlowingFluid.class)
 public abstract class FlowingFluidMixin extends Fluid
 {
-	@Inject(method = "spreadTo", at = @At("HEAD"))
+	@Inject(method = "spreadTo", at = @At("HEAD"), cancellable = true)
 	protected void veganoption$onSpreadTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, FluidState fluidState, CallbackInfo info)
 	{
 		Block block = level.getBlockState(pos).getBlock();
