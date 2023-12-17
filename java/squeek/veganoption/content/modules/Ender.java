@@ -34,7 +34,6 @@ import squeek.veganoption.blocks.BlockRawEnder;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.fluids.RawEnderFluid;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
@@ -49,7 +48,6 @@ public class Ender implements IContentModule
 	public static RegistryObject<Block> encrustedObsidian;
 	public static RegistryObject<Item> encrustedObsidianItem;
 	public static RegistryObject<Block> enderRift;
-	public static RegistryObject<Item> enderRiftItem;
 	public static RegistryObject<BlockEntityType<TileEntityEnderRift>> enderRiftType;
 	public static RegistryObject<FluidType> rawEnderFluidType;
 	public static RegistryObject<Fluid> rawEnderStill;
@@ -66,7 +64,6 @@ public class Ender implements IContentModule
 
 		enderRift = REGISTER_BLOCKS.register("ender_rift", BlockEnderRift::new);
 		enderRiftType = REGISTER_BLOCKENTITIES.register("ender_rift", () -> BlockEntityType.Builder.of(TileEntityEnderRift::new, enderRift.get()).build(null));
-		enderRiftItem = REGISTER_ITEMS.register("ender_rift", () -> new BlockItem(enderRift.get(), new Item.Properties()));
 
 		BaseFlowingFluid.Properties fluidProperties = new BaseFlowingFluid.Properties(() -> rawEnderFluidType.get(), () -> rawEnderStill.get(), () -> rawEnderFlowing.get())
 			.block(() -> (LiquidBlock) rawEnderBlock.get())
@@ -129,14 +126,6 @@ public class Ender implements IContentModule
 			.requires(Items.EMERALD)
 			.unlockedBy("has_obsidian", provider.hasW(Items.OBSIDIAN))
 			.save(output);
-	}
-
-	@Override
-	public void finish()
-	{
-		// todo: consolidate jei wiki entries
-		RelationshipRegistry.addRelationship(rawEnderBucket.get(), enderRiftItem.get());
-		RelationshipRegistry.addRelationship(enderRiftItem.get(), encrustedObsidianItem.get());
 	}
 
 	@Override
