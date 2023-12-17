@@ -1,0 +1,13 @@
+{
+  "values": [
+    "#forge:food/raw_meat",
+    "#forge:food/cooked_meat",
+    "#forge:food/raw_fish",
+    "#forge:food/cooked_fish",
+    "minecraft:suspicious_stew",
+    "minecraft:golden_apple",
+    "minecraft:enchanted_golden_apple",
+    "minecraft:golden_carrot",
+    "minecraft:spider_eye"
+  ]
+}

@@ -1,35 +1,44 @@
 package squeek.veganoption.content.registry;
 
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.helpers.MiscHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * Compostable items are registered using the tags veganoption:compostables/brown and veganoption:compostables/brown. Items can be
+ * blacklisted by tagging them as veganoption:compostables/blacklist.
+ * <br/>
+ * Food items are automatically green, despite not being tagged, unless they are in a bowl or other craft-remainder item, or are flagged as
+ * meat in the item's FoodProperties. Due to the large number of modded food items, this is handled at runtime.
+ */
+@Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER)
 public class CompostRegistry
 {
-	public static List<Item> browns = new ArrayList<>();
-	public static List<Item> greens = new ArrayList<>();
-	public static List<FoodSpecifier> uncompostableFoods = new ArrayList<>();
+	private static final Set<Item> compostableFoods = new HashSet<>();
 
-	public static void registerAllFoods()
+	@SubscribeEvent
+	public static void registerAllFoods(TagsUpdatedEvent event)
 	{
 		long millisecondsStart = System.currentTimeMillis();
 		int numRegistered = 0;
 
 		for (Item item : ForgeRegistries.ITEMS)
 		{
-			if (item == null)
-				continue;
-
-			if (isCompostableFood(new ItemStack(item)))
+			ItemStack itemStack = new ItemStack(item);
+			if (!isBlacklisted(item) && item.isEdible() && !(item instanceof BowlFoodItem) && !itemStack.hasCraftingRemainingItem() && !itemStack.getFoodProperties(null).isMeat())
 			{
-				addGreen(item);
+				compostableFoods.add(item);
 				numRegistered++;
 			}
 		}
@@ -37,65 +46,42 @@ public class CompostRegistry
 		long timeSpentInMilliseconds = System.currentTimeMillis() - millisecondsStart;
 		String timeTakenString = "took " + (timeSpentInMilliseconds / 1000.0f) + " seconds";
 		VeganOption.Log.info("Found and registered " + numRegistered + " compostable foods (" + timeTakenString + ")");
+		VeganOption.Log.info("Important: Foods registered at runtime may not necessarily have the item tag veganoption:compostables/green");
 	}
 
-	public abstract static class FoodSpecifier
+	public static boolean isCompostable(ItemStack itemStack)
 	{
-		public abstract boolean matches(ItemStack itemStack);
+		return isGreen(itemStack) || isBrown(itemStack);
 	}
 
-	public static boolean isCompostable(Item item)
+	public static boolean isBrown(ItemStack itemStack)
 	{
-		return isGreen(item) || isBrown(item);
+		return isBrown(itemStack.getItem());
 	}
 
 	public static boolean isBrown(Item item)
 	{
-		return browns.contains(item);
+		return MiscHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_BROWN) && !isBlacklisted(item);
+	}
+
+	public static boolean isGreen(ItemStack itemStack)
+	{
+		return isGreen(itemStack.getItem());
 	}
 
 	public static boolean isGreen(Item item)
 	{
-		return greens.contains(item);
-	}
+		if (isBlacklisted(item))
+			return false;
 
-	public static boolean isCompostableFood(ItemStack itemStack)
-	{
-		// TODO: optionally use AppleCore's method?
-		if (itemStack != null && itemStack.isEdible() && (!(itemStack.getItem() instanceof BowlFoodItem) || itemStack.hasCraftingRemainingItem()))
-		{
-			for (FoodSpecifier uncompostableFood : uncompostableFoods)
-			{
-				if (uncompostableFood.matches(itemStack))
-					return false;
-			}
+		if (MiscHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_GREEN) || compostableFoods.contains(item))
 			return true;
-		}
-		return false;
+
+		return compostableFoods.contains(item);
 	}
 
-	public static void addBrown(Item item)
+	public static boolean isBlacklisted(Item item)
 	{
-		browns.add(item);
-	}
-
-	public static void addBrown(TagKey<Item> tag)
-	{
-		browns.addAll(ForgeRegistries.ITEMS.getValues().stream().filter(i -> ContentHelper.isItemTaggedAs(i, tag)).toList());
-	}
-
-	public static void addGreen(Item item)
-	{
-		greens.add(item);
-	}
-
-	public static void addGreen(TagKey<Item> tag)
-	{
-		greens.addAll(ForgeRegistries.ITEMS.getValues().stream().filter(i -> ContentHelper.isItemTaggedAs(i, tag)).toList());
-	}
-
-	public static void blacklist(FoodSpecifier foodSpecifier)
-	{
-		uncompostableFoods.add(foodSpecifier);
+		return MiscHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_BLACKLIST);
 	}
 }

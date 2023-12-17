@@ -2,6 +2,8 @@ package squeek.veganoption.gui;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.StateSwitchingButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -19,16 +21,20 @@ import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.network.MessageComposterTumble;
 import squeek.veganoption.network.NetworkHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComposterScreen extends AbstractContainerScreen<ComposterMenu>
 {
-	protected Inventory inventory = null;
+	protected Inventory playerInventory;
+	public int inventoryRows;
+	private StateSwitchingButton tumbleButton;
 	public static final ResourceLocation TEXTURE_BG = new ResourceLocation("textures/gui/container/generic_54.png");
 	public static final ResourceLocation TEXTURE_COMPONENTS = new ResourceLocation(ModInfo.MODID_LOWER, "textures/gui/composter.png");
-	public int xStart;
-	public int yStart;
-	public int inventoryRows;
+	private static final WidgetSprites TUMBLE_BUTTON_SPRITES = new WidgetSprites(
+		new ResourceLocation(ModInfo.MODID_LOWER, "composter/tumble_button"),
+		new ResourceLocation(ModInfo.MODID_LOWER, "composter/tumble_button_disabled"),
+		new ResourceLocation(ModInfo.MODID_LOWER, "composter/tumble_button_highlighted"));
 
 	public static final int GUI_HEADER_SIZE = 17;
 	public static final int SIDE_TAB_WIDTH = 18;
@@ -39,15 +45,20 @@ public class ComposterScreen extends AbstractContainerScreen<ComposterMenu>
 	public static final String DEGREE_SYMBOL = "\u00B0";
 
 
-	public ComposterScreen(ComposterMenu menu, Inventory inventory, Component title)
+	public ComposterScreen(ComposterMenu menu, Inventory playerInventory, Component title)
 	{
-		super(menu, inventory, title);
-		this.inventory = inventory;
-		this.inventoryRows = inventory.getContainerSize() / 9;
+		super(menu, playerInventory, title);
+		this.playerInventory = playerInventory;
+		this.inventoryRows = menu.getRowCount();
 		this.imageHeight = 114 + this.inventoryRows * MiscHelper.STANDARD_SLOT_WIDTH;
+	}
 
-		this.xStart = (this.width - this.imageWidth) / 2;
-		this.yStart = (this.height - this.imageHeight) / 2;
+	@Override
+	protected void init()
+	{
+		super.init();
+		tumbleButton = new StateSwitchingButton(getTumbleX(), getTumbleY(), 13, 13, !menu.isAerating());
+		tumbleButton.initTextureValues(TUMBLE_BUTTON_SPRITES);
 	}
 
 	@Override
@@ -56,16 +67,12 @@ public class ComposterScreen extends AbstractContainerScreen<ComposterMenu>
 		if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
 			ItemStack itemstack = this.hoveredSlot.getItem();
 			List<Component> tooltip = this.getTooltipFromContainerItem(itemstack);
-			MutableComponent name = Component.empty().append(itemstack.getHoverName());
+			MutableComponent name = tooltip.get(0).copy();
 
-			if (CompostRegistry.isBrown(itemstack.getItem()))
-				name.withStyle(ChatFormatting.GOLD);
-			else if (CompostRegistry.isGreen(itemstack.getItem()))
-				name.withStyle(ChatFormatting.GREEN);
-
-			if (itemstack.hasCustomHoverName()) {
-				name.withStyle(ChatFormatting.ITALIC);
-			}
+			if (CompostRegistry.isBrown(itemstack))
+				name.getSiblings().set(0, name.getSiblings().get(0).copy().withStyle(ChatFormatting.GOLD));
+			else if (CompostRegistry.isGreen(itemstack))
+				name.getSiblings().set(0, name.getSiblings().get(0).copy().withStyle(ChatFormatting.GREEN));
 
 			tooltip.set(0, name);
 
@@ -75,32 +82,33 @@ public class ComposterScreen extends AbstractContainerScreen<ComposterMenu>
 
 	public boolean isMouseOverTumbleButton(double mouseX, double mouseY)
 	{
-		int buttonStartX = xStart - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP + 4;
-		int buttonStartY = yStart + SIDE_TAB_Y_START + SIDE_TAB_HEIGHT - 17;
+		int buttonStartX = getTumbleX();
+		int buttonStartY = getTumbleY();
 		return mouseX >= buttonStartX && mouseX < buttonStartX + 13 && mouseY >= buttonStartY && mouseY < buttonStartY + 13;
 	}
 
 	public boolean isMouseOverTemperature(int mouseX, int mouseY)
 	{
-		int mouseoverStartX = xStart - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP + 4;
-		int mouseoverStartY = yStart + SIDE_TAB_Y_START + 4;
+		int mouseoverStartX = leftPos - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP + 4;
+		int mouseoverStartY = topPos + SIDE_TAB_Y_START + 4;
 		return mouseX >= mouseoverStartX && mouseX < mouseoverStartX + 13 && mouseY >= mouseoverStartY && mouseY < mouseoverStartY + 32;
 	}
 
 	public boolean isMouseOverCompostingPercent(int mouseX, int mouseY)
 	{
-		int mouseoverStartX = xStart + imageWidth - SIDE_TAB_OVERLAP + 1;
-		int mouseoverStartY = yStart + SIDE_TAB_Y_START + 5;
+		int mouseoverStartX = leftPos + imageWidth - SIDE_TAB_OVERLAP + 1;
+		int mouseoverStartY = topPos + SIDE_TAB_Y_START + 5;
 		return mouseX >= mouseoverStartX && mouseX < mouseoverStartX + 12 && mouseY >= mouseoverStartY && mouseY < mouseoverStartY + 44;
 	}
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)
 	{
-		// tumble button
-		graphics.blit(TEXTURE_COMPONENTS, -SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP + 4, SIDE_TAB_Y_START + SIDE_TAB_HEIGHT - 17, 0, menu.isAerating() ? 80 : (isMouseOverTumbleButton(mouseX, mouseY) ? 67 : 54), 13, 13);
-
 		super.render(graphics, mouseX, mouseY, partialTicks);
+		tumbleButton.setStateTriggered(!menu.isAerating());
+		tumbleButton.render(graphics, mouseX, mouseY, partialTicks);
+
+		renderTooltip(graphics, mouseX, mouseY);
 
 		if (isMouseOverTumbleButton(mouseX, mouseY))
 		{
@@ -108,19 +116,19 @@ public class ComposterScreen extends AbstractContainerScreen<ComposterMenu>
 		}
 		else if (isMouseOverTemperature(mouseX, mouseY))
 		{
-			graphics.renderTooltip(font, getRobustToolTip("gui.composter.temperature", Math.round(menu.getCompostTemperature()) + DEGREE_SYMBOL + "C"), mouseX, mouseY);
+			graphics.renderTooltip(font, getRobustToolTip("gui.composter.temperature", menu.getCompostTemperature() + DEGREE_SYMBOL + "C"), mouseX, mouseY);
 		}
 		else if (isMouseOverCompostingPercent(mouseX, mouseY))
 		{
-			graphics.renderTooltip(font, getRobustToolTip("gui.composter.composting", ((int) (menu.getCompostingPercent() * 100)) + "%"), mouseX, mouseY);
+			graphics.renderTooltip(font, getRobustToolTip("gui.composter.composting", menu.getCompostingPercent() + "%"), mouseX, mouseY);
 		}
 	}
 
 	public List<FormattedCharSequence> getRobustToolTip(String identifier, Object... args)
 	{
-		@SuppressWarnings("unchecked")
 		Component title = Component.empty().append(LangHelper.translate(identifier, args)).withStyle(ChatFormatting.GRAY);
-		List<FormattedCharSequence> desc = font.split(FormattedText.of(LangHelper.translate(identifier + ".desc").replaceAll("\\\\n", String.valueOf('\n')), Style.EMPTY.withColor(ChatFormatting.GRAY)), imageWidth);
+		// Font#split returns an ImmutableList, we need it to be mutable.
+		List<FormattedCharSequence> desc = new ArrayList<>(font.split(FormattedText.of(LangHelper.translate(identifier + ".desc").replaceAll("\\\\n", String.valueOf('\n')), Style.EMPTY.withColor(ChatFormatting.GRAY)), imageWidth));
 		desc.add(0, title.getVisualOrderText());
 		return desc;
 	}
@@ -128,25 +136,37 @@ public class ComposterScreen extends AbstractContainerScreen<ComposterMenu>
 	@Override
 	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY)
 	{
-		graphics.blit(TEXTURE_BG, xStart, yStart, 0, 0, imageWidth, imageHeight);
-		graphics.blit(TEXTURE_COMPONENTS, xStart - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP, yStart + SIDE_TAB_Y_START, 0, 0, SIDE_TAB_WIDTH, SIDE_TAB_HEIGHT);
-		graphics.blit(TEXTURE_COMPONENTS, xStart + imageWidth - SIDE_TAB_OVERLAP, yStart + SIDE_TAB_Y_START, SIDE_TAB_WIDTH, 0, SIDE_TAB_WIDTH, SIDE_TAB_HEIGHT);
+		graphics.blit(TEXTURE_BG, leftPos, topPos, 0, 0, imageWidth, inventoryRows * MiscHelper.STANDARD_SLOT_WIDTH + GUI_HEADER_SIZE);
+		graphics.blit(TEXTURE_BG, leftPos, topPos + inventoryRows * MiscHelper.STANDARD_SLOT_WIDTH + GUI_HEADER_SIZE, 0, 126, imageWidth, 96);
+		graphics.blit(TEXTURE_COMPONENTS, leftPos - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP, topPos + SIDE_TAB_Y_START, 0, 0, SIDE_TAB_WIDTH, SIDE_TAB_HEIGHT);
+		graphics.blit(TEXTURE_COMPONENTS, leftPos + imageWidth - SIDE_TAB_OVERLAP, topPos + SIDE_TAB_Y_START, SIDE_TAB_WIDTH, 0, SIDE_TAB_WIDTH, SIDE_TAB_HEIGHT);
 
 		// composting percent
-		graphics.blit(TEXTURE_COMPONENTS, xStart + imageWidth - SIDE_TAB_OVERLAP + 1, yStart + SIDE_TAB_Y_START + 5, 47, 0, 12, Math.round(menu.getCompostingPercent() * 44));
+		graphics.blit(TEXTURE_COMPONENTS, leftPos + imageWidth - SIDE_TAB_OVERLAP + 1, topPos + SIDE_TAB_Y_START + 5, 47, 0, 12, Math.round((menu.getCompostingPercent() / 100f) * 44));
 
 		// temperature
 		int temperatureHeight = Math.max(0, Math.round((menu.getCompostTemperature() - menu.getBiomeTemperature()) / (TileEntityComposter.MAX_COMPOST_TEMPERATURE - menu.getBiomeTemperature()) * 30));
-		graphics.blit(TEXTURE_COMPONENTS, xStart - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP + 5, yStart + SIDE_TAB_Y_START + 5 + 30 - temperatureHeight, 36, 30 - temperatureHeight, 11, temperatureHeight);
+		graphics.blit(TEXTURE_COMPONENTS, leftPos - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP + 5, topPos + SIDE_TAB_Y_START + 5 + 30 - temperatureHeight, 36, 30 - temperatureHeight, 11, temperatureHeight);
 	}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button)
 	{
-		if (isMouseOverTumbleButton(mouseX, mouseY) && button == 0)
+		if (tumbleButton.mouseClicked(mouseX, mouseY, button) && !menu.isAerating())
 		{
+			tumbleButton.setStateTriggered(false);
 			NetworkHandler.channel.sendToServer(new MessageComposterTumble(null));
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
+	}
+
+	private int getTumbleX()
+	{
+		return leftPos - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP + 4;
+	}
+
+	private int getTumbleY()
+	{
+		return topPos + SIDE_TAB_Y_START + SIDE_TAB_HEIGHT - 17;
 	}
 }

@@ -13,7 +13,6 @@ import org.apache.commons.lang3.function.TriFunction;
 
 public abstract class GenericMenu extends AbstractContainerMenu
 {
-	protected Container inventory;
 	protected ContainerLevelAccess access;
 	protected int nextSlotIndex = 0;
 	protected boolean allowShiftClickToMultipleSlots = false;
@@ -32,7 +31,7 @@ public abstract class GenericMenu extends AbstractContainerMenu
 
 	protected void addSlots(TriFunction<Integer, Integer, Integer, Slot> slotFunction, int xStart, int yStart, int rows)
 	{
-		addSlots(slotFunction, xStart, yStart, inventory.getContainerSize(), rows);
+		addSlots(slotFunction, xStart, yStart, getContainer().getContainerSize(), rows);
 	}
 
 	protected void addSlots(TriFunction<Integer, Integer, Integer, Slot> slotFunction, int xStart, int yStart, int numSlots, int rows)
@@ -84,9 +83,9 @@ public abstract class GenericMenu extends AbstractContainerMenu
 			ItemStack stackToTransfer = stackInSlot;
 
 			// transferring from the container to the player inventory
-			if (slotNum < this.inventory.getContainerSize())
+			if (slotNum < this.getContainer().getContainerSize())
 			{
-				if (!this.moveItemStackTo(stackToTransfer, this.inventory.getContainerSize(), this.slots.size(), true))
+				if (!this.moveItemStackTo(stackToTransfer, this.getContainer().getContainerSize(), this.slots.size(), true))
 				{
 					return ItemStack.EMPTY;
 				}
@@ -94,7 +93,7 @@ public abstract class GenericMenu extends AbstractContainerMenu
 			// transferring from the player inventory into the container
 			else
 			{
-				if (!this.moveItemStackTo(stackToTransfer, 0, this.inventory.getContainerSize(), false))
+				if (!this.moveItemStackTo(stackToTransfer, 0, this.getContainer().getContainerSize(), false))
 				{
 					return ItemStack.EMPTY;
 				}
@@ -128,4 +127,9 @@ public abstract class GenericMenu extends AbstractContainerMenu
 	 * @return The Block associated with this Container.
 	 */
 	protected abstract Block getBlock();
+
+	/**
+	 * @return The Container associated with this Menu
+	 */
+	public abstract Container getContainer();
 }

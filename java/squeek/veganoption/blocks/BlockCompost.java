@@ -17,10 +17,9 @@ public class BlockCompost extends Block
 	public BlockCompost()
 	{
 		super(BlockBehaviour.Properties.of()
-			.strength(0.5f)
+			.strength(0.4f)
 			.randomTicks()
 			.sound(SoundType.GRASS)
-			.requiresCorrectToolForDrops()
 			.mapColor(MapColor.DIRT));
 	}
 
@@ -30,7 +29,7 @@ public class BlockCompost extends Block
 	{
 		super.randomTick(state, level, pos, rand);
 
-		// skip ForgeDirection.DOWN
+		// skip Direction.DOWN
 		Direction randomDirection = Direction.DOWN;
 		while (randomDirection == Direction.DOWN)
 		{

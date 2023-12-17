@@ -13,7 +13,6 @@ import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.registry.CompostRegistry;
 
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
@@ -28,6 +27,13 @@ public class MobHeads implements IContentModule
 	{
 		papierMache = REGISTER_ITEMS.register("papier_mache", () -> new Item(new Item.Properties()));
 		mobHeadBlank = REGISTER_ITEMS.register("blank_mob_head", () -> new Item(new Item.Properties()));
+	}
+
+	@Override
+	public void datagenItemTags(DataGenProviders.ItemTags provider)
+	{
+		provider.tagW(ContentHelper.ItemTags.COMPOSTABLES_BROWN)
+			.add(papierMache.get());
 	}
 
 	@Override
@@ -70,12 +76,6 @@ public class MobHeads implements IContentModule
 			.define('h', mobHeadBlank.get())
 			.unlockedBy("has_papier_mache", provider.hasW(papierMache.get()))
 			.save(output);
-	}
-
-	@Override
-	public void finish()
-	{
-		CompostRegistry.addBrown(papierMache.get());
 	}
 
 	@Override

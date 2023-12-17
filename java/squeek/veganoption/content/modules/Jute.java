@@ -42,7 +42,6 @@ import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
 import squeek.veganoption.loot.SimpleBlockDropLootModifier;
@@ -150,7 +149,11 @@ public class Jute implements IContentModule
 	@Override
 	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
-		provider.tagW(ContentHelper.ItemTags.FIBRES).add(juteFibre.get());
+		provider.tagW(ContentHelper.ItemTags.FIBRES)
+			.add(juteFibre.get());
+
+		provider.tagW(ContentHelper.ItemTags.COMPOSTABLES_GREEN)
+			.add(juteStalk.get());
 	}
 
 	@Override
@@ -237,7 +240,6 @@ public class Jute implements IContentModule
 	@Override
 	public void finish()
 	{
-		CompostRegistry.addGreen(Jute.juteStalk.get());
 		RelationshipRegistry.addRelationship(juteFibre.get(), juteBundledItem.get());
 	}
 }

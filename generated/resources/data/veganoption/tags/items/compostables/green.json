@@ -1,0 +1,19 @@
+{
+  "values": [
+    "#minecraft:saplings",
+    "#minecraft:leaves",
+    "#minecraft:flowers",
+    "veganoption:rotten_plants",
+    "minecraft:tall_grass",
+    "minecraft:grass",
+    "minecraft:fern",
+    "minecraft:large_fern",
+    "minecraft:pumpkin",
+    "minecraft:melon",
+    "minecraft:vine",
+    "minecraft:brown_mushroom",
+    "minecraft:red_mushroom",
+    "minecraft:kelp",
+    "veganoption:jute_stalk"
+  ]
+}

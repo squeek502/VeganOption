@@ -122,6 +122,7 @@
     "block.veganoption.compost.vowiki.usage": "%1$s provides passive improvement to adjacent [[minecraft:farmland]].",
     "item.veganoption.fertilizer": "Fertilizer",
     "item.veganoption.fertilizer.vowiki.usage": "%1$s is a [[minecraft:bone_meal]] alternative.",
+    "veganoption.gui.composter.name": "Composter",
     "veganoption.gui.composter.tumble": "Tumble Composter",
     "veganoption.gui.composter.tumble.desc": "Every time the composter is tumbled, it will lose heat initially, but will gain more heat in the long run. The composter should be tumbled about twice every Minecraft day.",
     "veganoption.gui.composter.temperature": "Temperature: %s",

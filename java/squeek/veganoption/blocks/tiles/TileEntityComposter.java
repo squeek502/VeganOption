@@ -3,10 +3,12 @@ package squeek.veganoption.blocks.tiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -18,6 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -28,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.NetworkHooks;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.registry.CompostRegistry;
+import squeek.veganoption.gui.ComposterMenu;
 import squeek.veganoption.helpers.*;
 
 import java.util.ArrayList;
@@ -50,9 +54,11 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 
 	public static final long NOT_COMPOSTING = -1;
 	public static final float NOT_AERATING = -1;
-	public static final int DATASLOT_ID_PERCENT_COMPOSTED = 1;
-	public static final int DATASLOT_ID_BIOME_TEMPERATURE = 2;
-	public static final int DATASLOT_ID_COMPOST_TEMPERATURE = 3;
+	public static final int DATASLOT_ID_PERCENT_COMPOSTED = 0;
+	public static final int DATASLOT_ID_BIOME_TEMPERATURE = 1;
+	public static final int DATASLOT_ID_COMPOST_TEMPERATURE = 2;
+	public static final int DATASLOT_ID_IS_AERATING = 3;
+	public static final int NUM_DATASLOTS = 4;
 
 	protected NonNullList<ItemStack> inventoryItems;
 	protected float compostPercent;
@@ -85,7 +91,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 		@Override
 		protected boolean isOwnContainer(Player player)
 		{
-			return false; //todo gui
+			return player.containerMenu instanceof ComposterMenu menu && menu.getContainer() == TileEntityComposter.this;
 		}
 
 		private void playSound(Level level, BlockPos pos, SoundEvent sound)
@@ -102,8 +108,9 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 			return switch (id)
 			{
 				case DATASLOT_ID_BIOME_TEMPERATURE -> Math.round(biomeTemperature);
-				case DATASLOT_ID_PERCENT_COMPOSTED -> (int) getCompostingPercent() * 100;
+				case DATASLOT_ID_PERCENT_COMPOSTED -> (int) (getCompostingPercent() * 100);
 				case DATASLOT_ID_COMPOST_TEMPERATURE -> (int) getCompostTemperature();
+				case DATASLOT_ID_IS_AERATING -> isAerating() ? 1 : 0;
 				default -> 0;
 			};
 		}
@@ -116,13 +123,14 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 				case DATASLOT_ID_BIOME_TEMPERATURE -> biomeTemperature = value;
 				case DATASLOT_ID_PERCENT_COMPOSTED -> setCompostingPercent((float) value / 100);
 				case DATASLOT_ID_COMPOST_TEMPERATURE -> setTemperature((float) value);
+				case DATASLOT_ID_IS_AERATING -> aerate();
 			}
 		}
 
 		@Override
 		public int getCount()
 		{
-			return 2;
+			return NUM_DATASLOTS;
 		}
 	};
 
@@ -135,7 +143,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	/*
 	 * BlockComposter delegated methods
 	 */
-	public boolean onActivated(Player player, BlockState state)
+	public boolean onActivated(Player player)
 	{
 		if (player.isCrouching() && !level.isClientSide() && !isAerating())
 		{
@@ -145,7 +153,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 
 		if (!player.isCrouching() && !level.isClientSide() && player instanceof ServerPlayer)
 		{
-			NetworkHooks.openScreen((ServerPlayer) player, state.getMenuProvider(level, getBlockPos()), getBlockPos());
+			NetworkHooks.openScreen((ServerPlayer) player, this, getBlockPos());
 			return true;
 		}
 
@@ -187,6 +195,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 
 	private void onServerTick(Level level)
 	{
+		openersCounter.recheckOpeners(level, getBlockPos(), getBlockState());
 		if (isComposting() && !isAerating())
 		{
 			long ticksSinceCycleStart = level.getGameTime() - Math.max(compostStart, lastAeration);
@@ -212,7 +221,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 				attemptCompost();
 				compostPercent = 0f;
 			}
-			setChanged();
+			markDirty();
 		}
 	}
 
@@ -307,7 +316,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 		float oldTemp = compostTemperature;
 		compostTemperature = temperature;
 		clampTemperature();
-		setChanged();
+		markDirty();
 
 		if (Math.round(compostTemperature) != Math.round(oldTemp))
 		{
@@ -362,7 +371,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 		{
 			ItemStack itemStack = getItem(slotNum);
 
-			if (itemStack != null && CompostRegistry.isBrown(itemStack.getItem()))
+			if (itemStack != null && CompostRegistry.isBrown(itemStack))
 			{
 				brownSlots.add(slotNum);
 			}
@@ -377,7 +386,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 		{
 			ItemStack itemStack = getItem(slotNum);
 
-			if (itemStack != null && CompostRegistry.isGreen(itemStack.getItem()))
+			if (itemStack != null && CompostRegistry.isGreen(itemStack))
 			{
 				greenSlots.add(slotNum);
 			}
@@ -493,7 +502,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 
 	public void onInventoryChanged()
 	{
-		setChanged();
+		markDirty();
 	}
 
 	public boolean isInventoryEmpty()
@@ -595,13 +604,13 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	@Override
 	protected Component getDefaultName()
 	{
-		return Component.translatable("veganoption.container.composter");
+		return Component.translatable(LangHelper.prependModId("gui.composter.name"));
 	}
 
 	@Override
 	protected AbstractContainerMenu createMenu(int containerID, Inventory inventory)
 	{
-		return null;
+		return new ComposterMenu(containerID, inventory, ContainerLevelAccess.create(getLevel(), getBlockPos()), getBlockPos(), dataAccess);
 	}
 
 	@Override
@@ -626,7 +635,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	@Override
 	public boolean canPlaceItem(int slotNum, ItemStack itemStack)
 	{
-		return CompostRegistry.isCompostable(itemStack.getItem());
+		return CompostRegistry.isCompostable(itemStack);
 	}
 
 	/*
@@ -649,15 +658,15 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	@Override
 	public void startOpen(Player player)
 	{
-		if (!remove)
-			openersCounter.incrementOpeners(player, getLevel(), getBlockPos(), getBlockState());
+		if (!remove && !player.isSpectator() && level != null)
+			openersCounter.incrementOpeners(player, level, getBlockPos(), getBlockState());
 	}
 
 	@Override
 	public void stopOpen(Player player)
 	{
-		if (!remove)
-			openersCounter.decrementOpeners(player, getLevel(), getBlockPos(), getBlockState());
+		if (!remove && !player.isSpectator() && level != null)
+			openersCounter.decrementOpeners(player, level, getBlockPos(), getBlockState());
 	}
 
 	/*
@@ -670,11 +679,18 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	}
 
 	@Override
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt)
+	{
+		handleUpdateTag(pkt.getTag());
+	}
+
+	@Override
 	public CompoundTag getUpdateTag()
 	{
 		CompoundTag tag = super.getUpdateTag();
 		tag.putLong("LastAeration", lastAeration);
 		tag.putFloat("Temp", compostTemperature);
+		tag.putFloat("Compost", compostPercent);
 		return tag;
 	}
 
@@ -683,6 +699,14 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	{
 		lastAeration = tag.getLong("LastAeration");
 		compostTemperature = tag.getFloat("Temp");
+		compostPercent = tag.getFloat("Compost");
+	}
+
+	private void markDirty()
+	{
+		setChanged();
+		if (level instanceof ServerLevel serverLevel)
+			serverLevel.getChunkSource().blockChanged(worldPosition);
 	}
 
 	/*

@@ -1,0 +1,13 @@
+{
+  "values": [
+    "#forge:rods/wooden",
+    "#forge:fibres",
+    "minecraft:paper",
+    "minecraft:dead_bush",
+    {
+      "id": "#forge:dusts/wood",
+      "required": false
+    },
+    "veganoption:papier_mache"
+  ]
+}

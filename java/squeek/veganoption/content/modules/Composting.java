@@ -1,6 +1,9 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -11,13 +14,21 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -28,19 +39,20 @@ import squeek.veganoption.blocks.BlockComposter;
 import squeek.veganoption.blocks.renderers.RenderComposter;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.content.ContentHelper;
+import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
-import squeek.veganoption.content.DataGenProviders;
-import squeek.veganoption.loot.GenericBlockLootSubProvider;
-import squeek.veganoption.content.registry.CompostRegistry;
-import squeek.veganoption.content.registry.CompostRegistry.FoodSpecifier;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.gui.ComposterMenu;
+import squeek.veganoption.gui.ComposterScreen;
+import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import static squeek.veganoption.VeganOption.*;
 
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ModInfo.MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Composting implements IContentModule
 {
 	public static RegistryObject<Block> composter;
@@ -51,8 +63,6 @@ public class Composting implements IContentModule
 	public static RegistryObject<Block> compost;
 	public static RegistryObject<Item> compostItem;
 	public static RegistryObject<Item> fertilizer;
-
-	private static final String TEXTURE = ModInfo.MODID_LOWER + ":/entity/composter_legs";
 
 	private static final FoodProperties ROTTEN_PLANTS_FOOD = new FoodProperties.Builder()
 		.nutrition(4)
@@ -65,7 +75,20 @@ public class Composting implements IContentModule
 	public void create()
 	{
 		composter = REGISTER_BLOCKS.register("composter", BlockComposter::new);
-		composterItem = REGISTER_ITEMS.register("composter", () -> new BlockItem(composter.get(), new Item.Properties()));
+		composterItem = REGISTER_ITEMS.register("composter", () -> new BlockItem(composter.get(), new Item.Properties()) {
+			@Override
+			public void initializeClient(Consumer<IClientItemExtensions> consumer)
+			{
+				consumer.accept(new IClientItemExtensions() {
+					@Override
+					public BlockEntityWithoutLevelRenderer getCustomRenderer()
+					{
+						Minecraft mc = Minecraft.getInstance();
+						return new RenderComposter.ComposterItemRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels());
+					}
+				});
+			}
+		});
 		composterEntityType = REGISTER_BLOCKENTITIES.register("composter", () -> BlockEntityType.Builder.of(TileEntityComposter::new, composter.get()).build(null));
 		composterMenuType = REGISTER_MENUS.register("composter", () -> IMenuTypeExtension.create((id, inv, data) -> new ComposterMenu(id, inv, data.readBlockPos())));
 
@@ -91,7 +114,8 @@ public class Composting implements IContentModule
 		provider.tagW(ContentHelper.ItemTags.FOOD_RAW_FISH)
 			.add(Items.COD)
 			.add(Items.SALMON)
-			.add(Items.PUFFERFISH);
+			.add(Items.PUFFERFISH)
+			.add(Items.TROPICAL_FISH);
 
 		provider.tagW(ContentHelper.ItemTags.FOOD_COOKED_MEAT)
 			.add(Items.COOKED_BEEF)
@@ -111,12 +135,48 @@ public class Composting implements IContentModule
 			.addTag(ContentHelper.ItemTags.FOOD_RAW_FISH)
 			.addTag(ContentHelper.ItemTags.FOOD_COOKED_MEAT)
 			.addTag(ContentHelper.ItemTags.FOOD_RAW_MEAT);
+
+		// Compostables
+		provider.tagW(ContentHelper.ItemTags.COMPOSTABLES_BROWN)
+			.addTag(ContentHelper.ItemTags.STICKS)
+			.addTag(ContentHelper.ItemTags.FIBRES)
+			.add(Items.PAPER)
+			.add(Items.DEAD_BUSH)
+			.addOptionalTag(ContentHelper.ItemTags.DUST_WOOD.location());
+
+		provider.tagW(ContentHelper.ItemTags.COMPOSTABLES_GREEN)
+			.addTag(ContentHelper.ItemTags.SAPLINGS)
+			.addTag(ContentHelper.ItemTags.LEAVES)
+			.addTag(ContentHelper.ItemTags.FLOWERS)
+			.add(rottenPlants.get())
+			.add(Items.TALL_GRASS)
+			.add(Items.GRASS)
+			.add(Items.FERN)
+			.add(Items.LARGE_FERN)
+			.add(Items.PUMPKIN)
+			.add(Items.MELON)
+			.add(Items.VINE)
+			.add(Items.BROWN_MUSHROOM)
+			.add(Items.RED_MUSHROOM)
+			.add(Items.KELP);
+
+		provider.tagW(ContentHelper.ItemTags.COMPOSTABLES_BLACKLIST)
+			.addTag(ContentHelper.ItemTags.FOOD_RAW_MEAT)
+			.addTag(ContentHelper.ItemTags.FOOD_COOKED_MEAT)
+			.addTag(ContentHelper.ItemTags.FOOD_RAW_FISH)
+			.addTag(ContentHelper.ItemTags.FOOD_COOKED_FISH)
+			.add(Items.SUSPICIOUS_STEW)
+			.add(Items.GOLDEN_APPLE)
+			.add(Items.ENCHANTED_GOLDEN_APPLE)
+			.add(Items.GOLDEN_CARROT)
+			.add(Items.SPIDER_EYE);
 	}
 
 	@Override
 	public void datagenBlockTags(DataGenProviders.BlockTags provider)
 	{
 		provider.tagW(BlockTags.MINEABLE_WITH_SHOVEL).add(compost.get());
+		provider.tagW(BlockTags.MINEABLE_WITH_AXE).add(composter.get());
 	}
 
 	@Override
@@ -144,46 +204,6 @@ public class Composting implements IContentModule
 		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.ROTTEN_FLESH), () -> Ingredient.of(ContentHelper.ItemTags.ROTTEN_MATERIAL));
 		RelationshipRegistry.addRelationship(compostItem.get(), composterItem.get());
 		RelationshipRegistry.addRelationship(rottenPlants.get(), composterItem.get());
-
-		CompostRegistry.addBrown(ContentHelper.ItemTags.STICKS);
-		CompostRegistry.addBrown(Items.PAPER);
-		CompostRegistry.addBrown(ContentHelper.ItemTags.FIBRES);
-		CompostRegistry.addBrown(ContentHelper.ItemTags.DUST_WOOD);
-		CompostRegistry.addBrown(Items.DEAD_BUSH);
-
-		CompostRegistry.addGreen(ContentHelper.ItemTags.SAPLINGS);
-		CompostRegistry.addGreen(rottenPlants.get());
-		CompostRegistry.addGreen(Items.TALL_GRASS);
-		CompostRegistry.addGreen(Items.FERN);
-		CompostRegistry.addGreen(Items.LARGE_FERN);
-		CompostRegistry.addGreen(ContentHelper.ItemTags.LEAVES);
-		CompostRegistry.addGreen(Items.PUMPKIN);
-		CompostRegistry.addGreen(Items.MELON);
-		CompostRegistry.addGreen(Items.VINE);
-		CompostRegistry.addGreen(ContentHelper.ItemTags.FLOWERS);
-		CompostRegistry.addGreen(Items.BROWN_MUSHROOM);
-		CompostRegistry.addGreen(Items.RED_MUSHROOM);
-
-		CompostRegistry.blacklist(new FoodSpecifier()
-		{
-			@Override
-			public boolean matches(ItemStack itemStack)
-			{
-				if (itemStack.isEdible())
-				{
-					if (itemStack.getFoodProperties(null).isMeat())
-						return true;
-					if (ContentHelper.isItemTaggedAs(itemStack.getItem(), ContentHelper.ItemTags.FOOD_RAW_FISH) || ContentHelper.isItemTaggedAs(itemStack.getItem(), ContentHelper.ItemTags.FOOD_COOKED_FISH))
-						return true;
-					if (ContentHelper.isItemTaggedAs(itemStack.getItem(), ContentHelper.ItemTags.FOOD_RAW_MEAT) || ContentHelper.isItemTaggedAs(itemStack.getItem(), ContentHelper.ItemTags.FOOD_COOKED_MEAT))
-						return true;
-				}
-
-				return false;
-			}
-		});
-
-		CompostRegistry.registerAllFoods();
 	}
 
 	@Override
@@ -224,5 +244,18 @@ public class Composting implements IContentModule
 				return List.of(compost.get(), composter.get());
 			}
 		};
+	}
+
+	@Override
+	public void finishClient(FMLClientSetupEvent event)
+	{
+		MenuScreens.register(composterMenuType.get(), ComposterScreen::new);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
+	public static void registerComposterLegsModel(ModelEvent.RegisterAdditional event)
+	{
+		event.register(RenderComposter.LEGS_MODEL);
 	}
 }

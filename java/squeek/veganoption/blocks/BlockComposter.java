@@ -2,20 +2,14 @@ package squeek.veganoption.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,17 +21,14 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.content.modules.Composting;
-import squeek.veganoption.gui.ComposterMenu;
-import squeek.veganoption.helpers.LangHelper;
 
 public class BlockComposter extends HorizontalDirectionalBlock implements EntityBlock
 {
-	public static final VoxelShape SHAPE = Shapes.box(1, 0, 1, 15, 14, 15);
+	public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 14, 15);
 	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
 	public BlockComposter()
@@ -63,7 +54,8 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 		BlockEntity tile = level.getBlockEntity(pos);
 		if (tile instanceof TileEntityComposter composter)
 		{
-			return composter.onActivated(player, state) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+			composter.onActivated(player);
+			return InteractionResult.CONSUME;
 		}
 		return super.use(state, level, pos, player, hand, hit);
 	}
@@ -77,6 +69,14 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 			composter.onBlockBroken();
 		}
 		super.onRemove(state, level, pos, newState, movedByPiston);
+	}
+
+	@Override
+	public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int data)
+	{
+		if (level.getBlockEntity(pos) instanceof TileEntityComposter composter)
+			return composter.triggerEvent(id, data);
+		return super.triggerEvent(state, level, pos, id, data);
 	}
 
 	@Override
@@ -127,19 +127,12 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 	@Override
 	public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos)
 	{
-		return new MenuProvider() {
-			@Override
-			public Component getDisplayName()
-			{
-				return Component.translatable(LangHelper.prependModId("block.composter.name"));
-			}
+		return (TileEntityComposter) level.getBlockEntity(pos);
+	}
 
-			@Nullable
-			@Override
-			public AbstractContainerMenu createMenu(int containerID, Inventory playerInv, Player player)
-			{
-				return new ComposterMenu(containerID, playerInv, pos);
-			}
-		};
+	@Override
+	public RenderShape getRenderShape(BlockState state)
+	{
+		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
 }

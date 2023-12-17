@@ -104,6 +104,10 @@ public class ContentHelper
 		public static final TagKey<Item> WOOD_ASH = forgeTag("wood_ash");
 		public static final TagKey<Item> WOOD_PLANKS = net.minecraft.tags.ItemTags.PLANKS;
 
+		public static final TagKey<Item> COMPOSTABLES_GREEN = veganoptionTag("compostables/green");
+		public static final TagKey<Item> COMPOSTABLES_BROWN = veganoptionTag("compostables/brown");
+		public static final TagKey<Item> COMPOSTABLES_BLACKLIST = veganoptionTag("compostables/blacklist");
+
 		static {
 			ImmutableMap.Builder<DyeColor, TagKey<Item>> builder = ImmutableMap.builder();
 			for (DyeColor color : DyeColor.values())
@@ -114,12 +118,12 @@ public class ContentHelper
 		}
 
 
-		private static TagKey<Item> forgeTag(String name)
+		public static TagKey<Item> forgeTag(String name)
 		{
 			return net.minecraft.tags.ItemTags.create(new ResourceLocation("forge", name));
 		}
 
-		private static TagKey<Item> veganoptionTag(String name)
+		public static TagKey<Item> veganoptionTag(String name)
 		{
 			return net.minecraft.tags.ItemTags.create(new ResourceLocation(ModInfo.MODID_LOWER, name));
 		}
