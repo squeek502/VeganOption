@@ -1,6 +1,7 @@
 package squeek.veganoption.blocks.tiles;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -14,6 +15,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,12 +30,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestLidController;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.gui.ComposterMenu;
 import squeek.veganoption.helpers.*;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -133,6 +143,8 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 			return NUM_DATASLOTS;
 		}
 	};
+
+	private LazyOptional<IItemHandler> inventoryCapLazy;
 
 	public TileEntityComposter(BlockPos pos, BlockState state)
 	{
@@ -519,7 +531,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	{
 		for (ItemStack itemStack : inventoryItems)
 		{
-			if (itemStack == null || itemStack.getCount() < Math.min(getMaxStackSize(), itemStack.getMaxStackSize()))
+			if (itemStack.isEmpty() || itemStack.getCount() < Math.min(getMaxStackSize(), itemStack.getMaxStackSize()))
 				return false;
 		}
 		return true;
@@ -635,7 +647,18 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	@Override
 	public boolean canPlaceItem(int slotNum, ItemStack itemStack)
 	{
-		return CompostRegistry.isCompostable(itemStack);
+		return CompostRegistry.isCompostable(itemStack) && !isInventoryFull();
+	}
+
+	@Override
+	public boolean canTakeItem(Container output, int slotNum, ItemStack itemStack)
+	{
+		return isOutputItem(itemStack);
+	}
+
+	static boolean isOutputItem(ItemStack itemStack)
+	{
+		return itemStack.getItem() == Composting.rottenPlants.get() || itemStack.getItem() == Composting.compostItem.get();
 	}
 
 	/*
@@ -747,5 +770,37 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	public float getLidOpenness(float partialTickTime)
 	{
 		return lidController.getOpenness(partialTickTime);
+	}
+
+	/*
+	Capabilities
+	 */
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side)
+	{
+		if (!remove && cap == Capabilities.ITEM_HANDLER)
+		{
+			if (inventoryCapLazy == null)
+				inventoryCapLazy = LazyOptional.of(() -> new InvWrapper(this) {
+					@Override
+					public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
+					{
+						// For some reason, the default InvWrapper implementation does not call canTakeItem
+						if (!isOutputItem(getItem(slot)))
+							return ItemStack.EMPTY;
+						return super.extractItem(slot, amount, simulate);
+					}
+				});
+			return inventoryCapLazy.cast();
+		}
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps()
+	{
+		super.invalidateCaps();
+		inventoryCapLazy.invalidate();
 	}
 }
