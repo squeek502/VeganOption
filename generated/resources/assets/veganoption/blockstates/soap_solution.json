@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "level=0": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=1": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=10": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=11": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=12": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=13": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=14": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=15": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=2": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=3": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=4": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=5": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=6": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=7": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=8": {
+      "model": "veganoption:block/soap_solution"
+    },
+    "level=9": {
+      "model": "veganoption:block/soap_solution"
+    }
+  }
+}

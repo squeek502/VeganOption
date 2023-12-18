@@ -19,6 +19,8 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
@@ -138,5 +140,11 @@ public class Ink implements IContentModule
 		provider.basicItem(blackVegetableOilInk.get());
 		provider.basicItem(waxVegetable.get());
 		provider.basicItem(blackVegetableOilInkBucket.get());
+	}
+
+	@Override
+	public void datagenBlockStatesAndModels(BlockStateProvider provider)
+	{
+		provider.getVariantBuilder(blackInk.get()).forAllStates(state -> ConfiguredModel.builder().modelFile(provider.models().getExistingFile(provider.modLoc("black_ink"))).build());
 	}
 }

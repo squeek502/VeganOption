@@ -801,6 +801,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	public void invalidateCaps()
 	{
 		super.invalidateCaps();
-		inventoryCapLazy.invalidate();
+		if (inventoryCapLazy != null)
+			inventoryCapLazy.invalidate();
 	}
 }

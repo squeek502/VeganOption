@@ -23,6 +23,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
@@ -108,6 +109,8 @@ public class Ender implements IContentModule
 	public void datagenBlockStatesAndModels(BlockStateProvider provider)
 	{
 		provider.simpleBlock(encrustedObsidian.get());
+		provider.simpleBlock(enderRift.get(), provider.models().getExistingFile(provider.mcLoc("block/end_portal")));
+		provider.getVariantBuilder(rawEnderBlock.get()).forAllStates(state -> ConfiguredModel.builder().modelFile(provider.models().getExistingFile(provider.modLoc("raw_ender"))).build());
 	}
 
 	@Override

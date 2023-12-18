@@ -1,0 +1,100 @@
+{
+  "variants": {
+    "is_source=false,level=0": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=1": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=10": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=11": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=12": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=13": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=14": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=15": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=2": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=3": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=4": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=5": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=6": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=7": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=8": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=false,level=9": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=0": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=1": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=10": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=11": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=12": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=13": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=14": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=15": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=2": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=3": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=4": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=5": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=6": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=7": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=8": {
+      "model": "veganoption:block/raw_ender"
+    },
+    "is_source=true,level=9": {
+      "model": "veganoption:block/raw_ender"
+    }
+  }
+}

@@ -31,6 +31,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.SoundActions;
@@ -118,6 +120,12 @@ public class FrozenBubble implements IContentModule
 			.predicate(damagedPredicate, 1)
 			.model(partiallyFilledModel)
 			.end();
+	}
+
+	@Override
+	public void datagenBlockStatesAndModels(BlockStateProvider provider)
+	{
+		provider.getVariantBuilder(soapSolutionBlock.get()).forAllStates(state -> ConfiguredModel.builder().modelFile(provider.models().getExistingFile(provider.modLoc("soap_solution"))).build());
 	}
 
 	@OnlyIn(Dist.CLIENT)
