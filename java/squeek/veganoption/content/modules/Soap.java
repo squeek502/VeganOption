@@ -25,7 +25,6 @@ import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.blocks.BlockLyeWater;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
@@ -38,17 +37,18 @@ import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.items.ItemSoap;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.*;
 
 public class Soap implements IContentModule
 {
-	public static RegistryObject<FluidType> fluidTypeLyeWater;
-	public static RegistryObject<Fluid> fluidLyeWaterStill;
-	public static RegistryObject<Fluid> fluidLyeWaterFlowing;
-	public static RegistryObject<Block> fluidBlockLyeWater;
-	public static RegistryObject<Item> bucketLyeWater;
-	public static RegistryObject<Item> soap;
+	public static Supplier<FluidType> fluidTypeLyeWater;
+	public static Supplier<Fluid> fluidLyeWaterStill;
+	public static Supplier<Fluid> fluidLyeWaterFlowing;
+	public static Supplier<Block> fluidBlockLyeWater;
+	public static Supplier<Item> bucketLyeWater;
+	public static Supplier<Item> soap;
 
 	@Override
 	public void create()

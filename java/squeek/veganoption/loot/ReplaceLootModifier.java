@@ -5,13 +5,13 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,8 +22,8 @@ public class ReplaceLootModifier extends LootModifier
 	public static final Supplier<Codec<ReplaceLootModifier>> CODEC = Suppliers.memoize(() -> {
 		return RecordCodecBuilder.create(instance -> codecStart(instance).and(
 			instance.group(
-				ForgeRegistries.ITEMS.getCodec().fieldOf("replace").forGetter(m -> m.replace),
-				ForgeRegistries.ITEMS.getCodec().fieldOf("with").forGetter(m -> m.with)
+				BuiltInRegistries.ITEM.byNameCodec().fieldOf("replace").forGetter(m -> m.replace),
+				BuiltInRegistries.ITEM.byNameCodec().fieldOf("with").forGetter(m -> m.with)
 			)).apply(instance, ReplaceLootModifier::new)
 		);
 	});

@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'net.neoforged.gradle.userdev' version '7.0.43'
-	id 'net.neoforged.gradle.mixin' version '7.0.43'
+	id 'net.neoforged.gradle.userdev' version '7.0.57'
+	id 'net.neoforged.gradle.mixin' version '7.0.57'
 }
 
 if (version == "unspecified")
@@ -71,11 +71,12 @@ sourceSets.main.resources.srcDirs += 'resources'
 sourceSets.main.resources.srcDirs += 'generated/resources'
 sourceSets.test.java.srcDirs += 'tests'
 
-def forgeVersion = "20.2.44-beta"
+def neoVersion = "20.2.86"
+def neoVersionRange = "[20.2.86,20.3)"
 def jeiVersion = "16.0.0.28"
  
 dependencies {
-	implementation "net.neoforged:neoforge:${forgeVersion}"
+	implementation "net.neoforged:neoforge:${neoVersion}"
 //	Awaiting a NeoForge version...
 //	compileOnly "mezz.jei:jei-1.20.2-common-api:${jeiVersion}"
 //	compileOnly "mezz.jei:jei-1.20.2-forge-api:${jeiVersion}"
@@ -85,7 +86,7 @@ dependencies {
 tasks.withType(ProcessResources).configureEach {
 	var replaceProperties = [
 			minecraft_version: "1.20.2", minecraft_version_range: "1.20.2",
-			neo_version: forgeVersion, neo_version_range: forgeVersion,
+			neo_version: neoVersion, neo_version_range: neoVersionRange,
 			loader_version_range: "[1,)",
 			mod_id: "veganoption",
 			mod_name: "The Vegan Option",

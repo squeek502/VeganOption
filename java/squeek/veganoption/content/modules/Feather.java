@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -19,7 +19,7 @@ import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 // currently depends on Kapok
 public class Feather implements IContentModule
 {
-	public static RegistryObject<Item> fauxFeather;
+	public static DeferredHolder<Item, Item> fauxFeather;
 
 	@Override
 	public void create()

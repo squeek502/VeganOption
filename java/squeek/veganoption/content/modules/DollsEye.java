@@ -16,11 +16,12 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
-import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.loot.SimpleBlockDropLootModifier;
+
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
@@ -32,7 +33,7 @@ public class DollsEye implements IContentModule
 		.effect(() -> new MobEffectInstance(MobEffects.POISON, 5, 0), 1f)
 		.build();
 
-	public static RegistryObject<Item> dollsEye;
+	public static Supplier<Item> dollsEye;
 
 	@Override
 	public void create()

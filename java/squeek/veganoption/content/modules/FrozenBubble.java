@@ -40,7 +40,7 @@ import net.neoforged.neoforge.common.crafting.StrictNBTIngredient;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
@@ -57,20 +57,21 @@ import squeek.veganoption.items.ItemFrozenBubble;
 import squeek.veganoption.items.ItemSoapSolution;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.*;
 
 public class FrozenBubble implements IContentModule
 {
-	public static RegistryObject<Item> soapSolution;
-	public static RegistryObject<Item> soapSolutionBucket;
-	public static RegistryObject<Item> frozenBubble;
-	public static RegistryObject<EntityType<EntityBubble>> bubbleEntityType;
-	public static RegistryObject<FluidType> soapSolutionFluidType;
-	public static RegistryObject<Fluid> soapSolutionStill;
-	public static RegistryObject<Fluid> soapSolutionFlowing;
-	public static RegistryObject<Block> soapSolutionBlock;
+	public static Supplier<Item> soapSolution;
+	public static Supplier<Item> soapSolutionBucket;
+	public static DeferredHolder<Item, ItemFrozenBubble> frozenBubble;
+	public static Supplier<EntityType<EntityBubble>> bubbleEntityType;
+	public static Supplier<FluidType> soapSolutionFluidType;
+	public static Supplier<Fluid> soapSolutionStill;
+	public static Supplier<Fluid> soapSolutionFlowing;
+	public static Supplier<Block> soapSolutionBlock;
 
 	@Override
 	public void create()

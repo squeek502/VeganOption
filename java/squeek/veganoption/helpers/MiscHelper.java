@@ -2,14 +2,12 @@ package squeek.veganoption.helpers;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import squeek.veganoption.ModInfo;
 
@@ -33,11 +31,6 @@ public class MiscHelper
 			return haystack.contains(needle) ? needle : null;
 		}
 		return null;
-	}
-
-	public static boolean isItemTaggedAs(Item item, TagKey<Item> tag)
-	{
-		return ForgeRegistries.ITEMS.tags().getTag(tag).contains(item);
 	}
 
 	public static RecipeManager getRecipeManager()

@@ -19,30 +19,30 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.ColorHelper;
 import squeek.veganoption.helpers.MiscHelper;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class BlockRettable extends HayBlock
 {
 	public static final int MAX_RETTING_STAGES = 3;
 	public static final IntegerProperty STAGE = IntegerProperty.create("retting_stage", 0, MAX_RETTING_STAGES);
 
-	private RegistryObject<Item> rettedItem;
+	private Supplier<Item> rettedItemSupplier;
 	private int minRettedItemDrops;
 	private int maxRettedItemDrops;
 
-	public BlockRettable(RegistryObject<Item> rettedItem, int minRettedItemDrops, int maxRettedItemDrops)
+	public BlockRettable(Supplier<Item> rettedItemSupplier, int minRettedItemDrops, int maxRettedItemDrops)
 	{
 		super(BlockBehaviour.Properties.of()
 			.sound(SoundType.GRASS)
 			.strength(0.5f)
 			.randomTicks()
 			.mapColor(MapColor.COLOR_GREEN));
-		this.rettedItem = rettedItem;
+		this.rettedItemSupplier = rettedItemSupplier;
 		this.minRettedItemDrops = minRettedItemDrops;
 		this.maxRettedItemDrops = maxRettedItemDrops;
 		registerDefaultState(getStateDefinition().any().setValue(STAGE, 0));
@@ -57,7 +57,7 @@ public class BlockRettable extends HayBlock
 
 	public Item getRettedItem()
 	{
-		return rettedItem.get();
+		return rettedItemSupplier.get();
 	}
 
 	public int getMinRettedItemDrops()

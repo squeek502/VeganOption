@@ -29,7 +29,7 @@ import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
@@ -43,16 +43,17 @@ import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.*;
 
 public class PlantMilk implements IContentModule
 {
-	public static RegistryObject<FluidType> plantMilkFluidType;
-	public static RegistryObject<Fluid> plantMilkStill;
-	public static RegistryObject<Fluid> plantMilkFlowing;
-	public static RegistryObject<Block> plantMilkBlock;
-	public static RegistryObject<Item> plantMilkBucket;
+	public static Supplier<FluidType> plantMilkFluidType;
+	public static Supplier<Fluid> plantMilkStill;
+	public static Supplier<Fluid> plantMilkFlowing;
+	public static Supplier<Block> plantMilkBlock;
+	public static DeferredHolder<Item, BucketItem> plantMilkBucket;
 
 	@Override
 	public void create()

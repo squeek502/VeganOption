@@ -32,7 +32,6 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.BlockCompost;
 import squeek.veganoption.blocks.BlockComposter;
@@ -49,20 +48,21 @@ import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ModInfo.MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Composting implements IContentModule
 {
-	public static RegistryObject<Block> composter;
-	public static RegistryObject<Item> composterItem;
-	public static RegistryObject<BlockEntityType<TileEntityComposter>> composterEntityType;
-	public static RegistryObject<MenuType<ComposterMenu>> composterMenuType;
-	public static RegistryObject<Item> rottenPlants;
-	public static RegistryObject<Block> compost;
-	public static RegistryObject<Item> compostItem;
-	public static RegistryObject<Item> fertilizer;
+	public static Supplier<Block> composter;
+	public static Supplier<Item> composterItem;
+	public static Supplier<BlockEntityType<TileEntityComposter>> composterEntityType;
+	public static Supplier<MenuType<ComposterMenu>> composterMenuType;
+	public static Supplier<Item> rottenPlants;
+	public static Supplier<Block> compost;
+	public static Supplier<Item> compostItem;
+	public static Supplier<Item> fertilizer;
 
 	private static final FoodProperties ROTTEN_PLANTS_FOOD = new FoodProperties.Builder()
 		.nutrition(4)

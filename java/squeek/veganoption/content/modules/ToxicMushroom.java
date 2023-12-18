@@ -13,19 +13,20 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 
+import java.util.function.Supplier;
+
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class ToxicMushroom implements IContentModule
 {
-	public static RegistryObject<Item> falseMorel;
-	public static RegistryObject<Item> falseMorelFermented;
+	public static Supplier<Item> falseMorel;
+	public static Supplier<Item> falseMorelFermented;
 
 	@Override
 	public void create()

@@ -25,7 +25,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -38,16 +37,18 @@ import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.entities.EntityPlasticEgg;
 import squeek.veganoption.items.ItemPlasticEgg;
 
+import java.util.function.Supplier;
+
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.*;
 
 public class Egg implements IContentModule
 {
-	public static RegistryObject<Item> potatoStarch;
-	public static RegistryObject<Item> appleSauce;
-	public static RegistryObject<Item> plasticEgg;
-	public static RegistryObject<EntityType<EntityPlasticEgg>> plasticEggEntityType;
-	public static RegistryObject<RecipeSerializer<EggRecipe>> eggRecipeSerializer;
+	public static Supplier<Item> potatoStarch;
+	public static Supplier<Item> appleSauce;
+	public static Supplier<Item> plasticEgg;
+	public static Supplier<EntityType<EntityPlasticEgg>> plasticEggEntityType;
+	public static Supplier<RecipeSerializer<EggRecipe>> eggRecipeSerializer;
 
 	@Override
 	public void create()

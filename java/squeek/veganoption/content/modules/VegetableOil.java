@@ -29,7 +29,6 @@ import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -42,18 +41,19 @@ import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.loot.ReplaceLootModifier;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.*;
 
 public class VegetableOil implements IContentModule
 {
-	public static RegistryObject<Item> seedSunflower;
-	public static RegistryObject<Item> vegetableOilBottle;
-	public static RegistryObject<Item> vegetableOilBucket;
-	public static RegistryObject<FluidType> fluidTypeVegetableOil;
-	public static RegistryObject<Fluid> fluidVegetableOilStill;
-	public static RegistryObject<Fluid> fluidVegetableOilFlowing;
-	public static RegistryObject<Block> fluidBlockVegetableOil;
+	public static Supplier<Item> seedSunflower;
+	public static Supplier<Item> vegetableOilBottle;
+	public static Supplier<Item> vegetableOilBucket;
+	public static Supplier<FluidType> fluidTypeVegetableOil;
+	public static Supplier<Fluid> fluidVegetableOilStill;
+	public static Supplier<Fluid> fluidVegetableOilFlowing;
+	public static Supplier<Block> fluidBlockVegetableOil;
 
 	@Override
 	public void create()

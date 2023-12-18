@@ -20,7 +20,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.blocks.renderers.RenderBasin;
 import squeek.veganoption.blocks.tiles.TileEntityBasin;
@@ -29,14 +29,15 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.*;
 
 public class Basin implements IContentModule
 {
-	public static RegistryObject<Block> basin;
-	public static RegistryObject<Item> basinItem;
-	public static RegistryObject<BlockEntityType<TileEntityBasin>> basinType;
+	public static DeferredHolder<Block, BlockBasin> basin;
+	public static Supplier<Item> basinItem;
+	public static Supplier<BlockEntityType<TileEntityBasin>> basinType;
 
 	@Override
 	public void create()

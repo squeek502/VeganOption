@@ -26,7 +26,6 @@ import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -38,18 +37,19 @@ import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.helpers.FluidHelper;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.*;
 
 public class Ink implements IContentModule
 {
-	public static RegistryObject<Item> blackVegetableOilInk;
-	public static RegistryObject<Item> blackVegetableOilInkBucket;
-	public static RegistryObject<Item> waxVegetable;
-	public static RegistryObject<FluidType> blackInkFluidType;
-	public static RegistryObject<Fluid> blackInkFluidStill;
-	public static RegistryObject<Fluid> blackInkFluidFlowing;
-	public static RegistryObject<Block> blackInk;
+	public static Supplier<Item> blackVegetableOilInk;
+	public static Supplier<Item> blackVegetableOilInkBucket;
+	public static Supplier<Item> waxVegetable;
+	public static Supplier<FluidType> blackInkFluidType;
+	public static Supplier<Fluid> blackInkFluidStill;
+	public static Supplier<Fluid> blackInkFluidFlowing;
+	public static Supplier<Block> blackInk;
 
 	@Override
 	public void create()

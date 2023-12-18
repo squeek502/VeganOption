@@ -14,7 +14,7 @@ public class TemperatureHelper
 
 	public static float getBiomeTemperature(Level level, BlockPos pos)
 	{
-		return level.getBiome(pos).get().getBaseTemperature() * FLOAT_TEMP_TO_CELSIUS;
+		return level.getBiome(pos).value().getBaseTemperature() * FLOAT_TEMP_TO_CELSIUS;
 	}
 
 	public static float celsiusToFahrenheit(float celsius)

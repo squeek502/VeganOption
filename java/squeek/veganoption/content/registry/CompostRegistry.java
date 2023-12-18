@@ -1,16 +1,15 @@
 package squeek.veganoption.content.registry;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
-import squeek.veganoption.helpers.MiscHelper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +32,7 @@ public class CompostRegistry
 		long millisecondsStart = System.currentTimeMillis();
 		int numRegistered = 0;
 
-		for (Item item : ForgeRegistries.ITEMS)
+		for (Item item : BuiltInRegistries.ITEM)
 		{
 			ItemStack itemStack = new ItemStack(item);
 			if (!isBlacklisted(item) && item.isEdible() && !(item instanceof BowlFoodItem) && !itemStack.hasCraftingRemainingItem() && !itemStack.getFoodProperties(null).isMeat())
@@ -61,7 +60,7 @@ public class CompostRegistry
 
 	public static boolean isBrown(Item item)
 	{
-		return MiscHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_BROWN) && !isBlacklisted(item);
+		return ContentHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_BROWN) && !isBlacklisted(item);
 	}
 
 	public static boolean isGreen(ItemStack itemStack)
@@ -74,7 +73,7 @@ public class CompostRegistry
 		if (isBlacklisted(item))
 			return false;
 
-		if (MiscHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_GREEN) || compostableFoods.contains(item))
+		if (ContentHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_GREEN) || compostableFoods.contains(item))
 			return true;
 
 		return compostableFoods.contains(item);
@@ -82,6 +81,6 @@ public class CompostRegistry
 
 	public static boolean isBlacklisted(Item item)
 	{
-		return MiscHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_BLACKLIST);
+		return ContentHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_BLACKLIST);
 	}
 }

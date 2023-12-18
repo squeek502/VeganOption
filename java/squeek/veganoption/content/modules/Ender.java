@@ -28,7 +28,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.blocks.BlockEncrustedObsidian;
 import squeek.veganoption.blocks.BlockEnderRift;
 import squeek.veganoption.blocks.BlockRawEnder;
@@ -41,20 +41,21 @@ import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.*;
 
 public class Ender implements IContentModule
 {
-	public static RegistryObject<Block> encrustedObsidian;
-	public static RegistryObject<Item> encrustedObsidianItem;
-	public static RegistryObject<Block> enderRift;
-	public static RegistryObject<BlockEntityType<TileEntityEnderRift>> enderRiftType;
-	public static RegistryObject<FluidType> rawEnderFluidType;
-	public static RegistryObject<Fluid> rawEnderStill;
-	public static RegistryObject<Fluid> rawEnderFlowing;
-	public static RegistryObject<Block> rawEnderBlock;
-	public static RegistryObject<Item> rawEnderBucket;
+	public static DeferredHolder<Block, BlockEncrustedObsidian> encrustedObsidian;
+	public static Supplier<Item> encrustedObsidianItem;
+	public static Supplier<Block> enderRift;
+	public static Supplier<BlockEntityType<TileEntityEnderRift>> enderRiftType;
+	public static Supplier<FluidType> rawEnderFluidType;
+	public static Supplier<Fluid> rawEnderStill;
+	public static Supplier<Fluid> rawEnderFlowing;
+	public static Supplier<Block> rawEnderBlock;
+	public static Supplier<Item> rawEnderBucket;
 	public static final int RAW_ENDER_PER_PEARL = FluidType.BUCKET_VOLUME;
 
 	@Override

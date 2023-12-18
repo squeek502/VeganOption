@@ -6,18 +6,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.Modifiers;
+
+import java.util.function.Supplier;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.REGISTER_RECIPESERIALIZERS;
 
 public class RecipeRegistration
 {
-	public static RegistryObject<RecipeSerializer<ShapelessMatchingTagRecipe>> TAG_MATCH_SHAPELESS_SERIALIZER;
-	public static RegistryObject<RecipeSerializer<ConversionRecipe>> CONVERSION_RECIPE_SERIALIZER;
-	public static RegistryObject<RecipeSerializer<ShapelessDamageItemRecipe>> DAMAGE_ITEM_SHAPELESS_SERIALIZER;
-	public static RegistryObject<RecipeSerializer<SmeltingRecipeWithCount>> SMELTING_COUNT_SERIALIZER;
+	public static Supplier<RecipeSerializer<ShapelessMatchingTagRecipe>> TAG_MATCH_SHAPELESS_SERIALIZER;
+	public static Supplier<RecipeSerializer<ConversionRecipe>> CONVERSION_RECIPE_SERIALIZER;
+	public static Supplier<RecipeSerializer<ShapelessDamageItemRecipe>> DAMAGE_ITEM_SHAPELESS_SERIALIZER;
+	public static Supplier<RecipeSerializer<SmeltingRecipeWithCount>> SMELTING_COUNT_SERIALIZER;
 	public static final String TAG_MATCH_SHAPELESS_NAME = "crafting_shapeless_matching_tags";
 	public static final String CONVERSION_RECIPE_NAME = "conversion";
 	public static final String DAMAGE_ITEM_SHAPELESS_NAME = "crafting_shapeless_damage_item";

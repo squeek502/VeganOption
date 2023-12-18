@@ -1,7 +1,6 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -13,11 +12,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
+
+import java.util.function.Supplier;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
@@ -25,11 +26,11 @@ import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Burlap implements IContentModule
 {
-	public static RegistryObject<Item> burlap;
-	public static RegistryObject<Item> burlapHelmet;
-	public static RegistryObject<Item> burlapChestplate;
-	public static RegistryObject<Item> burlapLeggings;
-	public static RegistryObject<Item> burlapBoots;
+	public static Supplier<Item> burlap;
+	public static DeferredHolder<Item, DyeableArmorItem> burlapHelmet;
+	public static DeferredHolder<Item, DyeableArmorItem> burlapChestplate;
+	public static DeferredHolder<Item, DyeableArmorItem> burlapLeggings;
+	public static DeferredHolder<Item, DyeableArmorItem> burlapBoots;
 
 	@Override
 	public void create()
@@ -132,12 +133,9 @@ public class Burlap implements IContentModule
 	@SubscribeEvent
 	public static void registerColorHandlers(RegisterColorHandlersEvent.Item event)
 	{
-		event.register(new ItemColor() {
-			@Override
-			public int getColor(ItemStack stack, int tintIndex)
-			{
-				return tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack);
-			}
-		}, burlapBoots.get(), burlapLeggings.get(), burlapChestplate.get(), burlapHelmet.get());
+		event.register(
+			(stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack),
+			burlapBoots.get(), burlapLeggings.get(), burlapChestplate.get(), burlapHelmet.get()
+		);
 	}
 }

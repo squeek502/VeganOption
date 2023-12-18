@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.state.properties.BedPart;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 import squeek.veganoption.blocks.BlockBedStraw;
 import squeek.veganoption.content.ContentHelper;
@@ -26,14 +25,15 @@ import squeek.veganoption.items.ItemBedStraw;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.REGISTER_BLOCKS;
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class StrawBed implements IContentModule
 {
-	public static RegistryObject<Block> bedStrawBlock;
-	public static RegistryObject<Item> bedStrawItem;
+	public static Supplier<Block> bedStrawBlock;
+	public static Supplier<Item> bedStrawItem;
 
 	@Override
 	public void create()

@@ -1,17 +1,16 @@
 package squeek.veganoption.content;
 
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import squeek.veganoption.ModInfo;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class ContentHelper
 {
@@ -31,7 +30,7 @@ public class ContentHelper
 	 */
 	public static boolean isItemTaggedAs(Item item, TagKey<Item> tag)
 	{
-		return Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tag).contains(item);
+		return BuiltInRegistries.ITEM.getTag(tag).map(holders -> holders.stream().anyMatch(h -> h.value() == item)).orElse(false);
 	}
 
 	public static class ItemTags

@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
@@ -34,7 +34,7 @@ public class SimpleBlockDropLootModifier extends LootModifier
 	public static final Supplier<Codec<SimpleBlockDropLootModifier>> CODEC = Suppliers.memoize(() -> {
 		return RecordCodecBuilder.create(instance -> codecStart(instance).and(
 			instance.group(
-				ForgeRegistries.ITEMS.getCodec().fieldOf("drop").forGetter(m -> m.drop),
+				BuiltInRegistries.ITEM.byNameCodec().fieldOf("drop").forGetter(m -> m.drop),
 				NumberProviders.CODEC.fieldOf("chance").forGetter(m -> m.chance),
 				NumberProviders.CODEC.fieldOf("num").forGetter(m -> m.num)
 			)).apply(instance, SimpleBlockDropLootModifier::new)

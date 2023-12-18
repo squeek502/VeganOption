@@ -18,7 +18,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.BlockKapok;
 import squeek.veganoption.content.ContentHelper;
@@ -37,9 +37,9 @@ import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class Kapok implements IContentModule
 {
-	public static RegistryObject<Item> kapokTuft;
-	public static Map<DyeColor, RegistryObject<Block>> kapokBlocks = new EnumMap<>(DyeColor.class);
-	public static Map<DyeColor, RegistryObject<Item>> kapokBlockItems = new EnumMap<>(DyeColor.class);
+	public static Supplier<Item> kapokTuft;
+	public static Map<DyeColor, DeferredHolder<Block, BlockKapok>> kapokBlocks = new EnumMap<>(DyeColor.class);
+	public static Map<DyeColor, DeferredHolder<Item, BlockItem>> kapokBlockItems = new EnumMap<>(DyeColor.class);
 	private static Map<DyeColor, Supplier<Item>> woolBlockItems = new EnumMap<>(DyeColor.class);
 
 	@Override
@@ -89,7 +89,7 @@ public class Kapok implements IContentModule
 	@Override
 	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		for (Map.Entry<DyeColor, RegistryObject<Item>> entry : kapokBlockItems.entrySet())
+		for (Map.Entry<DyeColor, DeferredHolder<Item, BlockItem>> entry : kapokBlockItems.entrySet())
 		{
 			ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, entry.getValue().get())
 				.requires(entry.getKey().getTag())
@@ -138,7 +138,7 @@ public class Kapok implements IContentModule
 	@Override
 	public void datagenItemModels(ItemModelProvider provider)
 	{
-		for (Map.Entry<DyeColor, RegistryObject<Item>> entry : kapokBlockItems.entrySet())
+		for (Map.Entry<DyeColor, DeferredHolder<Item, BlockItem>> entry : kapokBlockItems.entrySet())
 		{
 			String color = entry.getKey().getName();
 			provider.withExistingParent(color + "_kapok", provider.modLoc("block/" + color + "_kapok"));
@@ -174,7 +174,7 @@ public class Kapok implements IContentModule
 			@Override
 			protected Iterable<Block> getKnownBlocks()
 			{
-				return kapokBlocks.values().stream().map(RegistryObject::get).toList();
+				return kapokBlocks.values().stream().map((b) -> (Block) b.get()).toList();
 			}
 		};
 	}

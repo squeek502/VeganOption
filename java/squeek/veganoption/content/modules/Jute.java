@@ -36,7 +36,7 @@ import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.blocks.BlockJutePlant;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.content.ContentHelper;
@@ -47,6 +47,7 @@ import squeek.veganoption.loot.GenericBlockLootSubProvider;
 import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.REGISTER_BLOCKS;
@@ -55,12 +56,12 @@ import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Jute implements IContentModule
 {
-	public static RegistryObject<Block> juteBundled;
-	public static RegistryObject<Item> juteBundledItem;
-	public static RegistryObject<Block> jutePlant;
-	public static RegistryObject<Item> juteSeeds;
-	public static RegistryObject<Item> juteStalk;
-	public static RegistryObject<Item> juteFibre;
+	public static DeferredHolder<Block, BlockRettable> juteBundled;
+	public static DeferredHolder<Item, BlockItem> juteBundledItem;
+	public static DeferredHolder<Block, BlockJutePlant> jutePlant;
+	public static Supplier<Item> juteSeeds;
+	public static Supplier<Item> juteStalk;
+	public static Supplier<Item> juteFibre;
 
 	public static final int JUTE_BASE_COLOR = 0x67ce0c;
 	public static final int JUTE_RETTED_COLOR = 0xbfb57e;

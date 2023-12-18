@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
@@ -20,16 +19,18 @@ import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.items.ItemWashableWheat;
 
+import java.util.function.Supplier;
+
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 // TODO: Tooltips, usage, and recipe text
 public class Seitan implements IContentModule
 {
-	public static RegistryObject<Item> wheatFlour;
-	public static RegistryObject<Item> wheatDough;
-	public static RegistryObject<Item> seitanUnwashed;
-	public static RegistryObject<Item> seitanRaw;
-	public static RegistryObject<Item> seitanCooked;
+	public static Supplier<Item> wheatFlour;
+	public static Supplier<Item> wheatDough;
+	public static Supplier<Item> seitanUnwashed;
+	public static Supplier<Item> seitanRaw;
+	public static Supplier<Item> seitanCooked;
 
 	private static final float COOK_XP = 0.35f;
 

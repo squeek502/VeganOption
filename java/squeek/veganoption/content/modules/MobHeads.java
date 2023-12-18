@@ -9,18 +9,19 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
+
+import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 // currently depends on potatoStarch
 public class MobHeads implements IContentModule
 {
-	public static RegistryObject<Item> papierMache;
-	public static RegistryObject<Item> mobHeadBlank;
+	public static Supplier<Item> papierMache;
+	public static Supplier<Item> mobHeadBlank;
 
 	@Override
 	public void create()

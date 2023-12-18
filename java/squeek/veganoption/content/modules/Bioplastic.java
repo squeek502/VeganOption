@@ -7,19 +7,20 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.recipes.CookingRecipeWithCountBuilder;
 import squeek.veganoption.content.recipes.ShapelessDamageItemRecipeBuilder;
 
+import java.util.function.Supplier;
+
 import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 
 public class Bioplastic implements IContentModule
 {
-	public static RegistryObject<Item> bioplastic;
-	public static RegistryObject<Item> plasticRod;
+	public static Supplier<Item> bioplastic;
+	public static Supplier<Item> plasticRod;
 
 	@Override
 	public void create()

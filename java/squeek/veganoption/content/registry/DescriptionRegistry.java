@@ -1,7 +1,7 @@
 package squeek.veganoption.content.registry;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.helpers.LangHelper;
 
@@ -23,7 +23,7 @@ public class DescriptionRegistry
 		long millisecondsStart = System.currentTimeMillis();
 		int numRegistered = 0;
 
-		for (Item item : ForgeRegistries.ITEMS)
+		for (Item item : BuiltInRegistries.ITEM)
 		{
 			if (tryRegisterItem(item))
 				numRegistered++;
