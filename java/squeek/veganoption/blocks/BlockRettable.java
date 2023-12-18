@@ -154,10 +154,10 @@ public class BlockRettable extends HayBlock
 		{
 			if (getter == null || pos == null)
 				return baseColor;
-			else if (isRetted(getter, pos))
+			else if (isRetted(state))
 				return rettedColor;
 			else
-				return ColorHelper.blendBetweenColors(getRettingPercent(getter, pos), baseColor, rettedColor, 0D, 1D);
+				return ColorHelper.blendBetweenColors(getRettingPercent(state), baseColor, rettedColor, 0D, 1D);
 		}
 
 		@Override
