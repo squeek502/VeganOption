@@ -51,6 +51,7 @@ public class ContentHelper
 		public static final TagKey<Item> DYES_GREEN = Tags.Items.DYES_GREEN;
 		public static final TagKey<Item> DYES_LIGHT_GRAY = Tags.Items.DYES_LIGHT_GRAY;
 		public static final TagKey<Item> DYES_LIME = Tags.Items.DYES_LIME;
+		public static final TagKey<Item> DYES_PINK = Tags.Items.DYES_PINK;
 		public static final TagKey<Item> EGGS = Tags.Items.EGGS;
 		public static final TagKey<Item> EGG_OBJECT = veganoptionTag("eggs/object");
 		public static final TagKey<Item> EGG_BAKING = veganoptionTag("eggs/baking");

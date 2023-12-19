@@ -64,7 +64,7 @@ public class MobHeads implements IContentModule
 		mobHeadRecipe(ContentHelper.ItemTags.DYES_BROWN, Items.PLAYER_HEAD, output, provider);
 		mobHeadRecipe(ContentHelper.ItemTags.DYES_GREEN, Items.ZOMBIE_HEAD, output, provider);
 		mobHeadRecipe(ContentHelper.ItemTags.DYES_LIME, Items.CREEPER_HEAD, output, provider);
-		// todo: piglin head
+		mobHeadRecipe(ContentHelper.ItemTags.DYES_PINK, Items.PIGLIN_HEAD, output, provider);
 	}
 
 	private void mobHeadRecipe(TagKey<Item> dye, Item mobHead, RecipeOutput output, DataGenProviders.Recipes provider)
