@@ -158,6 +158,7 @@ public class Egg implements IContentModule
 			@Override
 			public void onHitEntity(EntityHitResult hitResult, EntityPlasticEgg eggEntity)
 			{
+				playFireChargeSound(hitResult.getEntity().level(), hitResult.getEntity().blockPosition());
 				hitResult.getEntity().setSecondsOnFire(2);
 			}
 
@@ -169,9 +170,14 @@ public class Egg implements IContentModule
 				BlockPos relativePos = hitResult.getBlockPos().relative(dir);
 				if (BaseFireBlock.canBePlacedAt(level, relativePos, dir))
 				{
-					level.playSound(null, relativePos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+					playFireChargeSound(level, relativePos);
 					level.setBlockAndUpdate(relativePos, BaseFireBlock.getState(level, relativePos));
 				}
+			}
+
+			private void playFireChargeSound(Level level, BlockPos pos)
+			{
+				level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
 			}
 		});
 
