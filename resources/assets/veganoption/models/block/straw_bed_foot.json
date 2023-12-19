@@ -1,26 +1,47 @@
 {
-	"render_type": "cutout_mipped",
 	"textures": {
-		"particle": "veganoption:block/straw_bed_feet_top",
-		"top": "veganoption:block/straw_bed_feet_top",
-		"bottom": "block/oak_planks",
+		"legs": "veganoption:block/bed_legs",
 		"end": "veganoption:block/straw_bed_feet_end",
-		"side": "veganoption:block/straw_bed_feet_side"
+		"side": "veganoption:block/straw_bed_feet_side",
+		"top": "veganoption:block/straw_bed_feet_top",
+		"wood": "block/oak_planks",
+		"particle": "block/oak_planks"
 	},
 	"elements": [
-		{   "from": [ 0, 0, 0 ],
-			"to": [ 16, 9, 16 ],
+		{
+			"from": [0, 0, 0],
+			"to": [3, 3, 3],
 			"faces": {
-				"up":    { "uv": [  0, 16, 16,  0 ], "texture": "#top", "rotation": 90 },
-				"north": { "uv": [  0,  7, 16, 16 ], "texture": "#end" },
-				"west":  { "uv": [  0,  7, 16, 16 ], "texture": "#side" },
-				"east":  { "uv": [ 16,  7,  0, 16 ], "texture": "#side" }
+				"north": {"uv": [2, 8, 5, 11], "texture": "#legs"},
+				"east": {"uv": [11, 8, 14, 11], "texture": "#legs"},
+				"south": {"uv": [8, 8, 11, 11], "texture": "#legs"},
+				"west": {"uv": [5, 8, 8, 11], "texture": "#legs"},
+				"up": {"uv": [5, 5, 8, 8], "texture": "#legs"},
+				"down": {"uv": [8, 5, 11, 8], "texture": "#legs"}
 			}
 		},
-		{   "from": [ 0, 3, 0 ],
-			"to": [ 16, 3, 16 ],
+		{
+			"from": [13, 0, 0],
+			"to": [16, 3, 3],
 			"faces": {
-				"down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#bottom" }
+				"north": {"uv": [5, 8, 8, 11], "texture": "#legs"},
+				"east": {"uv": [2, 8, 5, 11], "texture": "#legs"},
+				"south": {"uv": [11, 8, 14, 11], "texture": "#legs"},
+				"west": {"uv": [8, 8, 11, 11], "texture": "#legs"},
+				"up": {"uv": [5, 5, 8, 8], "texture": "#legs"},
+				"down": {"uv": [8, 5, 11, 8], "texture": "#legs"}
+			}
+		},
+		{
+			"from": [0, 3, 0],
+			"to": [16, 9, 16],
+			"faces": {
+				"north": {"uv": [0, 7, 16, 13], "texture": "#end"},
+				"east": {"uv": [0, 7, 16, 13], "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#end"},
+				"west": {"uv": [0, 7, 16, 13], "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#wood"}
 			}
 		}
 	]
