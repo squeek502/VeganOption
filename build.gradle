@@ -8,7 +8,7 @@ plugins {
 }
 
 if (version == "unspecified")
-	version = "0.2.0"
+	version = "0.3.0"
 if (System.getenv("BUILD_NUMBER") != null)
 	version += (version ? "+" : "") + "${System.getenv("BUILD_NUMBER")}"
 if (System.getenv("GIT_COMMIT") != null)
