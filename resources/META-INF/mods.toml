@@ -8,7 +8,7 @@ issueTrackerURL="https://github.com/squeek502/veganoption/issues"
 	version="${mod_version}"
 	displayName="${mod_name}"
 	authors="${mod_authors}"
-	#logoFile="examplemod.png" #TODO
+	logoFile="logo.png"
 	displayTest="MATCH_VERSION"
 	description='''${mod_description}'''
 
