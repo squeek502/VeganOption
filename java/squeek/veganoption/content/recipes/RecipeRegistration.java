@@ -5,14 +5,20 @@ import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.Modifiers;
+import squeek.veganoption.helpers.MiscHelper;
 
 import java.util.function.Supplier;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 import static squeek.veganoption.VeganOption.REGISTER_RECIPESERIALIZERS;
 
+@Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RecipeRegistration
 {
 	public static Supplier<RecipeSerializer<ShapelessMatchingTagRecipe>> TAG_MATCH_SHAPELESS_SERIALIZER;
@@ -38,5 +44,11 @@ public class RecipeRegistration
 	public static void datagen(RecipeOutput output)
 	{
 		SpecialRecipeBuilder.special(CONVERSION_RECIPE_SERIALIZER.get()).save(output, new ResourceLocation(MODID_LOWER, CONVERSION_RECIPE_NAME));
+	}
+
+	@SubscribeEvent
+	public static void setRecipeManagerCache(AddReloadListenerEvent event)
+	{
+		MiscHelper.setCachedRecipeManager(event.getServerResources().getRecipeManager());
 	}
 }

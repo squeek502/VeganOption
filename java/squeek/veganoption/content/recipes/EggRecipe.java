@@ -81,6 +81,6 @@ public class EggRecipe extends CustomRecipe
 	@Override
 	public RecipeSerializer<?> getSerializer()
 	{
-		return null;
+		return Egg.eggRecipeSerializer.get();
 	}
 }

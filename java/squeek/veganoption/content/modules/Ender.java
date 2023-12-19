@@ -150,6 +150,7 @@ public class Ender implements IContentModule
 		};
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void finishClient(FMLClientSetupEvent event)
 	{

@@ -1,13 +1,10 @@
 package squeek.veganoption.network;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.DistExecutor;
 import net.neoforged.neoforge.network.NetworkEvent;
 import net.neoforged.neoforge.network.simple.SimpleMessage;
-import squeek.veganoption.blocks.BlockEnderRift;
-import squeek.veganoption.helpers.RandomHelper;
 
 public class EnderRiftParticleMessage implements SimpleMessage
 {
@@ -33,10 +30,10 @@ public class EnderRiftParticleMessage implements SimpleMessage
 		buf.writeDouble(z);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void onMessage(EnderRiftParticleMessage message, NetworkEvent.Context ctx)
 	{
-		ctx.enqueueWork(() -> BlockEnderRift.spawnBlockTeleportFX(Minecraft.getInstance().level, message.x, message.y, message.z, RandomHelper.random));
+		//noinspection removal
+		ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> EnderRiftParticleMessageClientHandler.handle(message, ctx)));
 		ctx.setPacketHandled(true);
 	}
 }

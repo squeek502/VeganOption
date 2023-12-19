@@ -202,6 +202,7 @@ public class FrozenBubble implements IContentModule
 		PotionBrewing.addMix(Potions.AWKWARD, frozenBubble.get(), Potions.WATER_BREATHING);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void finishClient(FMLClientSetupEvent event)
 	{

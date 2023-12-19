@@ -3,10 +3,7 @@ package squeek.veganoption.content.recipes;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import squeek.veganoption.content.Modifiers;
 
@@ -53,6 +50,6 @@ public class ConversionRecipe extends CustomRecipe
 	@Override
 	public RecipeSerializer<?> getSerializer()
 	{
-		return null;
+		return RecipeRegistration.CONVERSION_RECIPE_SERIALIZER.get();
 	}
 }

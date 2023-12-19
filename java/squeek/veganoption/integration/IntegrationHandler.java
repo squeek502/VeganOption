@@ -1,5 +1,7 @@
 package squeek.veganoption.integration;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
@@ -20,6 +22,7 @@ public class IntegrationHandler extends IntegrationBase
 		integrators.values().forEach(IntegratorBase::create);
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{

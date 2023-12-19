@@ -1,19 +1,13 @@
 package squeek.veganoption.helpers;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import squeek.veganoption.ModInfo;
 
 import java.util.Collection;
 
-@Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class MiscHelper
 {
 	public static final int MAX_REDSTONE_SIGNAL_STRENGTH = 15;
@@ -41,7 +35,7 @@ public class MiscHelper
 
 		try
 		{
-			Level clientLevel = Minecraft.getInstance().level;
+			Level clientLevel = ClientHelper.getLevel();
 			if (clientLevel != null)
 				return clientLevel.getRecipeManager();
 		}
@@ -57,9 +51,8 @@ public class MiscHelper
 		throw new IllegalStateException("[Vegan Option] RecipeManager not found on server, client, or startup cache!");
 	}
 
-	@SubscribeEvent
-	public static void setRecipeManagerCache(AddReloadListenerEvent event)
+	public static void setCachedRecipeManager(RecipeManager manager)
 	{
-		cachedRecipeManager = event.getServerResources().getRecipeManager();
+		cachedRecipeManager = manager;
 	}
 }
