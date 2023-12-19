@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.Direction;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -50,7 +49,7 @@ public class StrawBed implements IContentModule
 			.pattern("===")
 			.define('~', Items.HAY_BLOCK)
 			.define('=', ContentHelper.ItemTags.WOOD_PLANKS)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.unlockedBy("has_hay", provider.hasW(Items.HAY_BLOCK))
 			.save(output);
 	}
 

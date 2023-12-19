@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
@@ -39,7 +38,7 @@ public class Feather implements IContentModule
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, fauxFeather.get())
 			.requires(ContentHelper.ItemTags.FLUFFY_MATERIAL)
 			.requires(ContentHelper.ItemTags.PLASTIC_ROD)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.unlockedBy("has_kapok", provider.hasW(Kapok.kapokTuft.get()))
 			.save(output);
 	}
 

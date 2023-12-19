@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -73,7 +72,7 @@ public class Burlap implements IContentModule
 			.pattern("~~")
 			.pattern("~~")
 			.define('~', ContentHelper.ItemTags.FIBRES)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) // todo
+			.unlockedBy("has_jute", provider.hasW(Jute.juteFibre.get()))
 			.save(output);
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, burlapBoots.get())

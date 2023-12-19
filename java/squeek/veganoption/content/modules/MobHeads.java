@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -47,7 +46,7 @@ public class MobHeads implements IContentModule
 			.requires(Items.PAPER)
 			.requires(Items.PAPER)
 			.requires(Items.PAPER)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_paper", provider.hasW(Items.PAPER))
 			.save(output);
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, mobHeadBlank.get())

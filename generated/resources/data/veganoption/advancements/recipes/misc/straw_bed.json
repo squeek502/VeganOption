@@ -1,20 +1,29 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
+    "has_hay": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:hay_block"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "veganoption:straw_bed"
       },
       "trigger": "minecraft:recipe_unlocked"
-    },
-    "unlock_right_away": {
-      "trigger": "minecraft:tick"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "unlock_right_away"
+      "has_hay"
     ]
   ],
   "rewards": {

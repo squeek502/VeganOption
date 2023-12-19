@@ -107,14 +107,14 @@ public class Kapok implements IContentModule
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STRING)
 			.pattern("~~~")
 			.define('~', kapokTuft.get())
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_kapok", provider.hasW(kapokTuft.get()))
 			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "string"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, kapokBlockItems.get(DyeColor.WHITE).get())
 			.pattern("~~")
 			.pattern("~~")
 			.define('~', kapokTuft.get())
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_kapok", provider.hasW(kapokTuft.get()))
 			.save(output);
 	}
 

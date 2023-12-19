@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.Direction;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -165,16 +164,16 @@ public class Jute implements IContentModule
 			.pattern("///")
 			.pattern("///")
 			.define('/', juteStalk.get())
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_jute", provider.hasW(juteStalk.get()))
 			.save(output);
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, juteSeeds.get())
 			.requires(juteStalk.get())
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_jute", provider.hasW(juteStalk.get()))
 			.save(output);
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STRING)
 			.pattern("~~")
 			.define('~', ContentHelper.ItemTags.FIBRES)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_jute", provider.hasW(juteStalk.get()))
 			.save(output);
 	}
 

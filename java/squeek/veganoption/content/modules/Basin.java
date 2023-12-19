@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -69,7 +68,7 @@ public class Basin implements IContentModule
 			.pattern(" g ")
 			.define('g', Tags.Items.GLASS_COLORLESS)
 			.define('c', Items.CAULDRON)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.unlockedBy("has_cauldron", provider.hasW(Items.CAULDRON))
 			.save(output);
 	}
 

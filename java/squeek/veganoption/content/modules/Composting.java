@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -188,7 +187,7 @@ public class Composting implements IContentModule
 			.pattern(" / ")
 			.define('/', ContentHelper.ItemTags.STICKS)
 			.define('c', Items.CHEST)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.unlockedBy("has_chest", provider.hasW(Items.CHEST))
 			.save(output);
 
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, fertilizer.get(), 8)

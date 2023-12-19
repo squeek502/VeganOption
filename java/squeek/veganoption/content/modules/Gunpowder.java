@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
@@ -12,8 +11,8 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import squeek.veganoption.content.ContentHelper;
-import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.DataGenProviders;
+import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 
 import java.util.function.Supplier;
@@ -53,7 +52,7 @@ public class Gunpowder implements IContentModule
 			.requires(Items.CHARCOAL)
 			.requires(ContentHelper.ItemTags.SULFUR)
 			.requires(ContentHelper.ItemTags.SALTPETER)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) // todo
+			.unlockedBy("has_sulfur", provider.hasW(sulfur.get()))
 			.save(output);
 	}
 

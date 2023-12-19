@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -177,12 +176,12 @@ public class FrozenBubble implements IContentModule
 			.pattern("iii")
 			.define('i', Items.ICE)
 			.define('s', soapSolution.get())
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.unlockedBy("has_soap_solution", provider.hasW(soapSolution.get()))
 			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "frozen_bubble_ice"));
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, frozenBubble.get())
 			.requires(Items.PACKED_ICE)
 			.requires(soapSolution.get())
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick()) //todo
+			.unlockedBy("has_soap_solution", provider.hasW(soapSolution.get()))
 			.save(output, new ResourceLocation(ModInfo.MODID_LOWER, "frozen_bubble_packed_ice"));
 	}
 

@@ -1,6 +1,5 @@
 package squeek.veganoption.content.modules;
 
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -111,7 +110,7 @@ public class PlantMilk implements IContentModule
 			.requires(Items.WATER_BUCKET)
 			.requires(Ingredient.of(ContentHelper.ItemTags.PLANT_MILK_SOURCES), 2)
 			.requires(Items.SUGAR)
-			.unlockedBy("unlock_right_away", PlayerTrigger.TriggerInstance.tick())
+			.unlockedBy("has_water_bucket", provider.hasW(Items.WATER_BUCKET))
 			.save(output);
 	}
 
