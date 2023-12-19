@@ -2,9 +2,12 @@ package squeek.veganoption.content.modules;
 
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.food.FoodProperties;
@@ -16,10 +19,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -147,6 +152,28 @@ public class Egg implements IContentModule
 		Modifiers.eggs.addItem(Items.BONE_MEAL, growModifier);
 		// todo: compat module
 		Modifiers.eggs.addItem(Composting.fertilizer.get(), growModifier);
+
+		Modifiers.eggs.addItem(Items.FIRE_CHARGE, new EggModifier()
+		{
+			@Override
+			public void onHitEntity(EntityHitResult hitResult, EntityPlasticEgg eggEntity)
+			{
+				hitResult.getEntity().setSecondsOnFire(2);
+			}
+
+			@Override
+			public void onHitBlock(BlockHitResult hitResult, EntityPlasticEgg eggEntity)
+			{
+				Level level = eggEntity.level();
+				Direction dir = hitResult.getDirection();
+				BlockPos relativePos = hitResult.getBlockPos().relative(dir);
+				if (BaseFireBlock.canBePlacedAt(level, relativePos, dir))
+				{
+					level.playSound(null, relativePos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+					level.setBlockAndUpdate(relativePos, BaseFireBlock.getState(level, relativePos));
+				}
+			}
+		});
 
 		Modifiers.recipes.convertInputForFood(() -> Ingredient.of(Items.EGG), () -> Ingredient.of(ContentHelper.ItemTags.EGG_BAKING));
 		Modifiers.recipes.convertInputForFood(() -> Ingredient.of(ContentHelper.ItemTags.EGGS), () -> Ingredient.of(ContentHelper.ItemTags.EGG_BAKING));
