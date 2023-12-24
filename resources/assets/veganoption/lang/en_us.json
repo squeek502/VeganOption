@@ -17,11 +17,9 @@
     "veganoption.waila.composter.empty": "Empty",
     "veganoption.waila.composter.percent": "Composting: %s",
     "veganoption.waila.composter.temperature": "Temperature: %s",
-    "veganoption.info.basin.empty": "Empty",
-    "veganoption.info.basin.open": "Open",
-    "veganoption.info.basin.closed": "Closed",
-    "veganoption.context.fluid.title": "%1$s",
-    "veganoption.context.fluid.value": "%2$dmB",
+    "config.jade.plugin_veganoption.basin": "Basin State and Contents",
+    "veganoption.waila.basin.open": "Open",
+    "veganoption.waila.basin.closed": "Closed",
 
     "_comment": "Jute",
     "block.veganoption.bundled_jute": "Bundled Jute",
@@ -81,6 +79,7 @@
     "veganoption:plant_milk_bucket.vowiki.usage": "If you're looking for the curative effects that the Minecraft [[minecraft:milk_bucket]] gives, use [[veganoption:soap]] instead.",
     "block.veganoption.plant_milk": "Plant Milk",
     "fluid.block.veganoption.plant_milk": "Plant Milk",
+    "fluid_type.veganoption.plant_milk": "Plant Milk",
 
     "_comment": "Egg",
     "item.veganoption.apple_sauce": "Apple Sauce",
@@ -99,6 +98,7 @@
     "item.veganoption.vegetable_oil_bucket": "Bucket of Vegetable Oil",
     "fluid.block.veganoption.vegetable_oil": "Vegetable Oil",
     "block.veganoption.vegetable_oil": "Vegetable Oil",
+    "fluid_type.veganoption.vegetable_oil": "Vegetable Oil",
 
     "_comment": "Vegetable Oil Ink",
     "item.veganoption.vegetable_oil_ink_black": "Black Vegetable Oil Ink",
@@ -106,6 +106,7 @@
     "item.veganoption.vegetable_oil_ink_black_bucket": "Black Vegetable Oil Ink Bucket",
     "fluid.block.veganoption.black_ink": "Black Vegetable Oil Ink",
     "block.veganoption.black_ink": "Black Vegetable Oil Ink",
+    "fluid_type.veganoption.black_ink": "Black Vegetable Oil Ink",
     "item.veganoption.vegetable_wax": "Vegetable Wax",
     "item.veganoption.rosin": "Rosin",
 
@@ -134,6 +135,7 @@
     "block.veganoption.lye_water.vowiki.usage": "Warning: %1$s is corrosive.",
     "item.veganoption.lye_water_bucket": "Wood Ash Lye Bucket",
     "fluid.block.veganoption.lye_water": "Wood Ash Lye",
+    "fluid_type.veganoption.lye_water": "Wood Ash Lye",
     "death.attack.veganoption.lye_water": "%1$s bathed in lye",
     "death.attack.veganoption.lye_water.player": "%1$s bathed in lye whilst trying to escape %2$s",
     "item.veganoption.soap": "Soap",
@@ -143,6 +145,7 @@
     "item.veganoption.soap_solution.vowiki.usage": "%1$s can be used to create a {entity.veganoption.bubble.name}. It can be used by either a player or a [[minecraft:dispenser]].",
     "fluid.block.veganoption.soap_solution": "Soap Solution",
     "block.veganoption.soap_solution": "Soap Solution",
+    "fluid_type.veganoption.soap_solution": "Soap Solution",
 
     "_comment": "Frozen Bubble",
     "entity.veganoption.bubble": "Bubble",

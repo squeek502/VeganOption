@@ -3,6 +3,7 @@ package squeek.veganoption.integration.jade;
 import net.minecraft.network.chat.Component;
 import snownee.jade.api.*;
 import snownee.jade.api.theme.IThemeHelper;
+import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.blocks.BlockComposter;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
@@ -16,6 +17,7 @@ public class VeganOptionPlugin implements IWailaPlugin
 	{
 		registerer.registerBlockComponent(RettableProvider.getInstance(), BlockRettable.class);
 		registerer.registerBlockComponent(ComposterProvider.getInstance(), BlockComposter.class);
+		registerer.registerBlockComponent(BasinProvider.getInstance(), BlockBasin.class);
 	}
 
 	@Override
