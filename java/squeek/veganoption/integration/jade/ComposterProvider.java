@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ComposterProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor>
 {
-	static final ResourceLocation UID = new ResourceLocation(ModInfo.MODID_LOWER, "composter");
+	private static final ResourceLocation UID = new ResourceLocation(ModInfo.MODID_LOWER, "composter");
 	private static final String DATA_PERCENT = "Percent";
 	private static final String DATA_TEMPERATURE = "Temperature";
 	private static final String DATA_COMPOSTING = "IsComposting";
@@ -63,7 +63,7 @@ public class ComposterProvider implements IBlockComponentProvider, IServerDataPr
 
 	static class HideInventory implements IServerExtensionProvider<TileEntityComposter, ItemStack>
 	{
-		static final ResourceLocation UID = new ResourceLocation(ModInfo.MODID_LOWER, "hide_inventory");
+		private static final ResourceLocation UID = new ResourceLocation(ModInfo.MODID_LOWER, "hide_inventory");
 		private static HideInventory INSTANCE;
 
 		static HideInventory getInstance()
