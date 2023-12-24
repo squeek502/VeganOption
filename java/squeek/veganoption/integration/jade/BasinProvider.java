@@ -22,6 +22,8 @@ public class BasinProvider implements IBlockComponentProvider
 		return INSTANCE;
 	}
 
+	private BasinProvider() {}
+
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config)
 	{

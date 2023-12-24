@@ -24,6 +24,8 @@ public class JutePlantProvider implements IBlockComponentProvider
 		return INSTANCE;
 	}
 
+	private JutePlantProvider() {}
+
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config)
 	{

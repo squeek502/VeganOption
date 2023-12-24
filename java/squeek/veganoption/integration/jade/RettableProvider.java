@@ -23,6 +23,8 @@ public class RettableProvider implements IBlockComponentProvider
 		return INSTANCE;
 	}
 
+	private RettableProvider() {}
+
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig pluginConfig)
 	{

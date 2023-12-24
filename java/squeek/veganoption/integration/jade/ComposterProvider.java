@@ -31,6 +31,8 @@ public class ComposterProvider implements IBlockComponentProvider, IServerDataPr
 		return INSTANCE;
 	}
 
+	private ComposterProvider() {}
+
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config)
 	{
@@ -72,6 +74,8 @@ public class ComposterProvider implements IBlockComponentProvider, IServerDataPr
 				INSTANCE = new HideInventory();
 			return INSTANCE;
 		}
+
+		private HideInventory() {}
 
 		@Override
 		public @Nullable List<ViewGroup<ItemStack>> getGroups(Accessor<?> accessor, TileEntityComposter tileEntityComposter)
