@@ -13,7 +13,7 @@ import squeek.veganoption.helpers.LangHelper;
 
 public class RettableProvider implements IBlockComponentProvider
 {
-	static final ResourceLocation UID = new ResourceLocation(ModInfo.MODID_LOWER, "retting");
+	private static final ResourceLocation UID = new ResourceLocation(ModInfo.MODID_LOWER, "retting");
 	private static RettableProvider INSTANCE;
 
 	static RettableProvider getInstance()

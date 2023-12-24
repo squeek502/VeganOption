@@ -20,6 +20,10 @@ public class VeganOptionPlugin implements IWailaPlugin
 		registerer.registerBlockComponent(ComposterProvider.getInstance(), BlockComposter.class);
 		registerer.registerBlockComponent(BasinProvider.getInstance(), BlockBasin.class);
 		registerer.registerBlockComponent(JutePlantProvider.getInstance(), BlockJutePlant.class);
+
+		registerer.markAsClientFeature(RettableProvider.getInstance().getUid());
+		registerer.markAsClientFeature(BasinProvider.getInstance().getUid());
+		registerer.markAsClientFeature(JutePlantProvider.getInstance().getUid());
 	}
 
 	@Override
@@ -32,11 +36,6 @@ public class VeganOptionPlugin implements IWailaPlugin
 	static void addPercentInfoToTooltip(ITooltip tooltip, String key, float value)
 	{
 		addInfoToTooltip(tooltip, key, String.format("%1$d%%", Math.round(value * 100f)));
-	}
-
-	static void addNumericalInfoToTooltip(ITooltip tooltip, String key, int value)
-	{
-		addInfoToTooltip(tooltip, key, String.format("%1$d", value));
 	}
 
 	static void addInfoToTooltip(ITooltip tooltip, String key, Object arg)

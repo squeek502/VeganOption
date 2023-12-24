@@ -13,7 +13,7 @@
     "veganoption.waila.composter.empty": "Empty",
     "veganoption.waila.composter.percent": "Composting: %s",
     "veganoption.waila.composter.temperature": "Temperature: %s",
-    "config.jade.plugin_veganoption.basin": "Basin State and Contents",
+    "config.jade.plugin_veganoption.basin": "Basin Open/Closed State",
     "veganoption.waila.basin.open": "Open",
     "veganoption.waila.basin.closed": "Closed",
 
