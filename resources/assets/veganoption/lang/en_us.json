@@ -4,7 +4,6 @@
 
     "_comment": "Jade strings",
     "veganoption.waila.jute_growth": "Growth: %s",
-    "veganoption.waila.jute_growth.mature": "Mature",
     "config.jade.plugin_veganoption.retting": "Rettable Block Progress",
     "veganoption.waila.retting": "Retting: %s",
     "veganoption.waila.retting.not_submerged": "Needs to be submerged in water",
