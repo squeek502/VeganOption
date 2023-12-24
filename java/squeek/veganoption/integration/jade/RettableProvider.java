@@ -35,7 +35,7 @@ public class RettableProvider implements IBlockComponentProvider
 		else
 		{
 			if (blockRettable.canRet(accessor.getLevel(), accessor.getPosition()))
-				tooltip.add(Component.translatable(LangHelper.prependModId("waila.retting"), IThemeHelper.get().info(String.format("%1$d%%", Math.round(rettingPercent * 100F)))));
+				VeganOptionPlugin.addPercentInfoToTooltip(tooltip, "waila.retting", rettingPercent);
 			else
 				tooltip.add(Component.translatable(LangHelper.prependModId("waila.retting.not_submerged")));
 		}
