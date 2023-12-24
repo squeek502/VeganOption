@@ -5,6 +5,7 @@ import snownee.jade.api.*;
 import snownee.jade.api.theme.IThemeHelper;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.blocks.BlockComposter;
+import squeek.veganoption.blocks.BlockJutePlant;
 import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.LangHelper;
@@ -18,6 +19,7 @@ public class VeganOptionPlugin implements IWailaPlugin
 		registerer.registerBlockComponent(RettableProvider.getInstance(), BlockRettable.class);
 		registerer.registerBlockComponent(ComposterProvider.getInstance(), BlockComposter.class);
 		registerer.registerBlockComponent(BasinProvider.getInstance(), BlockBasin.class);
+		registerer.registerBlockComponent(JutePlantProvider.getInstance(), BlockJutePlant.class);
 	}
 
 	@Override
