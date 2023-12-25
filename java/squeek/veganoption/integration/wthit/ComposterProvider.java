@@ -1,6 +1,7 @@
 package squeek.veganoption.integration.wthit;
 
 import mcp.mobius.waila.api.*;
+import mcp.mobius.waila.api.data.ItemData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -8,7 +9,6 @@ import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.LangHelper;
 
-// todo: hide inventory contents
 public class ComposterProvider implements IBlockComponentProvider, IDataProvider<TileEntityComposter>
 {
 	static final ResourceLocation CONFIG_ID = new ResourceLocation(ModInfo.MODID_LOWER, "composter");
@@ -51,6 +51,8 @@ public class ComposterProvider implements IBlockComponentProvider, IDataProvider
 			data.raw().putBoolean(DATA_COMPOSTING, te.isComposting());
 			data.raw().putFloat(DATA_PERCENT, te.getCompostingPercent());
 			data.raw().putFloat(DATA_TEMPERATURE, te.getCompostTemperature());
+			// Hide inventory contents
+			data.blockAll(ItemData.class);
 		}
 	}
 }
