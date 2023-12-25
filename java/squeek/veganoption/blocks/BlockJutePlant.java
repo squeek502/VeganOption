@@ -86,8 +86,8 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 
 		if (isFullyGrown(newGrowthStage))
 		{
-			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			level.setBlockAndUpdate(pos.below(), Blocks.AIR.defaultBlockState());
+			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			DoublePlantBlock.placeAt(level, Blocks.LARGE_FERN.defaultBlockState(), pos.below(), 3);
 		}
 		else
