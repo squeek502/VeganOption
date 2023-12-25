@@ -98,13 +98,13 @@ def badpacketsVersion = "0.5.4"
 dependencies {
 	implementation "net.neoforged:neoforge:${neoVersion}"
 	implementation "curse.maven:jade-324717:${jadeVersion}"
+	// We need the default implementations in REI, rather than just the API
+	implementation "me.shedaniel:RoughlyEnoughItems-neoforge:${reiVersion}"
 
 	compileOnly "mcp.mobius.waila:wthit-api:neo-${wthitVersion}"
-	compileOnly "me.shedaniel:RoughlyEnoughItems-api-neoforge:${reiVersion}"
 
 	runtimeOnly "mcp.mobius.waila:wthit:neo-${wthitVersion}"
 	runtimeOnly "lol.bai:badpackets:neo-${badpacketsVersion}"
-	runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${reiVersion}"
 
 //	Awaiting a NeoForge version...
 //	compileOnly "mezz.jei:jei-1.20.2-common-api:${jeiVersion}"
