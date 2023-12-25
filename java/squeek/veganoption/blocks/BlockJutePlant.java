@@ -43,7 +43,8 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 			.sound(SoundType.GRASS)
 			.offsetType(BlockBehaviour.OffsetType.XYZ)
 			.ignitedByLava()
-			.pushReaction(PushReaction.DESTROY));
+			.pushReaction(PushReaction.DESTROY)
+			.randomTicks());
 		registerDefaultState(getStateDefinition().any().setValue(GROWTH_STAGE, 0));
 	}
 
@@ -87,7 +88,7 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 		{
 			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			level.setBlockAndUpdate(pos.below(), Blocks.AIR.defaultBlockState());
-			DoublePlantBlock.placeAt(level, Blocks.LARGE_FERN.defaultBlockState(), pos.below(), 2);
+			DoublePlantBlock.placeAt(level, Blocks.LARGE_FERN.defaultBlockState(), pos.below(), 3);
 		}
 		else
 		{
