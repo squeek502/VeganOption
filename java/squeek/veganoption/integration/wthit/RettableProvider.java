@@ -24,7 +24,6 @@ public class RettableProvider implements IBlockComponentProvider
 			if (rettingPercent >= 1)
 			{
 				tooltip.addLine(Component.translatable(LangHelper.prependModId("waila.retted")));
-//				tooltip.add(IThemeHelper.get().success(Component.translatable(LangHelper.prependModId("waila.retted"))));
 			}
 			else
 			{
