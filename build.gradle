@@ -30,6 +30,13 @@ repositories {
 			includeGroup "curse.maven"
 		}
 	}
+	maven {
+		url "https://maven2.bai.lol"
+		content {
+			includeGroup "lol.bai"
+			includeGroup "mcp.mobius.waila"
+		}
+	}
 }
 
 base {
@@ -80,10 +87,18 @@ sourceSets.test.java.srcDirs += 'tests'
 def neoVersion = "20.2.86"
 def neoVersionRange = "[20.2.86,20.3)"
 def jeiVersion = "16.0.0.28"
+def jadeVersion = "4845321" // 12.1.8
+def wthitVersion = "9.1.2"
+def badpacketsVersion = "0.5.4"
  
 dependencies {
 	implementation "net.neoforged:neoforge:${neoVersion}"
-	implementation "curse.maven:jade-324717:4845321" // 12.1.8
+	implementation "curse.maven:jade-324717:${jadeVersion}"
+
+	compileOnly "mcp.mobius.waila:wthit-api:neo-${wthitVersion}"
+
+	runtimeOnly "mcp.mobius.waila:wthit:neo-${wthitVersion}"
+	runtimeOnly "lol.bai:badpackets:neo-${badpacketsVersion}"
 
 //	Awaiting a NeoForge version...
 //	compileOnly "mezz.jei:jei-1.20.2-common-api:${jeiVersion}"
