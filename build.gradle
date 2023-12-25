@@ -24,6 +24,12 @@ repositories {
 		// JEI fallback
 		url "https://modmaven.dev"
 	}
+	maven {
+		url "https://cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
 }
 
 base {
@@ -77,6 +83,8 @@ def jeiVersion = "16.0.0.28"
  
 dependencies {
 	implementation "net.neoforged:neoforge:${neoVersion}"
+	implementation "curse.maven:jade-324717:4845321" // 12.1.8
+
 //	Awaiting a NeoForge version...
 //	compileOnly "mezz.jei:jei-1.20.2-common-api:${jeiVersion}"
 //	compileOnly "mezz.jei:jei-1.20.2-forge-api:${jeiVersion}"
