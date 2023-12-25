@@ -1,11 +1,14 @@
 package squeek.veganoption.integration.wthit;
 
 import mcp.mobius.waila.api.IRegistrar;
+import mcp.mobius.waila.api.ITooltip;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
-import net.minecraft.resources.ResourceLocation;
-import squeek.veganoption.ModInfo;
+import net.minecraft.network.chat.Component;
 import squeek.veganoption.blocks.BlockBasin;
+import squeek.veganoption.blocks.BlockComposter;
+import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.helpers.LangHelper;
 
 public class VeganOptionPlugin implements IWailaPlugin
 {
@@ -13,7 +16,15 @@ public class VeganOptionPlugin implements IWailaPlugin
 	public void register(IRegistrar registrar)
 	{
 		registrar.addComponent(new BasinProvider(), TooltipPosition.BODY, BlockBasin.class);
+		registrar.addComponent(ComposterProvider.getInstance(), TooltipPosition.BODY, BlockComposter.class);
+		registrar.addBlockData(ComposterProvider.getInstance(), TileEntityComposter.class);
 
-		registrar.addConfig(new ResourceLocation(ModInfo.MODID_LOWER, "basin"), true);
+		registrar.addConfig(BasinProvider.CONFIG_ID, true);
+		registrar.addSyncedConfig(ComposterProvider.CONFIG_ID, true, false);
+	}
+
+	static void addPercentInfoToTooltip(ITooltip tooltip, String key, float value)
+	{
+		tooltip.addLine(Component.translatable(LangHelper.prependModId(key), String.format("%1$d%%", Math.round(value * 100f))));
 	}
 }
