@@ -6,6 +6,7 @@
     "config.waila.plugin_veganoption": "The Vegan Option",
     "veganoption.waila.jute_growth": "Growth: %s",
     "config.jade.plugin_veganoption.retting": "Rettable Block Progress",
+    "config.waila.plugin_veganoption.retting": "Rettable Block Progress",
     "veganoption.waila.retting": "Retting: %s",
     "veganoption.waila.retting.not_submerged": "Needs to be submerged in water",
     "veganoption.waila.retted": "Retted",

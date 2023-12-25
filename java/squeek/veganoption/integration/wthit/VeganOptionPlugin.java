@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.blocks.BlockComposter;
 import squeek.veganoption.blocks.BlockJutePlant;
+import squeek.veganoption.blocks.BlockRettable;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.LangHelper;
 
@@ -20,9 +21,11 @@ public class VeganOptionPlugin implements IWailaPlugin
 		registrar.addComponent(ComposterProvider.getInstance(), TooltipPosition.BODY, BlockComposter.class);
 		registrar.addBlockData(ComposterProvider.getInstance(), TileEntityComposter.class);
 		registrar.addComponent(new JutePlantProvider(), TooltipPosition.BODY, BlockJutePlant.class);
+		registrar.addComponent(new RettableProvider(), TooltipPosition.BODY, BlockRettable.class);
 
 		registrar.addConfig(BasinProvider.CONFIG_ID, true);
 		registrar.addSyncedConfig(ComposterProvider.CONFIG_ID, true, false);
+		registrar.addConfig(RettableProvider.CONFIG_ID, true);
 	}
 
 	static void addPercentInfoToTooltip(ITooltip tooltip, String key, float value)
