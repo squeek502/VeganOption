@@ -113,8 +113,9 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 
 	public float getGrowthPercent(BlockGetter getter, BlockPos pos, BlockState state)
 	{
-		if (hasTop(state))
-			return getGrowthPercent(getter, pos.above(), getter.getBlockState(pos.above()));
+		BlockState stateAbove = getter.getBlockState(pos.above());
+		if (hasTop(state) && stateAbove.hasProperty(GROWTH_STAGE))
+			return getGrowthPercent(getter, pos.above(), stateAbove);
 
 		return (float) state.getValue(GROWTH_STAGE) / NUM_GROWTH_STAGES;
 	}
