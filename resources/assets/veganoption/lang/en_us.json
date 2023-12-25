@@ -2,7 +2,7 @@
     "_comment": "Creative Tab",
     "itemGroup.veganoption": "The Vegan Option",
 
-    "_comment": "Jade strings",
+    "_comment": "Jade and WTHIT strings",
     "veganoption.waila.jute_growth": "Growth: %s",
     "config.jade.plugin_veganoption.retting": "Rettable Block Progress",
     "veganoption.waila.retting": "Retting: %s",
@@ -13,6 +13,7 @@
     "veganoption.waila.composter.percent": "Composting: %s",
     "veganoption.waila.composter.temperature": "Temperature: %s",
     "config.jade.plugin_veganoption.basin": "Basin Open/Closed State",
+    "config.waila.plugin_veganoption.basin": "Basin Open/Closed State",
     "veganoption.waila.basin.open": "Open",
     "veganoption.waila.basin.closed": "Closed",
 

@@ -1,0 +1,6 @@
+{
+	"veganoption:plugin": {
+		"initializer": "squeek.veganoption.integration.wthit.VeganOptionPlugin",
+		"side":  "*"
+	}
+}
