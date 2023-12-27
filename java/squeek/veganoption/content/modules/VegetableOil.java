@@ -1,20 +1,24 @@
 package squeek.veganoption.content.modules;
 
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -23,9 +27,7 @@ import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
-import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -39,6 +41,7 @@ import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.helpers.FluidHelper;
 import squeek.veganoption.loot.ReplaceLootModifier;
+import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -140,12 +143,39 @@ public class VegetableOil implements IContentModule
 	@Override
 	public void datagenLootModifiers(GlobalLootModifierProvider provider)
 	{
-		provider.add("sunflower_seeds", new ReplaceLootModifier(
+		provider.add("sunflower_seeds_top", new ReplaceLootModifier(
 			new LootItemCondition[] {
 				new InvertedLootItemCondition(MatchTool.toolMatches(ItemPredicate.Builder.item().of(Items.SHEARS)).build()),
-				new LootTableIdCondition.Builder(Tags.Blocks.STONE.location()).build()
+				new LootItemBlockStatePropertyCondition.Builder(Blocks.SUNFLOWER)
+					.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER.getSerializedName()))
+					.build(),
+				LootItemEntityPropertyCondition.entityPresent(LootContext.EntityTarget.THIS).build()
 			},
 			Items.SUNFLOWER,
 			seedSunflower.get()));
+
+		provider.add("sunflower_seeds_top_shears", new SimpleBlockDropLootModifier(
+			new LootItemCondition[] {
+				MatchTool.toolMatches(ItemPredicate.Builder.item().of(Items.SHEARS)).build(),
+				new LootItemBlockStatePropertyCondition.Builder(Blocks.SUNFLOWER)
+					.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER.getSerializedName()))
+					.build(),
+				LootItemEntityPropertyCondition.entityPresent(LootContext.EntityTarget.THIS).build()
+			},
+			Items.SUNFLOWER,
+			ConstantValue.exactly(1f),
+			ConstantValue.exactly(1f)));
+
+		// remove drop if there is no entity responsible for breaking the block, i.e., if the bottom is breaking because the top was broken
+		// todo: this causes there to be no drops when digging the dirt block underneath the sunflower, which may not be desired
+		provider.add("sunflower_seeds_bottom", new ReplaceLootModifier(
+			new LootItemCondition[] {
+				new LootItemBlockStatePropertyCondition.Builder(Blocks.SUNFLOWER)
+					.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER.getSerializedName()))
+					.build(),
+				new InvertedLootItemCondition(LootItemEntityPropertyCondition.entityPresent(LootContext.EntityTarget.THIS).build())
+			},
+			Items.SUNFLOWER,
+			Items.AIR));
 	}
 }

@@ -13,8 +13,16 @@
       }
     },
     {
-      "condition": "neoforge:loot_table_id",
-      "loot_table_id": "forge:stone"
+      "block": "minecraft:sunflower",
+      "condition": "minecraft:block_state_property",
+      "properties": {
+        "half": "upper"
+      }
+    },
+    {
+      "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {}
     }
   ],
   "replace": "minecraft:sunflower",

@@ -1,0 +1,28 @@
+{
+  "type": "veganoption:simple_block_drop",
+  "chance": 1.0,
+  "conditions": [
+    {
+      "condition": "minecraft:match_tool",
+      "predicate": {
+        "items": [
+          "minecraft:shears"
+        ]
+      }
+    },
+    {
+      "block": "minecraft:sunflower",
+      "condition": "minecraft:block_state_property",
+      "properties": {
+        "half": "upper"
+      }
+    },
+    {
+      "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {}
+    }
+  ],
+  "drop": "minecraft:sunflower",
+  "num": 1.0
+}

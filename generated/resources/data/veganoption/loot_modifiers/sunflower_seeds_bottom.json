@@ -1,0 +1,22 @@
+{
+  "type": "veganoption:replace_with",
+  "conditions": [
+    {
+      "block": "minecraft:sunflower",
+      "condition": "minecraft:block_state_property",
+      "properties": {
+        "half": "lower"
+      }
+    },
+    {
+      "condition": "minecraft:inverted",
+      "term": {
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {}
+      }
+    }
+  ],
+  "replace": "minecraft:sunflower",
+  "with": "minecraft:air"
+}
