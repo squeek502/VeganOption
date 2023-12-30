@@ -5,17 +5,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 // todo: create a proper ingredient that works with json.
 public class InputItemStack
 {
-	private Supplier<Ingredient> ingredient;
+	private Supplier<Ingredient> ingredientSupplier;
 	private int count;
 
-	public InputItemStack(Supplier<Ingredient> ingredient, int count)
+	public InputItemStack(Supplier<Ingredient> ingredientSupplier, int count)
 	{
-		this.ingredient = ingredient;
+		this.ingredientSupplier = ingredientSupplier;
 		this.count = count;
 	}
 
@@ -41,11 +43,25 @@ public class InputItemStack
 
 	public boolean matches(ItemStack input)
 	{
-		return ingredient.get().test(input) && getCount() == input.getCount();
+		return ingredientSupplier.get().test(input) && getCount() == input.getCount();
 	}
 
 	public int getCount()
 	{
 		return count;
+	}
+
+	public List<ItemStack> resolve()
+	{
+		Ingredient ingredient = ingredientSupplier.get();
+		if (ingredient.isEmpty())
+			return List.of(ItemStack.EMPTY);
+		ItemStack[] items = ingredient.getItems();
+		List<ItemStack> stacks = new ArrayList<>();
+		for (ItemStack item : items)
+		{
+			stacks.add(new ItemStack(item.getItem(), getCount()));
+		}
+		return stacks;
 	}
 }
