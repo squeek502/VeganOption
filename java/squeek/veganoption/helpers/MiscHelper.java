@@ -6,7 +6,10 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class MiscHelper
 {
@@ -54,5 +57,15 @@ public class MiscHelper
 	public static void setCachedRecipeManager(RecipeManager manager)
 	{
 		cachedRecipeManager = manager;
+	}
+
+	/**
+	 * Creates a shuffled copy of the provided list
+	 */
+	public static <T> List<T> newShuffledList(List<T> toShuffle)
+	{
+		List<T> shuffled = new ArrayList<T>(toShuffle);
+		Collections.shuffle(shuffled);
+		return shuffled;
 	}
 }
