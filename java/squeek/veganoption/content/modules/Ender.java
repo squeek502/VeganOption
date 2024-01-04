@@ -35,6 +35,7 @@ import squeek.veganoption.blocks.BlockRawEnder;
 import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
+import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.fluids.RawEnderFluid;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
@@ -90,6 +91,12 @@ public class Ender implements IContentModule
 		rawEnderFlowing = REGISTER_FLUIDS.register("raw_ender_flowing", () -> new RawEnderFluid.Flowing(fluidProperties));
 		rawEnderBlock = REGISTER_BLOCKS.register("raw_ender", BlockRawEnder::new);
 		rawEnderBucket = REGISTER_ITEMS.register("raw_ender_bucket", () -> new BucketItem(() -> rawEnderStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+	}
+
+	@Override
+	public void finish()
+	{
+		RelationshipRegistry.addRelationship(rawEnderBucket.get(), encrustedObsidianItem.get());
 	}
 
 	@Override

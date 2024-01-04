@@ -1,9 +1,13 @@
 package squeek.veganoption.helpers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ public class MiscHelper
 	public static final int NINE_SLOT_WIDTH = 162;
 	public static final int STANDARD_GUI_WIDTH = 176;
 	public static final int STANDARD_SLOT_WIDTH = 18;
+	public static final int STANDARD_SLOT_HEIGHT = 18;
 	private static RecipeManager cachedRecipeManager;
 
 	public static Item getMatchingItemFromList(Collection<Item> haystack, Item needle)
@@ -26,6 +31,19 @@ public class MiscHelper
 		if (haystack != null)
 		{
 			return haystack.contains(needle) ? needle : null;
+		}
+		return null;
+	}
+
+	public static ItemStack getMatchingItemFromStackList(Collection<ItemStack> haystack, Item needle)
+	{
+		if (haystack != null)
+		{
+			for (ItemStack item : haystack)
+			{
+				if (item.getItem() == needle)
+					return item;
+			}
 		}
 		return null;
 	}
@@ -67,5 +85,15 @@ public class MiscHelper
 		List<T> shuffled = new ArrayList<T>(toShuffle);
 		Collections.shuffle(shuffled);
 		return shuffled;
+	}
+
+	public static ItemStack getItemStackByObjectName(String name)
+	{
+		return new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(name)));
+	}
+
+	public static Fluid getFluidByObjectName(String name)
+	{
+		return BuiltInRegistries.FLUID.get(new ResourceLocation(name));
 	}
 }
