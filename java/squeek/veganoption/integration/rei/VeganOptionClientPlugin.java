@@ -1,10 +1,13 @@
 package squeek.veganoption.integration.rei;
 
+import dev.architectury.event.EventResult;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
+import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.forge.REIPluginClient;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
@@ -37,6 +40,15 @@ public class VeganOptionClientPlugin implements REIClientPlugin
 			registry.add(DefaultCraftingDisplay.of(new RecipeHolder<>(new ResourceLocation(ModInfo.MODID_LOWER, "conversion_recipe_" + i), recipe)));
 			i++;
 		}
+
+		registry.registerVisibilityPredicate((DisplayCategory<?> category, Display display) -> {
+			if (display instanceof DefaultCraftingDisplay<?> craftingDisplay)
+			{
+				if (craftingDisplay.getOptionalRecipe().isPresent())
+					return Modifiers.recipes.convertedRecipeHolders.contains(craftingDisplay.getOptionalRecipe().get()) ? EventResult.interruptFalse() : EventResult.pass();
+			}
+			return EventResult.pass();
+		});
 
 		for (PistonCraftingRecipe recipe : PistonCraftingRegistry.getRecipes())
 		{

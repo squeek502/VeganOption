@@ -24,6 +24,7 @@ public class RecipeModifier
 	public Map<Supplier<Ingredient>, Supplier<Ingredient>> notFoodOutputConversions = new HashMap<>();
 	public List<Item> excludedRecipeOutputs = new ArrayList<>();
 	public List<CraftingRecipe> recipes = new ArrayList<>();
+	public List<RecipeHolder<?>> convertedRecipeHolders = new ArrayList<>();
 
 	public void convertInput(Supplier<Ingredient> toConvert, Supplier<Ingredient> replacement)
 	{
@@ -58,6 +59,7 @@ public class RecipeModifier
 			Recipe<?> recipe = holder.value();
 			if (shouldConvert(recipe))
 			{
+				convertedRecipeHolders.add(holder);
 				recipes.add(convertRecipe((CraftingRecipe) recipe));
 				recipesConverted++;
 			}
