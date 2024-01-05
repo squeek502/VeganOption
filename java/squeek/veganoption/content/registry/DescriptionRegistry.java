@@ -55,13 +55,13 @@ public class DescriptionRegistry
 	public static boolean tryRegisterItemStack(ItemStack stack)
 	{
 		boolean didRegister = false;
-		if (hasUsageText(stack) && itemsWithUsageDescriptions.stream().noneMatch(i -> i.getItem() == stack.getItem()))
+		if (canRegisterUsageText(stack))
 		{
 			itemsWithUsageDescriptions.add(stack);
 			registeredLangKeys.add(stack.getDescriptionId() + ".vowiki.usage");
 			didRegister = true;
 		}
-		if (hasCraftingText(stack) && itemsWithCraftingDescriptions.stream().noneMatch(i -> i.getItem() == stack.getItem()))
+		if (canRegisterCraftingText(stack))
 		{
 			itemsWithCraftingDescriptions.add(stack);
 			registeredLangKeys.add(stack.getDescriptionId() + ".vowiki.crafting");
@@ -72,14 +72,26 @@ public class DescriptionRegistry
 
 	private static boolean hasUsageText(ItemStack stack)
 	{
-		String key = stack.getDescriptionId() + ".vowiki.usage";
-		return !registeredLangKeys.contains(key) && (LangHelper.existsRaw(key) || !RelationshipRegistry.getChildren(stack.getItem()).isEmpty());
+		return LangHelper.existsRaw(stack.getDescriptionId() + ".vowiki.usage") || !RelationshipRegistry.getChildren(stack.getItem()).isEmpty();
 	}
 
 	private static boolean hasCraftingText(ItemStack stack)
 	{
-		String key = stack.getDescriptionId() + ".vowiki.crafting";
-		return !registeredLangKeys.contains(key) && (LangHelper.existsRaw(key) || !RelationshipRegistry.getParents(stack.getItem()).isEmpty());
+		return LangHelper.existsRaw(stack.getDescriptionId() + ".vowiki.crafting") || !RelationshipRegistry.getParents(stack.getItem()).isEmpty();
+	}
+
+	private static boolean canRegisterUsageText(ItemStack stack)
+	{
+		return hasUsageText(stack) &&
+			!registeredLangKeys.contains(stack.getDescriptionId() + ".vowiki.usage") &&
+			itemsWithUsageDescriptions.stream().noneMatch(i -> i.getItem() == stack.getItem());
+	}
+
+	private static boolean canRegisterCraftingText(ItemStack stack)
+	{
+		return hasCraftingText(stack) &&
+			!registeredLangKeys.contains(stack.getDescriptionId() + ".vowiki.crafting") &&
+			itemsWithCraftingDescriptions.stream().noneMatch(i -> i.getItem() == stack.getItem());
 	}
 
 	/**
