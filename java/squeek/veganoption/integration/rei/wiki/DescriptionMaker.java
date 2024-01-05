@@ -11,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
 
@@ -177,7 +178,7 @@ public abstract class DescriptionMaker
 
 	public String getCraftingOfItem(ItemStack topic)
 	{
-		String key = topic.getDescriptionId() + ".vowiki.crafting";
+		String key = DescriptionRegistry.getCraftingKey(topic);
 		if (LangHelper.existsRaw(key))
 			return LangHelper.translateRaw(key, formattedTopicName(topic));
 		return "";
@@ -185,7 +186,7 @@ public abstract class DescriptionMaker
 
 	public String getUsageOfItem(ItemStack topic)
 	{
-		String key = topic.getDescriptionId() + ".vowiki.usage";
+		String key = DescriptionRegistry.getUsageKey(topic);
 		if (LangHelper.existsRaw(key))
 			return LangHelper.translateRaw(key, formattedTopicName(topic));
 		return "";

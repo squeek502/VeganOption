@@ -16,6 +16,8 @@ public class DescriptionRegistry
 	private static final List<Item> damageableItemsWithUniqueDescriptions = new ArrayList<>();
 	/** Used to prevent duplicate entries from being registered. Necessary for damageable items with unique descriptions. */
 	private static final List<String> registeredLangKeys = new ArrayList<>();
+	private static final String USAGE_SUFFIX = ".vowiki.usage";
+	private static final String CRAFTING_SUFFIX = ".vowiki.crafting";
 
 	public static void registerAllDescriptions()
 	{
@@ -72,25 +74,25 @@ public class DescriptionRegistry
 
 	private static boolean hasUsageText(ItemStack stack)
 	{
-		return LangHelper.existsRaw(stack.getDescriptionId() + ".vowiki.usage") || !RelationshipRegistry.getChildren(stack.getItem()).isEmpty();
+		return LangHelper.existsRaw(getUsageKey(stack)) || !RelationshipRegistry.getChildren(stack.getItem()).isEmpty();
 	}
 
 	private static boolean hasCraftingText(ItemStack stack)
 	{
-		return LangHelper.existsRaw(stack.getDescriptionId() + ".vowiki.crafting") || !RelationshipRegistry.getParents(stack.getItem()).isEmpty();
+		return LangHelper.existsRaw(getCraftingKey(stack)) || !RelationshipRegistry.getParents(stack.getItem()).isEmpty();
 	}
 
 	private static boolean canRegisterUsageText(ItemStack stack)
 	{
 		return hasUsageText(stack) &&
-			!registeredLangKeys.contains(stack.getDescriptionId() + ".vowiki.usage") &&
+			!registeredLangKeys.contains(getUsageKey(stack)) &&
 			itemsWithUsageDescriptions.stream().noneMatch(i -> i.getItem() == stack.getItem());
 	}
 
 	private static boolean canRegisterCraftingText(ItemStack stack)
 	{
 		return hasCraftingText(stack) &&
-			!registeredLangKeys.contains(stack.getDescriptionId() + ".vowiki.crafting") &&
+			!registeredLangKeys.contains(getCraftingKey(stack)) &&
 			itemsWithCraftingDescriptions.stream().noneMatch(i -> i.getItem() == stack.getItem());
 	}
 
@@ -102,8 +104,13 @@ public class DescriptionRegistry
 		damageableItemsWithUniqueDescriptions.add(item);
 	}
 
-	public static boolean itemHasUniqueDamageDescriptions(ItemStack stack)
+	public static String getUsageKey(ItemStack stack)
 	{
-		return damageableItemsWithUniqueDescriptions.contains(stack.getItem());
+		return stack.getDescriptionId() + USAGE_SUFFIX;
+	}
+
+	public static String getCraftingKey(ItemStack stack)
+	{
+		return stack.getDescriptionId() + CRAFTING_SUFFIX;
 	}
 }
