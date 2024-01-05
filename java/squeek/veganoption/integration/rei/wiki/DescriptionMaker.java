@@ -21,13 +21,17 @@ import java.util.regex.Pattern;
 
 public abstract class DescriptionMaker
 {
-	public static final Font font = Minecraft.getInstance().font;
+	public static final Font FONT = Minecraft.getInstance().font;
 	public static final int DESC_DISPLACEMENT = 3;
 	public static final int WIDTH = 160;
 	public static final int HEIGHT = 140;
 	public static final int Y_START = 22;
 	public static final int PADDING = 4;
-	public static final int MAX_LINES_PER_PAGE = (HEIGHT - Y_START) / font.lineHeight - 1;
+	public static final int MAX_LINES_PER_PAGE = (HEIGHT - Y_START) / FONT.lineHeight - 1;
+	public static final ChatFormatting REF_COLOR_LIGHT = ChatFormatting.DARK_BLUE;
+	public static final ChatFormatting REF_COLOR_DARK = ChatFormatting.AQUA;
+	public static final ChatFormatting TOPIC_COLOR_LIGHT = ChatFormatting.BLACK;
+	public static final ChatFormatting TOPIC_COLOR_DARK = ChatFormatting.WHITE;
 
 	public List<DescriptionDisplay> createDisplays(ItemStack topic)
 	{
@@ -54,14 +58,13 @@ public abstract class DescriptionMaker
 		if (!referenced.isEmpty())
 			firstPageMaxLines -= DESC_DISPLACEMENT;
 
-		List<FormattedCharSequence> splitText = splitText(text, font, WIDTH - PADDING * 2);
+		List<FormattedCharSequence> splitText = splitText(text, FONT, WIDTH - PADDING * 2);
 
 		for (int page = 0; page < getNumPages(splitText, MAX_LINES_PER_PAGE, firstPageMaxLines); page++)
 		{
 			int startingLineIndex = getStartingLine(page, MAX_LINES_PER_PAGE, firstPageMaxLines);
 			int endingLineIndex = Math.min(splitText.size(), getStartingLine(page + 1, MAX_LINES_PER_PAGE, firstPageMaxLines));
-			List<FormattedCharSequence> pageText = splitText.subList(startingLineIndex, endingLineIndex);
-			pages.add(newDisplay(topic, related, referenced, pageText, page == 0));
+			pages.add(newDisplay(topic, related, referenced, text, startingLineIndex, endingLineIndex, page == 0));
 		}
 
 		return pages;
@@ -95,7 +98,7 @@ public abstract class DescriptionMaker
 			{
 				if (!isItemStackReferenceRedundant(topic, referencedItemStack, referenced, related))
 					referenced.add(EntryIngredients.of(referencedItemStack));
-				referenceMatcher.appendReplacement(referencedBuffer, wrapItemNameInFormat(referencedItemStack, ChatFormatting.DARK_BLUE));
+				referenceMatcher.appendReplacement(referencedBuffer, wrapItemNameInFormat(referencedItemStack, REF_COLOR_LIGHT));
 			}
 			else
 			{
@@ -104,7 +107,7 @@ public abstract class DescriptionMaker
 				{
 					if (!isFluidReferenceRedundant(referencedFluid, referenced))
 						referenced.add(EntryIngredients.of(referencedFluid));
-					referenceMatcher.appendReplacement(referencedBuffer, wrapInFormat(referencedFluid.getFluidType().getDescriptionId(), ChatFormatting.DARK_BLUE));
+					referenceMatcher.appendReplacement(referencedBuffer, wrapInFormat(referencedFluid.getFluidType().getDescriptionId(), REF_COLOR_LIGHT));
 				}
 			}
 		}
@@ -114,7 +117,7 @@ public abstract class DescriptionMaker
 		return text;
 	}
 
-	public List<FormattedCharSequence> splitText(String text, Font fontRenderer, int maxWidth)
+	public static List<FormattedCharSequence> splitText(String text, Font fontRenderer, int maxWidth)
 	{
 		if (text == null)
 			return null;
@@ -142,14 +145,14 @@ public abstract class DescriptionMaker
 
 	public abstract String getRelatedText(ItemStack topic);
 
-	public abstract DescriptionDisplay newDisplay(ItemStack topic, List<ItemStack> related, List<EntryIngredient> referenced, List<FormattedCharSequence> text, boolean isFirstPage);
+	public abstract DescriptionDisplay newDisplay(ItemStack topic, List<ItemStack> related, List<EntryIngredient> referenced, String text, int startingLineIndex, int endingLineIndex, boolean isFirstPage);
 
 	/**
 	 * Formats the provided item name, with formatting for the description topic.
 	 */
 	public String formattedItemName(ItemStack topic)
 	{
-		return wrapItemNameInFormat(topic, ChatFormatting.BLACK);
+		return wrapItemNameInFormat(topic, TOPIC_COLOR_LIGHT);
 	}
 
 	public String wrapItemNameInFormat(ItemStack item, ChatFormatting format)

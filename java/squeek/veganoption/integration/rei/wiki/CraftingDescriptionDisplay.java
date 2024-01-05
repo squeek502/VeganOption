@@ -3,7 +3,6 @@ package squeek.veganoption.integration.rei.wiki;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import squeek.veganoption.integration.rei.VeganOptionClientPlugin;
 
@@ -11,9 +10,9 @@ import java.util.List;
 
 public class CraftingDescriptionDisplay extends DescriptionDisplay
 {
-	public CraftingDescriptionDisplay(ItemStack topic, List<ItemStack> related, List<EntryIngredient> referenced, List<FormattedCharSequence> text, boolean isFirstPage)
+	public CraftingDescriptionDisplay(ItemStack topic, List<ItemStack> related, List<EntryIngredient> referenced, String fullEntryText, int startingLineIndex, int endingLineIndex, boolean isFirstPage)
 	{
-		super(topic, related, referenced, text, isFirstPage);
+		super(topic, related, referenced, fullEntryText, startingLineIndex, endingLineIndex, isFirstPage);
 	}
 
 	@Override

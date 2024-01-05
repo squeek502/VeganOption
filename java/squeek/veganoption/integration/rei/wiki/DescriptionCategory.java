@@ -3,6 +3,7 @@ package squeek.veganoption.integration.rei.wiki;
 import com.google.common.collect.ImmutableList;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.REIRuntime;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
@@ -42,8 +43,16 @@ public abstract class DescriptionCategory<T extends DescriptionDisplay> implemen
 			yPos = addSlotsSubsection(getRelatedTitle(), bounds, font, widgets, relatedItems.stream().map(EntryIngredients::of).toList(), yPos);
 		}
 
+		String fullEntryText = display.getFullEntryText();
+
+		if (REIRuntime.getInstance().isDarkThemeEnabled())
+		{
+			fullEntryText = fullEntryText.replaceAll(DescriptionMaker.REF_COLOR_LIGHT.toString(), DescriptionMaker.REF_COLOR_DARK.toString());
+			fullEntryText = fullEntryText.replaceAll(DescriptionMaker.TOPIC_COLOR_LIGHT.toString(), DescriptionMaker.TOPIC_COLOR_DARK.toString());
+		}
+
 		int finalY = yPos;
-		List<FormattedCharSequence> lines = ImmutableList.copyOf(display.getText());
+		List<FormattedCharSequence> lines = ImmutableList.copyOf(display.getThisPageText(fullEntryText));
 		widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
 			int y = finalY;
 			for (FormattedCharSequence line : lines)
@@ -51,7 +60,7 @@ public abstract class DescriptionCategory<T extends DescriptionDisplay> implemen
 				if (line != null)
 				{
 					int x = bounds.getCenterX() - (font.width(line) / 2);
-					graphics.drawString(font, line, x, y, ColorHelper.DEFAULT_TEXT_COLOR, false);
+					graphics.drawString(font, line, x, y, REIRuntime.getInstance().isDarkThemeEnabled() ? ColorHelper.DEFAULT_LIGHT_TEXT_COLOR : ColorHelper.DEFAULT_TEXT_COLOR, false);
 					y += font.lineHeight;
 				}
 			}
@@ -71,7 +80,7 @@ public abstract class DescriptionCategory<T extends DescriptionDisplay> implemen
 	{
 		int xPos = bounds.getCenterX();
 
-		widgets.add(Widgets.createLabel(new Point(xPos, yPos), title).color(ColorHelper.DEFAULT_TEXT_COLOR).noShadow());
+		widgets.add(Widgets.createLabel(new Point(xPos, yPos), title).color(ColorHelper.DEFAULT_TEXT_COLOR, ColorHelper.DEFAULT_LIGHT_TEXT_COLOR).noShadow());
 
 		int itemSlotsWidth = ingredients.size() * MiscHelper.STANDARD_SLOT_WIDTH;
 		xPos = bounds.getCenterX() - (itemSlotsWidth / 2);

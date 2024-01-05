@@ -12,16 +12,20 @@ public abstract class DescriptionDisplay implements Display
 	private final ItemStack topic;
 	private final List<ItemStack> related;
 	private final List<EntryIngredient> referenced;
-	private final List<FormattedCharSequence> text;
+	private final String fullEntryText;
 	private final boolean isFirstPage;
+	private final int startingLineIndex;
+	private final int endingLineIndex;
 
-	public DescriptionDisplay(ItemStack topic, List<ItemStack> related, List<EntryIngredient> referenced, List<FormattedCharSequence> text, boolean isFirstPage)
+	public DescriptionDisplay(ItemStack topic, List<ItemStack> related, List<EntryIngredient> referenced, String fullEntryText, int startingLineIndex, int endingLineIndex, boolean isFirstPage)
 	{
 		this.topic = topic;
 		this.related = related;
 		this.referenced = referenced;
-		this.text = text;
+		this.fullEntryText = fullEntryText;
 		this.isFirstPage = isFirstPage;
+		this.startingLineIndex = startingLineIndex;
+		this.endingLineIndex = endingLineIndex;
 	}
 
 	public ItemStack getTopic()
@@ -39,13 +43,18 @@ public abstract class DescriptionDisplay implements Display
 		return referenced;
 	}
 
-	public List<FormattedCharSequence> getText()
+	public String getFullEntryText()
 	{
-		return text;
+		return fullEntryText;
 	}
 
 	public boolean isFirstPage()
 	{
 		return isFirstPage;
+	}
+
+	public List<FormattedCharSequence> getThisPageText(String entryText)
+	{
+		return DescriptionMaker.splitText(entryText, DescriptionMaker.FONT, DescriptionMaker.WIDTH - DescriptionMaker.PADDING * 2).subList(startingLineIndex, endingLineIndex);
 	}
 }

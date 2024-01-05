@@ -3,6 +3,7 @@ package squeek.veganoption.helpers;
 public class ColorHelper
 {
 	public static final int DEFAULT_TEXT_COLOR = 0x404040;
+	public static final int DEFAULT_LIGHT_TEXT_COLOR = 0xbfbfbf;
 
 	public static float[] toNormalizedRGB(int color)
 	{
