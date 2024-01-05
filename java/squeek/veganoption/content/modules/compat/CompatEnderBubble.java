@@ -9,7 +9,7 @@ import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.content.modules.FrozenBubble;
-import squeek.veganoption.content.registry.RelationshipRegistry;
+import squeek.veganoption.content.registry.DescriptionRegistry;
 
 public class CompatEnderBubble implements IContentModule
 {
@@ -31,6 +31,6 @@ public class CompatEnderBubble implements IContentModule
 	@Override
 	public void finish()
 	{
-		RelationshipRegistry.addRelationship(FrozenBubble.frozenBubble.get(), Ender.rawEnderBucket.get());
+		DescriptionRegistry.setUniqueDamageableItem(FrozenBubble.frozenBubble.get());
 	}
 }

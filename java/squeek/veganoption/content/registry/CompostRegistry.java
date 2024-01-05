@@ -1,5 +1,6 @@
 package squeek.veganoption.content.registry;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.Item;
@@ -11,7 +12,9 @@ import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.content.ContentHelper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -82,5 +85,20 @@ public class CompostRegistry
 	public static boolean isBlacklisted(Item item)
 	{
 		return ContentHelper.isItemTaggedAs(item, ContentHelper.ItemTags.COMPOSTABLES_BLACKLIST);
+	}
+
+	public static List<Item> getGreens()
+	{
+		List<Item> items = new ArrayList<>(BuiltInRegistries.ITEM.getTag(ContentHelper.ItemTags.COMPOSTABLES_GREEN).orElseThrow().stream().map(Holder::value).toList());
+		items.addAll(compostableFoods);
+		items.removeAll(BuiltInRegistries.ITEM.getTag(ContentHelper.ItemTags.COMPOSTABLES_BLACKLIST).orElseThrow().stream().map(Holder::value).toList());
+		return items.stream().distinct().toList();
+	}
+
+	public static List<Item> getBrowns()
+	{
+		List<Item> items = new ArrayList<>(BuiltInRegistries.ITEM.getTag(ContentHelper.ItemTags.COMPOSTABLES_BROWN).orElseThrow().stream().map(Holder::value).toList());
+		items.removeAll(BuiltInRegistries.ITEM.getTag(ContentHelper.ItemTags.COMPOSTABLES_BLACKLIST).orElseThrow().stream().map(Holder::value).toList());
+		return items;
 	}
 }

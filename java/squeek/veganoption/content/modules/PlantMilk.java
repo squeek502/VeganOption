@@ -29,7 +29,6 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -37,7 +36,6 @@ import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.recipes.ShapelessMatchingTagRecipeBuilder;
-import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 
@@ -122,9 +120,6 @@ public class PlantMilk implements IContentModule
 		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.MILK_BUCKET), () -> Ingredient.of(ContentHelper.ItemTags.MILK));
 
 		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(plantMilkStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(Fluids.WATER, FluidType.BUCKET_VOLUME), new InputItemStack(Items.SUGAR), new InputItemStack(ContentHelper.ItemTags.PLANT_MILK_SOURCES, 2)));
-
-		DescriptionRegistry.registerCustomCraftingText(plantMilkBucket.get(), ModInfo.MODID_LOWER + ":plant_milk_bucket.vowiki.crafting");
-		DescriptionRegistry.registerCustomUsageText(plantMilkBucket.get(), ModInfo.MODID_LOWER + ":plant_milk_bucket.vowiki.usage");
 	}
 
 	@OnlyIn(Dist.CLIENT)

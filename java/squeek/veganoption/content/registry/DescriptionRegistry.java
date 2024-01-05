@@ -2,22 +2,23 @@ package squeek.veganoption.content.registry;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.helpers.LangHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DescriptionRegistry
 {
-	public static List<Item> itemsWithUsageDescriptions = new ArrayList<>();
-	public static List<Item> itemsWithCraftingDescriptions = new ArrayList<>();
-	public static Map<Item, String> itemsWithCustomUsageDescriptions = new HashMap<>();
-	public static Map<Item, String> itemsWithCustomCraftingDescriptions = new HashMap<>();
+	public static List<ItemStack> itemsWithUsageDescriptions = new ArrayList<>();
+	public static List<ItemStack> itemsWithCraftingDescriptions = new ArrayList<>();
+	private static final List<Item> damageableItemsWithUniqueDescriptions = new ArrayList<>();
+	/** Used to prevent duplicate entries from being registered. Necessary for damageable items with unique descriptions. */
+	private static final List<String> registeredLangKeys = new ArrayList<>();
+	private static final String USAGE_SUFFIX = ".vowiki.usage";
+	private static final String CRAFTING_SUFFIX = ".vowiki.crafting";
 
-	//todo: jei integration.
 	public static void registerAllDescriptions()
 	{
 		long millisecondsStart = System.currentTimeMillis();
@@ -37,38 +38,79 @@ public class DescriptionRegistry
 	public static boolean tryRegisterItem(Item item)
 	{
 		boolean didRegister = false;
-		if (hasUsageText(item) && !itemsWithUsageDescriptions.contains(item))
+
+		if (damageableItemsWithUniqueDescriptions.contains(item))
 		{
-			itemsWithUsageDescriptions.add(item);
+			ItemStack stack = new ItemStack(item);
+			for (int damage = 1; damage <= stack.getMaxDamage(); damage++)
+			{
+				stack.setDamageValue(damage);
+				boolean registeredStack = tryRegisterItemStack(stack);
+				if (registeredStack)
+					didRegister = true;
+			}
+		}
+		didRegister = tryRegisterItemStack(new ItemStack(item)) || didRegister;
+		return didRegister;
+	}
+
+	public static boolean tryRegisterItemStack(ItemStack stack)
+	{
+		boolean didRegister = false;
+		if (canRegisterUsageText(stack))
+		{
+			itemsWithUsageDescriptions.add(stack);
+			registeredLangKeys.add(stack.getDescriptionId() + ".vowiki.usage");
 			didRegister = true;
 		}
-		if (hasCraftingText(item) && !itemsWithCraftingDescriptions.contains(item))
+		if (canRegisterCraftingText(stack))
 		{
-			itemsWithCraftingDescriptions.add(item);
+			itemsWithCraftingDescriptions.add(stack);
+			registeredLangKeys.add(stack.getDescriptionId() + ".vowiki.crafting");
 			didRegister = true;
 		}
 		return didRegister;
 	}
 
-	public static boolean hasUsageText(Item item)
+	private static boolean hasUsageText(ItemStack stack)
 	{
-		return LangHelper.existsRaw(item.getDescriptionId() + ".vowiki.usage") || !RelationshipRegistry.getChildren(item).isEmpty();
+		return LangHelper.existsRaw(getUsageKey(stack)) || !RelationshipRegistry.getChildren(stack.getItem()).isEmpty();
 	}
 
-	public static boolean hasCraftingText(Item item)
+	private static boolean hasCraftingText(ItemStack stack)
 	{
-		return LangHelper.existsRaw(item.getDescriptionId() + ".vowiki.crafting") || !RelationshipRegistry.getParents(item).isEmpty();
+		return LangHelper.existsRaw(getCraftingKey(stack)) || !RelationshipRegistry.getParents(stack.getItem()).isEmpty();
 	}
 
-	public static void registerCustomUsageText(Item item, String unlocalizedUsageText)
+	private static boolean canRegisterUsageText(ItemStack stack)
 	{
-		itemsWithCustomUsageDescriptions.put(item, unlocalizedUsageText);
-		itemsWithUsageDescriptions.add(item);
+		return hasUsageText(stack) &&
+			!registeredLangKeys.contains(getUsageKey(stack)) &&
+			itemsWithUsageDescriptions.stream().noneMatch(i -> i.getItem() == stack.getItem());
 	}
 
-	public static void registerCustomCraftingText(Item item, String unlocalizedCraftingText)
+	private static boolean canRegisterCraftingText(ItemStack stack)
 	{
-		itemsWithCustomCraftingDescriptions.put(item, unlocalizedCraftingText);
-		itemsWithCraftingDescriptions.add(item);
+		return hasCraftingText(stack) &&
+			!registeredLangKeys.contains(getCraftingKey(stack)) &&
+			itemsWithCraftingDescriptions.stream().noneMatch(i -> i.getItem() == stack.getItem());
+	}
+
+	/**
+	 * Sets the provided item as having unique descriptions for damaged versions. Damaged version must have a unique description ID.
+	 */
+	public static void setUniqueDamageableItem(Item item)
+	{
+		damageableItemsWithUniqueDescriptions.add(item);
+	}
+
+	public static String getUsageKey(ItemStack stack)
+	{
+		return stack.getDescriptionId() + USAGE_SUFFIX;
+	}
+
+	public static String getCraftingKey(ItemStack stack)
+	{
+		return stack.getDescriptionId() + CRAFTING_SUFFIX;
 	}
 }

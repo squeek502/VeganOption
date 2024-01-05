@@ -37,6 +37,9 @@ repositories {
 			includeGroup "mcp.mobius.waila"
 		}
 	}
+	maven {
+		url "https://maven.shedaniel.me/"
+	}
 }
 
 base {
@@ -87,6 +90,7 @@ sourceSets.test.java.srcDirs += 'tests'
 def neoVersion = "20.2.86"
 def neoVersionRange = "[20.2.86,20.3)"
 def jeiVersion = "16.0.0.28"
+def reiVersion = "13.0.685"
 def jadeVersion = "4845321" // 12.1.8
 def wthitVersion = "9.1.2"
 def badpacketsVersion = "0.5.4"
@@ -94,6 +98,8 @@ def badpacketsVersion = "0.5.4"
 dependencies {
 	implementation "net.neoforged:neoforge:${neoVersion}"
 	implementation "curse.maven:jade-324717:${jadeVersion}"
+	// We need the default implementations in REI, rather than just the API
+	implementation "me.shedaniel:RoughlyEnoughItems-neoforge:${reiVersion}"
 
 	compileOnly "mcp.mobius.waila:wthit-api:neo-${wthitVersion}"
 
