@@ -9,7 +9,7 @@ import java.util.List;
 public class CraftingDescriptionMaker extends DescriptionMaker
 {
 	@Override
-	public List<ItemStack> getRelated(ItemStack topic)
+	public List<ItemStack> getRelatedItems(ItemStack topic)
 	{
 		return RelationshipRegistry.getParents(topic.getItem()).stream().map(ItemStack::new).toList();
 	}

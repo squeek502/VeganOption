@@ -36,7 +36,7 @@ public abstract class DescriptionMaker
 	public List<DescriptionDisplay> createDisplays(ItemStack topic)
 	{
 		List<DescriptionDisplay> pages = new ArrayList<>();
-		List<ItemStack> related = getRelated(topic);
+		List<ItemStack> related = getRelatedItems(topic);
 		List<EntryIngredient> referenced = new ArrayList<>();
 		int firstPageMaxLines = MAX_LINES_PER_PAGE;
 
@@ -82,7 +82,7 @@ public abstract class DescriptionMaker
 		StringBuffer localizedBuffer = new StringBuffer(text.length());
 		while (localizationMatcher.find())
 		{
-			localizationMatcher.appendReplacement(localizedBuffer, LangHelper.translateRaw(localizationMatcher.group(1), formattedItemName(topic)));
+			localizationMatcher.appendReplacement(localizedBuffer, LangHelper.translateRaw(localizationMatcher.group(1), formattedTopicName(topic)));
 		}
 		localizationMatcher.appendTail(localizedBuffer);
 		text = localizedBuffer.toString();
@@ -139,7 +139,7 @@ public abstract class DescriptionMaker
 			return firstPageMaxLines + (page - 1) * maxLinesPerPage;
 	}
 
-	public abstract List<ItemStack> getRelated(ItemStack topic);
+	public abstract List<ItemStack> getRelatedItems(ItemStack topic);
 
 	public abstract String getText(ItemStack topic);
 
@@ -150,7 +150,7 @@ public abstract class DescriptionMaker
 	/**
 	 * Formats the provided item name, with formatting for the description topic.
 	 */
-	public String formattedItemName(ItemStack topic)
+	public String formattedTopicName(ItemStack topic)
 	{
 		return wrapItemNameInFormat(topic, TOPIC_COLOR_LIGHT);
 	}
@@ -179,7 +179,7 @@ public abstract class DescriptionMaker
 	{
 		String key = topic.getDescriptionId() + ".vowiki.crafting";
 		if (LangHelper.existsRaw(key))
-			return LangHelper.translateRaw(key, formattedItemName(topic));
+			return LangHelper.translateRaw(key, formattedTopicName(topic));
 		return "";
 	}
 
@@ -187,7 +187,7 @@ public abstract class DescriptionMaker
 	{
 		String key = topic.getDescriptionId() + ".vowiki.usage";
 		if (LangHelper.existsRaw(key))
-			return LangHelper.translateRaw(key, formattedItemName(topic));
+			return LangHelper.translateRaw(key, formattedTopicName(topic));
 		return "";
 	}
 
