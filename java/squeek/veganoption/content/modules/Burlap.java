@@ -3,6 +3,8 @@ package squeek.veganoption.content.modules;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.api.distmarker.Dist;
@@ -35,7 +37,13 @@ public class Burlap implements IContentModule
 	public void create()
 	{
 		burlap = REGISTER_ITEMS.register("burlap", () -> new Item(new Item.Properties()));
-		burlapBoots = REGISTER_ITEMS.register("burlap_boots", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.BOOTS, new Item.Properties()));
+		burlapBoots = REGISTER_ITEMS.register("burlap_boots", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.BOOTS, new Item.Properties()) {
+			@Override
+			public boolean canWalkOnPowderedSnow(ItemStack stack, LivingEntity wearer)
+			{
+				return true;
+			}
+		});
 		burlapLeggings = REGISTER_ITEMS.register("burlap_leggings", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.LEGGINGS, new Item.Properties()));
 		burlapChestplate = REGISTER_ITEMS.register("burlap_chestplate", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
 		burlapHelmet = REGISTER_ITEMS.register("burlap_helmet", () -> new DyeableArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Properties()));
@@ -63,6 +71,12 @@ public class Burlap implements IContentModule
 		provider.tagW(ContentHelper.ItemTags.LEATHER_HELMETS)
 			.add(burlapHelmet.get())
 			.add(Items.LEATHER_HELMET);
+
+		provider.tagW(ItemTags.FREEZE_IMMUNE_WEARABLES)
+			.add(burlapBoots.get())
+			.add(burlapLeggings.get())
+			.add(burlapChestplate.get())
+			.add(burlapHelmet.get());
 	}
 
 	@Override
