@@ -96,6 +96,7 @@ public class ContentHelper
 		public static final TagKey<Item> STARCH = veganoptionTag("starch");
 		public static final TagKey<Item> STICKS = Tags.Items.RODS_WOODEN;
 		public static final TagKey<Item> SULFUR = forgeTag("dusts/sulfur");
+		public static final TagKey<Item> SWEETENER = forgeTag("sweetener");
 		public static final TagKey<Item> VEGETABLE_OIL_SOURCES = veganoptionTag("vegetable_oil_sources");
 		public static final TagKey<Item> VEGETABLE_OIL = forgeTag("food/vegetable_oil");
 		public static final TagKey<Item> WAX = forgeTag("wax");

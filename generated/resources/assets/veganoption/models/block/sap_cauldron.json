@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_cauldron_full",
+  "textures": {
+    "content": "veganoption:block/sap_still"
+  }
+}

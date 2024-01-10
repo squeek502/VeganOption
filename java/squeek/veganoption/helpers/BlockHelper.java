@@ -2,9 +2,12 @@ package squeek.veganoption.helpers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -148,5 +151,39 @@ public class BlockHelper
 	public static void setBlockToAir(Level level, BlockPos pos)
 	{
 		level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+	}
+
+	/**
+	 * Checks if all the blocks below are logs, and stops at dirt/farmland, then checks if all the blocks above are logs, and stops at leaves.
+	 * Checks the PERSISTENT state value to determine this is indeed a true tree.
+	 * <br/>
+	 * This assumes that the blockstate at the startingPos has already been confirmed to be a valid log (not leaves).
+	 */
+	public static boolean isValidTree(Level level, BlockPos startingPos, Block log, Block leaves)
+	{
+		BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(startingPos.getX(), startingPos.getY(), startingPos.getZ());
+		for (int y = startingPos.getY(); y > level.getMinBuildHeight(); y--)
+		{
+			mutablePos.setY(y);
+			BlockState state = level.getBlockState(mutablePos);
+			if (!state.is(log))
+			{
+				if (!state.is(BlockTags.DIRT) && !state.is(Blocks.FARMLAND))
+					return false;
+				else break;
+			}
+		}
+		for (int y = startingPos.getY(); y < level.getMaxBuildHeight(); y++)
+		{
+			mutablePos.setY(y);
+			BlockState state = level.getBlockState(mutablePos);
+			if (!state.is(log))
+			{
+				if (!state.is(leaves) || (state.hasProperty(LeavesBlock.PERSISTENT) && state.getValue(LeavesBlock.PERSISTENT)))
+					return false;
+				else break;
+			}
+		}
+		return true;
 	}
 }

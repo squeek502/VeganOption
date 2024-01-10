@@ -199,6 +199,13 @@
     "item.veganoption.seitan_raw": "Raw Seitan",
     "item.veganoption.seitan_cooked": "Seitan",
 
+    "_comment": "Syrup",
+    "item.veganoption.syrup_bottle": "Syrup Bottle",
+    "item.veganoption.sap_bucket": "Bucket of Sap",
+    "block.veganoption.spout": "Spout",
+    "block.veganoption.sap_cauldron": "Cauldron",
+    "block.veganoption.syrup_cauldron": "Cauldron",
+
     "_comment": "JEI Strings",
     "veganoption.jei.byproduct.of": "Byproduct of",
     "veganoption.jei.byproducts": "Byproducts",
