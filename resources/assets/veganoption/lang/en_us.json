@@ -107,6 +107,7 @@
     "block.veganoption.black_ink": "Black Vegetable Oil Ink",
     "fluid_type.veganoption.black_ink": "Black Vegetable Oil Ink",
     "item.veganoption.vegetable_wax": "Vegetable Wax",
+    "item.veganoption.vegetable_wax.vowiki.usage": "%1$s is a [[minecraft:honeycomb]] alternative.",
     "item.veganoption.rosin": "Rosin",
 
     "_comment": "Bioplastic",
@@ -201,7 +202,11 @@
 
     "_comment": "Syrup",
     "item.veganoption.syrup_bottle": "Syrup Bottle",
+    "item.veganoption.syrup_bottle.vowiki.usage": "%1$s is a [[minecraft:honey_bottle]] alternative.",
+    "item.veganoption.syrup_bottle.vowiki.crafting": "Boiling sap in a [[minecraft:cauldron]] produces syrup, which can then be collected in glass bottles. 1 [[veganoption:sap_bucket]] produces 1 %1$s.",
     "item.veganoption.sap_bucket": "Bucket of Sap",
+    "item.veganoption.sap_bucket.vowiki.usage": "%1$s can be boiled in a [[minecraft:cauldron]] to produce a [[veganoption:syrup_bottle]].",
+    "item.veganoption.sap_bucket.vowiki.crafting": "Living birch trees can be tapped with a [[veganoption:spout]]. Place a [[minecraft:bucket]] on the [[veganoption:spout]] to collect sap.",
     "block.veganoption.spout": "Spout",
     "block.veganoption.sap_cauldron": "Sap Cauldron",
     "block.veganoption.syrup_cauldron": "Syrup Cauldron",
