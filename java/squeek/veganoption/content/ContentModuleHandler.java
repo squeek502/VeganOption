@@ -55,6 +55,7 @@ public class ContentModuleHandler
 		modules.put("DollsEye", new DollsEye());
 		modules.put("Basin", new Basin());
 		modules.put("Seitan", new Seitan());
+		modules.put("Syrup", new Syrup());
 
 		compatModules.put("EnderBubble", new CompatEnderBubble());
 	}

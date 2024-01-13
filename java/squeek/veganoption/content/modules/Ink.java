@@ -7,10 +7,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -56,7 +53,7 @@ public class Ink implements IContentModule
 	@Override
 	public void create()
 	{
-		waxVegetable = REGISTER_ITEMS.register("vegetable_wax", () -> new Item(new Item.Properties()));
+		waxVegetable = REGISTER_ITEMS.register("vegetable_wax", () -> new HoneycombItem(new Item.Properties()));
 
 		BaseFlowingFluid.Properties blackInkProperties = new BaseFlowingFluid.Properties(() -> blackInkFluidType.get(), () -> blackInkFluidStill.get(), () -> blackInkFluidFlowing.get())
 			.block(() -> (LiquidBlock) blackInk.get())
@@ -92,7 +89,9 @@ public class Ink implements IContentModule
 			.add(Items.INK_SAC)
 			.add(blackVegetableOilInk.get());
 
-		provider.tagW(ContentHelper.ItemTags.WAX).add(waxVegetable.get());
+		provider.tagW(ContentHelper.ItemTags.WAX)
+			.add(Items.HONEYCOMB)
+			.add(waxVegetable.get());
 	}
 
 	@Override
@@ -127,6 +126,10 @@ public class Ink implements IContentModule
 		PistonCraftingRegistry.register(new PistonCraftingRecipe(new FluidStack(blackInkFluidStill.get(), FluidType.BUCKET_VOLUME), new FluidStack(VegetableOil.fluidVegetableOilStill.get(), FluidType.BUCKET_VOLUME), new InputItemStack(ContentHelper.ItemTags.WAX, FluidHelper.BOTTLES_PER_BUCKET), new InputItemStack(ContentHelper.ItemTags.ROSIN, FluidHelper.BOTTLES_PER_BUCKET), new InputItemStack(ContentHelper.ItemTags.PIGMENT_BLACK, FluidHelper.BOTTLES_PER_BUCKET)));
 
 		Modifiers.bottles.registerCustomBottleHandler(ContentHelper.FluidTags.BLACK_INK, () -> new ItemStack(blackVegetableOilInk.get()), (stack) -> stack.getItem() == blackVegetableOilInk.get(), blackInkFluidStill);
+
+		Modifiers.recipes.convertInput(() -> Ingredient.of(Items.HONEYCOMB), () -> Ingredient.of(ContentHelper.ItemTags.WAX));
+		Modifiers.recipes.excludeOutput(Items.BEEHIVE);
+		Modifiers.recipes.excludeOutput(Items.HONEYCOMB_BLOCK);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "r": {
+      "tag": "forge:rods/plastic"
+    }
+  },
+  "pattern": [
+    " i ",
+    " rr",
+    "iii"
+  ],
+  "result": {
+    "item": "veganoption:spout"
+  },
+  "show_notification": true
+}

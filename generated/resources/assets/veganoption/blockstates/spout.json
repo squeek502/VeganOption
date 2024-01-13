@@ -1,0 +1,154 @@
+{
+  "variants": {
+    "facing=east,has_bucket=false,level=0": {
+      "model": "veganoption:block/spout"
+    },
+    "facing=east,has_bucket=false,level=1": {
+      "model": "veganoption:block/spout"
+    },
+    "facing=east,has_bucket=false,level=2": {
+      "model": "veganoption:block/spout"
+    },
+    "facing=east,has_bucket=false,level=3": {
+      "model": "veganoption:block/spout"
+    },
+    "facing=east,has_bucket=false,level=4": {
+      "model": "veganoption:block/spout"
+    },
+    "facing=east,has_bucket=true,level=0": {
+      "model": "veganoption:block/spout_with_bucket_empty"
+    },
+    "facing=east,has_bucket=true,level=1": {
+      "model": "veganoption:block/spout_with_bucket_level1"
+    },
+    "facing=east,has_bucket=true,level=2": {
+      "model": "veganoption:block/spout_with_bucket_level2"
+    },
+    "facing=east,has_bucket=true,level=3": {
+      "model": "veganoption:block/spout_with_bucket_level3"
+    },
+    "facing=east,has_bucket=true,level=4": {
+      "model": "veganoption:block/spout_with_bucket_full"
+    },
+    "facing=north,has_bucket=false,level=0": {
+      "model": "veganoption:block/spout",
+      "y": 270
+    },
+    "facing=north,has_bucket=false,level=1": {
+      "model": "veganoption:block/spout",
+      "y": 270
+    },
+    "facing=north,has_bucket=false,level=2": {
+      "model": "veganoption:block/spout",
+      "y": 270
+    },
+    "facing=north,has_bucket=false,level=3": {
+      "model": "veganoption:block/spout",
+      "y": 270
+    },
+    "facing=north,has_bucket=false,level=4": {
+      "model": "veganoption:block/spout",
+      "y": 270
+    },
+    "facing=north,has_bucket=true,level=0": {
+      "model": "veganoption:block/spout_with_bucket_empty",
+      "y": 270
+    },
+    "facing=north,has_bucket=true,level=1": {
+      "model": "veganoption:block/spout_with_bucket_level1",
+      "y": 270
+    },
+    "facing=north,has_bucket=true,level=2": {
+      "model": "veganoption:block/spout_with_bucket_level2",
+      "y": 270
+    },
+    "facing=north,has_bucket=true,level=3": {
+      "model": "veganoption:block/spout_with_bucket_level3",
+      "y": 270
+    },
+    "facing=north,has_bucket=true,level=4": {
+      "model": "veganoption:block/spout_with_bucket_full",
+      "y": 270
+    },
+    "facing=south,has_bucket=false,level=0": {
+      "model": "veganoption:block/spout",
+      "y": 90
+    },
+    "facing=south,has_bucket=false,level=1": {
+      "model": "veganoption:block/spout",
+      "y": 90
+    },
+    "facing=south,has_bucket=false,level=2": {
+      "model": "veganoption:block/spout",
+      "y": 90
+    },
+    "facing=south,has_bucket=false,level=3": {
+      "model": "veganoption:block/spout",
+      "y": 90
+    },
+    "facing=south,has_bucket=false,level=4": {
+      "model": "veganoption:block/spout",
+      "y": 90
+    },
+    "facing=south,has_bucket=true,level=0": {
+      "model": "veganoption:block/spout_with_bucket_empty",
+      "y": 90
+    },
+    "facing=south,has_bucket=true,level=1": {
+      "model": "veganoption:block/spout_with_bucket_level1",
+      "y": 90
+    },
+    "facing=south,has_bucket=true,level=2": {
+      "model": "veganoption:block/spout_with_bucket_level2",
+      "y": 90
+    },
+    "facing=south,has_bucket=true,level=3": {
+      "model": "veganoption:block/spout_with_bucket_level3",
+      "y": 90
+    },
+    "facing=south,has_bucket=true,level=4": {
+      "model": "veganoption:block/spout_with_bucket_full",
+      "y": 90
+    },
+    "facing=west,has_bucket=false,level=0": {
+      "model": "veganoption:block/spout",
+      "y": 180
+    },
+    "facing=west,has_bucket=false,level=1": {
+      "model": "veganoption:block/spout",
+      "y": 180
+    },
+    "facing=west,has_bucket=false,level=2": {
+      "model": "veganoption:block/spout",
+      "y": 180
+    },
+    "facing=west,has_bucket=false,level=3": {
+      "model": "veganoption:block/spout",
+      "y": 180
+    },
+    "facing=west,has_bucket=false,level=4": {
+      "model": "veganoption:block/spout",
+      "y": 180
+    },
+    "facing=west,has_bucket=true,level=0": {
+      "model": "veganoption:block/spout_with_bucket_empty",
+      "y": 180
+    },
+    "facing=west,has_bucket=true,level=1": {
+      "model": "veganoption:block/spout_with_bucket_level1",
+      "y": 180
+    },
+    "facing=west,has_bucket=true,level=2": {
+      "model": "veganoption:block/spout_with_bucket_level2",
+      "y": 180
+    },
+    "facing=west,has_bucket=true,level=3": {
+      "model": "veganoption:block/spout_with_bucket_level3",
+      "y": 180
+    },
+    "facing=west,has_bucket=true,level=4": {
+      "model": "veganoption:block/spout_with_bucket_full",
+      "y": 180
+    }
+  }
+}

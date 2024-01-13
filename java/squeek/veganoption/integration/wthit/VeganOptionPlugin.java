@@ -5,10 +5,8 @@ import mcp.mobius.waila.api.ITooltip;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import net.minecraft.network.chat.Component;
-import squeek.veganoption.blocks.BlockBasin;
-import squeek.veganoption.blocks.BlockComposter;
-import squeek.veganoption.blocks.BlockJutePlant;
-import squeek.veganoption.blocks.BlockRettable;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
+import squeek.veganoption.blocks.*;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.helpers.LangHelper;
 
@@ -22,6 +20,8 @@ public class VeganOptionPlugin implements IWailaPlugin
 		registrar.addBlockData(ComposterProvider.getInstance(), TileEntityComposter.class);
 		registrar.addComponent(new JutePlantProvider(), TooltipPosition.BODY, BlockJutePlant.class);
 		registrar.addComponent(new RettableProvider(), TooltipPosition.BODY, BlockRettable.class);
+		registrar.addIcon(CauldronsProvider.getInstance(), SapCauldronBlock.class);
+		registrar.addIcon(CauldronsProvider.getInstance(), LayeredCauldronBlock.class);
 
 		registrar.addConfig(BasinProvider.CONFIG_ID, true);
 		registrar.addSyncedConfig(ComposterProvider.CONFIG_ID, true, false);

@@ -1,0 +1,71 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "veganoption:spout",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "has_bucket": "true"
+          }
+        },
+        {
+          "condition": "minecraft:inverted",
+          "term": {
+            "block": "veganoption:spout",
+            "condition": "minecraft:block_state_property",
+            "properties": {
+              "level": "4"
+            }
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bucket"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "veganoption:spout",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "has_bucket": "true"
+          }
+        },
+        {
+          "block": "veganoption:spout",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "level": "4"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:sap_bucket"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:spout"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "veganoption:blocks/spout"
+}

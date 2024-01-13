@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_cauldron_level2",
+  "textures": {
+    "content": "veganoption:block/syrup_still"
+  }
+}
