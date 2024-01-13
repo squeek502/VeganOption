@@ -8,6 +8,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
@@ -232,5 +233,13 @@ public class Syrup implements IContentModule
 				return List.of(spoutBlock.get(), sapCauldron.get(), syrupCauldron.get());
 			}
 		};
+	}
+
+	@Override
+	public void datagenBlockTags(DataGenProviders.BlockTags provider)
+	{
+		provider.tagW(BlockTags.CAULDRONS)
+			.add(sapCauldron.get())
+			.add(syrupCauldron.get());
 	}
 }
