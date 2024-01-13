@@ -105,7 +105,9 @@ public class Ink implements IContentModule
 	@Override
 	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.VEGETABLE_OIL), RecipeCategory.MISC, waxVegetable.get(), 0.2f, ContentHelper.DEFAULT_SMELT_TIME);
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.VEGETABLE_OIL), RecipeCategory.MISC, waxVegetable.get(), 0.2f, ContentHelper.DEFAULT_SMELT_TIME)
+			.unlockedBy("has_oil", provider.hasW(VegetableOil.vegetableOilBottle.get()))
+			.save(output);
 
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, blackVegetableOilInk.get())
 			.requires(ContentHelper.ItemTags.VEGETABLE_OIL)

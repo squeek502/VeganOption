@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_oil": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "veganoption:vegetable_oil"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "veganoption:vegetable_wax"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_oil"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "veganoption:vegetable_wax"
+    ]
+  },
+  "sends_telemetry_event": false
+}
