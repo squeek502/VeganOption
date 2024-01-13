@@ -203,8 +203,8 @@
     "item.veganoption.syrup_bottle": "Syrup Bottle",
     "item.veganoption.sap_bucket": "Bucket of Sap",
     "block.veganoption.spout": "Spout",
-    "block.veganoption.sap_cauldron": "Cauldron",
-    "block.veganoption.syrup_cauldron": "Cauldron",
+    "block.veganoption.sap_cauldron": "Sap Cauldron",
+    "block.veganoption.syrup_cauldron": "Syrup Cauldron",
 
     "_comment": "JEI Strings",
     "veganoption.jei.byproduct.of": "Byproduct of",
