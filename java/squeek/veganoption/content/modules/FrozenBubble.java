@@ -21,9 +21,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.*;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -88,7 +86,14 @@ public class FrozenBubble implements IContentModule
 		});
 		soapSolutionStill = REGISTER_FLUIDS.register("soap_solution", () -> new BaseFlowingFluid.Source(fluidProperties));
 		soapSolutionFlowing = REGISTER_FLUIDS.register("soap_solution_flowing", () -> new BaseFlowingFluid.Flowing(fluidProperties));
-		soapSolutionBlock = REGISTER_BLOCKS.register("soap_solution", () -> new LiquidBlock(() -> (FlowingFluid) soapSolutionStill.get(), BlockBehaviour.Properties.of().noLootTable()));
+		soapSolutionBlock = REGISTER_BLOCKS.register("soap_solution", () -> new LiquidBlock(() -> (FlowingFluid) soapSolutionStill.get(), BlockBehaviour.Properties.of()
+			.noLootTable()
+			.mapColor(MapColor.NONE)
+			.replaceable()
+			.noCollission()
+			.strength(100f)
+			.pushReaction(PushReaction.DESTROY)
+			.liquid()));
 
 		soapSolution = REGISTER_ITEMS.register("soap_solution", ItemSoapSolution::new);
 		soapSolutionBucket = REGISTER_ITEMS.register("soap_solution_bucket", () -> new GenericBucketItem(() -> soapSolutionStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
