@@ -1,6 +1,5 @@
 package squeek.veganoption.blocks;
 
-import com.google.common.collect.Lists;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -14,6 +13,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import squeek.veganoption.content.modules.Ender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlockRawEnder extends LiquidBlock
@@ -37,8 +37,13 @@ public class BlockRawEnder extends LiquidBlock
 			.liquid()
 			.sound(SoundType.EMPTY));
 		registerDefaultState(getStateDefinition().any().setValue(IS_SOURCE, true).setValue(LEVEL, 0));
-		sourceStatesCache = Lists.newArrayList();
-		flowingStatesCache = Lists.newArrayList();
+		sourceStatesCache = new ArrayList<>();
+		flowingStatesCache = new ArrayList<>();
+		for (int i = 0; i < 16; i++)
+		{
+			sourceStatesCache.add(null);
+			flowingStatesCache.add(null);
+		}
 	}
 
 	@Override
@@ -56,7 +61,7 @@ public class BlockRawEnder extends LiquidBlock
 
 		if (!fluidStateCachesInitialized) initFluidStateCache();
 
-		return isSource ? sourceStatesCache.get(Math.min(level, 7)) : flowingStatesCache.get(Math.min(level, 7));
+		return isSource ? sourceStatesCache.get(level) : flowingStatesCache.get(level);
 	}
 
 	@Override
@@ -65,8 +70,10 @@ public class BlockRawEnder extends LiquidBlock
 		if (!fluidStateCachesInitialized) {
 			for (int i = 1; i < 9; i++)
 			{
-				flowingStatesCache.add(getFluid().getFlowing(9 - i, i == 1));
-				sourceStatesCache.add(getFluid().getSource().defaultFluidState().setValue(FlowingFluid.LEVEL, 9 - i).setValue(FlowingFluid.FALLING, false));
+				flowingStatesCache.set(i - 1, getFluid().getFlowing(9 - i, false));
+				flowingStatesCache.set(i + 7, getFluid().getFlowing(9 - i, true));
+				sourceStatesCache.set(i - 1, getFluid().getSource(false).setValue(FlowingFluid.LEVEL, 9 - i));
+				sourceStatesCache.set(i + 7, getFluid().getSource(true).setValue(FlowingFluid.LEVEL, 9 - i));
 			}
 
 			fluidStateCachesInitialized = true;
