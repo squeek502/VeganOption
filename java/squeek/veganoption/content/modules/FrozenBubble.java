@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -52,6 +51,7 @@ import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.entities.EntityBubble;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
+import squeek.veganoption.items.GenericBucketItem;
 import squeek.veganoption.items.ItemFrozenBubble;
 import squeek.veganoption.items.ItemSoapSolution;
 
@@ -91,7 +91,7 @@ public class FrozenBubble implements IContentModule
 		soapSolutionBlock = REGISTER_BLOCKS.register("soap_solution", () -> new LiquidBlock(() -> (FlowingFluid) soapSolutionStill.get(), BlockBehaviour.Properties.of().noLootTable()));
 
 		soapSolution = REGISTER_ITEMS.register("soap_solution", ItemSoapSolution::new);
-		soapSolutionBucket = REGISTER_ITEMS.register("soap_solution_bucket", () -> new BucketItem(() -> soapSolutionStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+		soapSolutionBucket = REGISTER_ITEMS.register("soap_solution_bucket", () -> new GenericBucketItem(() -> soapSolutionStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 		frozenBubble = REGISTER_ITEMS.register("frozen_bubble", ItemFrozenBubble::new);
 		bubbleEntityType = REGISTER_ENTITIES.register("bubble", () -> EntityType.Builder.<EntityBubble>of(EntityBubble::new, MobCategory.MISC)

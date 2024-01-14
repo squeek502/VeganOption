@@ -38,6 +38,7 @@ import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.recipes.ShapelessMatchingTagRecipeBuilder;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
+import squeek.veganoption.items.GenericBucketItem;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -80,7 +81,7 @@ public class PlantMilk implements IContentModule
 			.strength(100f)
 			.pushReaction(PushReaction.DESTROY)
 			.liquid()));
-		plantMilkBucket = REGISTER_ITEMS.register("plant_milk_bucket", () -> new BucketItem(() -> plantMilkStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+		plantMilkBucket = REGISTER_ITEMS.register("plant_milk_bucket", () -> new GenericBucketItem(() -> plantMilkStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 	}
 
 	@Override

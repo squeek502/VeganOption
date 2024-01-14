@@ -7,7 +7,10 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.HoneycombItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -34,6 +37,7 @@ import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.helpers.FluidHelper;
+import squeek.veganoption.items.GenericBucketItem;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -74,7 +78,7 @@ public class Ink implements IContentModule
 		blackInkFluidStill = REGISTER_FLUIDS.register("black_ink", () -> new BaseFlowingFluid.Source(blackInkProperties));
 		blackInkFluidFlowing = REGISTER_FLUIDS.register("black_ink_flowing", () -> new BaseFlowingFluid.Flowing(blackInkProperties));
 		blackInk = REGISTER_BLOCKS.register("black_ink", () -> new LiquidBlock(() -> (FlowingFluid) blackInkFluidStill.get(), BlockBehaviour.Properties.of().noLootTable()));
-		blackVegetableOilInkBucket = REGISTER_ITEMS.register("vegetable_oil_ink_black_bucket", () -> new BucketItem(() -> blackInkFluidStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+		blackVegetableOilInkBucket = REGISTER_ITEMS.register("vegetable_oil_ink_black_bucket", () -> new GenericBucketItem(() -> blackInkFluidStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -34,6 +33,7 @@ import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
+import squeek.veganoption.items.GenericBucketItem;
 import squeek.veganoption.items.ItemSoap;
 
 import java.util.function.Consumer;
@@ -56,7 +56,7 @@ public class Soap implements IContentModule
 		BaseFlowingFluid.Properties fluidProperties = new BaseFlowingFluid.Properties(() -> fluidTypeLyeWater.get(), () -> fluidLyeWaterStill.get(), () -> fluidLyeWaterFlowing.get())
 			.block(() -> (LiquidBlock) fluidBlockLyeWater.get())
 			.bucket(() -> bucketLyeWater.get());
-		bucketLyeWater = REGISTER_ITEMS.register("lye_water_bucket", () -> new BucketItem(() -> fluidLyeWaterStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+		bucketLyeWater = REGISTER_ITEMS.register("lye_water_bucket", () -> new GenericBucketItem(() -> fluidLyeWaterStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 		fluidTypeLyeWater = REGISTER_FLUIDTYPES.register("lye_water", () -> new FluidType(FluidType.Properties.create().sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)) {
 			@Override
 			public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer)

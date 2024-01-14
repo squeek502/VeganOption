@@ -10,7 +10,6 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -38,6 +37,7 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.fluids.RawEnderFluid;
+import squeek.veganoption.items.GenericBucketItem;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
@@ -90,7 +90,7 @@ public class Ender implements IContentModule
 		rawEnderStill = REGISTER_FLUIDS.register("raw_ender", () -> new RawEnderFluid.Still(fluidProperties));
 		rawEnderFlowing = REGISTER_FLUIDS.register("raw_ender_flowing", () -> new RawEnderFluid.Flowing(fluidProperties));
 		rawEnderBlock = REGISTER_BLOCKS.register("raw_ender", BlockRawEnder::new);
-		rawEnderBucket = REGISTER_ITEMS.register("raw_ender_bucket", () -> new BucketItem(() -> rawEnderStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+		rawEnderBucket = REGISTER_ITEMS.register("raw_ender_bucket", () -> new GenericBucketItem(() -> rawEnderStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 	}
 
 	@Override

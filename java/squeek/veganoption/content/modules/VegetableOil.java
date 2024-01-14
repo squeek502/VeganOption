@@ -6,7 +6,10 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -40,6 +43,7 @@ import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.helpers.FluidHelper;
+import squeek.veganoption.items.GenericBucketItem;
 import squeek.veganoption.loot.ReplaceLootModifier;
 import squeek.veganoption.loot.SimpleBlockDropLootModifier;
 
@@ -90,7 +94,7 @@ public class VegetableOil implements IContentModule
 			.strength(100f)
 			.pushReaction(PushReaction.DESTROY)
 			.liquid()));
-		vegetableOilBucket = REGISTER_ITEMS.register("vegetable_oil_bucket", () -> new BucketItem(() -> fluidVegetableOilStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+		vegetableOilBucket = REGISTER_ITEMS.register("vegetable_oil_bucket", () -> new GenericBucketItem(() -> fluidVegetableOilStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 	}
 
 	@Override
