@@ -10,6 +10,7 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.forge.REIPluginClient;
+import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modules.Composting;
+import squeek.veganoption.content.modules.Ink;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
@@ -87,6 +89,8 @@ public class VeganOptionClientPlugin implements REIClientPlugin
 		registry.add(new CompostingCategory());
 		registry.add(new CraftingDescriptionCategory());
 		registry.add(new UsageDescriptionCategory());
+
+		registry.addWorkstations(BuiltinPlugin.WAXING, EntryIngredients.of(Ink.waxVegetable.get()));
 	}
 
 	@Override
