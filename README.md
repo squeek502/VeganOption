@@ -198,7 +198,7 @@ Animal taming items | No alternative yet
 > *References: [Wheat gluten (food)](https://en.wikipedia.org/wiki/Seitan), [How to made your GLUTEN at home](http://y2u.be/5H2qzA50jZQ)*
 
 #### Syrup
-- 2 ![](resources/assets/veganoption/textures/item/plastic_rod.png) and 3 Iron Ingots are used to craft a Spout.
+- 2 ![](resources/assets/veganoption/textures/item/plastic_rod.png) Plastic Rods and 3 Iron Ingots are used to craft a Spout.
 - ![](resources/assets/veganoption/textures/item/sap_bucket.png) Sap is slowly produced by placing a Spout on a living birch tree trunk, and then a bucket on the Spout.
 - ![](resources/assets/veganoption/textures/item/syrup_bottle.png) Syrup (Honey alternative) is obtained by cooking sap in a cauldron and collecting it with a Glass Bottle.
 
