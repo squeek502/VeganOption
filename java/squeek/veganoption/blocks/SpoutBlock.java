@@ -124,7 +124,7 @@ public class SpoutBlock extends HorizontalDirectionalBlock
 
 		if (state.getValue(LEVEL) == MAX_LEVEL || !state.getValue(HAS_BUCKET))
 			return;
-		if (random.nextFloat() <= 0.3f)
+		if (random.nextFloat() <= 0.15f)
 		{
 			if (BlockHelper.isValidTree(level, pos.relative(state.getValue(FACING)), Blocks.BIRCH_LOG, Blocks.BIRCH_LEAVES))
 			{
