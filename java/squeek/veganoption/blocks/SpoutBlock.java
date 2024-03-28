@@ -2,6 +2,7 @@ package squeek.veganoption.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -40,18 +42,27 @@ public class SpoutBlock extends HorizontalDirectionalBlock
 	public static final int MIN_LEVEL = 0;
 	public static final int MAX_LEVEL = 4;
 	public static final IntegerProperty LEVEL = IntegerProperty.create("level", MIN_LEVEL, MAX_LEVEL);
-	private static final VoxelShape SPOUT_SOUTH_AABB = Block.box(6.0, 11.0, 12.0, 10.0, 15.0, 16.0);
-	private static final VoxelShape SPOUT_NORTH_AABB = Block.box(6.0, 11.0, 0.0, 10.0, 15.0, 4.0);
-	private static final VoxelShape SPOUT_WEST_AABB = Block.box(0.0, 11.0, 6.0, 4.0, 15.0, 10.0);
-	private static final VoxelShape SPOUT_EAST_AABB = Block.box(12.0, 11.0, 6.0, 16.0, 15.0, 10.0);
-	private static final VoxelShape BUCKET_SOUTH_AABB = Block.box(3.0, 2.0, 4.0, 13.0, 11.0, 14.0);
-	private static final VoxelShape BUCKET_NORTH_AABB = Block.box(3.0, 2.0, 2.0, 13.0, 11.0, 12.0);
-	private static final VoxelShape BUCKET_WEST_AABB = Block.box(2.0, 2.0, 3.0, 12.0, 11.0, 13.0);
-	private static final VoxelShape BUCKET_EAST_AABB = Block.box(4.0, 2.0, 3.0, 14.0, 11.0, 13.0);
-	private static final VoxelShape WITH_BUCKET_NORTH = Shapes.or(SPOUT_NORTH_AABB, BUCKET_NORTH_AABB);
-	private static final VoxelShape WITH_BUCKET_SOUTH = Shapes.or(SPOUT_SOUTH_AABB, BUCKET_SOUTH_AABB);
-	private static final VoxelShape WITH_BUCKET_EAST = Shapes.or(SPOUT_EAST_AABB, BUCKET_EAST_AABB);
-	private static final VoxelShape WITH_BUCKET_WEST = Shapes.or(SPOUT_WEST_AABB, BUCKET_WEST_AABB);
+	public static final BooleanProperty CAN_DRIP = BooleanProperty.create("can_drip");
+	private static final VoxelShape SPOUT_SOUTH = Block.box(6.0, 11.0, 12.0, 10.0, 15.0, 16.0);
+	private static final VoxelShape SPOUT_NORTH = Block.box(6.0, 11.0, 0.0, 10.0, 15.0, 4.0);
+	private static final VoxelShape SPOUT_WEST = Block.box(0.0, 11.0, 6.0, 4.0, 15.0, 10.0);
+	private static final VoxelShape SPOUT_EAST = Block.box(12.0, 11.0, 6.0, 16.0, 15.0, 10.0);
+	private static final VoxelShape INSIDE_BUCKET_SOUTH = Block.box(5.0, 3.0, 6.0, 11.0, 11.0, 12.0);
+	private static final VoxelShape INSIDE_BUCKET_NORTH = Block.box(5.0, 3.0, 4.0, 11.0, 11.0, 12.0);
+	private static final VoxelShape INSIDE_BUCKET_WEST = Block.box(4.0, 3.0, 5.0, 10.0, 11.0, 11.0);
+	private static final VoxelShape INSIDE_BUCKET_EAST = Block.box(6.0, 3.0, 5.0, 12.0, 11.0, 11.0);
+	private static final VoxelShape BUCKET_SOUTH = Block.box(3.0, 2.0, 4.0, 13.0, 11.0, 14.0);
+	private static final VoxelShape BUCKET_NORTH = Block.box(3.0, 2.0, 2.0, 13.0, 11.0, 12.0);
+	private static final VoxelShape BUCKET_WEST = Block.box(2.0, 2.0, 3.0, 12.0, 11.0, 13.0);
+	private static final VoxelShape BUCKET_EAST = Block.box(4.0, 2.0, 3.0, 14.0, 11.0, 13.0);
+	private static final VoxelShape WITH_BUCKET_SOUTH = Shapes.or(SPOUT_SOUTH, Shapes.join(BUCKET_SOUTH, INSIDE_BUCKET_SOUTH, BooleanOp.ONLY_FIRST));
+	private static final VoxelShape WITH_BUCKET_NORTH = Shapes.or(SPOUT_NORTH, Shapes.join(BUCKET_NORTH, INSIDE_BUCKET_NORTH, BooleanOp.ONLY_FIRST));
+	private static final VoxelShape WITH_BUCKET_WEST = Shapes.or(SPOUT_WEST, Shapes.join(BUCKET_WEST, INSIDE_BUCKET_WEST, BooleanOp.ONLY_FIRST));
+	private static final VoxelShape WITH_BUCKET_EAST = Shapes.or(SPOUT_EAST, Shapes.join(BUCKET_EAST, INSIDE_BUCKET_EAST, BooleanOp.ONLY_FIRST));
+	private static final VoxelShape WITH_BUCKET_SOUTH_VISUAL = Shapes.or(SPOUT_SOUTH, BUCKET_SOUTH);
+	private static final VoxelShape WITH_BUCKET_NORTH_VISUAL = Shapes.or(SPOUT_NORTH, BUCKET_NORTH);
+	private static final VoxelShape WITH_BUCKET_WEST_VISUAL = Shapes.or(SPOUT_WEST, BUCKET_WEST);
+	private static final VoxelShape WITH_BUCKET_EAST_VISUAL = Shapes.or(SPOUT_EAST, BUCKET_EAST);
 
 	public SpoutBlock()
 	{
@@ -63,7 +74,11 @@ public class SpoutBlock extends HorizontalDirectionalBlock
 				.noOcclusion()
 				.randomTicks()
 				.pushReaction(PushReaction.DESTROY));
-		registerDefaultState(getStateDefinition().any().setValue(HAS_BUCKET, false).setValue(FACING, Direction.NORTH).setValue(LEVEL, 0));
+		registerDefaultState(getStateDefinition().any()
+			.setValue(HAS_BUCKET, false)
+			.setValue(FACING, Direction.NORTH)
+			.setValue(LEVEL, 0)
+			.setValue(CAN_DRIP, false));
 	}
 
 	@Override
@@ -128,7 +143,11 @@ public class SpoutBlock extends HorizontalDirectionalBlock
 		{
 			if (BlockHelper.isValidTree(level, pos.relative(state.getValue(FACING)), Blocks.BIRCH_LOG, Blocks.BIRCH_LEAVES))
 			{
-				level.setBlockAndUpdate(pos, state.cycle(LEVEL));
+				level.setBlockAndUpdate(pos, state.cycle(LEVEL).setValue(CAN_DRIP, true));
+			}
+			else if (state.getValue(CAN_DRIP))
+			{
+				level.setBlockAndUpdate(pos, state.setValue(CAN_DRIP, false));
 			}
 		}
 	}
@@ -143,13 +162,42 @@ public class SpoutBlock extends HorizontalDirectionalBlock
 				continue;
 			BlockState state = defaultBlockState().setValue(FACING, direction);
 			if (state.canSurvive(context.getLevel(), context.getClickedPos()))
-				return state;
+			{
+				return state.setValue(CAN_DRIP, BlockHelper.isValidTree(context.getLevel(), context.getClickedPos().relative(direction), Blocks.BIRCH_LOG, Blocks.BIRCH_LEAVES));
+			}
 		}
 		return null;
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context)
+	{
+		if (state.getValue(HAS_BUCKET))
+		{
+			return switch (state.getValue(FACING))
+			{
+				case NORTH -> WITH_BUCKET_NORTH_VISUAL;
+				case SOUTH -> WITH_BUCKET_SOUTH_VISUAL;
+				case EAST -> WITH_BUCKET_EAST_VISUAL;
+				case WEST -> WITH_BUCKET_WEST_VISUAL;
+				default -> super.getShape(state, getter, pos, context);
+			};
+		}
+		else
+		{
+			return switch (state.getValue(FACING))
+			{
+				case NORTH -> SPOUT_NORTH;
+				case SOUTH -> SPOUT_SOUTH;
+				case EAST -> SPOUT_EAST;
+				case WEST -> SPOUT_WEST;
+				default -> super.getShape(state, getter, pos, context);
+			};
+		}
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context)
 	{
 		if (state.getValue(HAS_BUCKET))
 		{
@@ -166,12 +214,30 @@ public class SpoutBlock extends HorizontalDirectionalBlock
 		{
 			return switch (state.getValue(FACING))
 			{
-				case NORTH -> SPOUT_NORTH_AABB;
-				case SOUTH -> SPOUT_SOUTH_AABB;
-				case EAST -> SPOUT_EAST_AABB;
-				case WEST -> SPOUT_WEST_AABB;
+				case NORTH -> SPOUT_NORTH;
+				case SOUTH -> SPOUT_SOUTH;
+				case EAST -> SPOUT_EAST;
+				case WEST -> SPOUT_WEST;
 				default -> super.getShape(state, getter, pos, context);
 			};
+		}
+	}
+
+	@Override
+	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random)
+	{
+		if (state.getValue(CAN_DRIP))
+		{
+			if (random.nextFloat() <= 0.12f)
+			{
+				Direction dir = state.getValue(FACING);
+				Direction.Axis axis = dir.getAxis();
+				double forward = 0.1875;
+				double x = (double) pos.getX() + 0.5 + (axis == Direction.Axis.X ? dir.getStepX() * forward : 0);
+				double y = (double) pos.getY() + 0.6875F;
+				double z = (double) pos.getZ() + 0.5 + (axis == Direction.Axis.Z ? dir.getStepZ() * forward : 0);
+				level.addParticle(ParticleTypes.DRIPPING_HONEY, x, y, z, 0.0, 0.0, 0.0);
+			}
 		}
 	}
 
@@ -181,6 +247,7 @@ public class SpoutBlock extends HorizontalDirectionalBlock
 		builder.add(HAS_BUCKET);
 		builder.add(FACING);
 		builder.add(LEVEL);
+		builder.add(CAN_DRIP);
 	}
 
 	@Override
