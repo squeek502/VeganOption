@@ -10,5 +10,8 @@
 		"PistonBaseBlockMixin",
 		"PistonMovingBlockEntityMixin",
 		"FlowingFluidMixin"
+	],
+	"client": [
+		"BubbleParticleMixin"
 	]
 }

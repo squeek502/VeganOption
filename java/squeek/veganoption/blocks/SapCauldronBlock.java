@@ -2,10 +2,12 @@ package squeek.veganoption.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -78,6 +80,20 @@ public class SapCauldronBlock extends AbstractCauldronBlock
 	{
 		if (HEAT_SOURCES.contains(level.getBlockState(pos.below()).getBlock()))
 			level.setBlockAndUpdate(pos, Syrup.syrupCauldron.get().defaultBlockState());
+	}
+
+	@Override
+	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random)
+	{
+		if (HEAT_SOURCES.contains(level.getBlockState(pos.below()).getBlock()))
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				double x = Mth.clamp(pos.getX() + random.nextDouble(), pos.getX() + 0.25, pos.getX() + 0.75);
+				double z = Mth.clamp(pos.getZ() + random.nextDouble(), pos.getZ() + 0.25, pos.getZ() + 0.75);
+				level.addParticle(ParticleTypes.BUBBLE, x, pos.getY() + getContentHeight(state), z, 0, -0.1, 0);
+			}
+		}
 	}
 
 	@Override
