@@ -24,6 +24,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import squeek.veganoption.content.modules.Syrup;
+import squeek.veganoption.helpers.MiscHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -36,7 +37,7 @@ public class SapCauldronBlock extends AbstractCauldronBlock
 {
 	private static final ResourceKey<DamageType> BOILING_SAP_DAMAGE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID_LOWER, "boiling_sap"));
 	private static final List<Block> HEAT_SOURCES = List.of(Blocks.FIRE, Blocks.SOUL_FIRE, Blocks.LAVA);
-	public static final int BOIL_TIME_TICKS = 400;
+	public static final int BOIL_TIME_TICKS = MiscHelper.TICKS_PER_SEC * 45;
 
 	public SapCauldronBlock(Properties properties, Map<Item, CauldronInteraction> interactions)
 	{
