@@ -7,12 +7,14 @@ plugins {
 	id 'net.neoforged.gradle.mixin' version '7.0.97'
 }
 
-if (version == "unspecified")
-	version = "0.5.0"
-if (System.getenv("BUILD_NUMBER") != null)
-	version += (version ? "+" : "") + "${System.getenv("BUILD_NUMBER")}"
-if (System.getenv("GIT_COMMIT") != null)
-	version += (version ? "." : "") + "${System.getenv("GIT_COMMIT").take(5)}"
+def stdout = new ByteArrayOutputStream()
+exec {
+	commandLine 'git', 'rev-parse', '--short', 'HEAD'
+	standardOutput = stdout
+}
+def commit = stdout.toString().replace("\n", "").replace("\r", "").trim()
+
+version = project.hasProperty("dev") ? commit : mod_version
 
 repositories {
 	mavenLocal()
@@ -43,7 +45,7 @@ repositories {
 }
 
 base {
-	archivesName = project.projectDir.name + "-mc1.20.4"
+	archivesName = project.projectDir.name + "-mc${minecraft_version}"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -82,49 +84,41 @@ sourceSets.main.java.srcDirs += 'apis'
 sourceSets.main.resources.srcDirs += 'resources'
 sourceSets.main.resources.srcDirs += 'generated/resources'
 sourceSets.test.java.srcDirs += 'tests'
-
-def neoVersion = "20.4.214"
-def neoVersionRange = "[20.4.70,)"
-def jeiVersion = "16.0.0.28"
-def reiVersion = "14.0.688"
-def jadeVersion = "5109393" // 13.3.1
-def wthitVersion = "10.5.0"
-def badpacketsVersion = "0.6.1"
  
 dependencies {
-	implementation "net.neoforged:neoforge:${neoVersion}"
-	implementation "curse.maven:jade-324717:${jadeVersion}"
+	implementation "net.neoforged:neoforge:${neoforge_version}"
+	implementation "curse.maven:jade-324717:${jade_version}"
 	// REI is using an old version of Architectury which had not yet been updated for NeoForge 20.4.70+.
-	implementation "dev.architectury:architectury-neoforge:11.1.17"
+	implementation "dev.architectury:architectury-neoforge:${architectury_version_override}"
 	// We need the default implementations in REI, rather than just the API
-	implementation("me.shedaniel:RoughlyEnoughItems-neoforge:${reiVersion}") {
+	implementation("me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}") {
 		// Only use our version
 		exclude group: "dev.architectury"
 	}
 
-	compileOnly "mcp.mobius.waila:wthit-api:neo-${wthitVersion}"
+	compileOnly "mcp.mobius.waila:wthit-api:neo-${wthit_version}"
 
-	runtimeOnly "mcp.mobius.waila:wthit:neo-${wthitVersion}"
-	runtimeOnly "lol.bai:badpackets:neo-${badpacketsVersion}"
+	runtimeOnly "mcp.mobius.waila:wthit:neo-${wthit_version}"
+	runtimeOnly "lol.bai:badpackets:neo-${badpackets_version}"
 
 //	Awaiting a NeoForge version...
-//	compileOnly "mezz.jei:jei-1.20.2-common-api:${jeiVersion}"
-//	compileOnly "mezz.jei:jei-1.20.2-forge-api:${jeiVersion}"
-//	runtimeOnly "mezz.jei:jei-1.20.2-forge:${jeiVersion}"
+//	compileOnly "mezz.jei:jei-1.20.2-common-api:${jei_version}"
+//	compileOnly "mezz.jei:jei-1.20.2-forge-api:${jei_version}"
+//	runtimeOnly "mezz.jei:jei-1.20.2-forge:${jei_version}"
 }
 
 subsystems {
 	parchment {
-		minecraftVersion = "1.20.2"
-		mappingsVersion = "2023.12.10"
+		minecraftVersion = parchment_mc_version
+		mappingsVersion = parchment_mappings_version
 	}
 }
 
 tasks.withType(ProcessResources).configureEach {
 	var replaceProperties = [
-			minecraft_version: "1.20.4", minecraft_version_range: "1.20.4",
-			neo_version: neoVersion, neo_version_range: neoVersionRange,
-			loader_version_range: "[2,)",
+			minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+			neo_version: neoforge_version, neo_version_range: neoforge_version_range,
+			loader_version_range: loader_version_range,
 			mod_id: "veganoption",
 			mod_name: "The Vegan Option",
 			mod_license: "Public Domain",
