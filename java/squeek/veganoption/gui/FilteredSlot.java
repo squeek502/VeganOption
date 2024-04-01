@@ -7,9 +7,9 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Simple extension of the Slot class which only allows ItemStacks which the Container allows.
  */
-public class SlotFiltered extends Slot
+public class FilteredSlot extends Slot
 {
-	public SlotFiltered(Container container, int id, int x, int y)
+	public FilteredSlot(Container container, int id, int x, int y)
 	{
 		super(container, id, x, y);
 	}

@@ -37,7 +37,7 @@ public class ComposterMenu extends GenericMenu
 
 		composter.startOpen(playerInv.player);
 
-		addSlots((index, x, y) -> new SlotFiltered(composter, index, x, y), slotsX, slotsY, 3);
+		addSlots((index, x, y) -> new FilteredSlot(composter, index, x, y), slotsX, slotsY, 3);
 		addPlayerInventorySlots(playerInv, 85);
 		addDataSlots(data);
 	}
