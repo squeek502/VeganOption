@@ -117,7 +117,7 @@ public class Egg implements IContentModule
 			.unlockedBy("has_bioplastic", provider.hasW(Bioplastic.bioplastic.get()))
 			.save(output);
 
-		SpecialRecipeBuilder.special(eggRecipeSerializer.get()).save(output, new ResourceLocation(MODID_LOWER, "plastic_egg_storage"));
+		SpecialRecipeBuilder.special(EggRecipe::new).save(output, new ResourceLocation(MODID_LOWER, "plastic_egg_storage"));
  	}
 
 	@Override

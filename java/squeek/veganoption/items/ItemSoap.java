@@ -11,14 +11,13 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.EffectCures;
 
 import java.util.Collection;
 import java.util.List;
 
 public class ItemSoap extends Item
 {
-	public static ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
-
 	public ItemSoap()
 	{
 		super(new Item.Properties()
@@ -41,14 +40,6 @@ public class ItemSoap extends Item
 	}
 
 	/**
-	 * A way to cure only the potion effects that another item is a curative item of
-	 */
-	public static void curePotionEffectsAsItem(LivingEntity entity, ItemStack curativeItemToMimic)
-	{
-		entity.curePotionEffects(curativeItemToMimic);
-	}
-
-	/**
 	 * A way to cure potion effects without clearing effects that are meant
 	 * to be uncurable (e.g. Thaumcraft warp)
 	 */
@@ -57,7 +48,7 @@ public class ItemSoap extends Item
 		Collection<MobEffectInstance> activePotionEffects = player.getActiveEffects();
 		for (MobEffectInstance potionEffect : activePotionEffects)
 		{
-			if (potionEffect.getCurativeItems().isEmpty())
+			if (potionEffect.getCures().isEmpty())
 				continue;
 
 			player.removeEffect(potionEffect.getEffect());
@@ -69,7 +60,7 @@ public class ItemSoap extends Item
 	{
 		if (!level.isClientSide())
 		{
-			curePotionEffectsAsItem(entity, milkBucket);
+			entity.removeEffectsCuredBy(EffectCures.MILK);
 			stack.hurtAndBreak(1, entity, (entityIn) -> { /* do nothing */});
 		}
 		return super.finishUsingItem(stack, level, entity);
@@ -97,7 +88,7 @@ public class ItemSoap extends Item
 			}
 			if (mostDirtyEntity != null)
 			{
-				curePotionEffectsAsItem(mostDirtyEntity, milkBucket);
+				mostDirtyEntity.removeEffectsCuredBy(EffectCures.MILK);
 
 				if (itemStack.hurt(1, blockSource.level().getRandom(), null))
 					itemStack.setCount(0);

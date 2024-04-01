@@ -53,9 +53,9 @@ public class DataGenProviders
 		BlockTags blockTagsProvider = new BlockTags(packOutput, lookupProvider, ModInfo.MODID_LOWER, fileHelper);
 		generator.addProvider(server, blockTagsProvider);
 		generator.addProvider(server, new ItemTags(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), ModInfo.MODID_LOWER, fileHelper));
-		generator.addProvider(server, new EntityTypeTags(packOutput, lookupProvider));
+		generator.addProvider(server, new EntityTypeTags(packOutput, lookupProvider, fileHelper));
 		generator.addProvider(server, new FluidTags(packOutput, lookupProvider, ModInfo.MODID_LOWER, fileHelper));
-		generator.addProvider(server, new Recipes(packOutput, lookupProvider));
+		generator.addProvider(server, new Recipes(packOutput));
 
 		List<LootTableProvider.SubProviderEntry> subProviders = Lists.newArrayList();
 		ContentModuleHandler.iterateOverModules(module -> {
@@ -151,9 +151,9 @@ public class DataGenProviders
 
 	public static class EntityTypeTags extends EntityTypeTagsProvider
 	{
-		public EntityTypeTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider)
+		public EntityTypeTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper)
 		{
-			super(packOutput, lookupProvider);
+			super(packOutput, lookupProvider, ModInfo.MODID_LOWER, existingFileHelper);
 		}
 
 		@Override
@@ -179,9 +179,9 @@ public class DataGenProviders
 
 	public static class Recipes extends RecipeProvider
 	{
-		public Recipes(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider)
+		public Recipes(PackOutput packOutput)
 		{
-			super(packOutput, lookupProvider);
+			super(packOutput);
 		}
 
 		/**

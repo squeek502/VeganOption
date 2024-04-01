@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:bundled_jute"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

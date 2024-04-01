@@ -40,7 +40,7 @@ public class EggRecipe extends CustomRecipe
 		{
 			ItemStack eggStack = new ItemStack(Egg.plasticEgg.get());
 			CompoundTag nbt = new CompoundTag();
-			CompoundTag egg = toEgg.serializeNBT();
+			CompoundTag egg = toEgg.save(new CompoundTag());
 			nbt.put("ContainedItem", egg);
 			eggStack.setTag(nbt);
 			return eggStack;

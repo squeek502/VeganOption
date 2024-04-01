@@ -32,7 +32,7 @@ import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.common.crafting.StrictNBTIngredient;
+import net.neoforged.neoforge.common.crafting.NBTIngredient;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -162,12 +162,12 @@ public class FrozenBubble implements IContentModule
 		ShapelessDamageItemRecipeBuilder.shapeless(RecipeCategory.MISC, soapSolution.get())
 			.requires(ContentHelper.ItemTags.SOAP)
 			.requires(Items.SUGAR)
-			.requires(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)))
+			.requires(NBTIngredient.of(true, PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)))
 			.unlockedBy("has_soap", provider.hasW(Soap.soap.get()))
 			.save(output);
 		// the following bulk recipe must be done with an undamaged soap.
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, soapSolutionBucket.get())
-				.requires(StrictNBTIngredient.of(new ItemStack(Soap.soap.get())))
+				.requires(NBTIngredient.of(true, new ItemStack(Soap.soap.get())))
 				.requires(Items.SUGAR)
 				.requires(Items.SUGAR)
 				.requires(Items.SUGAR)

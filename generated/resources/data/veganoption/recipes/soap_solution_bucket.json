@@ -4,11 +4,9 @@
   "ingredients": [
     {
       "type": "neoforge:nbt",
-      "Count": 1,
-      "id": "veganoption:soap",
-      "tag": {
-        "Damage": 0
-      }
+      "item": "veganoption:soap",
+      "strict": true,
+      "tag": "{Damage:0}"
     },
     {
       "item": "minecraft:sugar"

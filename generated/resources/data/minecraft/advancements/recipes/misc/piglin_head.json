@@ -30,6 +30,5 @@
     "recipes": [
       "minecraft:piglin_head"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

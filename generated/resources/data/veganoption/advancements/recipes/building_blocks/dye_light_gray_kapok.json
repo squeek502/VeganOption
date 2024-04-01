@@ -21,6 +21,5 @@
     "recipes": [
       "veganoption:dye_light_gray_kapok"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

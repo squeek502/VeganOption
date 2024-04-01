@@ -104,7 +104,7 @@ public class ShapelessMatchingTagRecipe extends ShapelessRecipe
 			recipe -> recipe.group(
 					ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(recipe1 -> recipe1.group),
 					CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(recipe1 -> recipe1.category),
-					CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC.fieldOf("result").forGetter(recipe1 -> recipe1.result),
+					ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(recipe1 -> recipe1.result),
 					Ingredient.CODEC_NONEMPTY
 						.listOf()
 						.fieldOf("ingredients")

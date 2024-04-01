@@ -1,5 +1,6 @@
 package squeek.veganoption.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.BiomeColors;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
 
 public class BlockJutePlant extends BushBlock implements BonemealableBlock
 {
+	private static final MapCodec<? extends BushBlock> CODEC = simpleCodec(p -> new BlockJutePlant());
 	public static final int NUM_BOTTOM_STAGES = 6;
 	public static final int NUM_TOP_STAGES = 5;
 	public static final int NUM_GROWTH_STAGES = NUM_BOTTOM_STAGES + NUM_TOP_STAGES;
@@ -158,6 +160,12 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 		boolean shouldGrow = random.nextFloat() < GROWTH_CHANCE_PER_UPDATETICK;
 		if (shouldGrow && !hasTop(state))
 			deltaGrowth(level, pos, state, 1);
+	}
+
+	@Override
+	protected MapCodec<? extends BushBlock> codec()
+	{
+		return CODEC;
 	}
 
 	@Override

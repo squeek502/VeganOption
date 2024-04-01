@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:apple_sauce"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

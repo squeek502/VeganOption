@@ -14,7 +14,10 @@ issueTrackerURL="https://github.com/squeek502/veganoption/issues"
 
 [[dependencies.${mod_id}]]
     modId="neoforge"
-    mandatory=true
+    type="required"
     versionRange="${neo_version_range}"
     ordering="NONE"
     side="BOTH"
+
+[[mixins]]
+config="mixins.veganoption.json"

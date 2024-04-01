@@ -13,7 +13,7 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -186,7 +186,7 @@ public class FluidHelper
 			return (IFluidHandler) tile;
 
 		if (tile != null)
-			return tile.getCapability(Capabilities.FLUID_HANDLER, facing).orElse(null);
+			return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, facing);
 
 		return null;
 	}

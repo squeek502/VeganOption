@@ -6,10 +6,12 @@ import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 
 import javax.annotation.Nullable;
 
@@ -87,4 +89,11 @@ public interface IContentModule
 	 * Generate loot modifiers
 	 */
 	default void datagenLootModifiers(GlobalLootModifierProvider provider) {}
+
+	default void registerCapabilities(RegisterCapabilitiesEvent event) {}
+
+	/**
+	 * @param registrar The registrar for our mod ID namespace.
+	 */
+	default void registerNetworkPayloads(IPayloadRegistrar registrar) {}
 }

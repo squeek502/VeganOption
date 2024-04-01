@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:seitan_furnace"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

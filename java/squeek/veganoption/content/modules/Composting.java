@@ -25,12 +25,15 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.BlockCompost;
 import squeek.veganoption.blocks.BlockComposter;
@@ -44,6 +47,8 @@ import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.gui.ComposterMenu;
 import squeek.veganoption.gui.ComposterScreen;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
+import squeek.veganoption.network.ComposterTumblePacketPayload;
+import squeek.veganoption.network.ComposterTumblePacketPayloadServerHandler;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -99,6 +104,18 @@ public class Composting implements IContentModule
 	}
 
 	@Override
+	public void registerCapabilities(RegisterCapabilitiesEvent event)
+	{
+		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, composterEntityType.get(), (be, dir) -> be.getItemHandler());
+	}
+
+	@Override
+	public void registerNetworkPayloads(IPayloadRegistrar registrar)
+	{
+		registrar.play(ComposterTumblePacketPayload.ID, ComposterTumblePacketPayload::new, h -> h.server(ComposterTumblePacketPayloadServerHandler::handle));
+	}
+
+	@Override
 	public void datagenItemTags(DataGenProviders.ItemTags provider)
 	{
 		provider.tagW(ContentHelper.ItemTags.ROTTEN_MATERIAL)
@@ -149,7 +166,7 @@ public class Composting implements IContentModule
 			.addTag(ContentHelper.ItemTags.FLOWERS)
 			.add(rottenPlants.get())
 			.add(Items.TALL_GRASS)
-			.add(Items.GRASS)
+			.add(Items.SHORT_GRASS)
 			.add(Items.FERN)
 			.add(Items.LARGE_FERN)
 			.add(Items.PUMPKIN)

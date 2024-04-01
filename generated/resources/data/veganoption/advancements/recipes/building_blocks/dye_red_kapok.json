@@ -21,6 +21,5 @@
     "recipes": [
       "veganoption:dye_red_kapok"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

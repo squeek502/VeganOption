@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:seitan_smoker"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

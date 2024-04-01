@@ -23,13 +23,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.*;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import org.jetbrains.annotations.NotNull;
 import squeek.veganoption.blocks.BlockBasin;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modules.Basin;
@@ -368,12 +364,6 @@ public class TileEntityBasin extends BlockEntity
 		setChanged();
 		if (level instanceof ServerLevel serverLevel)
 			serverLevel.getChunkSource().blockChanged(worldPosition);
-	}
-
-	@Override
-	public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing)
-	{
-		return capability == Capabilities.FLUID_HANDLER ? LazyOptional.of(() -> (T) fluidTank) : super.getCapability(capability, facing);
 	}
 
 	private class BasinTank extends FluidTank

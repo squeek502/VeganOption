@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
@@ -38,7 +39,6 @@ import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import static squeek.veganoption.VeganOption.REGISTER_BLOCKS;
@@ -49,10 +49,10 @@ public class Syrup implements IContentModule
 	public static DeferredHolder<Block, SapCauldronBlock> sapCauldron;
 	public static Supplier<Item> sapBucket;
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-	public static final Map<Item, CauldronInteraction> sapInteractions = CauldronInteraction.newInteractionMap();
+	public static final CauldronInteraction.InteractionMap sapInteractions = CauldronInteraction.newInteractionMap("sap");
 	public static DeferredHolder<Block, LayeredCauldronBlock> syrupCauldron;
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-	public static final Map<Item, CauldronInteraction> syrupInteractions = CauldronInteraction.newInteractionMap();
+	public static final CauldronInteraction.InteractionMap syrupInteractions = CauldronInteraction.newInteractionMap("syrup");
 	public static Supplier<Item> syrupBottle;
 	public static DeferredHolder<Block, SpoutBlock> spoutBlock;
 	public static Supplier<Item> spoutItem;
@@ -60,9 +60,9 @@ public class Syrup implements IContentModule
 	@Override
 	public void create()
 	{
-		sapCauldron = REGISTER_BLOCKS.register("sap_cauldron", () -> new SapCauldronBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON), sapInteractions));
+		sapCauldron = REGISTER_BLOCKS.register("sap_cauldron", () -> new SapCauldronBlock(BlockBehaviour.Properties.ofLegacyCopy(Blocks.CAULDRON)));
 		sapBucket = REGISTER_ITEMS.register("sap_bucket", () -> new Item(new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-		syrupCauldron = REGISTER_BLOCKS.register("syrup_cauldron", () -> new LayeredCauldronBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON), (precipitation) -> false, syrupInteractions));
+		syrupCauldron = REGISTER_BLOCKS.register("syrup_cauldron", () -> new LayeredCauldronBlock(Biome.Precipitation.NONE, syrupInteractions, BlockBehaviour.Properties.ofLegacyCopy(Blocks.CAULDRON)));
 		syrupBottle = REGISTER_ITEMS.register("syrup_bottle", () -> new HoneyBottleItem(new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(Foods.HONEY_BOTTLE).stacksTo(16)));
 		spoutBlock = REGISTER_BLOCKS.register("spout", SpoutBlock::new);
 		spoutItem = REGISTER_ITEMS.register("spout", () -> new BlockItem(spoutBlock.get(), new Item.Properties()));
@@ -71,7 +71,7 @@ public class Syrup implements IContentModule
 	@Override
 	public void finish()
 	{
-		CauldronInteraction.EMPTY.put(sapBucket.get(), (state, level, pos, player, hand, stack) -> {
+		CauldronInteraction.EMPTY.map().put(sapBucket.get(), (state, level, pos, player, hand, stack) -> {
 			if (!level.isClientSide()) 
 			{
 				player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.BUCKET)));
@@ -82,7 +82,7 @@ public class Syrup implements IContentModule
 
 			return InteractionResult.sidedSuccess(level.isClientSide());
 		});
-		sapInteractions.put(Items.BUCKET, (state, level, pos, player, hand, stack) -> {
+		sapInteractions.map().put(Items.BUCKET, (state, level, pos, player, hand, stack) -> {
 			if (!level.isClientSide())
 			{
 				player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(sapBucket.get())));
@@ -93,7 +93,7 @@ public class Syrup implements IContentModule
 			return InteractionResult.sidedSuccess(level.isClientSide());
 		});
 
-		syrupInteractions.put(Items.GLASS_BOTTLE, (state, level, pos, player, hand, stack) -> {
+		syrupInteractions.map().put(Items.GLASS_BOTTLE, (state, level, pos, player, hand, stack) -> {
 			if (!level.isClientSide()) 
 			{
 				player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(syrupBottle.get())));
@@ -103,7 +103,7 @@ public class Syrup implements IContentModule
 
 			return InteractionResult.sidedSuccess(level.isClientSide());
 		});
-		syrupInteractions.put(syrupBottle.get(), (state, level, pos, player, hand, stack) -> {
+		syrupInteractions.map().put(syrupBottle.get(), (state, level, pos, player, hand, stack) -> {
 			if (state.getValue(LayeredCauldronBlock.LEVEL) != 3) 
 			{
 				if (!level.isClientSide()) 
@@ -118,7 +118,7 @@ public class Syrup implements IContentModule
 				return InteractionResult.PASS;
 			}
 		});
-		CauldronInteraction.EMPTY.put(syrupBottle.get(), (state, level, pos, player, hand, stack) -> {
+		CauldronInteraction.EMPTY.map().put(syrupBottle.get(), (state, level, pos, player, hand, stack) -> {
 			if (!level.isClientSide())
 			{
 				player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));

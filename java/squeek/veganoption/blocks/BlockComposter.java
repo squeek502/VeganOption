@@ -1,5 +1,6 @@
 package squeek.veganoption.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -28,6 +29,7 @@ import squeek.veganoption.content.modules.Composting;
 
 public class BlockComposter extends HorizontalDirectionalBlock implements EntityBlock
 {
+	private static final MapCodec<? extends HorizontalDirectionalBlock> CODEC = simpleCodec(p -> new BlockComposter());
 	public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 14, 15);
 	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
@@ -134,5 +136,11 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 	public RenderShape getRenderShape(BlockState state)
 	{
 		return RenderShape.ENTITYBLOCK_ANIMATED;
+	}
+
+	@Override
+	protected MapCodec<? extends HorizontalDirectionalBlock> codec()
+	{
+		return CODEC;
 	}
 }

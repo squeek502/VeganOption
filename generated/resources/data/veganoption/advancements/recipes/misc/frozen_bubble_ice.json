@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:frozen_bubble_ice"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

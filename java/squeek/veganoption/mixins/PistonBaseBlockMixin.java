@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import squeek.veganoption.api.event.PistonEvent;
 
 @Mixin(PistonBaseBlock.class)
-public class PistonBaseBlockMixin extends DirectionalBlock
+public abstract class PistonBaseBlockMixin extends DirectionalBlock
 {
 	protected PistonBaseBlockMixin(Properties properties)
 	{

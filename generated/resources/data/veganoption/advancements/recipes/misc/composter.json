@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:composter"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

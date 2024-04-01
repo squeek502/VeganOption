@@ -82,7 +82,7 @@ public class RecipeModifier
 		{
 			boolean isFood = isFood(s.result);
 
-			return new ShapedRecipe(s.getGroup(), s.category(), s.getWidth(), s.getHeight(), createNewIngredientList(s.getIngredients(), isFood), s.result, s.showNotification());
+			return new ShapedRecipe(s.getGroup(), s.category(), new ShapedRecipePattern(s.pattern.width(), s.pattern.height(), createNewIngredientList(s.pattern.ingredients(), isFood), s.pattern.data()), s.result, s.showNotification());
 		}
 		return recipe;
 	}

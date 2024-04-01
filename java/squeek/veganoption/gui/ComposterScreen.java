@@ -13,13 +13,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.tiles.TileEntityComposter;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
-import squeek.veganoption.network.MessageComposterTumble;
-import squeek.veganoption.network.NetworkHandler;
+import squeek.veganoption.network.ComposterTumblePacketPayload;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +155,7 @@ public class ComposterScreen extends AbstractContainerScreen<ComposterMenu>
 		if (tumbleButton.mouseClicked(mouseX, mouseY, button) && !menu.isAerating())
 		{
 			tumbleButton.setStateTriggered(false);
-			NetworkHandler.channel.sendToServer(new MessageComposterTumble(null));
+			PacketDistributor.SERVER.noArg().send(new ComposterTumblePacketPayload(null));
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}

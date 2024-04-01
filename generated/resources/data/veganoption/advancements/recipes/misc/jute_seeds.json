@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:jute_seeds"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

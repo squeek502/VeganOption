@@ -28,8 +28,7 @@ import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.MiscHelper;
 import squeek.veganoption.helpers.RandomHelper;
-import squeek.veganoption.network.EnderRiftParticleMessage;
-import squeek.veganoption.network.NetworkHandler;
+import squeek.veganoption.network.EnderRiftParticlePacketPayload;
 
 import java.util.Random;
 
@@ -63,9 +62,9 @@ public class BlockEnderRift extends EndPortalBlock implements IFluidFlowHandler
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
+	public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
 	{
-		super.tick(state, level, pos, random);
+		super.randomTick(state, level, pos, random);
 
 		BlockPos aboveBlockPos = pos.above();
 		BlockPos belowBlockPos = pos.below();
@@ -98,8 +97,12 @@ public class BlockEnderRift extends EndPortalBlock implements IFluidFlowHandler
 
 						if (!level.isClientSide())
 						{
-							PacketDistributor.PacketTarget target = PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(blockPosToSwallow.getX(), blockPosToSwallow.getY(), blockPosToSwallow.getZ(), 80, level.dimension()));
-							NetworkHandler.channel.send(target, new EnderRiftParticleMessage(blockPosToSwallow.getX(), blockPosToSwallow.getY(), blockPosToSwallow.getZ()));
+							int x = blockPosToSwallow.getX();
+							int y = blockPosToSwallow.getY();
+							int z = blockPosToSwallow.getZ();
+							PacketDistributor.NEAR
+								.with(new PacketDistributor.TargetPoint(x, y, z, 80, level.dimension()))
+								.send(new EnderRiftParticlePacketPayload(x, y, z));
 						}
 					}
 				}

@@ -30,6 +30,5 @@
     "recipes": [
       "minecraft:creeper_head"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

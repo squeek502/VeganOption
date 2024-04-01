@@ -21,6 +21,5 @@
     "recipes": [
       "veganoption:dye_lime_kapok"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

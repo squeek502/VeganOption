@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:suffering_proof"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -3,14 +3,15 @@ package squeek.veganoption.content.modules;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.content.recipes.CookingRecipeWithCountBuilder;
 import squeek.veganoption.content.recipes.ShapelessDamageItemRecipeBuilder;
 
 import java.util.function.Supplier;
@@ -40,7 +41,7 @@ public class Bioplastic implements IContentModule
 	@Override
 	public void datagenRecipes(RecipeOutput output, DataGenProviders.Recipes provider)
 	{
-		CookingRecipeWithCountBuilder.smelting(RecipeCategory.MISC, bioplastic.get(), 2, Ingredient.of(ContentHelper.ItemTags.STARCH), 0.35f)
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(ContentHelper.ItemTags.STARCH), RecipeCategory.MISC, new ItemStack(bioplastic.get(), 2), 0.35f, ContentHelper.DEFAULT_SMELT_TIME)
 			.unlockedBy("has_potato_starch", provider.hasW(Egg.potatoStarch.get()))
 			.save(output);
 

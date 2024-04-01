@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:burlap_boots"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -1,7 +1,6 @@
 package squeek.veganoption.blocks.tiles;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -30,20 +29,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestLidController;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import squeek.veganoption.content.modules.Composting;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.gui.ComposterMenu;
 import squeek.veganoption.helpers.*;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -144,7 +138,16 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 		}
 	};
 
-	private LazyOptional<IItemHandler> inventoryCapLazy;
+	private final Lazy<IItemHandler> invHandlerLazy = Lazy.of(() -> new InvWrapper(this) {
+		@Override
+		public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
+		{
+			// For some reason, the default InvWrapper implementation does not call canTakeItem
+			if (!isOutputItem(getItem(slot)))
+				return ItemStack.EMPTY;
+			return super.extractItem(slot, amount, simulate);
+		}
+	});
 
 	public TileEntityComposter(BlockPos pos, BlockState state)
 	{
@@ -163,9 +166,9 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 			return true;
 		}
 
-		if (!player.isCrouching() && !level.isClientSide() && player instanceof ServerPlayer)
+		if (!player.isCrouching() && !level.isClientSide() && player instanceof ServerPlayer sp)
 		{
-			NetworkHooks.openScreen((ServerPlayer) player, this, getBlockPos());
+			sp.openMenu(this, getBlockPos());
 			return true;
 		}
 
@@ -775,33 +778,8 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	/*
 	Capabilities
 	 */
-	@Nonnull
-	@Override
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side)
+	public IItemHandler getItemHandler()
 	{
-		if (!remove && cap == Capabilities.ITEM_HANDLER)
-		{
-			if (inventoryCapLazy == null)
-				inventoryCapLazy = LazyOptional.of(() -> new InvWrapper(this) {
-					@Override
-					public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
-					{
-						// For some reason, the default InvWrapper implementation does not call canTakeItem
-						if (!isOutputItem(getItem(slot)))
-							return ItemStack.EMPTY;
-						return super.extractItem(slot, amount, simulate);
-					}
-				});
-			return inventoryCapLazy.cast();
-		}
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public void invalidateCaps()
-	{
-		super.invalidateCaps();
-		if (inventoryCapLazy != null)
-			inventoryCapLazy.invalidate();
+		return invHandlerLazy.get();
 	}
 }

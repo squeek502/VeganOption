@@ -27,7 +27,6 @@ import squeek.veganoption.content.recipes.RecipeRegistration;
 import squeek.veganoption.helpers.CreativeTabHelper;
 import squeek.veganoption.integration.IntegrationHandler;
 import squeek.veganoption.loot.LootRegistration;
-import squeek.veganoption.network.NetworkHandler;
 
 @Mod(ModInfo.MODID_LOWER)
 @Mod.EventBusSubscriber(modid = ModInfo.MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -48,7 +47,6 @@ public class VeganOption
 	{
 		LootRegistration.init();
 		ContentModuleHandler.init();
-		NetworkHandler.init();
 		IntegrationHandler.init();
 		PistonCraftingHandler.init();
 		RecipeRegistration.init();

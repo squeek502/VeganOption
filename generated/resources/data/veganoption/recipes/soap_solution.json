@@ -10,11 +10,9 @@
     },
     {
       "type": "neoforge:nbt",
-      "Count": 1,
-      "id": "minecraft:potion",
-      "tag": {
-        "Potion": "minecraft:water"
-      }
+      "item": "minecraft:potion",
+      "strict": true,
+      "tag": "{Potion:\"minecraft:water\"}"
     }
   ],
   "result": {

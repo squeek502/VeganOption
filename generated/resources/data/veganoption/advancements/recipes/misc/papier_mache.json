@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:papier_mache"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

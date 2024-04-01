@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:blank_mob_head"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

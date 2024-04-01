@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:faux_feather"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

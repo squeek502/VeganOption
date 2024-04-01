@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:vegetable_oil_ink_black"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

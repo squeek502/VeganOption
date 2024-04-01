@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:plastic_rod"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -1,7 +1,7 @@
 package squeek.veganoption.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -12,7 +12,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.AbstractCauldronBlock;
@@ -28,7 +27,6 @@ import squeek.veganoption.helpers.MiscHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.Map;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 
@@ -38,10 +36,11 @@ public class SapCauldronBlock extends AbstractCauldronBlock
 	private static final ResourceKey<DamageType> BOILING_SAP_DAMAGE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID_LOWER, "boiling_sap"));
 	private static final List<Block> HEAT_SOURCES = List.of(Blocks.FIRE, Blocks.SOUL_FIRE, Blocks.LAVA);
 	public static final int BOIL_TIME_TICKS = MiscHelper.TICKS_PER_SEC * 45;
+	private static final MapCodec<SapCauldronBlock> CODEC = simpleCodec(SapCauldronBlock::new);
 
-	public SapCauldronBlock(Properties properties, Map<Item, CauldronInteraction> interactions)
+	public SapCauldronBlock(Properties properties)
 	{
-		super(properties, interactions);
+		super(properties, Syrup.sapInteractions);
 		NeoForge.EVENT_BUS.register(this);
 	}
 
@@ -95,6 +94,12 @@ public class SapCauldronBlock extends AbstractCauldronBlock
 				level.addParticle(ParticleTypes.BUBBLE, x, pos.getY() + getContentHeight(state), z, 0, -0.1, 0);
 			}
 		}
+	}
+
+	@Override
+	protected MapCodec<? extends AbstractCauldronBlock> codec()
+	{
+		return CODEC;
 	}
 
 	@Override

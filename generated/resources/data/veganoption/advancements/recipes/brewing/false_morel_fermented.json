@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:false_morel_fermented"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

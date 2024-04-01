@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:soap"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

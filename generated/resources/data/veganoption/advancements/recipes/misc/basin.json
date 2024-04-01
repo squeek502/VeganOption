@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:basin"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

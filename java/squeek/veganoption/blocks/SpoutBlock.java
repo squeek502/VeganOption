@@ -1,5 +1,6 @@
 package squeek.veganoption.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -37,6 +38,7 @@ import squeek.veganoption.helpers.BlockHelper;
 
 public class SpoutBlock extends HorizontalDirectionalBlock
 {
+	private static final MapCodec<? extends HorizontalDirectionalBlock> CODEC = simpleCodec(p -> new SpoutBlock());
 	public static final BooleanProperty HAS_BUCKET = BooleanProperty.create("has_bucket");
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final int MIN_LEVEL = 0;
@@ -260,5 +262,11 @@ public class SpoutBlock extends HorizontalDirectionalBlock
 	public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
 	{
 		return state.getValue(HAS_BUCKET) ? state.getValue(LEVEL) : 0;
+	}
+
+	@Override
+	protected MapCodec<? extends HorizontalDirectionalBlock> codec()
+	{
+		return CODEC;
 	}
 }

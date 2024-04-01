@@ -30,6 +30,5 @@
     "recipes": [
       "veganoption:plant_milk_bucket"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

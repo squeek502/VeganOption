@@ -5,7 +5,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.content.modules.*;
 import squeek.veganoption.content.modules.compat.CompatEnderBubble;
@@ -73,6 +76,19 @@ public class ContentModuleHandler
 	public static void init()
 	{
 		iterateOverModules(IContentModule::create);
+	}
+
+	@SubscribeEvent
+	public static void registerCapabilities(RegisterCapabilitiesEvent event)
+	{
+		iterateOverModules(module -> module.registerCapabilities(event));
+	}
+
+	@SubscribeEvent
+	public static void registerPayloads(RegisterPayloadHandlerEvent event)
+	{
+		IPayloadRegistrar registrar = event.registrar(ModInfo.MODID_LOWER);
+		iterateOverModules(module -> module.registerNetworkPayloads(registrar));
 	}
 
 	@OnlyIn(Dist.CLIENT)

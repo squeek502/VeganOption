@@ -3,8 +3,8 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'net.neoforged.gradle.userdev' version '7.0.57'
-	id 'net.neoforged.gradle.mixin' version '7.0.57'
+	id 'net.neoforged.gradle.userdev' version '7.0.97'
+	id 'net.neoforged.gradle.mixin' version '7.0.97'
 }
 
 if (version == "unspecified")
@@ -43,7 +43,7 @@ repositories {
 }
 
 base {
-	archivesName = project.projectDir.name + "-mc1.20.2"
+	archivesName = project.projectDir.name + "-mc1.20.4"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -77,29 +77,30 @@ runs {
 
 minecraft.accessTransformers.file rootProject.file('resources/META-INF/accesstransformer.cfg')
 
-mixin {
-	config 'mixins.veganoption.json'
-}
-
 sourceSets.main.java.srcDirs += 'java'
 sourceSets.main.java.srcDirs += 'apis'
 sourceSets.main.resources.srcDirs += 'resources'
 sourceSets.main.resources.srcDirs += 'generated/resources'
 sourceSets.test.java.srcDirs += 'tests'
 
-def neoVersion = "20.2.86"
-def neoVersionRange = "[20.2.86,20.3)"
+def neoVersion = "20.4.214"
+def neoVersionRange = "[20.4.70,)"
 def jeiVersion = "16.0.0.28"
-def reiVersion = "13.0.685"
-def jadeVersion = "4845321" // 12.1.8
-def wthitVersion = "9.1.2"
-def badpacketsVersion = "0.5.4"
+def reiVersion = "14.0.688"
+def jadeVersion = "5109393" // 13.3.1
+def wthitVersion = "10.5.0"
+def badpacketsVersion = "0.6.1"
  
 dependencies {
 	implementation "net.neoforged:neoforge:${neoVersion}"
 	implementation "curse.maven:jade-324717:${jadeVersion}"
+	// REI is using an old version of Architectury which had not yet been updated for NeoForge 20.4.70+.
+	implementation "dev.architectury:architectury-neoforge:11.1.17"
 	// We need the default implementations in REI, rather than just the API
-	implementation "me.shedaniel:RoughlyEnoughItems-neoforge:${reiVersion}"
+	implementation("me.shedaniel:RoughlyEnoughItems-neoforge:${reiVersion}") {
+		// Only use our version
+		exclude group: "dev.architectury"
+	}
 
 	compileOnly "mcp.mobius.waila:wthit-api:neo-${wthitVersion}"
 
@@ -112,11 +113,18 @@ dependencies {
 //	runtimeOnly "mezz.jei:jei-1.20.2-forge:${jeiVersion}"
 }
 
+subsystems {
+	parchment {
+		minecraftVersion = "1.20.2"
+		mappingsVersion = "2023.12.10"
+	}
+}
+
 tasks.withType(ProcessResources).configureEach {
 	var replaceProperties = [
-			minecraft_version: "1.20.2", minecraft_version_range: "1.20.2",
+			minecraft_version: "1.20.4", minecraft_version_range: "1.20.4",
 			neo_version: neoVersion, neo_version_range: neoVersionRange,
-			loader_version_range: "[1,)",
+			loader_version_range: "[2,)",
 			mod_id: "veganoption",
 			mod_name: "The Vegan Option",
 			mod_license: "Public Domain",

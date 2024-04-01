@@ -27,6 +27,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.blocks.BlockEncrustedObsidian;
 import squeek.veganoption.blocks.BlockEnderRift;
@@ -39,6 +40,8 @@ import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.fluids.RawEnderFluid;
 import squeek.veganoption.items.GenericBucketItem;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
+import squeek.veganoption.network.EnderRiftParticlePacketPayload;
+import squeek.veganoption.network.EnderRiftParticlePacketPayloadClientHandler;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -91,6 +94,12 @@ public class Ender implements IContentModule
 		rawEnderFlowing = REGISTER_FLUIDS.register("raw_ender_flowing", () -> new RawEnderFluid.Flowing(fluidProperties));
 		rawEnderBlock = REGISTER_BLOCKS.register("raw_ender", BlockRawEnder::new);
 		rawEnderBucket = REGISTER_ITEMS.register("raw_ender_bucket", () -> new GenericBucketItem(() -> rawEnderStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+	}
+
+	@Override
+	public void registerNetworkPayloads(IPayloadRegistrar registrar)
+	{
+		registrar.play(EnderRiftParticlePacketPayload.ID, EnderRiftParticlePacketPayload::new, h -> h.client(EnderRiftParticlePacketPayloadClientHandler::handle));
 	}
 
 	@Override

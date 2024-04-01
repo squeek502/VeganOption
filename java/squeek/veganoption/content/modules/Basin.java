@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -50,6 +52,12 @@ public class Basin implements IContentModule
 				.isViewBlocking((state, getter, pos) -> false)));
 		basinItem = REGISTER_ITEMS.register("basin", () -> new BlockItem(basin.get(), new Item.Properties()));
 		basinType = REGISTER_BLOCKENTITIES.register("basin", () -> BlockEntityType.Builder.of(TileEntityBasin::new, basin.get()).build(null));
+	}
+
+	@Override
+	public void registerCapabilities(RegisterCapabilitiesEvent event)
+	{
+		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, basinType.get(), (be, dir) -> be.fluidTank);
 	}
 
 	@OnlyIn(Dist.CLIENT)
