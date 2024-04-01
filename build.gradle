@@ -122,7 +122,7 @@ tasks.withType(ProcessResources).configureEach {
 			mod_id: "veganoption",
 			mod_name: "The Vegan Option",
 			mod_license: "Public Domain",
-			mod_version: project.version,
+			mod_version: mod_version,
 			mod_authors: "squeek502, SatanicSanta",
 			mod_description: "Adds vegan alternatives for the various animal products used in Minecraft.",
 	]
