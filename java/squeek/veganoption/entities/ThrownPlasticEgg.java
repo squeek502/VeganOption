@@ -13,23 +13,23 @@ import net.minecraft.world.phys.HitResult;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modules.Egg;
 
-public class EntityPlasticEgg extends ThrowableItemProjectile
+public class ThrownPlasticEgg extends ThrowableItemProjectile
 {
 	private static final byte EVENT_ID = 1;
 
 	private Item insideEgg;
-	public EntityPlasticEgg(EntityType<? extends ThrowableItemProjectile> type, Level level)
+	public ThrownPlasticEgg(EntityType<? extends ThrowableItemProjectile> type, Level level)
 	{
 		super(type, level);
 	}
 
-	public EntityPlasticEgg(Item insideEgg, double x, double y, double z, Level level)
+	public ThrownPlasticEgg(Item insideEgg, double x, double y, double z, Level level)
 	{
 		super(Egg.plasticEggEntityType.get(), x, y, z, level);
 		this.insideEgg = insideEgg;
 	}
 
-	public EntityPlasticEgg(Item insideEgg, LivingEntity thrower, Level level)
+	public ThrownPlasticEgg(Item insideEgg, LivingEntity thrower, Level level)
 	{
 		super(Egg.plasticEggEntityType.get(), thrower, level);
 		this.insideEgg = insideEgg;

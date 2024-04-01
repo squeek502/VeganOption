@@ -20,7 +20,7 @@ import squeek.veganoption.helpers.EffectsHelper;
 import squeek.veganoption.helpers.RandomHelper;
 import squeek.veganoption.helpers.TemperatureHelper;
 
-public class EntityBubble extends ThrowableItemProjectile
+public class BlownSoapBubble extends ThrowableItemProjectile
 {
 	private static final byte EVENT_ID = 7;
 	public static final int LIFETIME_BASE = 40;
@@ -31,19 +31,19 @@ public class EntityBubble extends ThrowableItemProjectile
 	public int lifetime = RandomHelper.getRandomIntFromRange(LIFETIME_BASE, LIFETIME_MAX);
 	public float temperature;
 
-	public EntityBubble(Level level, Player player)
+	public BlownSoapBubble(Level level, Player player)
 	{
 		super(FrozenBubble.bubbleEntityType.get(), player, level);
 		setItem(new ItemStack(FrozenBubble.frozenBubble.get()));
 	}
 
-	public EntityBubble(Level level, double x, double y, double z)
+	public BlownSoapBubble(Level level, double x, double y, double z)
 	{
 		super(FrozenBubble.bubbleEntityType.get(), x, y, z, level);
 		setItem(new ItemStack(FrozenBubble.frozenBubble.get()));
 	}
 
-	public EntityBubble(EntityType<? extends EntityBubble> type, Level level)
+	public BlownSoapBubble(EntityType<? extends BlownSoapBubble> type, Level level)
 	{
 		super(type, level);
 		setItem(new ItemStack(FrozenBubble.frozenBubble.get()));

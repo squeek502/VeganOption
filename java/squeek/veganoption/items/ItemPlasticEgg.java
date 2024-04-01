@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import squeek.veganoption.entities.EntityPlasticEgg;
+import squeek.veganoption.entities.ThrownPlasticEgg;
 import squeek.veganoption.helpers.LangHelper;
 
 import java.util.List;
@@ -25,18 +25,18 @@ public class ItemPlasticEgg extends ItemThrowableGeneric
 	public ThrowableItemProjectile getNewProjectile(ItemStack thrownItem, Level level, Player thrower)
 	{
 		if (hasItem(thrownItem))
-			return new EntityPlasticEgg(getContainedItem(thrownItem), thrower, level);
+			return new ThrownPlasticEgg(getContainedItem(thrownItem), thrower, level);
 
-		return new EntityPlasticEgg(null, thrower, level);
+		return new ThrownPlasticEgg(null, thrower, level);
 	}
 
 	@Override
 	public ThrowableItemProjectile getNewProjectile(ItemStack thrownItem, Level level, double x, double y, double z)
 	{
 		if (hasItem(thrownItem))
-			return new EntityPlasticEgg(getContainedItem(thrownItem), x, y, z, level);
+			return new ThrownPlasticEgg(getContainedItem(thrownItem), x, y, z, level);
 
-		return new EntityPlasticEgg(null, x, y, z, level);
+		return new ThrownPlasticEgg(null, x, y, z, level);
 	}
 
 	@Override

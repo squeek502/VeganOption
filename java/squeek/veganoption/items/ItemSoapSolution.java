@@ -11,7 +11,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
-import squeek.veganoption.entities.EntityBubble;
+import squeek.veganoption.entities.BlownSoapBubble;
 
 public class ItemSoapSolution extends Item
 {
@@ -40,7 +40,7 @@ public class ItemSoapSolution extends Item
 	{
 		if (!level.isClientSide() && entity instanceof Player player)
 		{
-			EntityBubble bubble = new EntityBubble(level, player);
+			BlownSoapBubble bubble = new BlownSoapBubble(level, player);
 			bubble.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, BUBBLE_INITIAL_VELOCITY, 1.0F);
 			level.addFreshEntity(bubble);
 		}
@@ -65,7 +65,7 @@ public class ItemSoapSolution extends Item
 		@Override
 		protected Projectile getProjectile(Level level, Position pos, ItemStack stack)
 		{
-			return new EntityBubble(level, pos.x(), pos.y(), pos.z());
+			return new BlownSoapBubble(level, pos.x(), pos.y(), pos.z());
 		}
 
 		@Override

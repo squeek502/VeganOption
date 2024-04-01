@@ -39,7 +39,7 @@ import squeek.veganoption.content.recipes.EggRecipe;
 import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
-import squeek.veganoption.entities.EntityPlasticEgg;
+import squeek.veganoption.entities.ThrownPlasticEgg;
 import squeek.veganoption.items.ItemPlasticEgg;
 
 import java.util.function.Supplier;
@@ -52,7 +52,7 @@ public class Egg implements IContentModule
 	public static Supplier<Item> potatoStarch;
 	public static Supplier<Item> appleSauce;
 	public static Supplier<Item> plasticEgg;
-	public static Supplier<EntityType<EntityPlasticEgg>> plasticEggEntityType;
+	public static Supplier<EntityType<ThrownPlasticEgg>> plasticEggEntityType;
 	public static Supplier<RecipeSerializer<EggRecipe>> eggRecipeSerializer;
 
 	@Override
@@ -62,7 +62,7 @@ public class Egg implements IContentModule
 		potatoStarch = REGISTER_ITEMS.register("potato_starch", () -> new Item(new Item.Properties()));
 		plasticEgg = REGISTER_ITEMS.register("plastic_egg", ItemPlasticEgg::new);
 
-		plasticEggEntityType = REGISTER_ENTITIES.register("plastic_egg", () -> EntityType.Builder.<EntityPlasticEgg>of(EntityPlasticEgg::new, MobCategory.MISC)
+		plasticEggEntityType = REGISTER_ENTITIES.register("plastic_egg", () -> EntityType.Builder.<ThrownPlasticEgg>of(ThrownPlasticEgg::new, MobCategory.MISC)
 			.sized(0.25f, 0.25f)
 			.updateInterval(1)
 			.setTrackingRange(80)
@@ -128,7 +128,7 @@ public class Egg implements IContentModule
 		Modifiers.eggs.addItem(Items.GUNPOWDER, new EggModifier()
 		{
 			@Override
-			public void onHitGeneric(HitResult hitResult, EntityPlasticEgg eggEntity)
+			public void onHitGeneric(HitResult hitResult, ThrownPlasticEgg eggEntity)
 			{
 				eggEntity.level().explode(eggEntity.getOwner(), eggEntity.getBlockX(), eggEntity.getBlockY(), eggEntity.getBlockZ(), 2F, Level.ExplosionInteraction.BLOCK);
 			}
@@ -136,7 +136,7 @@ public class Egg implements IContentModule
 		EggModifier growModifier = new EggModifier()
 		{
 			@Override
-			public void onHitBlock(BlockHitResult hitResult, EntityPlasticEgg eggEntity)
+			public void onHitBlock(BlockHitResult hitResult, ThrownPlasticEgg eggEntity)
 			{
 				Level level = eggEntity.level();
 				if (level.isClientSide())
@@ -156,14 +156,14 @@ public class Egg implements IContentModule
 		Modifiers.eggs.addItem(Items.FIRE_CHARGE, new EggModifier()
 		{
 			@Override
-			public void onHitEntity(EntityHitResult hitResult, EntityPlasticEgg eggEntity)
+			public void onHitEntity(EntityHitResult hitResult, ThrownPlasticEgg eggEntity)
 			{
 				playFireChargeSound(hitResult.getEntity().level(), hitResult.getEntity().blockPosition());
 				hitResult.getEntity().setSecondsOnFire(2);
 			}
 
 			@Override
-			public void onHitBlock(BlockHitResult hitResult, EntityPlasticEgg eggEntity)
+			public void onHitBlock(BlockHitResult hitResult, ThrownPlasticEgg eggEntity)
 			{
 				Level level = eggEntity.level();
 				Direction dir = hitResult.getDirection();

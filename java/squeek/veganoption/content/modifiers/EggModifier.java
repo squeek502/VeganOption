@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import squeek.veganoption.entities.EntityPlasticEgg;
+import squeek.veganoption.entities.ThrownPlasticEgg;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class EggModifier
 	 *
 	 * Default implementation must do nothing, or {@link EggModifier#DO_NOTHING_MODIFIER} must be changed.
 	 */
-	public void onHitGeneric(HitResult hitResult, EntityPlasticEgg eggEntity)
+	public void onHitGeneric(HitResult hitResult, ThrownPlasticEgg eggEntity)
 	{
 	}
 
@@ -59,7 +59,7 @@ public class EggModifier
 	 *
 	 * Default implementation must do nothing, or {@link EggModifier#DO_NOTHING_MODIFIER} must be changed.
 	 */
-	public void onHitEntity(EntityHitResult hitResult, EntityPlasticEgg eggEntity)
+	public void onHitEntity(EntityHitResult hitResult, ThrownPlasticEgg eggEntity)
 	{
 	}
 
@@ -68,7 +68,7 @@ public class EggModifier
 	 *
 	 * Default implementation must do nothing, or {@link EggModifier#DO_NOTHING_MODIFIER} must be changed.
 	 */
-	public void onHitBlock(BlockHitResult hitResult, EntityPlasticEgg eggEntity)
+	public void onHitBlock(BlockHitResult hitResult, ThrownPlasticEgg eggEntity)
 	{
 	}
 
@@ -82,7 +82,7 @@ public class EggModifier
 		}
 
 		@Override
-		public void onHitGeneric(HitResult rayTraceResult, EntityPlasticEgg eggEntity)
+		public void onHitGeneric(HitResult rayTraceResult, ThrownPlasticEgg eggEntity)
 		{
 			ItemEntity item = new ItemEntity(eggEntity.level(), eggEntity.getBlockX(), eggEntity.getBlockY(), eggEntity.getBlockZ(), new ItemStack(toDrop));
 			eggEntity.level().addFreshEntity(item);
