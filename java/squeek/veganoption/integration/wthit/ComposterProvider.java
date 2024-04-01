@@ -6,10 +6,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
-public class ComposterProvider implements IBlockComponentProvider, IDataProvider<TileEntityComposter>
+public class ComposterProvider implements IBlockComponentProvider, IDataProvider<ComposterBlockEntity>
 {
 	static final ResourceLocation CONFIG_ID = new ResourceLocation(ModInfo.MODID_LOWER, "composter");
 	private static final String DATA_PERCENT = "Percent";
@@ -43,11 +43,11 @@ public class ComposterProvider implements IBlockComponentProvider, IDataProvider
 	}
 
 	@Override
-	public void appendData(IDataWriter data, IServerAccessor<TileEntityComposter> accessor, IPluginConfig config)
+	public void appendData(IDataWriter data, IServerAccessor<ComposterBlockEntity> accessor, IPluginConfig config)
 	{
 		if (config.getBoolean(CONFIG_ID))
 		{
-			TileEntityComposter te = accessor.getTarget();
+			ComposterBlockEntity te = accessor.getTarget();
 			data.raw().putBoolean(DATA_COMPOSTING, te.isComposting());
 			data.raw().putFloat(DATA_PERCENT, te.getCompostingPercent());
 			data.raw().putFloat(DATA_TEMPERATURE, te.getCompostTemperature());

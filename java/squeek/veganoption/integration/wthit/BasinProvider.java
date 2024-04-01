@@ -7,7 +7,7 @@ import mcp.mobius.waila.api.ITooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.TileEntityBasin;
+import squeek.veganoption.blocks.tiles.BasinBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 public class BasinProvider implements IBlockComponentProvider
@@ -19,7 +19,7 @@ public class BasinProvider implements IBlockComponentProvider
 	{
 		if (config.getBoolean(CONFIG_ID))
 		{
-			TileEntityBasin basin = accessor.getBlockEntity();
+			BasinBlockEntity basin = accessor.getBlockEntity();
 			if (basin != null)
 				tooltip.addLine(Component.translatable(LangHelper.prependModId("waila.basin." + (basin.isOpen() ? "open" : "closed"))));
 		}

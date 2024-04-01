@@ -8,17 +8,17 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import squeek.veganoption.blocks.BlockBasin;
-import squeek.veganoption.blocks.tiles.TileEntityBasin;
+import squeek.veganoption.blocks.BasinBlock;
+import squeek.veganoption.blocks.tiles.BasinBlockEntity;
 import squeek.veganoption.helpers.RenderHelper;
 
 @OnlyIn(Dist.CLIENT)
-public class RenderBasin implements BlockEntityRenderer<TileEntityBasin>
+public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity>
 {
-	public static final double SIDE_WIDTH = BlockBasin.SIDE_WIDTH;
+	public static final double SIDE_WIDTH = BasinBlock.SIDE_WIDTH;
 
 	@Override
-	public void render(TileEntityBasin basin, float partialTickTime, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay)
+	public void render(BasinBlockEntity basin, float partialTickTime, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay)
 	{
 		FluidTank tank = basin.fluidTank;
 		if (tank.isEmpty())

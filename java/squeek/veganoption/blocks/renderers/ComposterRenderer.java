@@ -26,14 +26,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.BlockComposter;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.ComposterBlock;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.content.modules.Composting;
 
 import java.util.Calendar;
 
 @OnlyIn(Dist.CLIENT)
-public class RenderComposter implements BlockEntityRenderer<TileEntityComposter>
+public class ComposterRenderer implements BlockEntityRenderer<ComposterBlockEntity>
 {
 	private static final ResourceLocation OVERLAY_BLUE = createOverlayResourceLocation("blue");
 	private static final ResourceLocation OVERLAY_YELLOW = createOverlayResourceLocation("yellow");
@@ -52,7 +52,7 @@ public class RenderComposter implements BlockEntityRenderer<TileEntityComposter>
 	private BakedModel legs;
 	private final BlockRenderDispatcher blockRenderer;
 
-	public RenderComposter(BlockEntityRendererProvider.Context context)
+	public ComposterRenderer(BlockEntityRendererProvider.Context context)
 	{
 		Calendar calendar = Calendar.getInstance();
 		int today = calendar.get(Calendar.DAY_OF_MONTH);
@@ -67,11 +67,11 @@ public class RenderComposter implements BlockEntityRenderer<TileEntityComposter>
 	}
 
 	@Override
-	public void render(TileEntityComposter tile, float partialTickTime, PoseStack pose, MultiBufferSource buffer, int packedLight, int packedOverlay)
+	public void render(ComposterBlockEntity tile, float partialTickTime, PoseStack pose, MultiBufferSource buffer, int packedLight, int packedOverlay)
 	{
 		// level is null for the item renderer -- rotate it to face the proper direction for rendering in-inventory
-		BlockState state = tile.hasLevel() ? tile.getBlockState() : Composting.composter.get().defaultBlockState().setValue(BlockComposter.FACING, Direction.SOUTH);
-		Direction dir = state.getValue(BlockComposter.FACING);
+		BlockState state = tile.hasLevel() ? tile.getBlockState() : Composting.composter.get().defaultBlockState().setValue(ComposterBlock.FACING, Direction.SOUTH);
+		Direction dir = state.getValue(ComposterBlock.FACING);
 
 		if (legs == null)
 			legs = Minecraft.getInstance().getModelManager().getModel(LEGS_MODEL);
@@ -123,7 +123,7 @@ public class RenderComposter implements BlockEntityRenderer<TileEntityComposter>
 		}
 	}
 
-	private void rotateAndTumble(TileEntityComposter tile, Direction dir, PoseStack pose, float scaleFactor)
+	private void rotateAndTumble(ComposterBlockEntity tile, Direction dir, PoseStack pose, float scaleFactor)
 	{
 		Direction.Axis axis = dir.getAxis();
 		pose.scale(scaleFactor * (axis == Direction.Axis.X ? 0.8F : 1F), scaleFactor * 0.8F, scaleFactor * (axis == Direction.Axis.X ? 1F : 0.8F));
@@ -144,11 +144,11 @@ public class RenderComposter implements BlockEntityRenderer<TileEntityComposter>
 	{
 		temperature = Math.round(temperature);
 
-		if (temperature >= TileEntityComposter.MAX_COMPOST_TEMPERATURE)
+		if (temperature >= ComposterBlockEntity.MAX_COMPOST_TEMPERATURE)
 			return OVERLAY_RED;
-		else if (temperature >= TileEntityComposter.THERMOPHILIC_RANGE_START)
+		else if (temperature >= ComposterBlockEntity.THERMOPHILIC_RANGE_START)
 			return OVERLAY_ORANGE;
-		else if (temperature >= TileEntityComposter.MESOPHILIC_RANGE_START)
+		else if (temperature >= ComposterBlockEntity.MESOPHILIC_RANGE_START)
 			return OVERLAY_YELLOW;
 		else
 			return OVERLAY_BLUE;
@@ -161,7 +161,7 @@ public class RenderComposter implements BlockEntityRenderer<TileEntityComposter>
 
 	public static class ComposterItemRenderer extends BlockEntityWithoutLevelRenderer
 	{
-		private final TileEntityComposter dummyBlockEntity = new TileEntityComposter(BlockPos.ZERO, Composting.composter.get().defaultBlockState());
+		private final ComposterBlockEntity dummyBlockEntity = new ComposterBlockEntity(BlockPos.ZERO, Composting.composter.get().defaultBlockState());
 		private final BlockEntityRenderDispatcher dispatcher;
 
 		public ComposterItemRenderer(BlockEntityRenderDispatcher renderDispatcher, EntityModelSet modelSet)

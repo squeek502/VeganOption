@@ -7,7 +7,7 @@ import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.TileEntityBasin;
+import squeek.veganoption.blocks.tiles.BasinBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 public class BasinProvider implements IBlockComponentProvider
@@ -27,7 +27,7 @@ public class BasinProvider implements IBlockComponentProvider
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config)
 	{
-		TileEntityBasin basin = (TileEntityBasin) accessor.getBlockEntity();
+		BasinBlockEntity basin = (BasinBlockEntity) accessor.getBlockEntity();
 		tooltip.add(Component.translatable(LangHelper.prependModId("waila.basin." + (basin.isOpen() ? "open" : "closed"))));
 	}
 

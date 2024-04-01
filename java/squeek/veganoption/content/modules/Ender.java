@@ -29,10 +29,10 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import squeek.veganoption.blocks.BlockEncrustedObsidian;
-import squeek.veganoption.blocks.BlockEnderRift;
-import squeek.veganoption.blocks.BlockRawEnder;
-import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
+import squeek.veganoption.blocks.EncrustedObsidianBlock;
+import squeek.veganoption.blocks.EnderRiftBlock;
+import squeek.veganoption.blocks.RawEnderBlock;
+import squeek.veganoption.blocks.tiles.EnderRiftBlockEntity;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.RelationshipRegistry;
@@ -51,10 +51,10 @@ import static squeek.veganoption.VeganOption.*;
 
 public class Ender implements IContentModule
 {
-	public static DeferredHolder<Block, BlockEncrustedObsidian> encrustedObsidian;
+	public static DeferredHolder<Block, EncrustedObsidianBlock> encrustedObsidian;
 	public static Supplier<Item> encrustedObsidianItem;
 	public static Supplier<Block> enderRift;
-	public static Supplier<BlockEntityType<TileEntityEnderRift>> enderRiftType;
+	public static Supplier<BlockEntityType<EnderRiftBlockEntity>> enderRiftType;
 	public static Supplier<FluidType> rawEnderFluidType;
 	public static Supplier<Fluid> rawEnderStill;
 	public static Supplier<Fluid> rawEnderFlowing;
@@ -65,11 +65,11 @@ public class Ender implements IContentModule
 	@Override
 	public void create()
 	{
-		encrustedObsidian = REGISTER_BLOCKS.register("encrusted_obsidian", BlockEncrustedObsidian::new);
+		encrustedObsidian = REGISTER_BLOCKS.register("encrusted_obsidian", EncrustedObsidianBlock::new);
 		encrustedObsidianItem = REGISTER_ITEMS.register("encrusted_obsidian", () -> new BlockItem(encrustedObsidian.get(), new Item.Properties()));
 
-		enderRift = REGISTER_BLOCKS.register("ender_rift", BlockEnderRift::new);
-		enderRiftType = REGISTER_BLOCKENTITIES.register("ender_rift", () -> BlockEntityType.Builder.of(TileEntityEnderRift::new, enderRift.get()).build(null));
+		enderRift = REGISTER_BLOCKS.register("ender_rift", EnderRiftBlock::new);
+		enderRiftType = REGISTER_BLOCKENTITIES.register("ender_rift", () -> BlockEntityType.Builder.of(EnderRiftBlockEntity::new, enderRift.get()).build(null));
 
 		BaseFlowingFluid.Properties fluidProperties = new BaseFlowingFluid.Properties(() -> rawEnderFluidType.get(), () -> rawEnderStill.get(), () -> rawEnderFlowing.get())
 			.block(() -> (LiquidBlock) rawEnderBlock.get())
@@ -92,7 +92,7 @@ public class Ender implements IContentModule
 
 		rawEnderStill = REGISTER_FLUIDS.register("raw_ender", () -> new RawEnderFluid.Still(fluidProperties));
 		rawEnderFlowing = REGISTER_FLUIDS.register("raw_ender_flowing", () -> new RawEnderFluid.Flowing(fluidProperties));
-		rawEnderBlock = REGISTER_BLOCKS.register("raw_ender", BlockRawEnder::new);
+		rawEnderBlock = REGISTER_BLOCKS.register("raw_ender", RawEnderBlock::new);
 		rawEnderBucket = REGISTER_ITEMS.register("raw_ender_bucket", () -> new GenericBucketItem(() -> rawEnderStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 	}
 

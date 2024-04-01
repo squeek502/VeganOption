@@ -36,8 +36,8 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import squeek.veganoption.blocks.BlockJutePlant;
-import squeek.veganoption.blocks.BlockRettable;
+import squeek.veganoption.blocks.JutePlantBlock;
+import squeek.veganoption.blocks.RettableBlock;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -55,9 +55,9 @@ import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID_LOWER, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Jute implements IContentModule
 {
-	public static DeferredHolder<Block, BlockRettable> juteBundled;
+	public static DeferredHolder<Block, RettableBlock> juteBundled;
 	public static DeferredHolder<Item, BlockItem> juteBundledItem;
-	public static DeferredHolder<Block, BlockJutePlant> jutePlant;
+	public static DeferredHolder<Block, JutePlantBlock> jutePlant;
 	public static Supplier<Item> juteSeeds;
 	public static Supplier<Item> juteStalk;
 	public static Supplier<Item> juteFibre;
@@ -73,9 +73,9 @@ public class Jute implements IContentModule
 	{
 		juteFibre = REGISTER_ITEMS.register("jute_fibre", () -> new Item(new Item.Properties()));
 		juteStalk = REGISTER_ITEMS.register("jute_stalk", () -> new Item(new Item.Properties()));
-		juteBundled = REGISTER_BLOCKS.register("bundled_jute", () -> new BlockRettable(juteFibre, 8, 15));
+		juteBundled = REGISTER_BLOCKS.register("bundled_jute", () -> new RettableBlock(juteFibre, 8, 15));
 		juteBundledItem = REGISTER_ITEMS.register("bundled_jute", () -> new BlockItem(juteBundled.get(), new Item.Properties()));
-		jutePlant = REGISTER_BLOCKS.register("jute_plant", BlockJutePlant::new);
+		jutePlant = REGISTER_BLOCKS.register("jute_plant", JutePlantBlock::new);
 		juteSeeds = REGISTER_ITEMS.register("jute_seeds", () -> new ItemNameBlockItem(jutePlant.get(), new Item.Properties()));
 	}
 
@@ -89,16 +89,16 @@ public class Jute implements IContentModule
 	@SubscribeEvent
 	public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event)
 	{
-		event.register(new BlockRettable.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR), juteBundledItem.get());
-		event.register(new BlockJutePlant.ColorHandler(), juteSeeds.get());
+		event.register(new RettableBlock.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR), juteBundledItem.get());
+		event.register(new JutePlantBlock.ColorHandler(), juteSeeds.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event)
 	{
-		event.register(new BlockRettable.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR), juteBundled.get());
-		event.register(new BlockJutePlant.ColorHandler(), jutePlant.get());
+		event.register(new RettableBlock.ColorHandler(JUTE_BASE_COLOR, JUTE_RETTED_COLOR), juteBundled.get());
+		event.register(new JutePlantBlock.ColorHandler(), jutePlant.get());
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class Jute implements IContentModule
 
 		// growth stages 0-5 are for the bottom, and 6-10 are for the top. 11 is a special case for the bottom half when it has a top
 		provider.getVariantBuilder(jutePlant.get()).forAllStates(state -> {
-			int stage = state.getValue(BlockJutePlant.GROWTH_STAGE);
+			int stage = state.getValue(JutePlantBlock.GROWTH_STAGE);
 			int textureIndex = stage;
 			if (stage == 11)
 				textureIndex = 6;
@@ -203,27 +203,27 @@ public class Jute implements IContentModule
 				LootPool.Builder jutePlantPool = LootPool.lootPool()
 					.name("jute_plant")
 					.setRolls(ConstantValue.exactly(1));
-				for (int stage = 0; stage <= BlockJutePlant.NUM_GROWTH_STAGES; stage++)
+				for (int stage = 0; stage <= JutePlantBlock.NUM_GROWTH_STAGES; stage++)
 				{
-					if (!BlockJutePlant.isTop(stage))
+					if (!JutePlantBlock.isTop(stage))
 					{
 						jutePlantPool
 							.add(LootItem.lootTableItem(juteSeeds.get())
 								.apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
 								.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Jute.jutePlant.get())
 									.setProperties(StatePropertiesPredicate.Builder.properties()
-										.hasProperty(BlockJutePlant.GROWTH_STAGE, stage))));
+										.hasProperty(JutePlantBlock.GROWTH_STAGE, stage))));
 					}
 				}
 				add(jutePlant.get(), LootTable.lootTable().withPool(jutePlantPool));
 
 				LootItemCondition.Builder rettedCondition = LootItemBlockStatePropertyCondition.hasBlockStateProperties(juteBundled.get())
-					.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(BlockRettable.STAGE, BlockRettable.MAX_RETTING_STAGES));
+					.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(RettableBlock.STAGE, RettableBlock.MAX_RETTING_STAGES));
 
 				LootPool.Builder rettedJutePool = LootPool.lootPool()
 					.name("bundled_jute")
-					.add(LootItem.lootTableItem(((BlockRettable) juteBundled.get()).getRettedItem())
-						 .apply(LimitCount.limitCount(IntRange.range(((BlockRettable) juteBundled.get()).getMinRettedItemDrops(), ((BlockRettable) juteBundled.get()).getMaxRettedItemDrops())))
+					.add(LootItem.lootTableItem(((RettableBlock) juteBundled.get()).getRettedItem())
+						 .apply(LimitCount.limitCount(IntRange.range(((RettableBlock) juteBundled.get()).getMinRettedItemDrops(), ((RettableBlock) juteBundled.get()).getMaxRettedItemDrops())))
 						 .when(rettedCondition)
 						 .otherwise(LootItem.lootTableItem(juteBundledItem.get())));
 				add(juteBundled.get(), LootTable.lootTable().withPool(rettedJutePool));

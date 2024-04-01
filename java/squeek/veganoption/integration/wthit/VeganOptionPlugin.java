@@ -7,7 +7,7 @@ import mcp.mobius.waila.api.TooltipPosition;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import squeek.veganoption.blocks.*;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 public class VeganOptionPlugin implements IWailaPlugin
@@ -15,11 +15,11 @@ public class VeganOptionPlugin implements IWailaPlugin
 	@Override
 	public void register(IRegistrar registrar)
 	{
-		registrar.addComponent(new BasinProvider(), TooltipPosition.BODY, BlockBasin.class);
-		registrar.addComponent(ComposterProvider.getInstance(), TooltipPosition.BODY, BlockComposter.class);
-		registrar.addBlockData(ComposterProvider.getInstance(), TileEntityComposter.class);
-		registrar.addComponent(new JutePlantProvider(), TooltipPosition.BODY, BlockJutePlant.class);
-		registrar.addComponent(new RettableProvider(), TooltipPosition.BODY, BlockRettable.class);
+		registrar.addComponent(new BasinProvider(), TooltipPosition.BODY, BasinBlock.class);
+		registrar.addComponent(ComposterProvider.getInstance(), TooltipPosition.BODY, ComposterBlock.class);
+		registrar.addBlockData(ComposterProvider.getInstance(), ComposterBlockEntity.class);
+		registrar.addComponent(new JutePlantProvider(), TooltipPosition.BODY, JutePlantBlock.class);
+		registrar.addComponent(new RettableProvider(), TooltipPosition.BODY, RettableBlock.class);
 		registrar.addIcon(CauldronsProvider.getInstance(), SapCauldronBlock.class);
 		registrar.addIcon(CauldronsProvider.getInstance(), LayeredCauldronBlock.class);
 

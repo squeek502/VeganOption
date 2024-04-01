@@ -35,10 +35,10 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.BlockCompost;
-import squeek.veganoption.blocks.BlockComposter;
-import squeek.veganoption.blocks.renderers.RenderComposter;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.CompostBlock;
+import squeek.veganoption.blocks.ComposterBlock;
+import squeek.veganoption.blocks.renderers.ComposterRenderer;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -61,7 +61,7 @@ public class Composting implements IContentModule
 {
 	public static Supplier<Block> composter;
 	public static Supplier<Item> composterItem;
-	public static Supplier<BlockEntityType<TileEntityComposter>> composterEntityType;
+	public static Supplier<BlockEntityType<ComposterBlockEntity>> composterEntityType;
 	public static Supplier<MenuType<ComposterMenu>> composterMenuType;
 	public static Supplier<Item> rottenPlants;
 	public static Supplier<Block> compost;
@@ -78,7 +78,7 @@ public class Composting implements IContentModule
 	@Override
 	public void create()
 	{
-		composter = REGISTER_BLOCKS.register("composter", BlockComposter::new);
+		composter = REGISTER_BLOCKS.register("composter", ComposterBlock::new);
 		composterItem = REGISTER_ITEMS.register("composter", () -> new BlockItem(composter.get(), new Item.Properties()) {
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer)
@@ -88,18 +88,18 @@ public class Composting implements IContentModule
 					public BlockEntityWithoutLevelRenderer getCustomRenderer()
 					{
 						Minecraft mc = Minecraft.getInstance();
-						return new RenderComposter.ComposterItemRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels());
+						return new ComposterRenderer.ComposterItemRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels());
 					}
 				});
 			}
 		});
-		composterEntityType = REGISTER_BLOCKENTITIES.register("composter", () -> BlockEntityType.Builder.of(TileEntityComposter::new, composter.get()).build(null));
+		composterEntityType = REGISTER_BLOCKENTITIES.register("composter", () -> BlockEntityType.Builder.of(ComposterBlockEntity::new, composter.get()).build(null));
 		composterMenuType = REGISTER_MENUS.register("composter", () -> IMenuTypeExtension.create((id, inv, data) -> new ComposterMenu(id, inv, data.readBlockPos())));
 
 		rottenPlants = REGISTER_ITEMS.register("rotten_plants", () -> new Item(new Item.Properties().food(ROTTEN_PLANTS_FOOD)));
 		fertilizer = REGISTER_ITEMS.register("fertilizer", () -> new BoneMealItem(new Item.Properties()));
 
-		compost = REGISTER_BLOCKS.register("compost", BlockCompost::new);
+		compost = REGISTER_BLOCKS.register("compost", CompostBlock::new);
 		compostItem = REGISTER_ITEMS.register("compost", () -> new BlockItem(compost.get(), new Item.Properties()));
 	}
 
@@ -240,7 +240,7 @@ public class Composting implements IContentModule
 	@Override
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{
-		event.registerBlockEntityRenderer(composterEntityType.get(), RenderComposter::new);
+		event.registerBlockEntityRenderer(composterEntityType.get(), ComposterRenderer::new);
 	}
 
 	@Override
@@ -273,6 +273,6 @@ public class Composting implements IContentModule
 	@SubscribeEvent
 	public static void registerComposterLegsModel(ModelEvent.RegisterAdditional event)
 	{
-		event.register(RenderComposter.LEGS_MODEL);
+		event.register(ComposterRenderer.LEGS_MODEL);
 	}
 }

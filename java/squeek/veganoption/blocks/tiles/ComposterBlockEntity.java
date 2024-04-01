@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityComposter extends BaseContainerBlockEntity
+public class ComposterBlockEntity extends BaseContainerBlockEntity
 {
 	public static final float IDEAL_GREEN_TO_BROWN_RATIO = 0.666666667f; // 2 to 1
 	public static final int TICKS_BETWEEN_COMPOST_ATTEMPTS = MiscHelper.TICKS_PER_DAY / 2;
@@ -95,7 +95,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 		@Override
 		protected boolean isOwnContainer(Player player)
 		{
-			return player.containerMenu instanceof ComposterMenu menu && menu.getContainer() == TileEntityComposter.this;
+			return player.containerMenu instanceof ComposterMenu menu && menu.getContainer() == ComposterBlockEntity.this;
 		}
 
 		private void playSound(Level level, BlockPos pos, SoundEvent sound)
@@ -149,7 +149,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 		}
 	});
 
-	public TileEntityComposter(BlockPos pos, BlockState state)
+	public ComposterBlockEntity(BlockPos pos, BlockState state)
 	{
 		super(Composting.composterEntityType.get(), pos, state);
 		this.inventoryItems = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
@@ -199,7 +199,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 	 */
 	public static <T extends BlockEntity> void onTick(Level level, BlockPos blockPos, BlockState blockState, T t)
 	{
-		if (t instanceof TileEntityComposter composter)
+		if (t instanceof ComposterBlockEntity composter)
 		{
 			if (level.isClientSide())
 				composter.onClientTick();
@@ -323,7 +323,7 @@ public class TileEntityComposter extends BaseContainerBlockEntity
 		if (!isAerating())
 			return NOT_AERATING;
 
-		return (float) ((level.getGameTime() - lastAeration) / (double) TileEntityComposter.NUM_TICKS_FOR_FULL_AERATION);
+		return (float) ((level.getGameTime() - lastAeration) / (double) ComposterBlockEntity.NUM_TICKS_FOR_FULL_AERATION);
 	}
 
 	public void setTemperature(float temperature)

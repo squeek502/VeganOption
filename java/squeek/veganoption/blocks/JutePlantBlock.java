@@ -24,9 +24,9 @@ import net.neoforged.neoforge.common.PlantType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BlockJutePlant extends BushBlock implements BonemealableBlock
+public class JutePlantBlock extends BushBlock implements BonemealableBlock
 {
-	private static final MapCodec<? extends BushBlock> CODEC = simpleCodec(p -> new BlockJutePlant());
+	private static final MapCodec<? extends BushBlock> CODEC = simpleCodec(p -> new JutePlantBlock());
 	public static final int NUM_BOTTOM_STAGES = 6;
 	public static final int NUM_TOP_STAGES = 5;
 	public static final int NUM_GROWTH_STAGES = NUM_BOTTOM_STAGES + NUM_TOP_STAGES;
@@ -35,7 +35,7 @@ public class BlockJutePlant extends BushBlock implements BonemealableBlock
 
 	public static final IntegerProperty GROWTH_STAGE = IntegerProperty.create("growth", 0, NUM_GROWTH_STAGES);
 
-	public BlockJutePlant()
+	public JutePlantBlock()
 	{
 		super(BlockBehaviour.Properties.of()
 			.mapColor(MapColor.PLANT)

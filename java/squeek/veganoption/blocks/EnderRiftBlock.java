@@ -23,7 +23,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
-import squeek.veganoption.blocks.tiles.TileEntityEnderRift;
+import squeek.veganoption.blocks.tiles.EnderRiftBlockEntity;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.MiscHelper;
@@ -32,12 +32,12 @@ import squeek.veganoption.network.EnderRiftParticlePacketPayload;
 
 import java.util.Random;
 
-public class BlockEnderRift extends EndPortalBlock implements IFluidFlowHandler
+public class EnderRiftBlock extends EndPortalBlock implements IFluidFlowHandler
 {
 	public static final int BLOCK_TELEPORT_RADIUS = 4;
 	public static final int NAUSEA_LENGTH_IN_SECONDS = 5;
 
-	public BlockEnderRift()
+	public EnderRiftBlock()
 	{
 		super(BlockBehaviour.Properties.of()
 			.mapColor(MapColor.NONE)
@@ -51,7 +51,7 @@ public class BlockEnderRift extends EndPortalBlock implements IFluidFlowHandler
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new TileEntityEnderRift(pos, state);
+		return new EnderRiftBlockEntity(pos, state);
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class BlockEnderRift extends EndPortalBlock implements IFluidFlowHandler
 	{
 		for (BlockPos blockToCheck : BlockHelper.getBlocksAdjacentTo(blockPos))
 		{
-			if (!(level.getBlockState(blockToCheck).getBlock() instanceof BlockEncrustedObsidian))
+			if (!(level.getBlockState(blockToCheck).getBlock() instanceof EncrustedObsidianBlock))
 				return false;
 		}
 		return true;

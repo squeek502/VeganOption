@@ -12,9 +12,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.common.IPlantable;
 
-public class BlockCompost extends Block
+public class CompostBlock extends Block
 {
-	public BlockCompost()
+	public CompostBlock()
 	{
 		super(BlockBehaviour.Properties.of()
 			.strength(0.4f)

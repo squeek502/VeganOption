@@ -20,7 +20,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.BlockKapok;
+import squeek.veganoption.blocks.KapokBlock;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.Modifiers;
@@ -38,7 +38,7 @@ import static squeek.veganoption.VeganOption.REGISTER_ITEMS;
 public class Kapok implements IContentModule
 {
 	public static Supplier<Item> kapokTuft;
-	public static Map<DyeColor, DeferredHolder<Block, BlockKapok>> kapokBlocks = new EnumMap<>(DyeColor.class);
+	public static Map<DyeColor, DeferredHolder<Block, KapokBlock>> kapokBlocks = new EnumMap<>(DyeColor.class);
 	public static Map<DyeColor, DeferredHolder<Item, BlockItem>> kapokBlockItems = new EnumMap<>(DyeColor.class);
 	private static Map<DyeColor, Supplier<Item>> woolBlockItems = new EnumMap<>(DyeColor.class);
 
@@ -48,7 +48,7 @@ public class Kapok implements IContentModule
 		kapokTuft = REGISTER_ITEMS.register("kapok_tuft", () -> new Item(new Item.Properties()));
 		for (DyeColor color : DyeColor.values())
 		{
-			kapokBlocks.put(color, REGISTER_BLOCKS.register(color.getName() + "_kapok", () -> new BlockKapok(color)));
+			kapokBlocks.put(color, REGISTER_BLOCKS.register(color.getName() + "_kapok", () -> new KapokBlock(color)));
 			kapokBlockItems.put(color, REGISTER_ITEMS.register(color.getName() + "_kapok", () -> new BlockItem(kapokBlocks.get(color).get(), new Item.Properties())));
 		}
 

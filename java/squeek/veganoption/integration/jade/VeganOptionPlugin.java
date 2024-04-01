@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.LayeredCauldronBlock;
 import snownee.jade.api.*;
 import snownee.jade.api.theme.IThemeHelper;
 import squeek.veganoption.blocks.*;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 @WailaPlugin
@@ -14,10 +14,10 @@ public class VeganOptionPlugin implements IWailaPlugin
 	@Override
 	public void registerClient(IWailaClientRegistration registerer)
 	{
-		registerer.registerBlockComponent(RettableProvider.getInstance(), BlockRettable.class);
-		registerer.registerBlockComponent(ComposterProvider.getInstance(), BlockComposter.class);
-		registerer.registerBlockComponent(BasinProvider.getInstance(), BlockBasin.class);
-		registerer.registerBlockComponent(JutePlantProvider.getInstance(), BlockJutePlant.class);
+		registerer.registerBlockComponent(RettableProvider.getInstance(), RettableBlock.class);
+		registerer.registerBlockComponent(ComposterProvider.getInstance(), ComposterBlock.class);
+		registerer.registerBlockComponent(BasinProvider.getInstance(), BasinBlock.class);
+		registerer.registerBlockComponent(JutePlantProvider.getInstance(), JutePlantBlock.class);
 		registerer.registerBlockIcon(CauldronsProvider.getInstance(), SapCauldronBlock.class);
 		registerer.registerBlockIcon(CauldronsProvider.getInstance(), LayeredCauldronBlock.class);
 
@@ -30,8 +30,8 @@ public class VeganOptionPlugin implements IWailaPlugin
 	@Override
 	public void register(IWailaCommonRegistration registerer)
 	{
-		registerer.registerItemStorage(ComposterProvider.HideInventory.getInstance(), TileEntityComposter.class);
-		registerer.registerBlockDataProvider(ComposterProvider.getInstance(), TileEntityComposter.class);
+		registerer.registerItemStorage(ComposterProvider.HideInventory.getInstance(), ComposterBlockEntity.class);
+		registerer.registerBlockDataProvider(ComposterProvider.getInstance(), ComposterBlockEntity.class);
 	}
 
 	static void addPercentInfoToTooltip(ITooltip tooltip, String key, float value)

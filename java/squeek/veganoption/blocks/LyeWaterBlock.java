@@ -20,11 +20,11 @@ import squeek.veganoption.content.modules.Soap;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 
-public class BlockLyeWater extends LiquidBlock
+public class LyeWaterBlock extends LiquidBlock
 {
 	private static final ResourceKey<DamageType> LYE_DAMAGE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID_LOWER, "lye_water"));
 
-	public BlockLyeWater()
+	public LyeWaterBlock()
 	{
 		super((FlowingFluid) Soap.fluidLyeWaterStill.get(), BlockBehaviour.Properties.of()
 			.mapColor(MapColor.COLOR_BROWN)

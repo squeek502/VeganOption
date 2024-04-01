@@ -10,7 +10,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
-import squeek.veganoption.blocks.BlockRawEnder;
+import squeek.veganoption.blocks.RawEnderBlock;
 import squeek.veganoption.content.modules.Ender;
 
 public abstract class RawEnderFluid extends BaseFlowingFluid
@@ -25,7 +25,7 @@ public abstract class RawEnderFluid extends BaseFlowingFluid
 	{
 		return Ender.rawEnderBlock.get().defaultBlockState()
 			.setValue(LiquidBlock.LEVEL, 8 - state.getAmount() + (state.getValue(FALLING) ? 8 : 0))
-			.setValue(BlockRawEnder.IS_SOURCE, state.isSource());
+			.setValue(RawEnderBlock.IS_SOURCE, state.isSource());
 	}
 
 	@Override

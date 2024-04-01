@@ -24,7 +24,7 @@ import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import squeek.veganoption.blocks.BlockLyeWater;
+import squeek.veganoption.blocks.LyeWaterBlock;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -66,7 +66,7 @@ public class Soap implements IContentModule
 		});
 		fluidLyeWaterStill = REGISTER_FLUIDS.register("lye_water", () -> new BaseFlowingFluid.Source(fluidProperties));
 		fluidLyeWaterFlowing = REGISTER_FLUIDS.register("lye_water_flowing", () -> new BaseFlowingFluid.Flowing(fluidProperties));
-		fluidBlockLyeWater = REGISTER_BLOCKS.register("lye_water", BlockLyeWater::new);
+		fluidBlockLyeWater = REGISTER_BLOCKS.register("lye_water", LyeWaterBlock::new);
 
 		soap = REGISTER_ITEMS.register("soap", ItemSoap::new);
 	}

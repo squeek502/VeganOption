@@ -8,7 +8,7 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.theme.IThemeHelper;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.BlockRettable;
+import squeek.veganoption.blocks.RettableBlock;
 import squeek.veganoption.helpers.LangHelper;
 
 public class RettableProvider implements IBlockComponentProvider
@@ -28,15 +28,15 @@ public class RettableProvider implements IBlockComponentProvider
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig pluginConfig)
 	{
-		BlockRettable blockRettable = (BlockRettable) accessor.getBlock();
-		float rettingPercent = BlockRettable.getRettingPercent(accessor.getBlockState());
+		RettableBlock rettableBlock = (RettableBlock) accessor.getBlock();
+		float rettingPercent = RettableBlock.getRettingPercent(accessor.getBlockState());
 		if (rettingPercent >= 1)
 		{
 			tooltip.add(IThemeHelper.get().success(Component.translatable(LangHelper.prependModId("waila.retted"))));
 		}
 		else
 		{
-			if (blockRettable.canRet(accessor.getLevel(), accessor.getPosition()))
+			if (rettableBlock.canRet(accessor.getLevel(), accessor.getPosition()))
 				VeganOptionPlugin.addPercentInfoToTooltip(tooltip, "waila.retting", rettingPercent);
 			else
 				tooltip.add(Component.translatable(LangHelper.prependModId("waila.retting.not_submerged")));

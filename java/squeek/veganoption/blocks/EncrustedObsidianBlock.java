@@ -11,9 +11,9 @@ import net.minecraft.world.level.material.MapColor;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
 
-public class BlockEncrustedObsidian extends Block
+public class EncrustedObsidianBlock extends Block
 {
-	public BlockEncrustedObsidian()
+	public EncrustedObsidianBlock()
 	{
 		super(BlockBehaviour.Properties.of()
 			.sound(SoundType.STONE)
@@ -29,7 +29,7 @@ public class BlockEncrustedObsidian extends Block
 		{
 			BlockState stateToCheck = level.getBlockState(blockPosToCheck);
 			Block blockToCheck = stateToCheck.getBlock();
-			if (blockToCheck != Ender.enderRift.get() && BlockEnderRift.isValidPortalLocation(level, blockPosToCheck) && stateToCheck.canBeReplaced())
+			if (blockToCheck != Ender.enderRift.get() && EnderRiftBlock.isValidPortalLocation(level, blockPosToCheck) && stateToCheck.canBeReplaced())
 			{
 				level.setBlockAndUpdate(blockPosToCheck, Ender.enderRift.get().defaultBlockState());
 			}

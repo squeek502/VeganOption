@@ -26,7 +26,7 @@ import squeek.veganoption.helpers.MiscHelper;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public class BlockRettable extends HayBlock
+public class RettableBlock extends HayBlock
 {
 	public static final int MAX_RETTING_STAGES = 3;
 	public static final IntegerProperty STAGE = IntegerProperty.create("retting_stage", 0, MAX_RETTING_STAGES);
@@ -35,7 +35,7 @@ public class BlockRettable extends HayBlock
 	private int minRettedItemDrops;
 	private int maxRettedItemDrops;
 
-	public BlockRettable(Supplier<Item> rettedItemSupplier, int minRettedItemDrops, int maxRettedItemDrops)
+	public RettableBlock(Supplier<Item> rettedItemSupplier, int minRettedItemDrops, int maxRettedItemDrops)
 	{
 		super(BlockBehaviour.Properties.of()
 			.sound(SoundType.GRASS)

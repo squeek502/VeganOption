@@ -10,7 +10,7 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.view.IServerExtensionProvider;
 import snownee.jade.api.view.ViewGroup;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 import java.util.List;
@@ -57,13 +57,13 @@ public class ComposterProvider implements IBlockComponentProvider, IServerDataPr
 	@Override
 	public void appendServerData(CompoundTag compoundTag, BlockAccessor accessor)
 	{
-		TileEntityComposter te = (TileEntityComposter) accessor.getBlockEntity();
+		ComposterBlockEntity te = (ComposterBlockEntity) accessor.getBlockEntity();
 		compoundTag.putBoolean(DATA_COMPOSTING, te.isComposting());
 		compoundTag.putFloat(DATA_PERCENT, te.getCompostingPercent());
 		compoundTag.putFloat(DATA_TEMPERATURE, te.getCompostTemperature());
 	}
 
-	static class HideInventory implements IServerExtensionProvider<TileEntityComposter, ItemStack>
+	static class HideInventory implements IServerExtensionProvider<ComposterBlockEntity, ItemStack>
 	{
 		private static final ResourceLocation UID = new ResourceLocation(ModInfo.MODID_LOWER, "hide_inventory");
 		private static HideInventory INSTANCE;
@@ -78,7 +78,7 @@ public class ComposterProvider implements IBlockComponentProvider, IServerDataPr
 		private HideInventory() {}
 
 		@Override
-		public @Nullable List<ViewGroup<ItemStack>> getGroups(Accessor<?> accessor, TileEntityComposter tileEntityComposter)
+		public @Nullable List<ViewGroup<ItemStack>> getGroups(Accessor<?> accessor, ComposterBlockEntity composterBlockEntity)
 		{
 			return List.of();
 		}

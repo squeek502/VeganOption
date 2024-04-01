@@ -22,12 +22,12 @@ import squeek.veganoption.content.modules.StrawBed;
 
 import static squeek.veganoption.ModInfo.MODID_LOWER;
 
-public class BlockBedStraw extends BedBlock
+public class StrawBedBlock extends BedBlock
 {
 	private static final ResourceKey<DamageType> ITCHY_DAMAGE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID_LOWER, "itchy_bed"));
 	public static final int ITCH_DAMAGE = 2;
 
-	public BlockBedStraw()
+	public StrawBedBlock()
 	{
 		super(DyeColor.YELLOW, BlockBehaviour.Properties.of()
 			.mapColor(state -> state.getValue(BedBlock.PART) == BedPart.FOOT ? MapColor.COLOR_YELLOW : MapColor.WOOL)

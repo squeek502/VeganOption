@@ -16,14 +16,14 @@ import squeek.veganoption.content.modules.Ender;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockRawEnder extends LiquidBlock
+public class RawEnderBlock extends LiquidBlock
 {
 	public static final BooleanProperty IS_SOURCE = BooleanProperty.create("is_source");
 	private final List<FluidState> sourceStatesCache;
 	private final List<FluidState> flowingStatesCache;
 	private boolean fluidStateCachesInitialized = false;
 
-	public BlockRawEnder()
+	public RawEnderBlock()
 	{
 		super(() -> (FlowingFluid) Ender.rawEnderStill.get(), BlockBehaviour.Properties.of()
 			.mapColor(MapColor.COLOR_BLACK)

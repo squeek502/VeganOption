@@ -24,16 +24,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.content.modules.Composting;
 
-public class BlockComposter extends HorizontalDirectionalBlock implements EntityBlock
+public class ComposterBlock extends HorizontalDirectionalBlock implements EntityBlock
 {
-	private static final MapCodec<? extends HorizontalDirectionalBlock> CODEC = simpleCodec(p -> new BlockComposter());
+	private static final MapCodec<? extends HorizontalDirectionalBlock> CODEC = simpleCodec(p -> new ComposterBlock());
 	public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 14, 15);
 	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-	public BlockComposter()
+	public ComposterBlock()
 	{
 		super(BlockBehaviour.Properties.of()
 			.strength(2.5f)
@@ -54,7 +54,7 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
 	{
 		BlockEntity tile = level.getBlockEntity(pos);
-		if (tile instanceof TileEntityComposter composter)
+		if (tile instanceof ComposterBlockEntity composter)
 		{
 			composter.onActivated(player);
 			return InteractionResult.CONSUME;
@@ -66,7 +66,7 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston)
 	{
 		BlockEntity tile = level.getBlockEntity(pos);
-		if (tile instanceof TileEntityComposter composter)
+		if (tile instanceof ComposterBlockEntity composter)
 		{
 			composter.onBlockBroken();
 		}
@@ -76,7 +76,7 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 	@Override
 	public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int data)
 	{
-		if (level.getBlockEntity(pos) instanceof TileEntityComposter composter)
+		if (level.getBlockEntity(pos) instanceof ComposterBlockEntity composter)
 			return composter.triggerEvent(id, data);
 		return super.triggerEvent(state, level, pos, id, data);
 	}
@@ -104,9 +104,9 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 	public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
 	{
 		BlockEntity tile = level.getBlockEntity(pos);
-		if (tile != null && tile instanceof TileEntityComposter)
+		if (tile != null && tile instanceof ComposterBlockEntity)
 		{
-			return ((TileEntityComposter) tile).getComparatorSignalStrength();
+			return ((ComposterBlockEntity) tile).getComparatorSignalStrength();
 		}
 		return super.getAnalogOutputSignal(state, level, pos);
 	}
@@ -115,21 +115,21 @@ public class BlockComposter extends HorizontalDirectionalBlock implements Entity
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new TileEntityComposter(pos, state);
+		return new ComposterBlockEntity(pos, state);
 	}
 
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
 	{
-		return type == Composting.composterEntityType.get() ? TileEntityComposter::onTick : null;
+		return type == Composting.composterEntityType.get() ? ComposterBlockEntity::onTick : null;
 	}
 
 	@Nullable
 	@Override
 	public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos)
 	{
-		return (TileEntityComposter) level.getBlockEntity(pos);
+		return (ComposterBlockEntity) level.getBlockEntity(pos);
 	}
 
 	@Override

@@ -20,12 +20,12 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import squeek.veganoption.blocks.tiles.TileEntityBasin;
+import squeek.veganoption.blocks.tiles.BasinBlockEntity;
 import squeek.veganoption.content.modules.Basin;
 
 import static squeek.veganoption.helpers.WorldHelper.FULL_BLOCK_AABB;
 
-public class BlockBasin extends Block implements EntityBlock
+public class BasinBlock extends Block implements EntityBlock
 {
 	public static final BooleanProperty IS_OPEN = BooleanProperty.create("is_open");
 	public static final double SIDE_WIDTH = 0.125D;
@@ -35,7 +35,7 @@ public class BlockBasin extends Block implements EntityBlock
 		BooleanOp.ONLY_FIRST
 	);
 
-	public BlockBasin(Properties properties)
+	public BasinBlock(Properties properties)
 	{
 		super(properties);
 		registerDefaultState(getStateDefinition().any().setValue(IS_OPEN, false));
@@ -50,13 +50,13 @@ public class BlockBasin extends Block implements EntityBlock
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new TileEntityBasin(pos, state);
+		return new BasinBlockEntity(pos, state);
 	}
 
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
 	{
-		return !level.isClientSide() && type == Basin.basinType.get() ? TileEntityBasin::onServerTick : null;
+		return !level.isClientSide() && type == Basin.basinType.get() ? BasinBlockEntity::onServerTick : null;
 	}
 
 	/*
@@ -65,7 +65,7 @@ public class BlockBasin extends Block implements EntityBlock
 	private void update(BlockState state, Level level, BlockPos pos)
 	{
 		BlockEntity be = level.getBlockEntity(pos);
-		if (be instanceof TileEntityBasin entity)
+		if (be instanceof BasinBlockEntity entity)
 		{
 			boolean isPowered = level.hasNeighborSignal(pos);
 			if (isPowered != state.getValue(IS_OPEN))
@@ -98,8 +98,8 @@ public class BlockBasin extends Block implements EntityBlock
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
 	{
 		BlockEntity be = level.getBlockEntity(pos);
-		if (be instanceof TileEntityBasin)
-			return ((TileEntityBasin) be).onBlockActivated(player, hand, hit.getDirection(), hit.getLocation()) ? InteractionResult.SUCCESS : InteractionResult.PASS;
+		if (be instanceof BasinBlockEntity)
+			return ((BasinBlockEntity) be).onBlockActivated(player, hand, hit.getDirection(), hit.getLocation()) ? InteractionResult.SUCCESS : InteractionResult.PASS;
 		return InteractionResult.PASS;
 	}
 

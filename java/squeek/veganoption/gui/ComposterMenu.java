@@ -8,12 +8,12 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.block.Block;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.content.modules.Composting;
 
 public class ComposterMenu extends GenericMenu
 {
-	public TileEntityComposter composter;
+	public ComposterBlockEntity composter;
 	public int slotsX;
 	public int slotsY;
 	private final ContainerData data;
@@ -21,15 +21,15 @@ public class ComposterMenu extends GenericMenu
 	// client side constructor
 	public ComposterMenu(int containerID, Inventory playerInv, BlockPos pos)
 	{
-		this(containerID, playerInv, ContainerLevelAccess.NULL, pos, new SimpleContainerData(TileEntityComposter.NUM_DATASLOTS));
+		this(containerID, playerInv, ContainerLevelAccess.NULL, pos, new SimpleContainerData(ComposterBlockEntity.NUM_DATASLOTS));
 	}
 
 	public ComposterMenu(int containerID, Inventory playerInv, ContainerLevelAccess access, BlockPos pos, ContainerData data)
 	{
 		super(Composting.composterMenuType.get(), containerID, access);
-		checkContainerDataCount(data, TileEntityComposter.NUM_DATASLOTS);
+		checkContainerDataCount(data, ComposterBlockEntity.NUM_DATASLOTS);
 
-		composter = (TileEntityComposter) playerInv.player.level().getBlockEntity(pos);
+		composter = (ComposterBlockEntity) playerInv.player.level().getBlockEntity(pos);
 		allowShiftClickToMultipleSlots = true;
 		slotsX = 8;
 		slotsY = 18;
@@ -68,22 +68,22 @@ public class ComposterMenu extends GenericMenu
 
 	public int getBiomeTemperature()
 	{
-		return getData(TileEntityComposter.DATASLOT_ID_BIOME_TEMPERATURE);
+		return getData(ComposterBlockEntity.DATASLOT_ID_BIOME_TEMPERATURE);
 	}
 
 	public int getCompostingPercent()
 	{
-		return getData(TileEntityComposter.DATASLOT_ID_PERCENT_COMPOSTED);
+		return getData(ComposterBlockEntity.DATASLOT_ID_PERCENT_COMPOSTED);
 	}
 
 	public int getCompostTemperature()
 	{
-		return getData(TileEntityComposter.DATASLOT_ID_COMPOST_TEMPERATURE);
+		return getData(ComposterBlockEntity.DATASLOT_ID_COMPOST_TEMPERATURE);
 	}
 
 	public boolean isAerating()
 	{
-		return getData(TileEntityComposter.DATASLOT_ID_IS_AERATING) == 1;
+		return getData(ComposterBlockEntity.DATASLOT_ID_IS_AERATING) == 1;
 	}
 
 	private int getData(int slot)

@@ -5,7 +5,7 @@ import mcp.mobius.waila.api.IBlockComponentProvider;
 import mcp.mobius.waila.api.IPluginConfig;
 import mcp.mobius.waila.api.ITooltip;
 import net.minecraft.resources.ResourceLocation;
-import squeek.veganoption.blocks.BlockJutePlant;
+import squeek.veganoption.blocks.JutePlantBlock;
 
 public class JutePlantProvider implements IBlockComponentProvider
 {
@@ -16,7 +16,7 @@ public class JutePlantProvider implements IBlockComponentProvider
 	{
 		if (config.getBoolean(CONFIG_ID))
 		{
-			float growthValue = ((BlockJutePlant) accessor.getBlock()).getGrowthPercent(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState());
+			float growthValue = ((JutePlantBlock) accessor.getBlock()).getGrowthPercent(accessor.getWorld(), accessor.getPosition(), accessor.getBlockState());
 			VeganOptionPlugin.addPercentInfoToTooltip(tooltip, "waila.jute_growth", growthValue);
 		}
 	}

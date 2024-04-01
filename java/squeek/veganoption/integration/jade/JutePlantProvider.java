@@ -7,7 +7,7 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.Identifiers;
 import snownee.jade.api.config.IPluginConfig;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.BlockJutePlant;
+import squeek.veganoption.blocks.JutePlantBlock;
 
 public class JutePlantProvider implements IBlockComponentProvider
 {
@@ -28,7 +28,7 @@ public class JutePlantProvider implements IBlockComponentProvider
 	{
 		if (config.get(Identifiers.MC_CROP_PROGRESS))
 		{
-			float growthValue = ((BlockJutePlant) accessor.getBlock()).getGrowthPercent(accessor.getLevel(), accessor.getPosition(), accessor.getBlockState());
+			float growthValue = ((JutePlantBlock) accessor.getBlock()).getGrowthPercent(accessor.getLevel(), accessor.getPosition(), accessor.getBlockState());
 			VeganOptionPlugin.addPercentInfoToTooltip(tooltip, "waila.jute_growth", growthValue);
 		}
 	}

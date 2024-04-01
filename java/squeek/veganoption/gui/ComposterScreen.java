@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.TileEntityComposter;
+import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
@@ -145,7 +145,7 @@ public class ComposterScreen extends AbstractContainerScreen<ComposterMenu>
 		graphics.blit(TEXTURE_COMPONENTS, leftPos + imageWidth - SIDE_TAB_OVERLAP + 1, topPos + SIDE_TAB_Y_START + 5, 47, 0, 12, Math.round((menu.getCompostingPercent() / 100f) * 44));
 
 		// temperature
-		int temperatureHeight = Math.max(0, Math.round((menu.getCompostTemperature() - menu.getBiomeTemperature()) / (TileEntityComposter.MAX_COMPOST_TEMPERATURE - menu.getBiomeTemperature()) * 30));
+		int temperatureHeight = Math.max(0, Math.round((menu.getCompostTemperature() - menu.getBiomeTemperature()) / (ComposterBlockEntity.MAX_COMPOST_TEMPERATURE - menu.getBiomeTemperature()) * 30));
 		graphics.blit(TEXTURE_COMPONENTS, leftPos - SIDE_TAB_WIDTH + SIDE_TAB_OVERLAP + 5, topPos + SIDE_TAB_Y_START + 5 + 30 - temperatureHeight, 36, 30 - temperatureHeight, 11, temperatureHeight);
 	}
 

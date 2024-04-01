@@ -26,7 +26,7 @@ import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.*;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import squeek.veganoption.blocks.BlockBasin;
+import squeek.veganoption.blocks.BasinBlock;
 import squeek.veganoption.content.Modifiers;
 import squeek.veganoption.content.modules.Basin;
 import squeek.veganoption.helpers.FluidHelper;
@@ -36,7 +36,7 @@ import squeek.veganoption.helpers.WorldHelper;
 
 import java.util.List;
 
-public class TileEntityBasin extends BlockEntity
+public class BasinBlockEntity extends BlockEntity
 {
 	public FluidTank fluidTank = new BasinTank(FluidType.BUCKET_VOLUME);
 	protected boolean fluidConsumeStopped = true;
@@ -46,7 +46,7 @@ public class TileEntityBasin extends BlockEntity
 	public static int FLUID_CONSUME_TICK_PERIOD = MiscHelper.TICKS_PER_SEC;
 	public static int CONTAINER_FILL_TICK_PERIOD = MiscHelper.TICKS_PER_SEC;
 
-	public TileEntityBasin(BlockPos pos, BlockState state)
+	public BasinBlockEntity(BlockPos pos, BlockState state)
 	{
 		super(Basin.basinType.get(), pos, state);
 	}
@@ -56,7 +56,7 @@ public class TileEntityBasin extends BlockEntity
 	 */
 	public static <T extends BlockEntity> void onServerTick(Level level, BlockPos blockPos, BlockState blockState, T t)
 	{
-		if (!(t instanceof TileEntityBasin te))
+		if (!(t instanceof BasinBlockEntity te))
 			return;
 
 		if (te.shouldConsumeFluid())
@@ -99,7 +99,7 @@ public class TileEntityBasin extends BlockEntity
 		if (level == null || !couldFillContainers())
 			return false;
 
-		List<ItemEntity> entityItemsWithin = WorldHelper.getItemEntitiesWithin(level, ((BlockBasin) Basin.basin.get()).getInnerBoundingBox(getBlockPos()));
+		List<ItemEntity> entityItemsWithin = WorldHelper.getItemEntitiesWithin(level, ((BasinBlock) Basin.basin.get()).getInnerBoundingBox(getBlockPos()));
 
 		for (ItemEntity entityItemWithin : entityItemsWithin)
 		{
@@ -205,7 +205,7 @@ public class TileEntityBasin extends BlockEntity
 
 	public boolean isOpen(BlockState state)
 	{
-		return state.getValue(BlockBasin.IS_OPEN);
+		return state.getValue(BasinBlock.IS_OPEN);
 	}
 
 	public void onOpen()

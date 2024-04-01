@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import org.jetbrains.annotations.Nullable;
-import squeek.veganoption.blocks.BlockBedStraw;
+import squeek.veganoption.blocks.StrawBedBlock;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -37,7 +37,7 @@ public class StrawBed implements IContentModule
 	@Override
 	public void create()
 	{
-		bedStrawBlock = REGISTER_BLOCKS.register("straw_bed", BlockBedStraw::new);
+		bedStrawBlock = REGISTER_BLOCKS.register("straw_bed", StrawBedBlock::new);
 		bedStrawItem = REGISTER_ITEMS.register("straw_bed", () -> new ItemBedStraw((BedBlock) bedStrawBlock.get()));
 	}
 
