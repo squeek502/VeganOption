@@ -20,7 +20,7 @@ import squeek.veganoption.blocks.StrawBedBlock;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
-import squeek.veganoption.items.ItemBedStraw;
+import squeek.veganoption.items.StrawBedItem;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class StrawBed implements IContentModule
 	public void create()
 	{
 		bedStrawBlock = REGISTER_BLOCKS.register("straw_bed", StrawBedBlock::new);
-		bedStrawItem = REGISTER_ITEMS.register("straw_bed", () -> new ItemBedStraw((BedBlock) bedStrawBlock.get()));
+		bedStrawItem = REGISTER_ITEMS.register("straw_bed", () -> new StrawBedItem((BedBlock) bedStrawBlock.get()));
 	}
 
 	@Override

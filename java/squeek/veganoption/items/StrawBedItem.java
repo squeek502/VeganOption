@@ -12,9 +12,9 @@ import squeek.veganoption.helpers.LangHelper;
 
 import java.util.List;
 
-public class ItemBedStraw extends BedItem
+public class StrawBedItem extends BedItem
 {
-	public ItemBedStraw(BedBlock bed)
+	public StrawBedItem(BedBlock bed)
 	{
 		super(bed, new Item.Properties().stacksTo(1));
 	}

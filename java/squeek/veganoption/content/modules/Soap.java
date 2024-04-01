@@ -34,7 +34,7 @@ import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
 import squeek.veganoption.items.GenericBucketItem;
-import squeek.veganoption.items.ItemSoap;
+import squeek.veganoption.items.SoapItem;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -68,7 +68,7 @@ public class Soap implements IContentModule
 		fluidLyeWaterFlowing = REGISTER_FLUIDS.register("lye_water_flowing", () -> new BaseFlowingFluid.Flowing(fluidProperties));
 		fluidBlockLyeWater = REGISTER_BLOCKS.register("lye_water", LyeWaterBlock::new);
 
-		soap = REGISTER_ITEMS.register("soap", ItemSoap::new);
+		soap = REGISTER_ITEMS.register("soap", SoapItem::new);
 	}
 
 	@Override

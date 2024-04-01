@@ -15,35 +15,35 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import squeek.veganoption.helpers.RandomHelper;
 
-public abstract class ItemThrowableGeneric extends Item
+public abstract class GenericThrowableItem extends Item
 {
 	public static final float DEFAULT_THROWSPEED = 1.5F;
 
 	public SoundEvent throwSound;
 	public float throwSpeed;
 
-	public ItemThrowableGeneric()
+	public GenericThrowableItem()
 	{
 		this(DEFAULT_THROWSPEED);
 	}
 
-	public ItemThrowableGeneric(float throwSpeed)
+	public GenericThrowableItem(float throwSpeed)
 	{
 		this(SoundEvents.ARROW_SHOOT, throwSpeed);
 	}
 
-	public ItemThrowableGeneric(SoundEvent throwSound)
+	public GenericThrowableItem(SoundEvent throwSound)
 	{
 		this(throwSound, DEFAULT_THROWSPEED);
 	}
 
-	public ItemThrowableGeneric(SoundEvent throwSound, float throwSpeed)
+	public GenericThrowableItem(SoundEvent throwSound, float throwSpeed)
 	{
 		super(new Item.Properties());
 		this.throwSound = throwSound;
 		this.throwSpeed = throwSpeed;
 
-		DispenserBlock.registerBehavior(this, new ItemThrowableGeneric.DispenserBehavior(this));
+		DispenserBlock.registerBehavior(this, new GenericThrowableItem.DispenserBehavior(this));
 	}
 
 	@Override
@@ -71,18 +71,18 @@ public abstract class ItemThrowableGeneric extends Item
 
 	public static class DispenserBehavior extends AbstractProjectileDispenseBehavior
 	{
-		public ItemThrowableGeneric itemThrowableGeneric;
+		public GenericThrowableItem genericThrowableItem;
 
-		public DispenserBehavior(ItemThrowableGeneric itemThrowableGeneric)
+		public DispenserBehavior(GenericThrowableItem genericThrowableItem)
 		{
 			super();
-			this.itemThrowableGeneric = itemThrowableGeneric;
+			this.genericThrowableItem = genericThrowableItem;
 		}
 
 		@Override
 		protected Projectile getProjectile(Level level, Position pos, ItemStack stack)
 		{
-			return itemThrowableGeneric.getNewProjectile(stack, level, pos.x(), pos.y(), pos.z());
+			return genericThrowableItem.getNewProjectile(stack, level, pos.x(), pos.y(), pos.z());
 		}
 	}
 }

@@ -49,9 +49,9 @@ import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.content.registry.RelationshipRegistry;
 import squeek.veganoption.entities.BlownSoapBubble;
 import squeek.veganoption.fluids.GenericFluidTypeRenderProperties;
+import squeek.veganoption.items.FrozenBubbleItem;
 import squeek.veganoption.items.GenericBucketItem;
-import squeek.veganoption.items.ItemFrozenBubble;
-import squeek.veganoption.items.ItemSoapSolution;
+import squeek.veganoption.items.SoapSolutionItem;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -63,7 +63,7 @@ public class FrozenBubble implements IContentModule
 {
 	public static Supplier<Item> soapSolution;
 	public static Supplier<Item> soapSolutionBucket;
-	public static DeferredHolder<Item, ItemFrozenBubble> frozenBubble;
+	public static DeferredHolder<Item, FrozenBubbleItem> frozenBubble;
 	public static Supplier<EntityType<BlownSoapBubble>> bubbleEntityType;
 	public static Supplier<FluidType> soapSolutionFluidType;
 	public static Supplier<Fluid> soapSolutionStill;
@@ -95,10 +95,10 @@ public class FrozenBubble implements IContentModule
 			.pushReaction(PushReaction.DESTROY)
 			.liquid()));
 
-		soapSolution = REGISTER_ITEMS.register("soap_solution", ItemSoapSolution::new);
+		soapSolution = REGISTER_ITEMS.register("soap_solution", SoapSolutionItem::new);
 		soapSolutionBucket = REGISTER_ITEMS.register("soap_solution_bucket", () -> new GenericBucketItem(() -> soapSolutionStill.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
-		frozenBubble = REGISTER_ITEMS.register("frozen_bubble", ItemFrozenBubble::new);
+		frozenBubble = REGISTER_ITEMS.register("frozen_bubble", FrozenBubbleItem::new);
 		bubbleEntityType = REGISTER_ENTITIES.register("bubble", () -> EntityType.Builder.<BlownSoapBubble>of(BlownSoapBubble::new, MobCategory.MISC)
 			.updateInterval(80)
 			.setTrackingRange(1)

@@ -11,11 +11,11 @@ import squeek.veganoption.helpers.FluidHelper;
 
 import java.util.function.Function;
 
-public class ItemWashableWheat extends Item
+public class WashableWheatItem extends Item
 {
 	private final Stage stage;
 
-	public ItemWashableWheat(Stage stage)
+	public WashableWheatItem(Stage stage)
 	{
 		super(stage.getProperties());
 		this.stage = stage;

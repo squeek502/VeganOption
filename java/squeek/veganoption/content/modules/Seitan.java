@@ -17,7 +17,7 @@ import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
-import squeek.veganoption.items.ItemWashableWheat;
+import squeek.veganoption.items.WashableWheatItem;
 
 import java.util.function.Supplier;
 
@@ -37,9 +37,9 @@ public class Seitan implements IContentModule
 	@Override
 	public void create()
 	{
-		wheatFlour = REGISTER_ITEMS.register("wheat_flour", () -> new ItemWashableWheat(ItemWashableWheat.Stage.FLOUR));
-		wheatDough = REGISTER_ITEMS.register("wheat_dough", () -> new ItemWashableWheat(ItemWashableWheat.Stage.DOUGH));
-		seitanUnwashed = REGISTER_ITEMS.register("seitan_unwashed", () -> new ItemWashableWheat(ItemWashableWheat.Stage.UNWASHED));
+		wheatFlour = REGISTER_ITEMS.register("wheat_flour", () -> new WashableWheatItem(WashableWheatItem.Stage.FLOUR));
+		wheatDough = REGISTER_ITEMS.register("wheat_dough", () -> new WashableWheatItem(WashableWheatItem.Stage.DOUGH));
+		seitanUnwashed = REGISTER_ITEMS.register("seitan_unwashed", () -> new WashableWheatItem(WashableWheatItem.Stage.UNWASHED));
 		seitanRaw = REGISTER_ITEMS.register("seitan_raw", () -> new Item(new Item.Properties()));
 		seitanCooked = REGISTER_ITEMS.register("seitan_cooked", () -> new Item(new Item.Properties()
 			.food(new FoodProperties.Builder().nutrition(8).saturationMod(0.8f).build())));

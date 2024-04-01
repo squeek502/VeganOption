@@ -13,14 +13,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import squeek.veganoption.entities.BlownSoapBubble;
 
-public class ItemSoapSolution extends Item
+public class SoapSolutionItem extends Item
 {
 	public static final float BUBBLE_INITIAL_VELOCITY = 0.3f;
 
-	public ItemSoapSolution()
+	public SoapSolutionItem()
 	{
 		super(new Item.Properties().durability(15).setNoRepair().craftRemainder(Items.GLASS_BOTTLE));
-		DispenserBlock.registerBehavior(this, new ItemSoapSolution.DispenserBehavior());
+		DispenserBlock.registerBehavior(this, new SoapSolutionItem.DispenserBehavior());
 	}
 
 	@Override

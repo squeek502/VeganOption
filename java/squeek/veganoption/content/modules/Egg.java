@@ -40,7 +40,7 @@ import squeek.veganoption.content.recipes.InputItemStack;
 import squeek.veganoption.content.recipes.PistonCraftingRecipe;
 import squeek.veganoption.content.registry.PistonCraftingRegistry;
 import squeek.veganoption.entities.ThrownPlasticEgg;
-import squeek.veganoption.items.ItemPlasticEgg;
+import squeek.veganoption.items.PlasticEggItem;
 
 import java.util.function.Supplier;
 
@@ -60,7 +60,7 @@ public class Egg implements IContentModule
 	{
 		appleSauce = REGISTER_ITEMS.register("apple_sauce", () -> new BowlFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationMod(1f).build())));
 		potatoStarch = REGISTER_ITEMS.register("potato_starch", () -> new Item(new Item.Properties()));
-		plasticEgg = REGISTER_ITEMS.register("plastic_egg", ItemPlasticEgg::new);
+		plasticEgg = REGISTER_ITEMS.register("plastic_egg", PlasticEggItem::new);
 
 		plasticEggEntityType = REGISTER_ENTITIES.register("plastic_egg", () -> EntityType.Builder.<ThrownPlasticEgg>of(ThrownPlasticEgg::new, MobCategory.MISC)
 			.sized(0.25f, 0.25f)

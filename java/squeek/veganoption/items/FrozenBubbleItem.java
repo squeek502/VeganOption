@@ -10,9 +10,9 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.FluidHelper;
 
-public class ItemFrozenBubble extends Item
+public class FrozenBubbleItem extends Item
 {
-	public ItemFrozenBubble()
+	public FrozenBubbleItem()
 	{
 		super(new Item.Properties().durability(8));
 	}

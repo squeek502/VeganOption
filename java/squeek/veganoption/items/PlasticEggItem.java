@@ -14,9 +14,9 @@ import squeek.veganoption.helpers.LangHelper;
 
 import java.util.List;
 
-public class ItemPlasticEgg extends ItemThrowableGeneric
+public class PlasticEggItem extends GenericThrowableItem
 {
-	public ItemPlasticEgg()
+	public PlasticEggItem()
 	{
 		super();
 	}

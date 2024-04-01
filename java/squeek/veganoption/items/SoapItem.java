@@ -16,15 +16,15 @@ import net.neoforged.neoforge.common.EffectCures;
 import java.util.Collection;
 import java.util.List;
 
-public class ItemSoap extends Item
+public class SoapItem extends Item
 {
-	public ItemSoap()
+	public SoapItem()
 	{
 		super(new Item.Properties()
 			.stacksTo(1)
 			.durability(4)
 			.setNoRepair());
-		DispenserBlock.registerBehavior(this, new ItemSoap.DispenserBehavior());
+		DispenserBlock.registerBehavior(this, new SoapItem.DispenserBehavior());
 	}
 
 	@Override
