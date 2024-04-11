@@ -10,7 +10,7 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.view.IServerExtensionProvider;
 import snownee.jade.api.view.ViewGroup;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 import java.util.List;

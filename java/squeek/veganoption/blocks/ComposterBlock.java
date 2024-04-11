@@ -24,7 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.content.modules.Composting;
 
 public class ComposterBlock extends HorizontalDirectionalBlock implements EntityBlock

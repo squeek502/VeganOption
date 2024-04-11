@@ -23,7 +23,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
-import squeek.veganoption.blocks.tiles.EnderRiftBlockEntity;
+import squeek.veganoption.blocks.entities.EnderRiftBlockEntity;
 import squeek.veganoption.content.modules.Ender;
 import squeek.veganoption.helpers.BlockHelper;
 import squeek.veganoption.helpers.MiscHelper;

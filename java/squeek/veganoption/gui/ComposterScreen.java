@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.content.registry.CompostRegistry;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;

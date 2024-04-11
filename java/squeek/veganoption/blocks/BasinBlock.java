@@ -20,7 +20,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import squeek.veganoption.blocks.tiles.BasinBlockEntity;
+import squeek.veganoption.blocks.entities.BasinBlockEntity;
 import squeek.veganoption.content.modules.Basin;
 
 import static squeek.veganoption.helpers.WorldHelper.FULL_BLOCK_AABB;

@@ -6,7 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 public class ComposterProvider implements IBlockComponentProvider, IDataProvider<ComposterBlockEntity>

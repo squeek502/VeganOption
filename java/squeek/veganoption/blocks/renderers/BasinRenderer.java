@@ -9,7 +9,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import squeek.veganoption.blocks.BasinBlock;
-import squeek.veganoption.blocks.tiles.BasinBlockEntity;
+import squeek.veganoption.blocks.entities.BasinBlockEntity;
 import squeek.veganoption.helpers.RenderHelper;
 
 @OnlyIn(Dist.CLIENT)

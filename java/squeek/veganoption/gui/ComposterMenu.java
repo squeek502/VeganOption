@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.block.Block;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.content.modules.Composting;
 
 public class ComposterMenu extends GenericMenu

@@ -27,7 +27,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.ComposterBlock;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.content.modules.Composting;
 
 import java.util.Calendar;

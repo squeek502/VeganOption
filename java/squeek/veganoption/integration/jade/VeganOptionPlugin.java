@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.LayeredCauldronBlock;
 import snownee.jade.api.*;
 import snownee.jade.api.theme.IThemeHelper;
 import squeek.veganoption.blocks.*;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 @WailaPlugin

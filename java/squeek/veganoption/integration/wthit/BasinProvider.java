@@ -7,7 +7,7 @@ import mcp.mobius.waila.api.ITooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.BasinBlockEntity;
+import squeek.veganoption.blocks.entities.BasinBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 public class BasinProvider implements IBlockComponentProvider

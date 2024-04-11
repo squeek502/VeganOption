@@ -7,7 +7,7 @@ import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import squeek.veganoption.ModInfo;
-import squeek.veganoption.blocks.tiles.BasinBlockEntity;
+import squeek.veganoption.blocks.entities.BasinBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 public class BasinProvider implements IBlockComponentProvider

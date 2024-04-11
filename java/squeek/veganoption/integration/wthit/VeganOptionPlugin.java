@@ -7,7 +7,7 @@ import mcp.mobius.waila.api.TooltipPosition;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import squeek.veganoption.blocks.*;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.helpers.LangHelper;
 
 public class VeganOptionPlugin implements IWailaPlugin

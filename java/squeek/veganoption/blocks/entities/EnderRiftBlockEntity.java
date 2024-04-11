@@ -1,4 +1,4 @@
-package squeek.veganoption.blocks.tiles;
+package squeek.veganoption.blocks.entities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.TheEndPortalBlockEntity;

@@ -24,7 +24,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.blocks.BasinBlock;
 import squeek.veganoption.blocks.renderers.BasinRenderer;
-import squeek.veganoption.blocks.tiles.BasinBlockEntity;
+import squeek.veganoption.blocks.entities.BasinBlockEntity;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.loot.GenericBlockLootSubProvider;

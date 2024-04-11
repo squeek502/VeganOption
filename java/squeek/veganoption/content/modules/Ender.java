@@ -32,7 +32,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import squeek.veganoption.blocks.EncrustedObsidianBlock;
 import squeek.veganoption.blocks.EnderRiftBlock;
 import squeek.veganoption.blocks.RawEnderBlock;
-import squeek.veganoption.blocks.tiles.EnderRiftBlockEntity;
+import squeek.veganoption.blocks.entities.EnderRiftBlockEntity;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
 import squeek.veganoption.content.registry.RelationshipRegistry;

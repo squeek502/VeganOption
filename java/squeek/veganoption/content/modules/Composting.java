@@ -38,7 +38,7 @@ import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.CompostBlock;
 import squeek.veganoption.blocks.ComposterBlock;
 import squeek.veganoption.blocks.renderers.ComposterRenderer;
-import squeek.veganoption.blocks.tiles.ComposterBlockEntity;
+import squeek.veganoption.blocks.entities.ComposterBlockEntity;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
