@@ -1,20 +1,19 @@
 package squeek.veganoption.content.modifiers;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import squeek.veganoption.ModInfo;
 import squeek.veganoption.VeganOption;
 import squeek.veganoption.helpers.MiscHelper;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class RecipeModifier
@@ -23,8 +22,12 @@ public class RecipeModifier
 	public Map<Supplier<Ingredient>, Supplier<Ingredient>> foodOutputConversions = new HashMap<>();
 	public Map<Supplier<Ingredient>, Supplier<Ingredient>> notFoodOutputConversions = new HashMap<>();
 	public List<Item> excludedRecipeOutputs = new ArrayList<>();
+	/** The list of conversion recipes, i.e., our recipes */
 	public List<CraftingRecipe> recipes = new ArrayList<>();
-	public List<RecipeHolder<?>> convertedRecipeHolders = new ArrayList<>();
+	/** The list of conversion recipe holders, i.e., our recipe holders*/
+	public List<RecipeHolder<CraftingRecipe>> newRecipeHolders = new ArrayList<>();
+	/** The list of recipe holders for the recipes we have converted, i.e., vanilla's recipes */
+	public List<RecipeHolder<CraftingRecipe>> oldRecipeHolders = new ArrayList<>();
 
 	public void convertInput(Supplier<Ingredient> toConvert, Supplier<Ingredient> replacement)
 	{
@@ -59,8 +62,12 @@ public class RecipeModifier
 			Recipe<?> recipe = holder.value();
 			if (shouldConvert(recipe))
 			{
-				convertedRecipeHolders.add(holder);
-				recipes.add(convertRecipe((CraftingRecipe) recipe));
+				//noinspection unchecked - We know that the recipe is a CraftingRecipe because shouldConvert returns false for anything other than ShapedRecipe or ShapelessRecipe
+				oldRecipeHolders.add((RecipeHolder<CraftingRecipe>) holder);
+				CraftingRecipe newRecipe = convertRecipe((CraftingRecipe) recipe);
+				recipes.add(newRecipe);
+				newRecipeHolders.add(new RecipeHolder<>(new ResourceLocation(ModInfo.MODID_LOWER, "conversion_recipe_" + recipesConverted), newRecipe));
+
 				recipesConverted++;
 			}
 		}

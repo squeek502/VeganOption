@@ -219,9 +219,11 @@
     "veganoption.jei.drops": "Drops",
     "veganoption.jei.composting": "Composting",
     "veganoption.jei.references": "References",
+    "veganoption.jei.references.list": "* %1$s",
     "veganoption.jei.piston_crafting": "Piston Crafting",
     "veganoption.jei.piston_crafting.tooltip.fluid_input": "Fluid inputs must be displaced by the piston",
     "veganoption.jei.piston_crafting.tooltip.fluid_output": "Fluid outputs require a fluid handler (basin, tank, drum, etc) below the piston head",
+    "veganoption.jei.piston_crafting.tooltip.fluid_amount": "%1$s mB",
 
     "_comment": "Additional HarvestCraft content",
     "item.veganoption.bbq_sauce": "BBQ Sauce",

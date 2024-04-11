@@ -7,6 +7,12 @@ plugins {
 	id 'net.neoforged.gradle.mixin' version '7.0.97'
 }
 
+// To use REI or JEI in the dev client, create a local.properties file and specify the recipe_viewer
+// property as either "rei" or "jei". These mods do not really work well installed at the same time. Neither
+// will be used if it is not specified.
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 def stdout = new ByteArrayOutputStream()
 exec {
 	commandLine 'git', 'rev-parse', '--short', 'HEAD'
@@ -89,11 +95,20 @@ dependencies {
 	implementation "net.neoforged:neoforge:${neoforge_version}"
 	implementation "curse.maven:jade-324717:${jade_version}"
 	// REI is using an old version of Architectury which had not yet been updated for NeoForge 20.4.70+.
-	implementation "dev.architectury:architectury-neoforge:${architectury_version_override}"
+	compileOnly "dev.architectury:architectury-neoforge:${architectury_version_override}"
 	// We need the default implementations in REI, rather than just the API
-	implementation("me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}") {
+	compileOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}") {
 		// Only use our version
 		exclude group: "dev.architectury"
+	}
+
+	if (localProperties['recipe_viewer'] == 'rei') {
+		runtimeOnly "dev.architectury:architectury-neoforge:${architectury_version_override}"
+		runtimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}") {
+			exclude group: "dev.architectury"
+		}
+	} else if (localProperties['recipe_viewer'] == 'jei') {
+		runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 	}
 
 	compileOnly "mcp.mobius.waila:wthit-api:neo-${wthit_version}"
@@ -101,10 +116,8 @@ dependencies {
 	runtimeOnly "mcp.mobius.waila:wthit:neo-${wthit_version}"
 	runtimeOnly "lol.bai:badpackets:neo-${badpackets_version}"
 
-//	Awaiting a NeoForge version...
-//	compileOnly "mezz.jei:jei-1.20.2-common-api:${jei_version}"
-//	compileOnly "mezz.jei:jei-1.20.2-forge-api:${jei_version}"
-//	runtimeOnly "mezz.jei:jei-1.20.2-forge:${jei_version}"
+	compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+	compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
 }
 
 subsystems {

@@ -10,15 +10,12 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import squeek.veganoption.content.registry.DescriptionRegistry;
 import squeek.veganoption.helpers.LangHelper;
 import squeek.veganoption.helpers.MiscHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public abstract class DescriptionMaker
 {
@@ -52,7 +49,19 @@ public abstract class DescriptionMaker
 			textBuilder.append(relatedText);
 		}
 
-		String text = processText(textBuilder.toString(), topic, referenced, related);
+		String text = DescriptionRegistry.processWikiText(
+			textBuilder.toString(),
+			topic,
+			(referencedItemStack, referenceMatcher, referencedBuffer) -> {
+				if (!isItemStackReferenceRedundant(topic, referencedItemStack, referenced, related))
+					referenced.add(EntryIngredients.of(referencedItemStack));
+				referenceMatcher.appendReplacement(referencedBuffer, wrapItemNameInFormat(referencedItemStack, REF_COLOR_LIGHT));
+			},
+			(referencedFluid, referenceMatcher, referencedBuffer) -> {
+				if (!isFluidReferenceRedundant(referencedFluid, referenced))
+					referenced.add(EntryIngredients.of(referencedFluid));
+				referenceMatcher.appendReplacement(referencedBuffer, LangHelper.wrapInFormat(referencedFluid.getFluidType().getDescriptionId(), REF_COLOR_LIGHT));
+			});
 
 		if (!related.isEmpty())
 			firstPageMaxLines -= DESC_DISPLACEMENT;
@@ -69,53 +78,6 @@ public abstract class DescriptionMaker
 		}
 
 		return pages;
-	}
-
-	public String processText(String text, ItemStack topic, List<EntryIngredient> referenced, List<ItemStack> related)
-	{
-		if (text == null)
-			return null;
-
-		text = text.replaceAll("\\\\n", String.valueOf('\n'));
-
-		// {unlocalized.string.name} looks up the localized string
-		Matcher localizationMatcher = Pattern.compile("\\{([^\\}]+)\\}").matcher(text);
-		StringBuffer localizedBuffer = new StringBuffer(text.length());
-		while (localizationMatcher.find())
-		{
-			localizationMatcher.appendReplacement(localizedBuffer, LangHelper.translateRaw(localizationMatcher.group(1), formattedTopicName(topic)));
-		}
-		localizationMatcher.appendTail(localizedBuffer);
-		text = localizedBuffer.toString();
-
-		// [[mod:item_name]] references an item/block/fluid
-		Matcher referenceMatcher = Pattern.compile("\\[\\[([^\\]:]+:[^\\]:]+)\\]\\]").matcher(text);
-		StringBuffer referencedBuffer = new StringBuffer(text.length());
-		while (referenceMatcher.find())
-		{
-			String objectName = referenceMatcher.group(1);
-			ItemStack referencedItemStack = MiscHelper.getItemStackByObjectName(objectName);
-			if (!referencedItemStack.isEmpty())
-			{
-				if (!isItemStackReferenceRedundant(topic, referencedItemStack, referenced, related))
-					referenced.add(EntryIngredients.of(referencedItemStack));
-				referenceMatcher.appendReplacement(referencedBuffer, wrapItemNameInFormat(referencedItemStack, REF_COLOR_LIGHT));
-			}
-			else
-			{
-				Fluid referencedFluid = MiscHelper.getFluidByObjectName(objectName);
-				if (referencedFluid != Fluids.EMPTY)
-				{
-					if (!isFluidReferenceRedundant(referencedFluid, referenced))
-						referenced.add(EntryIngredients.of(referencedFluid));
-					referenceMatcher.appendReplacement(referencedBuffer, wrapInFormat(referencedFluid.getFluidType().getDescriptionId(), REF_COLOR_LIGHT));
-				}
-			}
-		}
-		referenceMatcher.appendTail(referencedBuffer);
-		text = referencedBuffer.toString();
-
-		return text;
 	}
 
 	public static List<FormattedCharSequence> splitText(String text, Font fontRenderer, int maxWidth)
@@ -151,32 +113,17 @@ public abstract class DescriptionMaker
 	/**
 	 * Formats the provided item name, with formatting for the description topic.
 	 */
-	public String formattedTopicName(ItemStack topic)
+	public static String formattedTopicName(ItemStack topic)
 	{
 		return wrapItemNameInFormat(topic, TOPIC_COLOR_LIGHT);
 	}
 
-	public String wrapItemNameInFormat(ItemStack item, ChatFormatting format)
+	public static String wrapItemNameInFormat(ItemStack item, ChatFormatting format)
 	{
-		return wrapInFormat(item.getDescriptionId(), format);
+		return LangHelper.wrapInFormat(item.getDescriptionId(), format);
 	}
 
-	/**
-	 * Wraps each localized word in the provided lang key with the provided formatting code and a reset code.
-	 * <br/>
-	 * This is needed to prevent formatting from carrying through entire lines when the item name is split on a line break by the font
-	 * renderer. Minecraft's native string splitter does not handle that case properly.
-	 * <br/>
-	 * Example: <code>wrapInFormat(Items.GOLDEN_APPLE.getDescriptionId(), ChatFormatting.RED)</code> would return the String <code>"§cGolden§r §cApple§r"</code>
-	 * <br/>
-	 * Due to spaces not being formatted, underline and strikethrough do not appear as would be expected.
-	 */
-	public String wrapInFormat(String langKey, ChatFormatting format)
-	{
-		return format + LangHelper.translateRaw(langKey).replaceAll(" ", ChatFormatting.RESET + " " + format) + ChatFormatting.RESET;
-	}
-
-	public String getCraftingOfItem(ItemStack topic)
+	public static String getCraftingOfItem(ItemStack topic)
 	{
 		String key = DescriptionRegistry.getCraftingKey(topic);
 		if (LangHelper.existsRaw(key))
@@ -184,7 +131,7 @@ public abstract class DescriptionMaker
 		return "";
 	}
 
-	public String getUsageOfItem(ItemStack topic)
+	public static String getUsageOfItem(ItemStack topic)
 	{
 		String key = DescriptionRegistry.getUsageKey(topic);
 		if (LangHelper.existsRaw(key))

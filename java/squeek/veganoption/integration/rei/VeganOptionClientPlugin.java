@@ -36,18 +36,16 @@ public class VeganOptionClientPlugin implements REIClientPlugin
 	@Override
 	public void registerDisplays(DisplayRegistry registry)
 	{
-		int i = 0;
-		for (CraftingRecipe recipe : Modifiers.recipes.recipes)
+		for (RecipeHolder<CraftingRecipe> recipeHolder : Modifiers.recipes.newRecipeHolders)
 		{
-			registry.add(DefaultCraftingDisplay.of(new RecipeHolder<>(new ResourceLocation(ModInfo.MODID_LOWER, "conversion_recipe_" + i), recipe)));
-			i++;
+			registry.add(DefaultCraftingDisplay.of(recipeHolder));
 		}
 
 		registry.registerVisibilityPredicate((DisplayCategory<?> category, Display display) -> {
 			if (display instanceof DefaultCraftingDisplay<?> craftingDisplay)
 			{
 				if (craftingDisplay.getOptionalRecipe().isPresent())
-					return Modifiers.recipes.convertedRecipeHolders.contains(craftingDisplay.getOptionalRecipe().get()) ? EventResult.interruptFalse() : EventResult.pass();
+					return Modifiers.recipes.oldRecipeHolders.contains(craftingDisplay.getOptionalRecipe().get()) ? EventResult.interruptFalse() : EventResult.pass();
 			}
 			return EventResult.pass();
 		});

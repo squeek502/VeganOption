@@ -56,4 +56,19 @@ public class LangHelper
 	{
 		return Component.translatable("item." + ModInfo.MODID_LOWER + "." + item + ".tooltip").withStyle(ChatFormatting.GRAY);
 	}
+
+	/**
+	 * Wraps each localized word in the provided lang key with the provided formatting code and a reset code.
+	 * <br/>
+	 * This is needed to prevent formatting from carrying through entire lines when the item name is split on a line break by the font
+	 * renderer. Minecraft's native string splitter does not handle that case properly.
+	 * <br/>
+	 * Example: <code>wrapInFormat(Items.GOLDEN_APPLE.getDescriptionId(), ChatFormatting.RED)</code> would return the String <code>"§cGolden§r §cApple§r"</code>
+	 * <br/>
+	 * Due to spaces not being formatted, underline and strikethrough do not appear as would be expected.
+	 */
+	public static String wrapInFormat(String langKey, ChatFormatting format)
+	{
+		return format + translateRaw(langKey).replaceAll(" ", ChatFormatting.RESET + " " + format) + ChatFormatting.RESET;
+	}
 }

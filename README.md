@@ -11,8 +11,13 @@ A Minecraft mod that seeks to add vegan alternatives to all Minecraft mob/animal
 ## Building The Mod
 
 1. Clone this repository
-2. If you have [Gradle](http://www.gradle.org/) installed, open a command line in the cloned directory and execute: ```gradle build```. To give the build a version number, use ```gradle build -Pversion=<version>``` instead (example: ```gradle build -Pversion=1.0.0```)
+2. If you have [Gradle](http://www.gradle.org/) installed, open a command line in the cloned directory and execute: ```gradle build```. To give the build a version number, use ```gradle build -Pversion=<version>``` instead (example: ```gradle build -Pversion=1.0.0```). To use the most recent commit, use ```gradle build -Pdev```
  * If you don't have Gradle installed, you can use [ForgeGradle](http://www.minecraftforge.net/forum/index.php?topic=14048.0)'s gradlew/gradlew.bat instead
+
+To use the `runClient` or `runServer` tasks, you must have a `local.properties` file in the project directory. Its contents are as follows:
+```
+recipe_viewer=jei # or rei, depending on which you need or prefer.
+```
 
 ## What's Included
 
