@@ -14,6 +14,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class BlockHelper
@@ -154,19 +155,28 @@ public class BlockHelper
 	}
 
 	/**
-	 * Checks if all the blocks below are logs, and stops at dirt/farmland, then checks if all the blocks above are logs, and stops at leaves.
+	 * Default implementation of {@link BlockHelper#isValidTree(Level, BlockPos, Predicate, Block)} which checks if the BlockState is the
+	 * provided log block.
+	 */
+	public static boolean isValidTree(Level level, BlockPos startingPos, Block log, Block leaves)
+	{
+		return isValidTree(level, startingPos, (state) -> state.is(log), leaves);
+	}
+
+	/**
+	 * Checks if all the blocks below match the predicate, and stops at dirt/farmland, then checks if all the blocks above match the predicate, and stops at leaves.
 	 * Checks the PERSISTENT state value to determine this is indeed a true tree.
 	 * <br/>
 	 * This assumes that the blockstate at the startingPos has already been confirmed to be a valid log (not leaves).
 	 */
-	public static boolean isValidTree(Level level, BlockPos startingPos, Block log, Block leaves)
+	public static boolean isValidTree(Level level, BlockPos startingPos, Predicate<BlockState> logPredicate, Block leaves)
 	{
 		BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(startingPos.getX(), startingPos.getY(), startingPos.getZ());
 		for (int y = startingPos.getY(); y > level.getMinBuildHeight(); y--)
 		{
 			mutablePos.setY(y);
 			BlockState state = level.getBlockState(mutablePos);
-			if (!state.is(log))
+			if (!logPredicate.test(state))
 			{
 				if (!state.is(BlockTags.DIRT) && !state.is(Blocks.FARMLAND))
 					return false;
@@ -177,7 +187,7 @@ public class BlockHelper
 		{
 			mutablePos.setY(y);
 			BlockState state = level.getBlockState(mutablePos);
-			if (!state.is(log))
+			if (!logPredicate.test(state))
 			{
 				if (!state.is(leaves) || (state.hasProperty(LeavesBlock.PERSISTENT) && state.getValue(LeavesBlock.PERSISTENT)))
 					return false;
@@ -185,5 +195,51 @@ public class BlockHelper
 			}
 		}
 		return true;
+	}
+
+	public static int getMatchingBlocksInColumn(Level level, BlockPos startingPos, Predicate<BlockState> predicate, Predicate<BlockState> stopWhen)
+	{
+		return getMatchingBlocksInColumn(level, startingPos, predicate, stopWhen, (state) -> 1);
+	}
+
+	/**
+	 * @param level The level
+	 * @param startingPos The block position to start the check from
+	 * @param predicate The predicate to match for
+	 * @param stopWhen When true, considers the column broken
+	 * @param incrementBy How much to increment by for the matching blockstate. To count simply 1 for each block, use the overloaded method.
+	 *                    This parameter is used, for example, to count how many resin-producing injuries are in a spruce tree, because there
+	 *                    can be up to 4 injuries (one for each horizontal side) in one block.
+	 * @return The number of blocks which match the provided predicate in the column at startingPos.
+	 */
+	public static int getMatchingBlocksInColumn(Level level, BlockPos startingPos, Predicate<BlockState> predicate, Predicate<BlockState> stopWhen, Function<BlockState, Integer> incrementBy)
+	{
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(startingPos.getX(), startingPos.getY(), startingPos.getZ());
+
+		// find bottom block first
+		for (int y = startingPos.getY(); y > level.getMinBuildHeight(); y--)
+		{
+			pos.setY(y);
+			BlockState state = level.getBlockState(pos);
+			if (stopWhen.test(state))
+			{
+				pos.setY(pos.getY() + 1);
+				break;
+			}
+		}
+
+		int matchingBlocks = 0;
+
+		// then climb up
+		for (int y = pos.getY(); y < level.getMaxBuildHeight(); y++)
+		{
+			pos.setY(y);
+			BlockState state = level.getBlockState(pos);
+			if (stopWhen.test(state))
+				break;
+			if (predicate.test(state))
+				matchingBlocks += incrementBy.apply(state);
+		}
+		return matchingBlocks;
 	}
 }
