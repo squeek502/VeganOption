@@ -6,6 +6,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -35,6 +36,7 @@ public class Resin implements IContentModule
 	public static Supplier<Item> resin;
 	public static Supplier<Item> rosin;
 	public static DeferredHolder<Block, DamagedSpruceLogBlock> damagedSpruceLog;
+	public static DeferredHolder<Item, BlockItem> damagedSpruceLogItem;
 
 	@Override
 	public void create()
@@ -42,6 +44,7 @@ public class Resin implements IContentModule
 		resin = REGISTER_ITEMS.register("resin", () -> new Item(new Item.Properties()));
 		rosin = REGISTER_ITEMS.register("rosin", () -> new Item(new Item.Properties()));
 		damagedSpruceLog = REGISTER_BLOCKS.register("damaged_spruce_log", DamagedSpruceLogBlock::new);
+		damagedSpruceLogItem = REGISTER_ITEMS.register("damaged_spruce_log", () -> new BlockItem(damagedSpruceLog.get(), new Item.Properties()));
 	}
 
 	@Override
@@ -57,6 +60,13 @@ public class Resin implements IContentModule
 	{
 		provider.basicItem(resin.get());
 		provider.basicItem(rosin.get());
+		provider.withExistingParent(damagedSpruceLogItem.getId().toString(), provider.mcLoc("block/cube"))
+			.texture("up", provider.mcLoc("block/spruce_log_top"))
+			.texture("down", provider.mcLoc("block/spruce_log_top"))
+			.texture("north", provider.modLoc("block/damaged_spruce_log"))
+			.texture("south", provider.mcLoc("block/spruce_log"))
+			.texture("east", provider.mcLoc("block/spruce_log"))
+			.texture("west", provider.mcLoc("block/spruce_log"));
 	}
 
 	@Override
