@@ -42,8 +42,8 @@ import java.util.function.Predicate;
 public class DamagedSpruceLogBlock extends Block
 {
 	private static final MapCodec<DamagedSpruceLogBlock> CODEC = simpleCodec(p -> new DamagedSpruceLogBlock());
-	private static final int TICKS_TO_HARDEN_MIN = MiscHelper.TICKS_PER_DAY;
-	private static final int TICKS_TO_HARDEN_MAX = TICKS_TO_HARDEN_MIN + (3 * MiscHelper.TICKS_PER_DAY);
+	private static final int TICKS_TO_HARDEN_MIN = MiscHelper.TICKS_PER_DAY / 2;
+	private static final int TICKS_TO_HARDEN_MAX = TICKS_TO_HARDEN_MIN + (2 * MiscHelper.TICKS_PER_DAY);
 	public static final BooleanProperty NORTH_DAMAGED = BooleanProperty.create("north_damaged");
 	public static final BooleanProperty SOUTH_DAMAGED = BooleanProperty.create("south_damaged");
 	public static final BooleanProperty EAST_DAMAGED = BooleanProperty.create("east_damaged");
