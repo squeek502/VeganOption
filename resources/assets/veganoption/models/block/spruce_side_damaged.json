@@ -1,0 +1,7 @@
+{
+	"parent": "veganoption:block/template_flat_north",
+	"textures": {
+		"texture": "veganoption:block/damaged_spruce_log",
+		"particle": "veganoption:block/damaged_spruce_log"
+	}
+}

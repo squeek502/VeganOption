@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "minecraft:block/spruce_log_top",
+    "east": "minecraft:block/spruce_log",
+    "north": "veganoption:block/damaged_spruce_log",
+    "south": "minecraft:block/spruce_log",
+    "up": "minecraft:block/spruce_log_top",
+    "west": "minecraft:block/spruce_log"
+  }
+}

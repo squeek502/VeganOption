@@ -90,6 +90,9 @@
 
     "_comment": "Resin",
     "item.veganoption.resin": "Resin",
+    "item.veganoption.resin.vowiki.crafting": "%1$s forms on spruce tree trunks which have been carved into with a sword.",
+    "item.veganoption.resin.vowiki.usage": "%1$s is a [[minecraft:slime_ball]] alternative. It is also used to create [[veganoption:rosin]].",
+    "block.veganoption.damaged_spruce_log": "Wounded Spruce Log",
 
     "_comment": "Vegetable Oil",
     "item.veganoption.sunflower_seeds": "Sunflower Seeds",

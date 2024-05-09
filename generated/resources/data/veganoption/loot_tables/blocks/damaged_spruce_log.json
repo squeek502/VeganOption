@@ -1,0 +1,92 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "veganoption:damaged_spruce_log",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "north_hardened": "true"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:resin"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "veganoption:damaged_spruce_log",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "south_hardened": "true"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:resin"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "veganoption:damaged_spruce_log",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "east_hardened": "true"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:resin"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "veganoption:damaged_spruce_log",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "west_hardened": "true"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veganoption:resin"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:spruce_log"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "veganoption:blocks/damaged_spruce_log"
+}
