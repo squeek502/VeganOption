@@ -4,6 +4,7 @@
     "#forge:fibres",
     "minecraft:paper",
     "minecraft:dead_bush",
+    "veganoption:spent_compost",
     {
       "id": "#forge:dusts/wood",
       "required": false

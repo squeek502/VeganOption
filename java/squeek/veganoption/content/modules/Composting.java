@@ -19,7 +19,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -31,14 +33,16 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import squeek.veganoption.ModInfo;
 import squeek.veganoption.blocks.CompostBlock;
 import squeek.veganoption.blocks.ComposterBlock;
-import squeek.veganoption.blocks.renderers.ComposterRenderer;
+import squeek.veganoption.blocks.MushroomCompostBlock;
 import squeek.veganoption.blocks.entities.ComposterBlockEntity;
+import squeek.veganoption.blocks.renderers.ComposterRenderer;
 import squeek.veganoption.content.ContentHelper;
 import squeek.veganoption.content.DataGenProviders;
 import squeek.veganoption.content.IContentModule;
@@ -66,6 +70,10 @@ public class Composting implements IContentModule
 	public static Supplier<Item> rottenPlants;
 	public static Supplier<Block> compost;
 	public static Supplier<Item> compostItem;
+	public static Supplier<Block> mushroomCompost;
+	public static Supplier<Item> mushroomCompostItem;
+	public static Supplier<Block> spentCompost;
+	public static Supplier<Item> spentCompostItem;
 	public static Supplier<Item> fertilizer;
 
 	private static final FoodProperties ROTTEN_PLANTS_FOOD = new FoodProperties.Builder()
@@ -101,6 +109,12 @@ public class Composting implements IContentModule
 
 		compost = REGISTER_BLOCKS.register("compost", CompostBlock::new);
 		compostItem = REGISTER_ITEMS.register("compost", () -> new BlockItem(compost.get(), new Item.Properties()));
+
+		mushroomCompost = REGISTER_BLOCKS.register("mushroom_compost", MushroomCompostBlock::new);
+		mushroomCompostItem = REGISTER_ITEMS.register("mushroom_compost", () -> new BlockItem(mushroomCompost.get(), new Item.Properties()));
+
+		spentCompost = REGISTER_BLOCKS.register("spent_compost", () -> new Block(Block.Properties.of().strength(0.4f).sound(SoundType.GRASS).mapColor(MapColor.DIRT)));
+		spentCompostItem = REGISTER_ITEMS.register("spent_compost", () -> new BlockItem(spentCompost.get(), new Item.Properties()));
 	}
 
 	@Override
@@ -158,6 +172,7 @@ public class Composting implements IContentModule
 			.addTag(ContentHelper.ItemTags.FIBRES)
 			.add(Items.PAPER)
 			.add(Items.DEAD_BUSH)
+			.add(spentCompostItem.get())
 			.addOptionalTag(ContentHelper.ItemTags.DUST_WOOD.location());
 
 		provider.tagW(ContentHelper.ItemTags.COMPOSTABLES_GREEN)
@@ -193,6 +208,10 @@ public class Composting implements IContentModule
 	{
 		provider.tagW(BlockTags.MINEABLE_WITH_SHOVEL).add(compost.get());
 		provider.tagW(BlockTags.MINEABLE_WITH_AXE).add(composter.get());
+		provider.tagW(BlockTags.MUSHROOM_GROW_BLOCK)
+			.add(compost.get())
+			.add(mushroomCompost.get())
+			.add(spentCompost.get());
 	}
 
 	@Override
@@ -226,6 +245,12 @@ public class Composting implements IContentModule
 	public void datagenBlockStatesAndModels(BlockStateProvider provider)
 	{
 		provider.simpleBlock(compost.get());
+		provider.getVariantBuilder(mushroomCompost.get()).forAllStatesExcept(
+			(state) -> ConfiguredModel.builder()
+				.modelFile(provider.models().getExistingFile(provider.models().modLoc("block/mushroom_compost" + (state.getValue(MushroomCompostBlock.HAS_SPROUTED) ? "_sprouted" : "_fresh"))))
+				.build(),
+			MushroomCompostBlock.VARIANT);
+		provider.simpleBlock(spentCompost.get());
 	}
 
 	@Override
@@ -234,6 +259,8 @@ public class Composting implements IContentModule
 		provider.basicItem(rottenPlants.get());
 		provider.basicItem(fertilizer.get());
 		provider.withExistingParent("compost", provider.modLoc("block/compost"));
+		provider.withExistingParent("mushroom_compost", provider.modLoc("block/mushroom_compost_sprouted"));
+		provider.withExistingParent("spent_compost", provider.modLoc("block/spent_compost"));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -252,12 +279,14 @@ public class Composting implements IContentModule
 			{
 				dropSelf(compost.get());
 				dropSelf(composter.get());
+				dropOther(mushroomCompost.get(), compost.get());
+				dropSelf(spentCompost.get());
 			}
 
 			@Override
 			protected Iterable<Block> getKnownBlocks()
 			{
-				return List.of(compost.get(), composter.get());
+				return List.of(compost.get(), composter.get(), mushroomCompost.get(), spentCompost.get());
 			}
 		};
 	}
