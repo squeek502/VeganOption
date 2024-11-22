@@ -93,6 +93,11 @@ public class MushroomCompostBlock extends CompostBlock
 			return name;
 		}
 
+		public Supplier<? extends Item> getItem()
+		{
+			return item;
+		}
+
 		@Nullable
 		public static Variant byItem(Item item)
 		{

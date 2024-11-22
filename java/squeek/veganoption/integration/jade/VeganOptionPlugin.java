@@ -18,6 +18,7 @@ public class VeganOptionPlugin implements IWailaPlugin
 		registerer.registerBlockComponent(ComposterProvider.getInstance(), ComposterBlock.class);
 		registerer.registerBlockComponent(BasinProvider.getInstance(), BasinBlock.class);
 		registerer.registerBlockComponent(JutePlantProvider.getInstance(), JutePlantBlock.class);
+		registerer.registerBlockComponent(MushroomCompostProvider.getInstance(), MushroomCompostBlock.class);
 		registerer.registerBlockIcon(CauldronsProvider.getInstance(), SapCauldronBlock.class);
 		registerer.registerBlockIcon(CauldronsProvider.getInstance(), LayeredCauldronBlock.class);
 
@@ -25,6 +26,7 @@ public class VeganOptionPlugin implements IWailaPlugin
 		registerer.markAsClientFeature(BasinProvider.getInstance().getUid());
 		registerer.markAsClientFeature(JutePlantProvider.getInstance().getUid());
 		registerer.markAsClientFeature(CauldronsProvider.getInstance().getUid());
+		registerer.markAsClientFeature(MushroomCompostProvider.getInstance().getUid());
 	}
 
 	@Override
