@@ -20,6 +20,7 @@
     "veganoption.waila.basin.open": "Open",
     "veganoption.waila.basin.closed": "Closed",
     "config.jade.plugin_veganoption.mushroom_compost": "Mushroom Compost Spores",
+    "config.waila.plugin_veganoption.mushroom_compost": "Mushroom Compost Spores",
     "veganoption.waila.mushroom_spores": "Spores: %s",
 
     "_comment": "Jute",
