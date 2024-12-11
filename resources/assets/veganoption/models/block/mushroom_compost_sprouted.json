@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "veganoption:block/mushroom_compost_sprouted"
+	}
+}

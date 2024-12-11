@@ -20,12 +20,14 @@ public class VeganOptionPlugin implements IWailaPlugin
 		registrar.addBlockData(ComposterProvider.getInstance(), ComposterBlockEntity.class);
 		registrar.addComponent(new JutePlantProvider(), TooltipPosition.BODY, JutePlantBlock.class);
 		registrar.addComponent(new RettableProvider(), TooltipPosition.BODY, RettableBlock.class);
+		registrar.addComponent(new MushroomCompostProvider(), TooltipPosition.BODY, MushroomCompostBlock.class);
 		registrar.addIcon(CauldronsProvider.getInstance(), SapCauldronBlock.class);
 		registrar.addIcon(CauldronsProvider.getInstance(), LayeredCauldronBlock.class);
 
 		registrar.addConfig(BasinProvider.CONFIG_ID, true);
 		registrar.addSyncedConfig(ComposterProvider.CONFIG_ID, true, false);
 		registrar.addConfig(RettableProvider.CONFIG_ID, true);
+		registrar.addConfig(MushroomCompostProvider.CONFIG_ID, true);
 	}
 
 	static void addPercentInfoToTooltip(ITooltip tooltip, String key, float value)

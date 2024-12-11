@@ -1,0 +1,7 @@
+{
+	"render_type": "cutout_mipped",
+	"parent": "block/cross",
+	"textures": {
+		"cross": "veganoption:block/false_morel"
+	}
+}

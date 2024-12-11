@@ -83,6 +83,8 @@ Animal taming items | No alternative yet
 - "Green" + "brown" materials together in a Composter creates ![](resources/assets/veganoption/textures/block/compost.png) Compost
 - Compost provides passive improvement to adjacent Farmland
 - Compost + [Saltpeter](#saltpeter) crafted together creates ![](resources/assets/veganoption/textures/item/fertilizer.png) Fertilizer (Bone Meal fertilizer alternative)
+- In ideal mushroom growing conditions, compost will sometimes sprout mushrooms, including the ![](resources/assets/veganoption/textures/block/false_morel.png) False Morel (Spider Eye alternative)
+  - Mushrooms, including the [False Morel](#false-morel), can be placed in Compost as spores to grow them at a faster rate than their natural spread, at the cost of eventually depleting the compost of its nutrients. Spent compost can be recycled into more compost as a brown material.
 
 > *References: [The Carbon:Nitrogen Ratio (C:N)](http://www.homecompostingmadeeasy.com/carbonnitrogenratio.html)*
 
@@ -181,7 +183,8 @@ Animal taming items | No alternative yet
 > *References: [Palliasse](http://en.wiktionary.org/wiki/palliasse)*
 
 #### False Morel
-- ![](resources/assets/veganoption/textures/item/false_morel.png) False Morels (Spider Eye alternative) occasionally drop when harvesting Mycelium
+- ![](resources/assets/veganoption/textures/item/false_morel.png) False Morels (Spider Eye alternative) occasionally grow on ![](resources/assets/veganoption/textures/block/compost.png) Compost when under ideal mushroom growing conditions
+- False Morels can be reproduced by regular mushroom spreading, or by placing them in Compost as sprouts. The latter will grow faster but eventually deplete the Compost of nutrients.
 - False Morel + Brown Mushroom + Sugar crafted together creates ![](resources/assets/veganoption/textures/item/false_morel_fermented.png) Fermented False Morel (Fermented Spider Eye alternative)
 
 > *References: [False morel](http://en.wikipedia.org/wiki/False_morel), [Gyromitra esculenta](http://en.wikipedia.org/wiki/Gyromitra_esculenta)*

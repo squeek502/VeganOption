@@ -143,8 +143,8 @@
     "block.veganoption.ender_rift": "末影裂痕",
 
     "_comment": "False Morel",
-    "item.veganoption.false_morel": "假羊肚菌",
-    "item.veganoption.false_morel.vowiki.usage": "%1$s一种有毒的蘑菇, 可以用来制作[[minecraft:spider_eye]].",
+    "block.veganoption.false_morel": "假羊肚菌",
+    "block.veganoption.false_morel.vowiki.usage": "%1$s一种有毒的蘑菇, 可以用来制作[[minecraft:spider_eye]].",
     "item.veganoption.false_morel_fermented": "发酵的假羊肚菌",
 
     "_comment": "Mob Heads",

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "has_sprouted=false": {
+      "model": "veganoption:block/mushroom_compost_fresh"
+    },
+    "has_sprouted=true": {
+      "model": "veganoption:block/mushroom_compost_sprouted"
+    }
+  }
+}

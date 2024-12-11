@@ -19,6 +19,9 @@
     "config.waila.plugin_veganoption.basin": "Basin Open/Closed State",
     "veganoption.waila.basin.open": "Open",
     "veganoption.waila.basin.closed": "Closed",
+    "config.jade.plugin_veganoption.mushroom_compost": "Mushroom Compost Spores",
+    "config.waila.plugin_veganoption.mushroom_compost": "Mushroom Compost Spores",
+    "veganoption.waila.mushroom_spores": "Spores: %s",
 
     "_comment": "Jute",
     "block.veganoption.bundled_jute": "Bundled Jute",
@@ -122,7 +125,10 @@
     "block.veganoption.composter": "Composter",
     "block.veganoption.composter.vowiki.usage": "A %1$s can be used to turn plant matter into [[veganoption:compost]] or [[veganoption:rotten_plants]].\\n\\nTo create [[veganoption:compost]], fill the %1$s with a mixture of \"green\" and \"brown\" materials. To create [[veganoption:rotten_plants]], only use \"green\" materials. See the \"{veganoption.jei.composting}\" tab for the list of \"green\" and \"brown\" materials.\\n\\nThe higher the temperature inside the composter, the faster the material will decompose. The speed that the temperature increases is determined by 3 factors:\\n\\n1) The last time the compost was tumbled (sneak + use the %1$s with an empty hand to tumble it)\\n\\n2) The fullness of the composter (the more full it is, the faster it will decompose)\\n\\n3) The ratio of \"green\" to \"brown\" materials (a ratio of 2:1 provides the maximum speed)\\n\\nIf the %1$s has not been tumbled in a while, it will start to lose its heat. Every time the %1$s is tumbled, it will lose heat initially, but will gain more heat in the long run. The %1$s should be tumbled about twice every Minecraft day.\\n\\n[[minecraft:comparator]] output from the %1$s is based on its current temperature.",
     "block.veganoption.compost": "Compost",
-    "block.veganoption.compost.vowiki.usage": "%1$s provides passive improvement to adjacent [[minecraft:farmland]].",
+    "block.veganoption.compost.vowiki.usage": "%1$s provides passive improvement to adjacent [[minecraft:farmland]]. Under ideal conditions — under shade, in a biome of moderate temperature, with access to moisture either through adjacent water or humidity – fungi may grow on it. In such conditions, mushroom spores, including the [[veganoption:false_morel]], can be planted in %1$s.",
+    "block.veganoption.mushroom_compost": "Mushroom Compost",
+    "block.veganoption.mushroom_compost.vowiki.usage": "%1$s is [[veganoption:compost]] which has had mushroom spores planted inside of it. Like regular compost, it will provide passive improvement to adjacent [[minecraft:farmland]]. Growing mushrooms in compost requires shade, a moderate temperature, and moisture via high humidity or adjacent water. Mushrooms will take a long time to initially sprout, after which they will grow significantly faster than they spread under normal circumstances. Eventually the nutrients in the compost will be spent, at which point it can be recomposted.",
+    "block.veganoption.spent_compost": "Spent Compost",
     "item.veganoption.fertilizer": "Fertilizer",
     "item.veganoption.fertilizer.vowiki.usage": "%1$s is a [[minecraft:bone_meal]] alternative.",
     "veganoption.gui.composter.name": "Composter",
@@ -169,8 +175,9 @@
     "block.veganoption.ender_rift": "Ender Rift",
 
     "_comment": "False Morel",
-    "item.veganoption.false_morel": "False Morel",
-    "item.veganoption.false_morel.vowiki.usage": "A %1$s is a toxic mushroom that can be used as a [[minecraft:spider_eye]] alternative.",
+    "block.veganoption.false_morel": "False Morel",
+    "block.veganoption.false_morel.vowiki.crafting": "The %1$s will sometimes grow in [[veganoption:compost]] under conditions ideal to fungal growth.",
+    "block.veganoption.false_morel.vowiki.usage": "A %1$s is a toxic mushroom that can be used as a [[minecraft:spider_eye]] alternative.",
     "item.veganoption.false_morel_fermented": "Fermented False Morel",
 
     "_comment": "Mob Heads",
