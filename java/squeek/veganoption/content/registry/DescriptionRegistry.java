@@ -67,13 +67,13 @@ public class DescriptionRegistry
 		if (canRegisterUsageText(stack))
 		{
 			itemsWithUsageDescriptions.add(stack);
-			registeredLangKeys.add(stack.getDescriptionId() + ".vowiki.usage");
+			registeredLangKeys.add(stack.getDescriptionId() + USAGE_SUFFIX);
 			didRegister = true;
 		}
 		if (canRegisterCraftingText(stack))
 		{
 			itemsWithCraftingDescriptions.add(stack);
-			registeredLangKeys.add(stack.getDescriptionId() + ".vowiki.crafting");
+			registeredLangKeys.add(stack.getDescriptionId() + CRAFTING_SUFFIX);
 			didRegister = true;
 		}
 		return didRegister;
