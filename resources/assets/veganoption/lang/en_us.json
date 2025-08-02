@@ -165,6 +165,7 @@
     "item.veganoption.frozen_bubble_filled": "Frozen Bubble (Partially Filled)",
     "item.veganoption.frozen_bubble_filled.vowiki.crafting": "A %1$s can be created by placing a [[veganoption:frozen_bubble]] in [[veganoption:raw_ender]].",
     "item.veganoption.frozen_bubble_filled.vowiki.usage": "A %1$s can be turned into an [[minecraft:ender_pearl]] by filling it completely with [[veganoption:raw_ender]].",
+    "item.minecraft.ender_pearl.vowiki.crafting": "An %1$s can be created by filling a [[veganoption:frozen_bubble]] completely with [[veganoption:raw_ender]].",
 
     "_comment": "Raw Ender",
     "block.veganoption.encrusted_obsidian": "Encrusted Obsidian",
