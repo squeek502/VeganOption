@@ -23,6 +23,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import net.neoforged.neoforge.fluids.*;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -364,6 +365,17 @@ public class BasinBlockEntity extends BlockEntity
 		setChanged();
 		if (level instanceof ServerLevel serverLevel)
 			serverLevel.getChunkSource().blockChanged(worldPosition);
+		if (level != null)
+		{
+			BlockPos pos = getBlockPos();
+			AuxiliaryLightManager lightManager = level.getAuxLightManager(pos);
+			if (lightManager != null)
+			{
+				FluidStack fluidStack = fluidTank.getFluid();
+				lightManager.setLightAt(pos, fluidStack.getFluidType().getLightLevel(fluidStack));
+			}
+			level.getLightEngine().checkBlock(pos);
+		}
 	}
 
 	private class BasinTank extends FluidTank

@@ -20,6 +20,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import squeek.veganoption.blocks.entities.BasinBlockEntity;
 import squeek.veganoption.content.modules.Basin;
 
@@ -101,6 +102,17 @@ public class BasinBlock extends Block implements EntityBlock
 		if (be instanceof BasinBlockEntity)
 			return ((BasinBlockEntity) be).onBlockActivated(player, hand, hit.getDirection(), hit.getLocation()) ? InteractionResult.SUCCESS : InteractionResult.PASS;
 		return InteractionResult.PASS;
+	}
+
+
+
+	@Override
+	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos)
+	{
+		AuxiliaryLightManager lightManager = level.getAuxLightManager(pos);
+		if (lightManager != null)
+			return lightManager.getLightAt(pos);
+		return super.getLightEmission(state, level, pos);
 	}
 
 	@Override
