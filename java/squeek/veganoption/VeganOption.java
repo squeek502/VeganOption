@@ -13,8 +13,12 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +30,7 @@ import squeek.veganoption.content.crafting.PistonCraftingHandler;
 import squeek.veganoption.content.recipes.RecipeRegistration;
 import squeek.veganoption.helpers.CreativeTabHelper;
 import squeek.veganoption.integration.IntegrationHandler;
+import squeek.veganoption.items.GenericBucketItem;
 import squeek.veganoption.loot.LootRegistration;
 
 @Mod(ModInfo.MODID_LOWER)
@@ -70,5 +75,15 @@ public class VeganOption
 	{
 		ContentModuleHandler.iterateOverModules(IContentModule::finish);
 		IntegrationHandler.finish();
+	}
+
+	@SubscribeEvent
+	public static void registerCapabilities(RegisterCapabilitiesEvent event)
+	{
+		for (DeferredHolder<Item, ? extends Item> itemSupplier : REGISTER_ITEMS.getEntries())
+		{
+			if (itemSupplier.get().getClass() == GenericBucketItem.class)
+				event.registerItem(Capabilities.FluidHandler.ITEM, (stack, context) -> new FluidBucketWrapper(stack), itemSupplier.get());
+		}
 	}
 }
